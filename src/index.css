@@ -1,0 +1,134 @@
+/* ==========================================================================
+   COSTA RICA UNIDOS — SOVEREIGN CIVIC GLASS v2.1 DESIGN SYSTEM
+   ========================================================================== */
+
+:root {
+  /* Paleta Primaria - Obsidiana Soberana */
+  --color-obsidian: #00040D;
+  --color-institutional-blue: #001489;
+  --color-national-red: #DA291C;
+  --color-radiant-white: #FFFFFF;
+  --color-biodiversity-green: #007A3D;
+
+  /* Glassmorphism Levels */
+  --glass-surface-bg: rgba(0, 20, 137, 0.22);
+  --glass-surface-border: rgba(255, 255, 255, 0.14);
+  --glass-floating-bg: rgba(0, 20, 137, 0.38);
+  --glass-floating-border: rgba(255, 255, 255, 0.24);
+
+  /* Typography */
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-telemetry: 'JetBrains Mono', monospace;
+
+  /* Transitions */
+  --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reseteo general */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-obsidian);
+  color: var(--color-radiant-white);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(0, 20, 137, 0.25) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(218, 41, 28, 0.12) 0%, transparent 35%);
+  background-attachment: fixed;
+}
+
+/* Contenedor centralizado */
+.civic-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Glassmorphism Cards */
+.civic-glass-card {
+  background: var(--glass-surface-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-surface-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 4, 13, 0.45);
+  transition: var(--transition-smooth);
+}
+
+.civic-glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+/* Botonería Soberana */
+.btn-sovereign {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-national-red);
+  color: var(--color-radiant-white);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 14px rgba(218, 41, 28, 0.4);
+}
+
+.btn-sovereign:hover {
+  background-color: #f03224;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(218, 41, 28, 0.6);
+}
+
+.btn-glass-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-radiant-white);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+.btn-glass-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Badge de Telemetría (JetBrains Mono) */
+.telemetry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-telemetry);
+  font-size: 0.78rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(0, 16, 102, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #79a6ff;
+  letter-spacing: 0.03em;
+}
