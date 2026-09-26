@@ -1,6 +1,19 @@
 import React from 'react';
 import Routing from './routes/Routing';
+import {
+  AccessibilityProvider,
+  VoiceReaderFloatingButton,
+  VoiceGuidedOnboardingModal
+} from './components/accessibility';
 
 export default function App() {
-  return <Routing />;
+  return (
+    <AccessibilityProvider>
+      <Routing />
+      {/* Botón flotante accesible de lectura asistida (TTS) con Web Speech API en 8 idiomas */}
+      <VoiceReaderFloatingButton />
+      {/* Modal de Onboarding Interactivo Animado Asistido por Voz */}
+      <VoiceGuidedOnboardingModal />
+    </AccessibilityProvider>
+  );
 }
