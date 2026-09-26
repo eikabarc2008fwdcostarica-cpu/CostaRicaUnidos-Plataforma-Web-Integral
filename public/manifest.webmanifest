@@ -1,0 +1,25 @@
+{
+  "name": "Costa Rica Unidos — Plataforma Soberana de Resiliencia",
+  "short_name": "CR Unidos SOS",
+  "description": "Centro cívico de emergencias, gestión del riesgo CNE y resiliencia offline para la República de Costa Rica.",
+  "start_url": "/seguridad-emergencias",
+  "display": "standalone",
+  "background_color": "#00040D",
+  "theme_color": "#00040D",
+  "lang": "es-CR",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%2300040D'/%3E%3Cpath d='M96 24 L160 52 V108 C160 148 96 172 96 172 C96 172 32 148 32 108 V52 Z' fill='%23DA291C' stroke='%23FFFFFF' stroke-width='6'/%3E%3Ctext x='96' y='122' fill='%23FFFFFF' font-size='48' font-weight='900' text-anchor='middle' font-family='sans-serif'%3ESOS%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%2300040D'/%3E%3Cpath d='M256 64 L420 136 V288 C420 394 256 460 256 460 C256 460 92 394 92 288 V136 Z' fill='%23DA291C' stroke='%23FFFFFF' stroke-width='14'/%3E%3Ctext x='256' y='325' fill='%23FFFFFF' font-size='120' font-weight='900' text-anchor='middle' font-family='sans-serif'%3ESOS%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

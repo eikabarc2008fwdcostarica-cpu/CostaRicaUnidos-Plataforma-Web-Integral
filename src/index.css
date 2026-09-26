@@ -1,20 +1,33 @@
 /* ==========================================================================
    COSTA RICA UNIDOS — SOVEREIGN CIVIC GLASS v2.1 DESIGN SYSTEM
+   República de Costa Rica • Portal Nacional y Dashboard Central
    ========================================================================== */
 
 :root {
-  /* Paleta Primaria - Obsidiana Soberana */
+  /* Paleta Primaria Institucional Tricolor */
   --color-obsidian: #00040D;
+  --color-sovereign-blue: #002B7F;
   --color-institutional-blue: #001489;
+  --color-solidarity-red: #CE1126;
   --color-national-red: #DA291C;
+  --color-civic-white: #F8FAFC;
   --color-radiant-white: #FFFFFF;
   --color-biodiversity-green: #007A3D;
+
+  /* Theming Engine Provincial Dinámico (Valores por defecto: Tricolor Nacional) */
+  --color-provincial-primary: #002B7F;
+  --color-provincial-secondary: #CE1126;
+  --color-provincial-accent: #FFFFFF;
+  --color-provincial-surface: rgba(0, 43, 127, 0.18);
+  --color-provincial-border: rgba(0, 43, 127, 0.35);
+  --glow-provincial: 0 0 25px rgba(0, 43, 127, 0.45), 0 0 50px rgba(206, 17, 38, 0.25);
 
   /* Glassmorphism Levels */
   --glass-surface-bg: rgba(0, 20, 137, 0.22);
   --glass-surface-border: rgba(255, 255, 255, 0.14);
   --glass-floating-bg: rgba(0, 20, 137, 0.38);
   --glass-floating-border: rgba(255, 255, 255, 0.24);
+  --glass-card-hover: rgba(255, 255, 255, 0.04);
 
   /* Typography */
   --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -22,6 +35,7 @@
 
   /* Transitions */
   --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-glow: box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
 }
 
 /* Reseteo general */
@@ -29,6 +43,11 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+*:focus-visible {
+  outline: 2px solid #79a6ff !important;
+  outline-offset: 3px !important;
 }
 
 body {
@@ -40,20 +59,35 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: 
-    radial-gradient(circle at 15% 20%, rgba(0, 20, 137, 0.25) 0%, transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(218, 41, 28, 0.12) 0%, transparent 35%);
+    radial-gradient(circle at 15% 20%, rgba(0, 43, 127, 0.28) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(206, 17, 38, 0.16) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(0, 4, 13, 0.95) 0%, rgba(0, 4, 13, 1) 100%);
   background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* Clases de Accesibilidad WCAG */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* Contenedor centralizado */
 .civic-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-/* Glassmorphism Cards */
+/* Glassmorphism Cards con soporte de Theming Provincial */
 .civic-glass-card {
   background: var(--glass-surface-bg);
   backdrop-filter: blur(16px);
@@ -68,30 +102,60 @@ body {
   border-color: rgba(255, 255, 255, 0.26);
 }
 
+.civic-glass-card.provincial-glow-card {
+  border-color: var(--color-provincial-border);
+  box-shadow: var(--glow-provincial);
+}
+
 /* Botonería Soberana */
 .btn-sovereign {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: var(--color-national-red);
+  background-color: var(--color-solidarity-red);
   color: var(--color-radiant-white);
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 10px;
   font-family: var(--font-main);
   font-size: 0.95rem;
   font-weight: 600;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
   text-decoration: none;
   transition: var(--transition-smooth);
-  box-shadow: 0 4px 14px rgba(218, 41, 28, 0.4);
+  box-shadow: 0 4px 16px rgba(206, 17, 38, 0.4);
 }
 
 .btn-sovereign:hover {
-  background-color: #f03224;
+  background-color: #e51a30;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(218, 41, 28, 0.6);
+  box-shadow: 0 6px 22px rgba(206, 17, 38, 0.6);
+}
+
+.btn-sovereign-blue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-sovereign-blue);
+  color: var(--color-radiant-white);
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 16px rgba(0, 43, 127, 0.5);
+}
+
+.btn-sovereign-blue:hover {
+  background-color: #0036a1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(0, 43, 127, 0.7);
 }
 
 .btn-glass-secondary {
@@ -102,7 +166,7 @@ body {
   background: rgba(255, 255, 255, 0.08);
   color: var(--color-radiant-white);
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 10px;
   font-family: var(--font-main);
   font-size: 0.95rem;
   font-weight: 600;
@@ -125,10 +189,215 @@ body {
   gap: 0.4rem;
   font-family: var(--font-telemetry);
   font-size: 0.78rem;
-  padding: 0.3rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 9999px;
-  background: rgba(0, 16, 102, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 16, 102, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #79a6ff;
   letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* Barra y Theming Engine Provincial */
+.provincial-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  background: rgba(0, 8, 25, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.provincial-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #E2E8F0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  white-space: nowrap;
+}
+
+.provincial-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.provincial-chip.active {
+  background: var(--chip-active-bg, rgba(0, 43, 127, 0.45));
+  border-color: var(--chip-active-border, #79a6ff);
+  color: #FFFFFF;
+  box-shadow: 0 0 14px var(--chip-active-glow, rgba(0, 43, 127, 0.5));
+}
+
+/* Formularios y Selectores Cívicos */
+.civic-select {
+  width: 100%;
+  appearance: none;
+  background-color: rgba(0, 10, 30, 0.75);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2379a6ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.1rem;
+  color: #FFFFFF;
+  padding: 0.8rem 2.5rem 0.8rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-family: var(--font-main);
+  font-size: 0.92rem;
+  font-weight: 500;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.civic-select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.civic-select:focus:not(:disabled) {
+  border-color: #79a6ff;
+  box-shadow: 0 0 0 3px rgba(121, 166, 255, 0.25);
+  background-color: rgba(0, 15, 45, 0.9);
+}
+
+.civic-select option {
+  background-color: #000c24;
+  color: #FFFFFF;
+  padding: 0.5rem;
+}
+
+/* Mapa SVG Interactivo */
+.svg-provincia-path {
+  cursor: pointer;
+  transition: fill 0.3s ease, stroke 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+  vector-effect: non-scaling-stroke;
+}
+
+.svg-provincia-path:hover {
+  filter: drop-shadow(0 0 16px var(--hover-glow, rgba(255, 255, 255, 0.6)));
+  stroke-width: 2.5px;
+  stroke: #FFFFFF;
+}
+
+.svg-provincia-path.active {
+  stroke-width: 3px;
+  stroke: #FFFFFF;
+  filter: drop-shadow(0 0 20px var(--hover-glow, rgba(0, 43, 127, 0.8)));
+}
+
+/* Drawer Lateral Deslizante */
+.civic-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 4, 13, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.civic-drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.civic-drawer-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 480px;
+  background: rgba(0, 8, 25, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-left: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: -8px 0 40px rgba(0, 4, 13, 0.7);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+}
+
+.civic-drawer-panel.open {
+  transform: translateX(0);
+}
+
+/* Modal Fullscreen del Mapa */
+.civic-modal-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(0, 4, 13, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.5rem;
+  overflow: hidden;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 12px rgba(0, 209, 102, 0.8), var(--glow-provincial);
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+  100% {
+    box-shadow: 0 0 35px #00D166, 0 0 60px #79a6ff, var(--glow-provincial);
+    transform: translate(-50%, -50%) scale(1.45);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.nlp-poi-glow {
+  animation: pulseGlow 1.4s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 50 !important;
+}
+
+/* Búsqueda Predictiva */
+.search-highlight {
+  color: #79a6ff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(121, 166, 255, 0.4);
 }

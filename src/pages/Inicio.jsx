@@ -1,153 +1,233 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import HeroCarousel from '../components/HeroCarousel';
+import ProvincialThemeEngine from '../components/ProvincialThemeEngine';
+import TerritorialSelector from '../components/TerritorialSelector';
+import PredictiveSearch from '../components/PredictiveSearch';
+import InteractiveSvgMap from '../components/InteractiveSvgMap';
+import TerritorialDrawer from '../components/TerritorialDrawer';
 
 export default function Inicio() {
+  // Estado coordinado centralizado para sincronización territorial bidireccional
+  const [selectedProvinciaId, setSelectedProvinciaId] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cr_selected_provincia_id');
+      return saved ? parseInt(saved, 10) : 0; // 0 = Estándar Tricolor Nacional
+    } catch {
+      return 0;
+    }
+  });
+
+  const [selectedCantonId, setSelectedCantonId] = useState('');
+  const [selectedDistritoId, setSelectedDistritoId] = useState('');
+
+  // Control del Drawer lateral deslizable
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [drawerProvinciaId, setDrawerProvinciaId] = useState(1);
+
+  // Sincronizar selección de provincia
+  const handleProvinciaChange = (provId) => {
+    setSelectedProvinciaId(provId);
+    setSelectedCantonId('');
+    setSelectedDistritoId('');
+  };
+
+  // Manejar selección desde la búsqueda predictiva
+  const handleSearchResult = (item) => {
+    if (item.type === 'provincia') {
+      setSelectedProvinciaId(item.provinciaId);
+      setSelectedCantonId('');
+      setSelectedDistritoId('');
+      setDrawerProvinciaId(item.provinciaId);
+    } else if (item.type === 'canton') {
+      setSelectedProvinciaId(item.provinciaId);
+      setSelectedCantonId(item.cantonId);
+      setSelectedDistritoId('');
+      setDrawerProvinciaId(item.provinciaId);
+    }
+
+    // Scroll suave hacia el selector territorial
+    const selectorEl = document.getElementById('seccion-selector-territorial');
+    if (selectorEl) {
+      selectorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  // Abrir Drawer de inspección territorial
+  const handleOpenDrawer = (provId) => {
+    const targetId = provId && provId !== 0 ? provId : selectedProvinciaId !== 0 ? selectedProvinciaId : 1;
+    setDrawerProvinciaId(targetId);
+    setIsDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Navegación Soberana */}
       <Navbar />
 
-      <main className="civic-container" style={{ flex: 1, padding: '4rem 1.5rem 6rem' }}>
-        {/* Telemetría cívica */}
-        <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
-          <span className="telemetry-badge">
+      <main className="civic-container" style={{ flex: 1, padding: '2.5rem 1.5rem 5rem' }}>
+        {/* Telemetría cívica de cabecera */}
+        <div style={{ marginBottom: '1.75rem', display: 'flex', justifyContent: 'center' }}>
+          <span className="telemetry-badge" style={{ backgroundColor: 'rgba(0, 20, 80, 0.5)' }}>
             <span style={{
               width: '8px',
               height: '8px',
               borderRadius: '50%',
               backgroundColor: '#00D166',
+              boxShadow: '0 0 10px #00D166',
               display: 'inline-block'
             }}></span>
-            REPÚBLICA DE COSTA RICA &bull; PLATAFORMA SOBERANA v2.1
+            REPÚBLICA DE COSTA RICA &bull; PORTAL NACIONAL SOBERANO v2.1 &bull; DTA ACTIVA
           </span>
         </div>
 
-        {/* Hero Institucional */}
-        <div style={{ textAlign: 'center', maxWidth: '840px', margin: '0 auto 3.5rem' }}>
-          <h1 style={{
-            fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
-            fontWeight: 800,
-            lineHeight: 1.15,
-            letterSpacing: '-0.03em',
-            marginBottom: '1.25rem',
-            background: 'linear-gradient(180deg, #FFFFFF 30%, #B0C7FF 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>
-            Costa Rica Unidos
-          </h1>
+        {/* 1. Barra de Búsqueda Predictiva con Debouncing de 300 ms */}
+        <PredictiveSearch onSelectResult={handleSearchResult} />
 
-          <p style={{
-            fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-            color: 'rgba(255, 255, 255, 0.82)',
-            fontWeight: 400,
-            lineHeight: 1.7,
-            marginBottom: '2.5rem'
-          }}>
-            Plataforma digital soberana e integral para la transparencia comunitaria,
-            la fiscalización de obras públicas y la articulación cívica de los <strong>84 cantones</strong> y <strong>492 distritos</strong> de la República.
-          </p>
+        {/* 2. Hero Institucional con Carrusel Dinámico Accesible Tricolor */}
+        <HeroCarousel
+          onSelectSlideCta={(targetId) => {
+            const el = document.getElementById(targetId);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+        />
 
-          {/* Acciones principales */}
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link to="/login" className="btn-sovereign">
-              Acceder con Identidad Cívica
-            </Link>
-            <Link to="/dashboard" className="btn-glass-secondary">
-              Explorar Panel Territorial
-            </Link>
-          </div>
-        </div>
+        {/* 3. Theming Engine Provincial Dinámico con Escudos Emblemáticos */}
+        <ProvincialThemeEngine
+          selectedProvinciaId={selectedProvinciaId}
+          onSelectProvincia={handleProvinciaChange}
+        />
+
+        {/* 4. Selector Territorial en Cascada (Provincia -> Cantón -> Distrito) con API y Caché Offline */}
+        <TerritorialSelector
+          selectedProvinciaId={selectedProvinciaId}
+          onProvinciaChange={handleProvinciaChange}
+          selectedCantonId={selectedCantonId}
+          onCantonChange={setSelectedCantonId}
+          selectedDistritoId={selectedDistritoId}
+          onDistritoChange={setSelectedDistritoId}
+          onOpenDrawer={handleOpenDrawer}
+        />
 
         {/* Módulos Cívicos Fundacionales */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '1.5rem',
-          marginTop: '2rem'
-        }}>
+        <section
+          aria-label="Pilares del Sistema Soberano"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1.5rem',
+            marginBottom: '3rem'
+          }}
+        >
           {/* Card 1: Cobertura Territorial */}
           <div className="civic-glass-card" style={{ padding: '2rem' }}>
             <div style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: '10px',
-              backgroundColor: 'rgba(0, 20, 137, 0.4)',
+              width: '46px',
+              height: '46px',
+              borderRadius: '12px',
+              backgroundColor: 'rgba(0, 43, 127, 0.4)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.3rem',
-              marginBottom: '1rem'
+              fontSize: '1.4rem',
+              marginBottom: '1rem',
+              border: '1px solid rgba(121, 166, 255, 0.3)'
             }}>
               🗺️
             </div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem', color: '#F8FAFC' }}>
               División Territorial Completa
             </h3>
-            <p style={{ color: 'rgba(255, 255, 255, 0.72)', fontSize: '0.92rem' }}>
-              Integración nativa con la División Territorial Administrativa (DTA) para las 7 provincias, desde los cantones históricos hasta los de reciente fundación.
+            <p style={{ color: '#CBD5E1', fontSize: '0.92rem', lineHeight: 1.6 }}>
+              Integración nativa con la División Territorial Administrativa (DTA) para las <strong>7 provincias</strong>, desde los cantones históricos hasta los de reciente fundación como Río Cuarto, Monteverde y Puerto Jiménez.
             </p>
           </div>
 
           {/* Card 2: Soberanía de Datos y Hacienda */}
           <div className="civic-glass-card" style={{ padding: '2rem' }}>
             <div style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: '10px',
-              backgroundColor: 'rgba(218, 41, 28, 0.25)',
+              width: '46px',
+              height: '46px',
+              borderRadius: '12px',
+              backgroundColor: 'rgba(206, 17, 38, 0.25)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.3rem',
-              marginBottom: '1rem'
+              fontSize: '1.4rem',
+              marginBottom: '1rem',
+              border: '1px solid rgba(206, 17, 38, 0.4)'
             }}>
               🏛️
             </div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-              Fiscalización y Trámites
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem', color: '#F8FAFC' }}>
+              Fiscalización y Trámites Cívicos
             </h3>
-            <p style={{ color: 'rgba(255, 255, 255, 0.72)', fontSize: '0.92rem' }}>
-              Conectividad con servicios tributarios del Ministerio de Hacienda para validación comercial y seguimiento presupuestario de compras públicas.
+            <p style={{ color: '#CBD5E1', fontSize: '0.92rem', lineHeight: 1.6 }}>
+              Conectividad con servicios tributarios del Ministerio de Hacienda para validación comercial y seguimiento presupuestario de compras públicas en SICOP.
             </p>
           </div>
 
           {/* Card 3: Cartografía 3D Fotorrealista */}
           <div className="civic-glass-card" style={{ padding: '2rem' }}>
             <div style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: '10px',
+              width: '46px',
+              height: '46px',
+              borderRadius: '12px',
               backgroundColor: 'rgba(0, 122, 61, 0.3)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.3rem',
-              marginBottom: '1rem'
+              fontSize: '1.4rem',
+              marginBottom: '1rem',
+              border: '1px solid rgba(0, 122, 61, 0.4)'
             }}>
               🌐
             </div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-              Visualizador GIS 3D
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem', color: '#F8FAFC' }}>
+              Visualizador GIS & Relieve
             </h3>
-            <p style={{ color: 'rgba(255, 255, 255, 0.72)', fontSize: '0.92rem' }}>
-              Topografía fotorrealista del relieve costarricense mediante Google Maps 3D y capas vectoriales GeoJSON para la gestión de infraestructura y riesgos.
+            <p style={{ color: '#CBD5E1', fontSize: '0.92rem', lineHeight: 1.6 }}>
+              Topografía fotorrealista del relieve costarricense y capas vectoriales GeoJSON para la gestión de infraestructura, cuencas hidrográficas y prevención de riesgos.
             </p>
           </div>
-        </div>
+        </section>
+
+        {/* 5. Mapa Resumen SVG Interactivo en el tercio inferior (pre-footer) */}
+        <InteractiveSvgMap
+          selectedProvinciaId={selectedProvinciaId}
+          onSelectProvincia={handleProvinciaChange}
+          onOpenDrawer={handleOpenDrawer}
+        />
       </main>
 
-      {/* Footer cívico */}
+      {/* Drawer Lateral Deslizable de Inspección Territorial */}
+      <TerritorialDrawer
+        isOpen={isDrawerOpen}
+        onClose={handleCloseDrawer}
+        provinciaId={drawerProvinciaId}
+      />
+
+      {/* Footer cívico institucional */}
       <footer style={{
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-        padding: '1.75rem 0',
-        backgroundColor: 'rgba(0, 4, 13, 0.85)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+        padding: '2rem 0',
+        backgroundColor: 'rgba(0, 4, 13, 0.9)',
         textAlign: 'center',
-        color: 'rgba(255, 255, 255, 0.55)',
+        color: '#94A3B8',
         fontSize: '0.85rem'
       }}>
         <div className="civic-container">
-          República de Costa Rica &bull; Costa Rica Unidos &bull; Sistema Sovereign Civic Glass v2.1
+          <p style={{ marginBottom: '0.4rem', color: '#E2E8F0', fontWeight: 600 }}>
+            República de Costa Rica &bull; Costa Rica Unidos &bull; Sistema Sovereign Civic Glass v2.1
+          </p>
+          <p style={{ fontSize: '0.78rem', color: '#64748B' }}>
+            Conformidad estricta WCAG 2.1 AA &bull; Integración DTA Oficial INEC / TSE &bull; Cobertura 84 Cantones y 492 Distritos
+          </p>
         </div>
       </footer>
     </div>
