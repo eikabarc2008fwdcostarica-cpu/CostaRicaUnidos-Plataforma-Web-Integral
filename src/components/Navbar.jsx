@@ -104,6 +104,23 @@ export default function Navbar() {
           </Link>
 
           <Link
+            to="/mapa-gis"
+            style={{
+              color: isActive('/mapa-gis') ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)',
+              backgroundColor: isActive('/mapa-gis') ? 'rgba(0, 43, 127, 0.55)' : 'transparent',
+              border: isActive('/mapa-gis') ? '1px solid #79a6ff' : '1px solid transparent',
+              padding: '0.5rem 1rem',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontWeight: 500,
+              fontSize: '0.9rem',
+              transition: 'var(--transition-smooth)'
+            }}
+          >
+            🗺️ Visor 3D GIS
+          </Link>
+
+          <Link
             to="/login"
             style={{
               color: isActive('/login') ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)',

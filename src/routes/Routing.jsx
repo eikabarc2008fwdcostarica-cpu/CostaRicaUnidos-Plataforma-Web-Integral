@@ -4,6 +4,7 @@ import PrivateRoutes from './PrivateRoutes';
 import Inicio from '../pages/Inicio';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
+import MapaGIS from '../pages/MapaGIS';
 import NotFound from '../pages/NotFound';
 
 /**
@@ -17,6 +18,8 @@ export default function Routing() {
         {/* Rutas Públicas */}
         <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/mapa-gis" element={<MapaGIS />} />
+        <Route path="/gis" element={<MapaGIS />} />
 
         {/* Rutas Privadas Protegidas */}
         <Route element={<PrivateRoutes />}>

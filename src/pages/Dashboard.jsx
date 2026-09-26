@@ -1,12 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 export default function Dashboard() {
   const modulosCivicos = [
-    { id: 'M01', nombre: 'Portal Nacional', desc: 'Alertas cívicas y cabecera de noticias oficiales', icono: '📰' },
+    { id: 'M01', nombre: 'Portal Nacional', desc: 'Alertas cívicas y cabecera de noticias oficiales', icono: '📰', ruta: '/' },
     { id: 'M03', nombre: 'Sistema de Trámites', desc: 'Digitalización y consulta de solicitudes públicas', icono: '📝' },
-    { id: 'M05', nombre: 'Visor Cartográfico GIS', desc: 'Capas GeoJSON y relieve 3D cantonal fotorrealista', icono: '🗺️' },
-    { id: 'M06', nombre: 'Gestión de Desastres', desc: 'Protocolos de emergencia y albergues en tiempo real', icono: '🚨' },
+    { id: 'M05', nombre: 'Visor Cartográfico GIS', desc: 'Capas GeoJSON y relieve 3D cantonal fotorrealista', icono: '🗺️', ruta: '/mapa-gis' },
+    { id: 'M06', nombre: 'Gestión de Desastres', desc: 'Protocolos de emergencia y albergues en tiempo real', icono: '🚨', ruta: '/mapa-gis' },
     { id: 'M08', nombre: 'Feria del Agricultor', desc: 'Rutas de abastecimiento y comercio local cantonal', icono: '🌽' },
     { id: 'M10', nombre: 'Observatorio Económico', desc: 'Verificación tributaria mediante API Hacienda', icono: '📊' }
   ];
@@ -94,13 +95,23 @@ export default function Dashboard() {
               </div>
 
               <div style={{ marginTop: '1.5rem' }}>
-                <button
-                  type="button"
-                  className="btn-glass-secondary"
-                  style={{ width: '100%', fontSize: '0.85rem', padding: '0.55rem' }}
-                >
-                  Abrir Módulo
-                </button>
+                {modulo.ruta ? (
+                  <Link
+                    to={modulo.ruta}
+                    className="btn-glass-secondary"
+                    style={{ width: '100%', fontSize: '0.85rem', padding: '0.55rem', textAlign: 'center', display: 'block' }}
+                  >
+                    Abrir Módulo →
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn-glass-secondary"
+                    style={{ width: '100%', fontSize: '0.85rem', padding: '0.55rem' }}
+                  >
+                    Abrir Módulo
+                  </button>
+                )}
               </div>
             </div>
           ))}
