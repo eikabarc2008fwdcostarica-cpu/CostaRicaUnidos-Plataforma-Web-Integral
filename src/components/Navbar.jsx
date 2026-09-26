@@ -138,6 +138,35 @@ export default function Navbar() {
           </Link>
 
           <Link
+            to="/seguridad-emergencias"
+            style={{
+              color: '#FFFFFF',
+              backgroundColor: (isActive('/seguridad-emergencias') || isActive('/emergencias') || isActive('/sos'))
+                ? '#DC2626'
+                : 'rgba(220, 38, 38, 0.25)',
+              border: (isActive('/seguridad-emergencias') || isActive('/emergencias') || isActive('/sos'))
+                ? '1px solid #EF4444'
+                : '1px solid rgba(220, 38, 38, 0.5)',
+              padding: '0.5rem 1rem',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontWeight: 700,
+              fontSize: '0.9rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              boxShadow: (isActive('/seguridad-emergencias') || isActive('/emergencias') || isActive('/sos'))
+                ? '0 0 15px rgba(239, 68, 68, 0.6)'
+                : '0 0 8px rgba(220, 38, 38, 0.25)',
+              transition: 'var(--transition-smooth)'
+            }}
+            aria-label="Centro de Emergencias y Botonera SOS 911"
+          >
+            <span style={{ fontSize: '1rem' }}>🚨</span>
+            <span>SOS 9-1-1</span>
+          </Link>
+
+          <Link
             to="/login"
             style={{
               color: isActive('/login') ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)',

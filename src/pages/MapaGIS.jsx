@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import MapaCartografico3D from '../components/gis/MapaCartografico3D';
 import { GIS_LAYERS_CONFIG, VUELOS_3D_DESTINOS } from '../components/gis/gisLayersData';
 
 export default function MapaGIS() {
   const [selectedLocationInfo, setSelectedLocationInfo] = useState(null);
+  const [searchParams] = useSearchParams();
+  const initialQuery = searchParams.get('q') || '';
 
   const handleSelectLocation = (latLng) => {
     setSelectedLocationInfo(latLng);
@@ -26,7 +29,7 @@ export default function MapaGIS() {
               boxShadow: '0 0 10px #00D166',
               display: 'inline-block'
             }} />
-            MÓDULO 05 &bull; SISTEMA DE INFORMACIÓN GEOGRÁFICA (GIS) &bull; RELIEVE 3D SOBERANO
+            MÓDULO 05 &bull; SISTEMA DE INFORMACIÓN GEOGRÁFICA (GIS) &bull; MÓDULO 12 &bull; IA NLP GEOCONTEXTUAL (RF-12.1)
           </span>
         </div>
 
@@ -51,14 +54,16 @@ export default function MapaGIS() {
             lineHeight: 1.65,
             marginBottom: '1.5rem'
           }}>
-            Plataforma geoespacial soberana con <strong>Geofencing Estricto Nacional</strong> (incluyendo la Isla del Coco),
-            controles de cámara 3D con inclinación de relieve (45°-60°), navegación multicapa institucional y deep-linking a Waze y Google Maps.
+            Plataforma geoespacial soberana con <strong>Geofencing Estricto Nacional</strong>, motor de <strong>Búsqueda Semántica en Lenguaje Natural con Dictado por Voz (RF-12.1)</strong>, controles 3D con relieve (45°-60°) y navegación multicapa.
           </p>
 
           {/* Badges de Cobertura */}
           <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <span className="telemetry-badge">
               📍 GEOFENCING: 5.45° N - 11.25° N
+            </span>
+            <span className="telemetry-badge">
+              ✨ BÚSQUEDA SEMÁNTICA NLP ACTIVA
             </span>
             <span className="telemetry-badge">
               🏔️ RELIEVE TOPOGRÁFICO 3D ACTIVO
@@ -75,6 +80,7 @@ export default function MapaGIS() {
             height="760px"
             onSelectLocation={handleSelectLocation}
             initialTilt={50}
+            initialSemanticQuery={initialQuery}
           />
         </div>
 

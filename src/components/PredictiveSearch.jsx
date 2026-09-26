@@ -78,7 +78,18 @@ export default function PredictiveSearch({ onSelectResult }) {
       color: '#00D166'
     }));
 
-    const combined = [...provHits, ...cantonHits.slice(0, 7), ...serviceHits.slice(0, 4)];
+    // Entrada directa al Motor de IA NLP (RF-12.1)
+    const aiNlpHit = {
+      type: 'nlp-ia',
+      id: 'ai-nlp-query',
+      titulo: `✨ Consultar en Visor 3D con IA: "${debouncedQuery}"`,
+      subtitulo: 'Activar capas automáticas y volar a la zona en el Visor GIS (RF-12.1)',
+      badge: 'IA NLP',
+      ruta: `/mapa-gis?q=${encodeURIComponent(debouncedQuery)}`,
+      color: '#79a6ff'
+    };
+
+    const combined = [aiNlpHit, ...provHits, ...cantonHits.slice(0, 5), ...serviceHits.slice(0, 3)];
     setResults(combined);
     setIsOpen(combined.length > 0);
     setHighlightedIndex(-1);
@@ -121,7 +132,9 @@ export default function PredictiveSearch({ onSelectResult }) {
     setIsOpen(false);
     setSearchTerm('');
 
-    if (item.type === 'canton' || item.type === 'provincia') {
+    if (item.type === 'nlp-ia' && item.ruta) {
+      navigate(item.ruta);
+    } else if (item.type === 'canton' || item.type === 'provincia') {
       if (onSelectResult) {
         onSelectResult(item);
       }

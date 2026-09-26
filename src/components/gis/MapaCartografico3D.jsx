@@ -12,6 +12,9 @@ import {
 import LayerControlPanel from './LayerControlPanel';
 import CameraFlyControls from './CameraFlyControls';
 import PointDetailCard from './PointDetailCard';
+import SemanticGeoSearchBar from './SemanticGeoSearchBar';
+import NlpResultsDrawer from './NlpResultsDrawer';
+import { procesarConsultaSemantica } from '../../services/geoSemanticNlpService';
 
 export default function MapaCartografico3D({
   onSelectLocation,
@@ -22,13 +25,20 @@ export default function MapaCartografico3D({
   initialTilt = 45,
   height = '740px',
   showLayerSelector = true,
-  showCameraControls = true
+  showCameraControls = true,
+  showSemanticSearch = true,
+  initialSemanticQuery = '',
+  onNlpResultChange
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
   const userMarkerRef = useRef(null);
   const routePolylineRef = useRef(null);
+
+  // Estados de IA Semántica NLP (RF-12.1)
+  const [nlpResult, setNlpResult] = useState(null);
+  const [highlightedPoiIds, setHighlightedPoiIds] = useState([]);
 
   // Estados de Capas y POIs
   const [activeLayers, setActiveLayers] = useState({
@@ -163,16 +173,17 @@ export default function MapaCartografico3D({
       const isVisible = activeLayers[poi.layer];
       if (!isVisible) return;
 
+      const isHighlighted = highlightedPoiIds.includes(poi.id);
       const layerConfig = GIS_LAYERS_CONFIG.find((l) => l.id === poi.layer);
       const pinColor = layerConfig ? layerConfig.color : '#002B7F';
 
       const svgIcon = {
         path: window.google.maps.SymbolPath.CIRCLE,
         fillColor: pinColor,
-        fillOpacity: 0.95,
-        strokeColor: '#FFFFFF',
-        strokeWeight: 2,
-        scale: 8
+        fillOpacity: 1,
+        strokeColor: isHighlighted ? '#FFFFFF' : '#FFFFFF',
+        strokeWeight: isHighlighted ? 4 : 2,
+        scale: isHighlighted ? 12 : 8
       };
 
       const marker = new window.google.maps.Marker({
@@ -180,7 +191,8 @@ export default function MapaCartografico3D({
         map: map,
         title: poi.nombre,
         icon: svgIcon,
-        animation: window.google.maps.Animation.DROP
+        animation: isHighlighted ? window.google.maps.Animation.DROP : undefined,
+        zIndex: isHighlighted ? 100 : 10
       });
 
       marker.addListener('click', () => {
@@ -225,12 +237,12 @@ export default function MapaCartografico3D({
     }
   };
 
-  // Actualizar marcadores cuando cambien las capas
+  // Actualizar marcadores cuando cambien las capas o los POIs resaltados
   useEffect(() => {
     if (mapInstanceRef.current && window.google) {
       renderGoogleMarkers(mapInstanceRef.current);
     }
-  }, [activeLayers, customMarkers, routeWaypoints]);
+  }, [activeLayers, customMarkers, routeWaypoints, highlightedPoiIds]);
 
   // 4. Funciones de Cámara 3D e Inclinación
   const handleSetTilt = (newTilt) => {
@@ -260,18 +272,54 @@ export default function MapaCartografico3D({
 
   // 5. Vuelo 3D Fly-To a Destinos
   const handleFlyTo = (destino) => {
+    const targetZoom = destino.zoom !== undefined ? destino.zoom : 13;
+    const targetTilt = destino.tilt !== undefined ? destino.tilt : 50;
+    const targetHeading = destino.heading !== undefined ? destino.heading : 0;
+
     setCenter({ lat: destino.lat, lng: destino.lng });
-    setTilt(destino.tilt);
-    setHeading(destino.heading);
-    setZoom(destino.zoom);
+    setTilt(targetTilt);
+    setHeading(targetHeading);
+    setZoom(targetZoom);
 
     if (mapInstanceRef.current) {
       mapInstanceRef.current.panTo({ lat: destino.lat, lng: destino.lng });
-      mapInstanceRef.current.setZoom(destino.zoom);
-      if (mapInstanceRef.current.setTilt) mapInstanceRef.current.setTilt(destino.tilt);
-      if (mapInstanceRef.current.setHeading) mapInstanceRef.current.setHeading(destino.heading);
+      mapInstanceRef.current.setZoom(targetZoom);
+      if (mapInstanceRef.current.setTilt) mapInstanceRef.current.setTilt(targetTilt);
+      if (mapInstanceRef.current.setHeading) mapInstanceRef.current.setHeading(targetHeading);
     }
   };
+
+  // 5.1 Manejador Reactivo de Consulta Semántica NLP (RF-12.1)
+  const handleNlpQueryResult = (result) => {
+    setNlpResult(result);
+    if (onNlpResultChange) onNlpResultChange(result);
+
+    if (result && result.exito) {
+      // a) Enciende de forma automática las capas cartográficas identificadas
+      if (result.activeLayersState) {
+        setActiveLayers(result.activeLayersState);
+      }
+
+      // b) Resalta los marcadores resultantes con destello visual
+      const ids = result.poisEncontrados ? result.poisEncontrados.map((p) => p.id) : [];
+      setHighlightedPoiIds(ids);
+
+      // c) Dispara transición de cámara (fly-to suave con inclinación 45°-60°)
+      if (result.targetCamera) {
+        handleFlyTo(result.targetCamera);
+      }
+    } else {
+      setHighlightedPoiIds([]);
+    }
+  };
+
+  // Auto-ejecución si se recibe initialSemanticQuery (ej. desde URL o Hero)
+  useEffect(() => {
+    if (initialSemanticQuery && initialSemanticQuery.trim()) {
+      const res = procesarConsultaSemantica(initialSemanticQuery);
+      handleNlpQueryResult(res);
+    }
+  }, [initialSemanticQuery]);
 
   // 6. Botón "Mi Ubicación" (navigator.geolocation con Geofencing)
   const handleGetLocation = () => {
@@ -423,6 +471,7 @@ export default function MapaCartografico3D({
               const yPercent = 100 - ((poi.lat - GEOFENCING_COSTA_RICA.south) / (GEOFENCING_COSTA_RICA.north - GEOFENCING_COSTA_RICA.south)) * 100;
               const layerConfig = GIS_LAYERS_CONFIG.find((l) => l.id === poi.layer);
               const color = layerConfig ? layerConfig.color : '#00D166';
+              const isHighlighted = highlightedPoiIds.includes(poi.id);
 
               return (
                 <button
@@ -430,6 +479,7 @@ export default function MapaCartografico3D({
                   type="button"
                   onClick={() => setSelectedPoint(poi)}
                   aria-label={`${poi.nombre} - ${poi.categoria}`}
+                  className={isHighlighted ? 'nlp-poi-glow' : ''}
                   style={{
                     position: 'absolute',
                     top: `${yPercent}%`,
@@ -441,34 +491,37 @@ export default function MapaCartografico3D({
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    zIndex: 20
+                    zIndex: isHighlighted ? 50 : 20
                   }}
                 >
                   <div
                     style={{
-                      width: '16px',
-                      height: '16px',
+                      width: isHighlighted ? '22px' : '16px',
+                      height: isHighlighted ? '22px' : '16px',
                       borderRadius: '50%',
                       backgroundColor: color,
-                      border: '2px solid #FFFFFF',
-                      boxShadow: `0 0 14px ${color}`,
-                      transition: 'transform 0.2s'
+                      border: isHighlighted ? '3px solid #FFFFFF' : '2px solid #FFFFFF',
+                      boxShadow: isHighlighted
+                        ? '0 0 25px #00D166, 0 0 45px var(--glow-provincial, #79a6ff)'
+                        : `0 0 14px ${color}`,
+                      transition: 'all 0.25s ease'
                     }}
                   />
                   <span
                     style={{
-                      fontSize: '0.68rem',
-                      fontWeight: 700,
+                      fontSize: isHighlighted ? '0.76rem' : '0.68rem',
+                      fontWeight: isHighlighted ? 800 : 700,
                       color: '#FFFFFF',
-                      backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                      padding: '0.1rem 0.35rem',
-                      borderRadius: '4px',
+                      backgroundColor: isHighlighted ? 'rgba(0, 20, 137, 0.95)' : 'rgba(0, 4, 13, 0.85)',
+                      padding: isHighlighted ? '0.2rem 0.5rem' : '0.1rem 0.35rem',
+                      borderRadius: isHighlighted ? '6px' : '4px',
                       marginTop: '3px',
                       whiteSpace: 'nowrap',
-                      border: '1px solid rgba(255, 255, 255, 0.15)'
+                      border: isHighlighted ? '1px solid #00D166' : '1px solid rgba(255, 255, 255, 0.15)',
+                      boxShadow: isHighlighted ? '0 0 14px rgba(0, 209, 102, 0.6)' : 'none'
                     }}
                   >
-                    {poi.nombre}
+                    {isHighlighted ? '✨ ' : ''}{poi.nombre}
                   </span>
                 </button>
               );
@@ -538,6 +591,49 @@ export default function MapaCartografico3D({
 
       {/* Tarjeta de Detalle del POI Seleccionado con Deep Links a Waze y Google Maps */}
       <PointDetailCard point={selectedPoint} onClose={() => setSelectedPoint(null)} />
+
+      {/* 7. Buscador Semántico Inteligente con IA y Dictado por Voz (RF-12.1) */}
+      {showSemanticSearch && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 35,
+            width: 'calc(100% - 380px)',
+            maxWidth: '680px'
+          }}
+        >
+          <SemanticGeoSearchBar
+            onQueryResult={handleNlpQueryResult}
+            initialQuery={initialSemanticQuery}
+          />
+        </div>
+      )}
+
+      {/* 8. Panel Drawer Flotante de Resultados de IA y Feedback (RF-12.1) */}
+      <NlpResultsDrawer
+        nlpResult={nlpResult}
+        onClose={() => {
+          setNlpResult(null);
+          setHighlightedPoiIds([]);
+        }}
+        onFocusPoi={(poi) => {
+          setSelectedPoint(poi);
+          handleFlyTo({
+            lat: poi.lat,
+            lng: poi.lng,
+            zoom: 14.5,
+            tilt: 55,
+            heading: heading || 0
+          });
+        }}
+        onSelectSuggestion={(sug) => {
+          const res = procesarConsultaSemantica(sug);
+          handleNlpQueryResult(res);
+        }}
+      />
     </div>
   );
 }
