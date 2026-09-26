@@ -121,6 +121,23 @@ export default function Navbar() {
           </Link>
 
           <Link
+            to="/reportar-incidencia"
+            style={{
+              color: isActive('/reportar-incidencia') ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)',
+              backgroundColor: isActive('/reportar-incidencia') ? 'rgba(218, 41, 28, 0.4)' : 'transparent',
+              border: isActive('/reportar-incidencia') ? '1px solid #DA291C' : '1px solid transparent',
+              padding: '0.5rem 1rem',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontWeight: 500,
+              fontSize: '0.9rem',
+              transition: 'var(--transition-smooth)'
+            }}
+          >
+            ⚠️ Reportar Avería
+          </Link>
+
+          <Link
             to="/login"
             style={{
               color: isActive('/login') ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)',

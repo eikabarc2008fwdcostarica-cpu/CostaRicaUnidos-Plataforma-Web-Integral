@@ -5,6 +5,7 @@ import Inicio from '../pages/Inicio';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import MapaGIS from '../pages/MapaGIS';
+import ReportarIncidencia from '../pages/ReportarIncidencia';
 import NotFound from '../pages/NotFound';
 
 /**
@@ -20,6 +21,8 @@ export default function Routing() {
         <Route path="/login" element={<Login />} />
         <Route path="/mapa-gis" element={<MapaGIS />} />
         <Route path="/gis" element={<MapaGIS />} />
+        <Route path="/reportar-incidencia" element={<ReportarIncidencia />} />
+        <Route path="/reportes" element={<ReportarIncidencia />} />
 
         {/* Rutas Privadas Protegidas */}
         <Route element={<PrivateRoutes />}>
