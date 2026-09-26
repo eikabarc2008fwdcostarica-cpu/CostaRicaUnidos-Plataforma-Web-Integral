@@ -1,72 +1,259 @@
 # Costa Rica Unidos — Plataforma Web Integral
 
-[![Arquitectura: React + Vite](https://img.shields.io/badge/Architecture-React%20%7C%20Vite%20SPA-61dafb?style=for-the-badge&logo=react)](https://react.dev/)
+[![Arquitectura: React + Vite](https://img.shields.io/badge/Architecture-React%2018%20%7C%20Vite%20SPA-61dafb?style=for-the-badge&logo=react)](https://react.dev/)
 [![Design System: Sovereign Civic Glass v2.1](https://img.shields.io/badge/Design%20System-Sovereign%20Civic%20Glass%20v2.1-002B7F?style=for-the-badge)](https://costaricaunidos.cr)
 [![Cobertura Territorial: 7 Provincias](https://img.shields.io/badge/Territorial-7%20Provincias%20%7C%2084%20Cantones%20%7C%20492%20Distritos-007A3D?style=for-the-badge)](https://inec.cr)
-[![Git Workflow: GitFlow DevOps](https://img.shields.io/badge/DevOps-GitFlow%20Workflow-CE1126?style=for-the-badge&logo=git)](https://git-scm.com/)
+[![Accesibilidad: Ley 7600 / WCAG 2.1 AA](https://img.shields.io/badge/Accessibility-Ley%207600%20%7C%20WCAG%202.1%20AA-FFC700?style=for-the-badge)](https://www.w3.org/WAI/WCAG21/quickref/)
+[![Privacidad: Ley N° 8968](https://img.shields.io/badge/Privacy-Ley%20N°%208968%20%7C%20EXIF%20Stripped-CE1126?style=for-the-badge)](https://pgrweb.go.cr)
+[![Modo Resiliencia: Offline-First PWA](https://img.shields.io/badge/PWA-Offline%20First%20%7C%20Service%20Worker-9C27B0?style=for-the-badge)](https://web.dev/progressive-web-apps/)
 
-Plataforma digital integral para la soberanía ciudadana, transparencia presupuestaria, fiscalización de obra pública y gestión territorial comunitaria en la República de Costa Rica.
+Plataforma digital integral para la soberanía ciudadana, transparencia presupuestaria, fiscalización de obra pública, resiliencia ante emergencias nacionales y navegación territorial tridimensional en la República de Costa Rica.
 
 ---
 
-## Índice
+## 📑 Tabla de Contenidos
 
 1. [Visión General del Proyecto](#1-visión-general-del-proyecto)
-2. [Estructura del Proyecto y Arquitectura Frontend](#2-estructura-del-proyecto-y-arquitectura-frontend)
-3. [Jerarquía Territorial Oficial de Costa Rica](#3-jerarquía-territorial-oficial-de-costa-rica)
-4. [Sistema de Diseño: Sovereign Civic Glass v2.1](#4-sistema-de-diseño-sovereign-civic-glass-v21)
-5. [Matriz Comparativa de Personas: Eiker vs Alanie](#5-matriz-comparativa-de-personas-eiker-vs-alanie)
-6. [Integración de APIs y Servicios de Datos](#6-integración-de-apis-y-servicios-de-datos)
-7. [Estrategia DevOps y Flujo de Ramas de Git](#7-estrategia-devops-y-flujo-de-ramas-de-git)
-8. [Archivos de Soporte y Gobernanza](#8-archivos-de-soporte-y-gobernanza)
+2. [Módulos Cívicos Implementados](#2-módulos-cívicos-implementados)
+   - [Módulo 01: Portal Nacional y Theming Soberano](#módulo-01-portal-nacional-y-theming-soberano)
+   - [Módulo 05: Sistema GIS y Visor Cartográfico 3D Soberano](#módulo-05-sistema-gis-y-visor-cartográfico-3d-soberano)
+   - [Módulo 07: Sistema de Reportes Ciudadanos e Incidencias Viales](#módulo-07-sistema-de-reportes-ciudadanos-e-incidencias-viales)
+   - [Módulo 10: Seguridad Ciudadana, Gestión del Riesgo y Modo Resiliencia Offline](#módulo-10-seguridad-ciudadana-gestión-del-riesgo-y-modo-resiliencia-offline)
+   - [Módulo 12 / RF-12.1: Búsqueda Semántica Geoespacial con NLP y Voz](#módulo-12--rf-121-búsqueda-semántica-geoespacial-con-nlp-y-voz)
+   - [Motor de Accesibilidad Universal (RNF-05 / Ley N° 7600)](#motor-de-accesibilidad-universal-rnf-05--ley-n-7600)
+3. [Arquitectura del Sistema y Flujo de Datos](#3-arquitectura-del-sistema-y-flujo-de-datos)
+4. [Estructura del Proyecto](#4-estructura-del-proyecto)
+5. [Jerarquía Territorial Oficial de Costa Rica](#5-jerarquía-territorial-oficial-de-costa-rica)
+6. [Sistema de Diseño: Sovereign Civic Glass v2.1](#6-sistema-de-diseño-sovereign-civic-glass-v21)
+7. [Matriz de Personas: Eiker vs Alanie](#7-matriz-de-personas-eiker-vs-alanie)
+8. [Instalación y Puesta en Marcha](#8-instalación-y-puesta-en-marcha)
+9. [Gobernanza, DevOps y Flujo GitFlow](#9-gobernanza-devops-y-flujo-gitflow)
+10. [Marco Normativo y Cumplimiento Legal](#10-marco-normativo-y-cumplimiento-legal)
 
 ---
 
 ## 1. Visión General del Proyecto
 
-**Costa Rica Unidos** nace como una solución de ingeniería de software cívico concebida para cerrar la brecha entre la ciudadanía y las instituciones del Estado. Su objetivo primordial es brindar un entorno unificado, accesible, auditatorio y transparente donde converjan:
+**Costa Rica Unidos** es una suite tecnológica de ingeniería de software cívico concebida para cerrar la brecha entre la ciudadanía y las instituciones del Estado. Su objetivo primordial es brindar un entorno unificado, accesible, auditable y transparente donde converjan:
 
-- **Fiscalización ciudadana activa**: Seguimiento de licitaciones, avance físico y presupuestario de obras públicas.
-- **Consultas tributarias y comerciales**: Verificación de situación fiscal ante el Ministerio de Hacienda y fomento del comercio local.
-- **Navegación territorial fotorrealista**: Modelado 3D interactivo del relieve nacional, cuencas, cantones e infraestructura mediante tecnologías geoespaciales de vanguardia.
-- **Participación comunitaria**: Canal directo para reportes barriales, alertas distritales y asambleas cívicas digitales.
-
----
-
-## 2. Estructura del Proyecto y Arquitectura Frontend
-
-El proyecto adopta una arquitectura modular desacoplada basada en componentes bajo el estándar SPA con React:
-
-```text
-CostaRicaUnidos-Plataforma-Web-Integral/
-├── .gitignore               # Reglas de exclusión para Git (node_modules, dist, env, etc.)
-├── Agent.md                 # Guía de directrices y contexto para agentes de Inteligencia Artificial
-├── CHANGELOG.md             # Registro cronológico de versiones y cambios (Keep a Changelog)
-├── CONTRIBUTING.md          # Guía de contribución, estándares de código y flujo de trabajo
-├── index.html               # Documento raíz HTML5 optimizado para accesibilidad y SEO cívico
-├── README.md                # Especificación técnica exhaustiva del proyecto
-├── SECURITY.md              # Políticas de reporte de vulnerabilidades y seguridad de datos
-└── src/
-    ├── App.jsx              # Componente raíz orquestador de layout, temas y proveedores
-    ├── main.jsx             # Punto de entrada de renderizado en el DOM
-    ├── components/          # Biblioteca de componentes atómicos y moleculares reutilizables
-    ├── pages/               # Vistas principales organizadas por dominio cívico funcional
-    └── routes/              # Definición de rutas, guardias de navegación y lazy loading
-```
-
-### Principios Arquitectónicos
-- **Separación de responsabilidades**: Componentes puramente visuales encapsulados en `src/components/`, lógica de página en `src/pages/`, enrutamiento declarativo en `src/routes/`.
-- **Cero código de implementación prematuro**: La fase fundacional establece el andamiaje estructural, validación de enlaces y gobernanza antes de la inyección de dependencias y lógica de negocio.
+- **Fiscalización ciudadana activa**: Trazabilidad y seguimiento en tiempo real de licitaciones, avance de obras públicas e incidencias viales.
+- **Navegación territorial fotorrealista**: Modelado 3D interactivo del relieve nacional, volcanes, valles y cordilleras con geocercado perimetral estricto.
+- **Resiliencia ante emergencias nacionales**: Botonera táctil SOS de acceso instantáneo, cintillo oficial de telemetría de alertas de la Comisión Nacional de Emergencias (CNE) y soporte offline total garantizado mediante Progressive Web Apps (PWA).
+- **Inteligencia artificial cívica y accesibilidad universal**: Procesamiento de lenguaje natural costarricense en cliente, dictado por voz y lectura de pantalla multilingüe con soporte para lenguas indígenas autóctonas.
 
 ---
 
-## 3. Jerarquía Territorial Oficial de Costa Rica
+## 2. Módulos Cívicos Implementados
 
-La plataforma implementa la **División Territorial Administrativa (DTA)** oficial según las clasificaciones del Instituto Nacional de Estadística y Censos (INEC) y el Tribunal Supremo de Elecciones (TSE).
+### Módulo 01: Portal Nacional y Theming Soberano
+- **Ruta**: `/` e `/inicio`
+- **Capacidades**:
+  - **Theming Engine Provincial Dinámico**: Inyección de tokens cromáticos `--province-primary` y `--glow-provincial` según la provincia activa, reflejando las identidades cantonales y patrias.
+  - **Selector Territorial en Cascada (DTA Oficial)**: Despliegue anidado de `Provincia` ➔ `Cantón` (84 cantones, incluyendo Río Cuarto, Monteverde y Puerto Jiménez) ➔ `Distrito` (492 distritos), con persistencia automática en `localStorage`.
+  - **Hero Carousel Tricolor**: Carrusel institucional interactivo accesible con controles de pausa, telemetría técnica en vivo y enlaces rápidos a servicios cívicos.
+  - **Cajón Flotante Territorial (Drawer)**: Exploración rápida de códigos postales y datos demográficos por distrito.
+  - **Búsqueda Predictiva con Atajo de Teclado**: Acceso global mediante `Ctrl + K`.
+
+### Módulo 05: Sistema GIS y Visor Cartográfico 3D Soberano
+- **Ruta**: `/mapa-gis`
+- **Capacidades**:
+  - **Google Maps JavaScript API v3 (WebGL / 3D Platform)**: Renderizado fotorrealista con texturizado de relieve, volcanes y topografía nacional.
+  - **Geofencing Soberano Estricto**: Restricción matemática infranqueable (`restriction.latLngBounds`) que limita el paneo y cámara a las fronteras terrestres y aguas patrimoniales de Costa Rica (incluyendo la delimitación insular de la Isla del Coco: Lat 5.53°, Lng -87.07°).
+  - **Controles de Cámara 3D y Vuelos Órbita**: Inclinación variable (tilt 45°-60°), rotación azimutal y animaciones suaves (*fly-to*) hacia cualquier provincia seleccionada.
+  - **Panel Multicapa Flotante de 5 Dimensiones Cívicas**:
+    1. 🏥 *Salud*: EBAIS, Clínicas Integradas y Hospitales de la CCSS.
+    2. 👮 *Seguridad*: Comisarías y Delegaciones de la Fuerza Pública.
+    3. 🛡️ *Gestión del Riesgo*: Albergues temporales oficiales de la CNE.
+    4. 🎓 *Educación*: Colegios Técnicos, Escuelas y Liceos del MEP.
+    5. 🚧 *Infraestructura Vial*: Proyectos de obra y rutas nacionales MOPT / CONAVI.
+  - **Tarjetas de Detalle Modal con Deep-Linking**: Telemetría técnica en tipografía `JetBrains Mono` con enlaces directos a Waze y Google Maps.
+
+### Módulo 07: Sistema de Reportes Ciudadanos e Incidencias Viales
+- **Ruta**: `/reportar-incidencia`
+- **Capacidades**:
+  - **Asistente Guiado de 4 Pasos (Stepper)**:
+    - *Paso 1 (Tipología del Daño)*: Selección visual de categoría (Hueco vial/bache en asfalto, Luminaria pública apagada o dañada, Fuga de agua potable/alcantarilla colapsada, Basurero clandestino).
+    - *Paso 2 (Evidencia Fotográfica y Privacidad)*: Captura de fotos con selector de archivo o cámara, previsualización interactiva y consentimiento de protección de datos.
+    - *Paso 3 (Georreferenciación Exacta)*: Selección de ubicación interactiva con pin GPS sobre mapa cartográfico y selector distrital.
+    - *Paso 4 (Confirmación y Radicado)*: Resumen formal, emisión de identificador cívico `CR-2026-XXXX` y generación de comprobante.
+  - **Compresión de Imágenes en Cliente (< 1 MB)**: Conversión automática al estándar WebP en `imageCompressor.js`.
+  - **Sanitización Forzosa de Metadatos EXIF (Ley N° 8968)**: Destrucción de metadatos GPS satelitales y de identificación de cámara en Canvas antes de almacenar o transferir datos.
+  - **Tablero de Trazabilidad de Tickets (Kanban)**: Monitoreo transparente en 4 fases (*En Revisión*, *Asignado*, *En Cuadrilla*, *Resuelto*) con buscador por radicado y exportación a PDF/JSON.
+
+### Módulo 10: Seguridad Ciudadana, Gestión del Riesgo y Modo Resiliencia Offline
+- **Ruta**: `/seguridad-emergencias`
+- **Capacidades**:
+  - **Botonera Táctil SOS a Pantalla Completa**: Botones táctiles de gran formato ($\ge 54\text{px}$) con contraste ultra-alto y marcado telefónico directo mediante enlaces nativos `tel:` para:
+    - `9-1-1`: Sistema de Emergencias Generales.
+    - `Fuerza Pública`: Policía del Ministerio de Seguridad Pública.
+    - `Bomberos`: Benemérito Cuerpo de Bomberos de Costa Rica.
+    - `Cruz Roja`: Benemérita Cruz Roja Costarricense.
+    - `OIJ`: Organismo de Investigación Judicial.
+  - **Cintillo Oficial de Telemetría de Alertas CNE**: Telemetría en vivo con los cuatro niveles oficiales de la Comisión Nacional de Emergencias: Verde (Informativa), Amarilla (Precaución), Naranja (Peligro Inminente) y Roja (Evacuación Obligatoria).
+  - **Directorio y Aforo de Albergues Temporales CNE**: Catálogo interactivo de albergues habilitados con indicación de capacidad máxima, personas albergadas y barra dinámica de aforo disponible.
+  - **Arquitectura PWA Offline-First**:
+    - Service Worker manual (`public/sw.js`) con estrategia Cache-First para recursos estáticos y assets cartográficos.
+    - Gestor de sincronización offline (`offlineSyncService.js`): Almacenamiento seguro de reportes en cola local para sincronización diferida automática al restablecerse la red.
+
+### Módulo 12 / RF-12.1: Búsqueda Semántica Geoespacial con NLP y Voz
+- **Componentes**: `src/components/gis/SemanticGeoSearchBar.jsx` y `src/services/geoSemanticNlpService.js`
+- **Capacidades**:
+  - **Pipeline de Procesamiento de Lenguaje Natural en Cliente**:
+    - Tokenización, normalización fonética y análisis semántico de consultas cívicas en español costarricense (ej. *"clínicas cerca de colegios técnicos en San Carlos"*, *"albergues habilitados si se inunda Parrita"*, *"bretes viales en Cartago"*).
+    - Extracción instantánea de entidades geográficas (84 cantones, 7 provincias, distritos) y clasificación de capas temáticas requeridas.
+  - **Dictado por Voz Accesible**: Integración con Web Speech API (`webkitSpeechRecognition`) configurado en dialecto costarricense (`es-CR`).
+  - **Transición Cartográfica 3D Reactiva**: Vuelo de cámara animado (*fly-to*) hacia las coordenadas extraídas y activación de resplandor visual temático (`--glow-provincial`).
+  - **Cajón Flotante de Resultados**: Despliegue lateral (`NlpResultsDrawer.jsx`) con tarjetas de puntos de interés filtrados, distancias y botones de navegación.
+
+### Motor de Accesibilidad Universal (RNF-05 / Ley N° 7600)
+- **Componentes**: `src/components/accessibility/`
+- **Capacidades**:
+  - **Selector de Escala Tipográfica en 4 Fases**:
+    * *Fase 1*: 100% (Tamaño estándar).
+    * *Fase 2*: 125% (Lectura cómoda).
+    * *Fase 3*: 150% (Adultos mayores o baja visión leve).
+    * *Fase 4*: 200% (Máxima accesibilidad visual, donde las áreas táctiles crecen automáticamente a un mínimo de 64px de alto).
+    * Inyección de variable CSS `--text-scale` sin desbordamiento horizontal en pantallas móviles (360px de ancho).
+  - **Sintetizador de Voz y Lector de Pantalla Flotante**:
+    * Web Speech API (`SpeechSynthesis`) con soporte para 8 idiomas: Español, Bribri, Cabécar, Maleku, Guaymí, Inglés, Francés y Mandarín.
+    * Conmutación entre voces femenina y masculina.
+  - **Inducción Interactiva Guiada por Voz**: Modal de inducción en 3 pasos con locución de bienvenida y transcripción sincronizada de subtítulos en vivo.
+
+---
+
+## 3. Arquitectura del Sistema y Flujo de Datos
 
 ```mermaid
 graph TD
-    CR[Costa Rica - Soberanía Nacional] --> P1[1. San José]
+    subgraph Presentation [Capa de Presentación — Sovereign Civic Glass v2.1]
+        A1[Navbar Institucional]
+        A2[Portal Nacional M01]
+        A3[Visor GIS 3D M05]
+        A4[Reportes Stepper M07]
+        A5[Emergencias SOS M10]
+        A6[Accesibilidad Universal Ley 7600]
+    end
+
+    subgraph Intelligence [Capa de Inteligencia y Procesamiento en Cliente]
+        B1[Motor NLP Semántico Geoespacial - geoSemanticNlpService]
+        B2[Web Speech Recognition es-CR]
+        B3[Web Speech Synthesis TTS Multilingüe]
+        B4[Image Compressor WebP & EXIF Stripper - Ley 8968]
+    end
+
+    subgraph GeoHardware [Capa Geoespacial y Plataforma 3D]
+        C1[Google Maps JavaScript API v3]
+        C2[WebGL 3D Tiles Platform]
+        C3[Geofencing Soberano Costa Rica + Isla del Coco]
+        C4[Camera Controls Tilt 45-60° & Fly-to]
+    end
+
+    subgraph Resilience [Capa de Resiliencia y Datos Offline]
+        D1[Service Worker Cache-First sw.js]
+        D2[Cola de Sincronización Offline - offlineSyncService]
+        D3[Persistencia Territorial localStorage / IndexedDB]
+        D4[Telemetría CNE en Vivo]
+    end
+
+    Presentation --> Intelligence
+    Presentation --> GeoHardware
+    Presentation --> Resilience
+    Intelligence --> GeoHardware
+    GeoHardware --> Resilience
+```
+
+---
+
+## 4. Estructura del Proyecto
+
+```text
+CostaRicaUnidos-Plataforma-Web-Integral/
+├── .env                              # Variables de entorno locales (API keys)
+├── .env.example                      # Plantilla de variables de entorno requeridas
+├── .gitignore                        # Exclusiones de Git (node_modules, dist, .env)
+├── Agent.md                          # Directrices de gobernanza cívica y memoria de IA
+├── CHANGELOG.md                      # Registro de cambios formal (Keep a Changelog / SemVer)
+├── CONTRIBUTING.md                   # Guía de contribución, GitFlow y estándares cívicos
+├── index.html                        # Punto de entrada HTML5 con metadatos de SEO y PWA
+├── package.json                      # Configuración de dependencias y scripts de npm
+├── README.md                         # Documentación técnica maestra del proyecto
+├── SECURITY.md                       # Políticas de ciberseguridad y cumplimiento Ley N° 8968
+├── vite.config.js                    # Configuración de empaquetado y plugins de Vite
+├── public/
+│   ├── manifest.webmanifest          # Manifiesto de aplicación PWA (instalabilidad)
+│   └── sw.js                         # Service Worker con estrategia de caché offline
+└── src/
+    ├── App.jsx                       # Componente orquestador y contenedor de temas
+    ├── main.jsx                      # Punto de renderizado en el DOM de React 18
+    ├── index.css                     # Sistema de estilos Sovereign Civic Glass v2.1
+    ├── serviceWorkerRegistration.js  # Registro y control de ciclo de vida del Service Worker
+    ├── components/
+    │   ├── HeroCarousel.jsx          # Carrusel institucional tricolor
+    │   ├── InteractiveSvgMap.jsx     # Mapa vectorial provincial SVG
+    │   ├── Navbar.jsx                # Barra de navegación cívica con accesibilidad
+    │   ├── PredictiveSearch.jsx      # Búsqueda territorial predictiva (Ctrl + K)
+    │   ├── ProvincialThemeEngine.jsx # Inyector dinámico de tokens cromáticos provinciales
+    │   ├── TerritorialDrawer.jsx     # Cajón deslizante de datos distritales
+    │   ├── TerritorialSelector.jsx   # Selector en cascada (Provincia ➔ Cantón ➔ Distrito)
+    │   ├── accessibility/            # Motor de accesibilidad universal (Ley 7600)
+    │   │   ├── AccessibilityContext.jsx
+    │   │   ├── TypographicScaleSelector.jsx
+    │   │   ├── VoiceGuidedOnboardingModal.jsx
+    │   │   ├── VoiceReaderFloatingButton.jsx
+    │   │   ├── accessibilityData.js
+    │   │   └── index.js
+    │   ├── gis/                      # Visor cartográfico 3D y búsqueda NLP (M05 / M12)
+    │   │   ├── CameraFlyControls.jsx
+    │   │   ├── LayerControlPanel.jsx
+    │   │   ├── MapaCartografico3D.jsx
+    │   │   ├── NlpResultsDrawer.jsx
+    │   │   ├── PointDetailCard.jsx
+    │   │   ├── SemanticGeoSearchBar.jsx
+    │   │   ├── darkMapStyles.js
+    │   │   ├── gisLayersData.js
+    │   │   └── index.js
+    │   ├── reports/                  # Reportes de incidencias viales y tickets (M07)
+    │   │   ├── Step1DamageType.jsx
+    │   │   ├── Step2PhotoPrivacy.jsx
+    │   │   ├── Step3Georeferencing.jsx
+    │   │   ├── Step4Confirmation.jsx
+    │   │   ├── TicketTraceabilityBoard.jsx
+    │   │   ├── imageCompressor.js
+    │   │   ├── ticketService.js
+    │   │   └── index.js
+    │   └── security/                 # Centro de seguridad, alertas SOS y CNE (M10)
+    │       ├── AlberguesListMap.jsx
+    │       ├── CneAlertRibbon.jsx
+    │       ├── OfflineResilienceManager.jsx
+    │       ├── SosKeypadFullscreen.jsx
+    │       └── index.js
+    ├── data/
+    │   └── territorialData.js        # DTA oficial: 7 provincias, 84 cantones, distritos
+    ├── pages/
+    │   ├── Dashboard.jsx             # Tablero de métricas cívicas
+    │   ├── Inicio.jsx                # Portal de bienvenida y navegación provincial
+    │   ├── Login.jsx                 # Acceso institucional autenticado
+    │   ├── MapaGIS.jsx               # Página principal del visor cartográfico 3D
+    │   ├── NotFound.jsx              # Vista de error 404 institucional
+    │   ├── ReportarIncidencia.jsx    # Asistente y trazabilidad de reportes viales
+    │   └── SeguridadEmergencias.jsx  # Centro de resiliencia y emergencias SOS
+    ├── routes/
+    │   └── index.jsx                 # Declaración de rutas con React Router DOM v6
+    └── services/
+        ├── geoSemanticNlpService.js  # Motor NLP de búsqueda geoespacial semántica
+        ├── offlineSyncService.js     # Gestor de cola y sincronización diferida
+        └── ubicacionesService.js     # Proveedor de jerarquía territorial DTA
+```
+
+---
+
+## 5. Jerarquía Territorial Oficial de Costa Rica
+
+La plataforma implementa con fidelidad absoluta la **División Territorial Administrativa (DTA)** oficial según las clasificaciones del Instituto Nacional de Estadística y Censos (INEC) y el Tribunal Supremo de Elecciones (TSE).
+
+```mermaid
+graph TD
+    CR[República de Costa Rica — Soberanía Nacional] --> P1[1. San José]
     CR --> P2[2. Alajuela]
     CR --> P3[3. Cartago]
     CR --> P4[4. Heredia]
@@ -83,199 +270,115 @@ graph TD
     P7 --> C_LI[6 Cantones / 30 Distritos]
 ```
 
-### Niveles Territoriales y Datos:
-1. **Nivel 1 — Provincias (7)**:
-   - `1`: San José | `2`: Alajuela | `3`: Cartago | `4`: Heredia
-   - `5`: Guanacaste | `6`: Puntarenas | `7`: Limón
-2. **Nivel 2 — Cantones (84)**:
-   - Incorporación de los cantones de reciente fundación: **Río Cuarto** (Cantón 216 de Alajuela), **Monteverde** (Cantón 612 de Puntarenas) y **Puerto Jiménez** (Cantón 613 de Puntarenas).
-3. **Nivel 3 — Distritos (492+)**:
-   - Cada distrito cuenta con georreferenciación vectorial (polígonos GeoJSON) y código postal/DTA de 5 dígitos (`PPDDD`).
-
 ---
 
-## 4. Sistema de Diseño: Sovereign Civic Glass v2.1
+## 6. Sistema de Diseño: Sovereign Civic Glass v2.1
 
-**Sovereign Civic Glass v2.1** es una evolución del glassmorphism diseñada específicamente para interfaces cívicas y gubernamentales de alta confiabilidad. Prioriza la transparencia semántica (el diseño refleja la transparencia del Estado), el confort visual y la conformidad estricta con las pautas de accesibilidad **WCAG 2.1 AA/AAA**.
+**Sovereign Civic Glass v2.1** es una evolución estética del *glassmorphism* concebida para plataformas estatales de alta confianza, transparencia semántica y legibilidad a la intemperie:
 
-### Paleta Cromática Institucional
-
-| Token | Nombre | Valor Hex | HSL | Propósito y Aplicación |
+### Tríadas Cromáticas Provinciales:
+| Provincia | Identidad Territorial | Token `--province-primary` | Token Secundario | Token Acento |
 | :--- | :--- | :--- | :--- | :--- |
-| `--color-sovereign-blue` | Azul Soberano | `#002B7F` | `hsl(219, 100%, 25%)` | Cabeceras institucionales, navegación primaria, botones de acción estatal |
-| `--color-civic-white` | Blanco Cívico | `#FFFFFF` | `hsl(0, 0%, 100%)` | Contraste de texto, fondos vítreos primarios, legibilidad universal |
-| `--color-solidarity-red` | Rojo Solidario | `#CE1126` | `hsl(353, 85%, 44%)` | Alertas de fiscalización, botones de reporte, indicadores de auditoría crítica |
-| `--color-biodiversity-green` | Verde Biodiversidad | `#007A3D` | `hsl(150, 100%, 24%)` | Proyectos ecológicos concluidos, estatus tributario al día, éxito de trámites |
-| `--color-glass-surface` | Vidrio Cívico Claro | `rgba(255, 255, 255, 0.72)` | — | Tarjetas cívicas en modo diurno, modales flotantes |
-| `--color-glass-dark` | Vidrio Cívico Nocturno | `rgba(10, 20, 40, 0.65)` | — | Fondos translúcidos en modo oscuro y superposiciones cartográficas 3D |
+| **San José** | Saprissa / Metrópoli | `#601438` | `#FFFFFF` | `#1A1F36` |
+| **Alajuela** | Liga Deportiva Alajuelense (LDA) | `#D31424` | `#111111` | `#FFFFFF` |
+| **Heredia** | Club Sport Herediano (CSH) | `#FFC700` | `#D61B23` | `#181818` |
+| **Cartago** | Club Sport Cartaginés (CSC) | `#0A3282` | `#FFFFFF` | `#3572C6` |
+| **Guanacaste** | Asociación Deportiva Guanacasteca (ADG) | `#05853B` | `#DE1C24` | `#FFFFFF` |
+| **Puntarenas** | Puntarenas F.C. (PFC) | `#F36717` | `#121212` | `#FFFFFF` |
+| **Limón** | Limón F.C. / La Tromba del Caribe | `#349E35` | `#FFFFFF` | `#D89F18` |
 
-### Especificaciones de Textura y Refracción
-- **Efecto de desenfoque de fondo**: `backdrop-filter: blur(16px) saturate(180%)`.
-- **Bordes translúcidos**: `border: 1px solid rgba(255, 255, 255, 0.18)`.
-- **Sombra volumétrica**: `box-shadow: 0 8px 32px 0 rgba(0, 43, 127, 0.12)`.
-- **Tipografía base**: Sistema modular sans-serif (`Inter`, `Plus Jakarta Sans`, `-apple-system`, `system-ui`) optimizado para lectura en pantallas de bajo contraste ambiental o intemperie.
+### Niveles de Vidrio Esmerilado:
+- **Nivel 1 (Superficie Base)**: `rgba(0, 16, 102, 0.65)` | `backdrop-filter: blur(16px)` | borde translúcido (12%).
+- **Nivel 2 (Paneles Flotantes / Drawers)**: `rgba(0, 20, 137, 0.55)` | `backdrop-filter: blur(24px)` | borde translúcido (20%).
+- **Nivel 3 (Modales Críticos / Diálogos SOS)**: `rgba(0, 8, 30, 0.85)` | `backdrop-filter: blur(32px)` | borde translúcido (28%).
 
 ---
 
-## 5. Matriz Comparativa de Personas: Eiker vs Alanie
-
-Para garantizar que la arquitectura atienda tanto la fiscalización avanzada como la usabilidad comunitaria masiva, el sistema se diseña alrededor de dos arquetipos cívicos contrastantes:
-
-```mermaid
-graph LR
-    subgraph Eiker [Perfil Eiker - El Fiscalizador Técnico]
-        E1[Auditoría de Obras]
-        E2[Visualización 3D y Relieve]
-        E3[Trazabilidad Hacienda y Presupuestos]
-        E4[Exportación CSV/JSON/GeoJSON]
-    end
-
-    subgraph Plataforma [Costa Rica Unidos Core Engine]
-        API1[APIs DTA + Hacienda + Google Maps 3D]
-        UI[Sovereign Civic Glass v2.1]
-    end
-
-    subgraph Alanie [Perfil Alanie - La Emprendedora Local]
-        A1[Consulta Rápida de Situación Fiscal]
-        A2[Reportes de Incidentes en su Distrito]
-        A3[Directorio Comercial de Cantón]
-        A4[Notificaciones Cívicas Móviles]
-    end
-
-    E1 --> Plataforma
-    E2 --> Plataforma
-    E3 --> Plataforma
-    E4 --> Plataforma
-    Plataforma --> A1
-    Plataforma --> A2
-    Plataforma --> A3
-    Plataforma --> A4
-```
-
-### Tabla Comparativa de Requerimientos
+## 7. Matriz de Personas: Eiker vs Alanie
 
 | Dimensión | Eiker (El Auditor Tecnológico) | Alanie (La Emprendedora Comunitaria) |
 | :--- | :--- | :--- |
 | **Rol Cívico** | Auditor social, ingeniero de datos, fiscalizador de compras públicas | Pequeña comerciante local, líder vecinal de distrito |
 | **Dispositivo Principal** | Estación de trabajo Desktop (múltiples monitores, alta resolución) | Smartphone (conexión móvil 4G/5G, pantalla táctil) |
 | **Nivel Técnico** | Avanzado (analiza esquemas JSON, presupuestos y modelos 3D) | Práctico / Cotidiano (valora la inmediatez, simplicidad y claridad) |
-| **Caso de Uso Primario** | Comparar costo de licitación pública vs avance físico volumétrico | Verificar estado tributario propio/proveedores y reportar huecos viales |
-| **Uso de Google Maps 3D** | Inspección de malla 3D de obras públicas, pendientes y cuencas | Ubicar oficinas distritales, ferias del agricultor e incidentes barriales |
-| **Interacción con Hacienda** | Análisis de ejecución presupuestaria de partidas por ministerio | Consulta rápida de cédula jurídica/física y validador de facturas |
-| **Tolerancia a Fricción** | Media (dispuesto a usar filtros complejos y queries relacionales) | Nula (requiere acciones en 1 a 2 toques con confirmación visual) |
-| **Métrica de Éxito UX** | Profundidad de datos disponibles y capacidad de exportación | Tiempo de resolución del trámite menor a 60 segundos |
+| **Caso de Uso Primario** | Comparar costo de licitación pública vs avance físico volumétrico | Reportar incidentes en su calle y consultar centros de auxilio |
+| **Uso de Google Maps 3D** | Inspección de malla 3D de obras públicas, pendientes y cuencas | Ubicar albergues CNE, EBAIS y comisarías de policía |
+| **Tolerancia a Fricción** | Media (dispuesto a usar filtros complejos y telemetría avanzada) | Nula (requiere acciones inmediatas a 1 toque en emergencias) |
 
 ---
 
-## 6. Integración de APIs y Servicios de Datos
+## 8. Instalación y Puesta en Marcha
 
-La plataforma interactúa con tres pilares de datos fundamentales:
+### Prerrequisitos
+- **Node.js**: Versión 18.x LTS o superior.
+- **npm**: Versión 9.x o superior.
+- **Google Maps API Key**: Con las APIs *Maps JavaScript API* y *Geocoding API* habilitadas.
 
-### 1. Google Maps Photorealistic 3D Platform & WebGL
-- **Propósito**: Renderizado tridimensional fotorrealista del territorio costarricense.
-- **Capacidades**:
-  - Visualización volumétrica de construcciones y proyectos de infraestructura vial nacional.
-  - Proyección de curvas de nivel, riesgos de inundación y análisis topográfico por cantón.
-  - Renderizado acelerado por hardware mediante WebGL con fallback a mapa vectorial estándar 2D en dispositivos de recursos limitados.
+### Instrucciones de Instalación
+1. Clonar el repositorio y acceder al directorio:
+   ```bash
+   git clone https://github.com/tu-organizacion/CostaRicaUnidos-Plataforma-Web-Integral.git
+   cd CostaRicaUnidos-Plataforma-Web-Integral
+   ```
 
-### 2. Ministerio de Hacienda (ATV y Comprobantes Electrónicos)
-- **Propósito**: Verificación tributaria transparente y autenticación de contribuyentes.
-- **Capacidades**:
-  - Consulta pública de situación tributaria por número de identificación (Cédula Física, Cédula Jurídica, DIMEX, NITE).
-  - Consulta de validez de comprobantes electrónicos (factura electrónica, tiquete electrónico, notas de crédito/débito).
-  - Visualización de datos de recaudación y partidas presupuestarias autorizadas por la Contraloría General de la República.
+2. Cambiar a la rama de desarrollo activo:
+   ```bash
+   git checkout feature/Eiker
+   ```
 
-### 3. API de Ubicaciones de Costa Rica (DTA / INEC)
-- **Propósito**: Catálogo geográfico estructurado y normalizado.
-- **Capacidades**:
-  - Despliegue en cascada ultra-rápido: `Provincia` ➔ `Cantón` ➔ `Distrito`.
-  - Capas GeoJSON optimizadas para cálculo de áreas, perímetros y delimitaciones censales.
+3. Instalar dependencias del proyecto:
+   ```bash
+   npm install
+   ```
 
----
+4. Configurar las variables de entorno:
+   Copie el archivo `.env.example` a `.env` y agregue su clave:
+   ```bash
+   cp .env.example .env
+   ```
+   *Contenido de `.env`:*
+   ```env
+   VITE_GOOGLE_MAPS_API_KEY=tu_clave_de_google_maps_aqui
+   ```
 
-## 7. Estrategia DevOps y Flujo de Ramas de Git
+5. Iniciar el servidor local de desarrollo:
+   ```bash
+   npm run dev
+   ```
+   La aplicación se abrirá en `http://localhost:5173/`.
 
-El equipo adopta una versión rigurosa y adaptada de **GitFlow** orientada a entregas continuas, seguridad de código y trazabilidad cívica.
+6. Validar compilación de producción:
+   ```bash
+   npm run build
+   ```
 
-```mermaid
-gitGraph
-    commit id: "Init Base"
-    branch develop
-    checkout develop
-    commit id: "Setup Architecture"
-    branch feature/maps-3d
-    checkout feature/maps-3d
-    commit id: "feat: Google Maps 3D Tiles"
-    commit id: "test: WebGL Fallbacks"
-    checkout develop
-    merge feature/maps-3d
-    branch feature/hacienda-api
-    checkout feature/hacienda-api
-    commit id: "feat: Tax Lookup Adapter"
-    checkout develop
-    merge feature/hacienda-api
-    branch release/v1.0.0
-    checkout release/v1.0.0
-    commit id: "chore: bump version 1.0.0"
-    checkout main
-    merge release/v1.0.0 tag: "v1.0.0"
-    checkout develop
-    merge release/v1.0.0
-    checkout main
-    branch hotfix/v1.0.1
-    checkout hotfix/v1.0.1
-    commit id: "fix: DTA canton code bug"
-    checkout main
-    merge hotfix/v1.0.1 tag: "v1.0.1"
-    checkout develop
-    merge hotfix/v1.0.1
-```
-
-### Convenciones de Ramas
-
-| Tipo de Rama | Formato de Nomenclatura | Rama Origen | Rama Destino | Descripción |
-| :--- | :--- | :--- | :--- | :--- |
-| **Producción** | `main` | — | — | Código estable desplegado en producción. Protegida contra pushes directos. |
-| **Integración** | `develop` | `main` | `main` | Rama de integración continua. Refleja los últimos desarrollos completados. |
-| **Características** | `feature/<modulo>-<descripcion>` | `develop` | `develop` | Desarrollo de nuevas capacidades (ej. `feature/civic-glass-cards`). |
-| **Estabilización** | `release/v<M>.<m>.<p>` | `develop` | `main` y `develop` | Pruebas finales, auditoría de seguridad y bump de versión. |
-| **Parches Críticos** | `hotfix/v<M>.<m>.<p>` | `main` | `main` y `develop` | Correcciones urgentes directamente sobre el código de producción. |
-
-### Convención de Mensajes de Commit (Conventional Commits v1.0.0)
-Todos los commits deben cumplir con el estándar:
-```text
-<tipo>(<alcance opcional>): <descripción concisa en imperativo>
-
-[cuerpo explicativo opcional]
-
-[referencias a issues/tickets opcionales]
-```
-- `feat`: Nueva funcionalidad para la plataforma.
-- `fix`: Corrección de un defecto o bug.
-- `docs`: Modificaciones exclusivamente en documentación.
-- `style`: Cambios visuales o de formato que no afectan la lógica (CSS, tokens).
-- `refactor`: Refactorización de código sin alterar comportamiento.
-- `perf`: Mejoras de rendimiento o carga.
-- `test`: Creación o corrección de pruebas unitarias o E2E.
-- `ci`: Modificaciones en pipelines de integración/despliegue continuo.
-- `chore`: Tareas administrativas de build, paquetes o herramientas auxiliares.
-
-### Políticas de Pull Requests y Branch Protection
-- **Revisión obligatoria**: Mínimo 2 aprobaciones de arquitectos/seniors antes del merge en `develop` o `main`.
-- **CI Verde**: Todos los linters, análisis de seguridad estática (SAST) y pruebas unitarias deben pasar con éxito.
-- **Sin Fast-Forward en integración**: Utilizar `--no-ff` para preservar el historial de características completas.
+7. Previsualizar la compilación de producción:
+   ```bash
+   npm run preview
+   ```
 
 ---
 
-## 8. Archivos de Soporte y Gobernanza
+## 9. Gobernanza, DevOps y Flujo GitFlow
 
-Para asegurar la sostenibilidad, escalabilidad y seguridad del repositorio:
+El proyecto implementa una disciplina estricta de control de versiones y gobernanza:
 
-- **[Agent.md](file:///c:/Users/abark/OneDrive/Documentos/OneDrive/Escritorio/Proyecto%20final-CostaRicaViva/CostaRicaUnidos-Plataforma-Web-Integral/Agent.md)**: Manual de contexto operativo para asistentes de código y modelos de lenguaje de inteligencia artificial que operen en este repositorio.
-- **[CONTRIBUTING.md](file:///c:/Users/abark/OneDrive/Documentos/OneDrive/Escritorio/Proyecto%20final-CostaRicaViva/CostaRicaUnidos-Plataforma-Web-Integral/CONTRIBUTING.md)**: Estándares de desarrollo, guías de estilo, ciclo de vida de issues y cómo preparar Pull Requests.
-- **[CHANGELOG.md](file:///c:/Users/abark/OneDrive/Documentos/OneDrive/Escritorio/Proyecto%20final-CostaRicaViva/CostaRicaUnidos-Plataforma-Web-Integral/CHANGELOG.md)**: Registro histórico de modificaciones basado en *Keep a Changelog* y versionado semántico (*SemVer*).
-- **[SECURITY.md](file:///c:/Users/abark/OneDrive/Documentos/OneDrive/Escritorio/Proyecto%20final-CostaRicaViva/CostaRicaUnidos-Plataforma-Web-Integral/SECURITY.md)**: Canales oficiales y procedimientos para divulgación coordinada y responsable de vulnerabilidades.
+- **[Agent.md](file:///c:/Users/abark/OneDrive/Documentos/OneDrive/Escritorio/Proyecto%20final-CostaRicaViva/CostaRicaUnidos-Plataforma-Web-Integral/Agent.md)**: Manual operativo de contexto e instrucciones acumulativas para asistentes de Inteligencia Artificial.
+- **[CHANGELOG.md](file:///c:/Users/abark/OneDrive/Documentos/OneDrive/Escritorio/Proyecto%20final-CostaRicaViva/CostaRicaUnidos-Plataforma-Web-Integral/CHANGELOG.md)**: Registro histórico formal de versiones siguiendo los estándares de *Keep a Changelog* y *SemVer 2.0.0*.
+- **[CONTRIBUTING.md](file:///c:/Users/abark/OneDrive/Documentos/OneDrive/Escritorio/Proyecto%20final-CostaRicaViva/CostaRicaUnidos-Plataforma-Web-Integral/CONTRIBUTING.md)**: Guía detallada para desarrolladores, reglas de commits convencionales, plantillas de Pull Request y estándares de accesibilidad.
+- **[SECURITY.md](file:///c:/Users/abark/OneDrive/Documentos/OneDrive/Escritorio/Proyecto%20final-CostaRicaViva/CostaRicaUnidos-Plataforma-Web-Integral/SECURITY.md)**: Protocolo de divulgación coordinada de vulnerabilidades y políticas de protección de datos personales.
 
 ---
 
-*Desarrollado con rigor técnico, vocación cívica y soberanía digital para el pueblo de Costa Rica.*
+## 10. Marco Normativo y Cumplimiento Legal
+
+| Ley o Estándar | Alcance en la Plataforma | Mecanismo de Verificación Técnica |
+| :--- | :--- | :--- |
+| **Ley N° 7600** | Igualdad de oportunidades y accesibilidad universal | Escala tipográfica en 4 fases (--text-scale), áreas táctiles $\ge 54\text{px}$/$\ge 64\text{px}$ y lector TTS en 8 idiomas |
+| **Ley N° 8968** | Protección de la persona y sus datos personales | Sanitización forzosa en Canvas que elimina metadatos EXIF / GPS satelitales en `imageCompressor.js` |
+| **WCAG 2.1 AA** | Pautas internacionales de accesibilidad web | Ratios de contraste $\ge 4.5:1$, navegación total por teclado y atributos ARIA completos |
+| **DTA Oficial** | Soberanía y delimitación territorial | Geofencing estricto de Costa Rica e Isla del Coco en Google Maps API y catálogo de 84 cantones |
+
+---
+
+*Desarrollado con rigor técnico, vocación patriótica y soberanía digital para el pueblo de la República de Costa Rica.*

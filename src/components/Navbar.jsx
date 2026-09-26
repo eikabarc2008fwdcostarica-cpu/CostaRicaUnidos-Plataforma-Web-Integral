@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { TypographicScaleSelector, useAccessibility } from './accessibility';
 
 export default function Navbar() {
   const location = useLocation();
+  const { openOnboarding } = useAccessibility();
 
   const isActive = (path) => location.pathname === path;
 
@@ -21,6 +23,8 @@ export default function Navbar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '0.75rem',
         padding: '0.85rem 1.5rem'
       }}>
         {/* Marca / Identidad Institucional */}
@@ -80,12 +84,48 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Enlaces de Navegación con Link */}
-        <nav style={{
+        {/* Controles de Navegación y Accesibilidad Universal */}
+        <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem'
+          flexWrap: 'wrap',
+          gap: '0.65rem'
         }}>
+          {/* 1. Selector de Escala Tipográfica en 4 Fases (RNF-05.1 / Ley 7600) */}
+          <TypographicScaleSelector />
+
+          {/* 2. Botón de Lanzamiento de Onboarding Narrado por Voz */}
+          <button
+            type="button"
+            onClick={openOnboarding}
+            aria-label="Abrir recorrido interactivo asistido por voz"
+            title="Recorrido guiado con narración asistida"
+            style={{
+              backgroundColor: 'rgba(0, 20, 137, 0.45)',
+              border: '1px solid rgba(121, 166, 255, 0.35)',
+              borderRadius: '8px',
+              padding: '0.45rem 0.75rem',
+              color: '#FFFFFF',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              transition: 'var(--transition-smooth)'
+            }}
+          >
+            <span>✨</span>
+            <span>Guía de Voz</span>
+          </button>
+
+          {/* Enlaces de Navegación con Link */}
+          <nav style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '0.45rem'
+          }}>
           <Link
             to="/"
             style={{
@@ -201,6 +241,7 @@ export default function Navbar() {
             Panel Cívico
           </Link>
         </nav>
+        </div>
       </div>
     </header>
   );

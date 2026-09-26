@@ -148,18 +148,35 @@ Módulo que integra capacidades generativas y de NLP; agrupa RF-12.1 y RF-12.2 d
 4. Documentación: manual de usuario y documentación de API actualizados en Swagger/OpenAPI.
 5. Desempeño: validación de latencia en carga de capas GIS y generación de itinerarios.
 6. Integración de APIs y accesibilidad: validación completa de contratos de API (Hacienda, Ubicaciones Costa Rica, Google Maps 3D), caché offline (IndexedDB), soporte multilingüe en 8 idiomas y pruebas de accesibilidad RNF-05.1/05.2.
-**Prioridades actuales:** _pendiente de definir — el SRS no especifica un orden de implementación por fases/sprints; preguntar al equipo antes de asumir una secuencia de módulos._
- 
+**Prioridades actuales:** Se completó exitosamente la fase inicial en la rama `feature/Eiker`: Módulo 01 (Portal Nacional & Theming), Módulo 05 (Google Maps 3D & GIS), Módulo 07 (Reportes Ciudadanos & Trazabilidad), Módulo 10 (Seguridad, Emergencias SOS & Modo Offline PWA), Módulo 12 / RF-12.1 (Búsqueda Semántica NLP & Dictado por Voz) y el Motor Universal de Accesibilidad (Escala Tipográfica 4 fases, Sintetizador TTS en 8 idiomas y Onboarding guiado por voz). Prioridad siguiente: Integración de backend/persistencia y desarrollo de M02 (Fiscalización de Obra Pública / SICOP) y M03 (Hacienda / ATV).
+
 > Ayuda a la IA a decidir cuando hay que elegir entre opciones.
- 
+
 ---
- 
+
 ## 6. Memoria del Proyecto
- 
+
 - **2026-09-25:** Se crea este `AGENT.md` a partir de dos documentos fuente entregados por el equipo:
   - `Especificación de Requerimientos de Software (SRS) v2.1 Consolidada` — define módulos M01–M12, RF/RNF, actores RBAC, arquitectura frontend y matriz de trazabilidad.
   - `Libro de Marca — Costa Rica Unidos (Sistema Sovereign Civic Glass), Edición Especial: Identidad Territorial por Escudos v2.1` — define sistema de marca, logo, paleta de color (nacional + 7 provincias), glassmorphism, tipografía y aplicaciones de UI.
   - No se han registrado aún decisiones técnicas, incidentes ni callejones sin salida posteriores a la fase de especificación: el proyecto se encuentra en etapa de documentación/diseño, no de implementación activa.
+- **2026-09-26 (Desarrollador / Agente Eiker):**
+  - **Hitos implementados en rama `feature/Eiker`:**
+    - **Módulo 01 (Portal Nacional y Theming Soberano):** Se implementó el motor de temas provinciales (`ProvincialThemeEngine.jsx`) con soporte reactivo para las 7 provincias soberanas, aplicando variables `--province-primary` y `--glow-provincial`. Se desarrolló el selector territorial en cascada (`TerritorialSelector.jsx`) con soporte para 7 provincias, 84 cantones y 492 distritos con sincronización a `localStorage`. Se integró el Hero Carousel (`HeroCarousel.jsx`) institucional con telemetría cívica, navegación por teclado y cumplimiento de contraste.
+    - **Módulo 05 (Sistema GIS y Visor Cartográfico 3D):** Se implementó el visor en 3D (`MapaCartografico3D.jsx`) con Google Maps JavaScript API v3 y soporte WebGL/Tilt 45°-60°. Se aplicó geofencing estricto soberano mediante `latLngBounds` cubriendo el territorio nacional e Isla del Coco. Se añadieron controles de vuelo orbital (`CameraFlyControls.jsx`), 5 capas vectoriales temáticas (`gisLayersData.js`: Salud/EBAIS, Seguridad/Comisarías, Albergues CNE, Centros Educativos, Infraestructura Vial) con tarjetas informativas (`PointDetailCard.jsx`) y deep-links a Waze y Google Maps.
+    - **Módulo 07 (Sistema de Reportes Ciudadanos e Incidencias Viales):** Se implementó el asistente Stepper en 4 pasos (`ReportarIncidencia.jsx`, `Step1DamageType.jsx`, `Step2PhotoPrivacy.jsx`, `Step3Georeferencing.jsx`, `Step4Confirmation.jsx`). Se construyó el procesador en cliente `imageCompressor.js` con conversión a WebP (< 1 MB) y despojo forzoso de metadatos EXIF / GPS para estricto cumplimiento de la Ley N° 8968. Se desarrolló el tablero de trazabilidad ciudadana (`TicketTraceabilityBoard.jsx`) tipo Kanban con filtros de estado y exportación a PDF/JSON.
+    - **Módulo 10 (Seguridad Ciudadana, Gestión del Riesgo y Modo Resiliencia Offline):** Se creó el centro de emergencias (`SeguridadEmergencias.jsx`), botonera táctil SOS a pantalla completa (`SosKeypadFullscreen.jsx`) con botones $\ge 54\text{px}$ y enlaces `tel:` directos a 9-1-1, Fuerza Pública, Bomberos, Cruz Roja y OIJ. Se añadió el cintillo de telemetría de alertas CNE (`CneAlertRibbon.jsx`) con estados Verde, Amarillo, Naranja y Rojo. Se implementó el catálogo interactivo de albergues (`AlberguesListMap.jsx`) con barras de aforo y el gestor de resiliencia offline (`OfflineResilienceManager.jsx`, `public/sw.js`, `offlineSyncService.js`) con estrategia Cache-First y cola de incidentes offline.
+    - **Módulo 12 / RF-12.1 (Búsqueda Semántica Geoespacial con NLP en Cliente):** Se desarrolló el motor de procesamiento de lenguaje natural (`geoSemanticNlpService.js`) especializado en consultas cívicas costarricenses (extracción de cantones, provincias, intenciones de capas). Se integró la barra semántica (`SemanticGeoSearchBar.jsx`) con reconocimiento de voz Web Speech API (`es-CR`), fly-to reactivo con glow provincial y cajón de resultados flotante (`NlpResultsDrawer.jsx`).
+    - **Motor de Accesibilidad Universal (RNF-05 / Ley 7600):** Se integró el contexto global de accesibilidad (`AccessibilityContext.jsx`), selector de escala tipográfica en 4 fases (`TypographicScaleSelector.jsx`: 100%, 125%, 150%, 200% con touch targets $\ge 64\text{px}$), variable global `--text-scale`, sintetizador por voz multilingüe (`VoiceReaderFloatingButton.jsx`) con soporte para 8 idiomas (incluyendo Bribri, Cabécar, Maleku, Guaymí) y voces femenina/masculina, y el modal de inducción interactiva guiada por voz (`VoiceGuidedOnboardingModal.jsx`) con subtítulos sincronizados.
+  - **Decisiones Técnicas Fundamentales:**
+    - *NLP Client-Side sin Latencia ni Costos:* Se optó por una arquitectura ligera basada en tokenización, stopwords y diccionarios ontológicos territoriales en cliente (`geoSemanticNlpService.js`), eliminando la latencia de red en emergencias y asegurando funcionamiento offline.
+    - *Soberanía de Datos y Ley N° 8968:* El stripping de EXIF se realiza directamente sobre el HTML Canvas antes de crear el Blob/Base64, garantizando que ninguna coordenada GPS oculta salga del dispositivo del usuario sin su consentimiento.
+    - *Escalabilidad CSS Tipográfica:* El selector de texto inyecta `--text-scale` a nivel `:root`, permitiendo que todos los elementos calculados en `rem` o `em` respondan armónicamente sin romper la grilla ni provocar overflow horizontal en pantallas de 360px.
+  - **Pendientes para próximas sesiones:**
+    - M02: Fiscalización de Obra Pública (Integración con SICOP / Cartografía de contratos).
+    - M03: Transparencia Tributaria y Hacienda (Validador de situación fiscal y facturación electrónica).
+    - Sustitución de mocks de persistencia local por API RESTful institucional autenticada mediante JWT/OAuth2 estatal.
+
 > Evita repetir errores y rediscutir lo acordado. Esta sección se actualiza de forma acumulativa, nunca se sobrescribe.
  
 ---
