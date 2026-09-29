@@ -8,10 +8,13 @@
 export interface HitoHistorico {
   id: string;
   anno: string;
+  fechaExacta?: string;
+  decretoRespaldo?: string;
   epoca: 'Precolombina' | 'Colonial' | 'Fundacional' | 'Siglo XX' | 'Contemporánea';
   titulo: string;
   descripcion: string;
   impacto: string;
+  impactoDistrital?: string;
   icono?: string;
 }
 
@@ -34,6 +37,14 @@ export interface EstrofaHimno {
   versos: string[];
 }
 
+export interface PartituraDetalle {
+  tonalidad: string;
+  compas: string;
+  tempo: string;
+  instrumentacion: string;
+  transcripcionOficial: string;
+}
+
 export interface HimnoOficial {
   cantonId: number;
   cantonNombre: string;
@@ -43,7 +54,25 @@ export interface HimnoOficial {
   annoDeclaratoria: string;
   audioUrl: string;
   partituraUrl: string;
+  partituraDetalle?: PartituraDetalle;
   estrofas: EstrofaHimno[];
+}
+
+export interface ResennaFundacional {
+  cantonNombre: string;
+  cantonId: number;
+  leyCreacion: string;
+  fechaFundacion: string;
+  tituloCiudadFecha: string;
+  presidenteAdministracion: string;
+  cabecera: string;
+  superficieKm2: number;
+  poblacionHabitantes: string;
+  distritosOficiales: string[];
+  lemaOficial: string;
+  escudoDescripcionBlason: string;
+  banderaDescripcion: string;
+  banderaColores: { nombre: string; hex: string; significado: string }[];
 }
 
 export interface ElementoPatrimonio {
@@ -59,6 +88,75 @@ export interface ElementoPatrimonio {
   imagenUrl: string;
   iconoCategoria: string;
 }
+
+export const RESENNAS_FUNDACIONALES: Record<string, ResennaFundacional> = {
+  'San José': {
+    cantonNombre: 'San José',
+    cantonId: 1,
+    leyCreacion: 'Ley N° 30 de Ordenanzas Municipales (7 de diciembre de 1848)',
+    fechaFundacion: '21 de mayo de 1737 (Erección Ermita de La Boca del Monte)',
+    tituloCiudadFecha: '16 de octubre de 1813 (Cortes de Cádiz) / Ratificado el 8 de junio de 1820',
+    presidenteAdministracion: 'Dr. José María Castro Madriz (Fundador de la República)',
+    cabecera: 'Distrito El Carmen (Sede del Palacio Municipal)',
+    superficieKm2: 44.62,
+    poblacionHabitantes: '352,366 hab.',
+    distritosOficiales: [
+      'Carmen', 'Merced', 'Hospital', 'Catedral', 'Zapote',
+      'San Francisco de Dos Ríos', 'Uruca', 'Mata Redonda', 'Pavas', 'Hatillo', 'San Sebastián'
+    ],
+    lemaOficial: 'Capital Soberana, Democrática y Faro de la Educación Republicana',
+    escudoDescripcionBlason: 'Escudo español cuartelado con bordura de oro. En el primer cuartel, la rueda dentada sobre fondo azul que simboliza el trabajo industrial y comercial; en el segundo, cinco estrellas de plata en representación de la unión centroamericana de 1821; en el tercero, ramas de café en flor, motor económico fundacional; y en el cuarto, la antorcha encendida de la libertad cívica y la paz republicana.',
+    banderaDescripcion: 'Pabellón cantonal conformado por dos franjas horizontales de igual dimensión: superior en azul cobalto soberano e inferior en blanco cívico, timbrado al centro por el escudo oficial cantonal.',
+    banderaColores: [
+      { nombre: 'Azul Soberano', hex: '#002B7F', significado: 'El cielo límpido del Valle Central y la lealtad inquebrantable a las instituciones democráticas.' },
+      { nombre: 'Blanco Cívico', hex: '#FFFFFF', significado: 'La paz permanente sin ejército, la concordia civil y la transparencia en el ejercicio del gobierno local.' }
+    ]
+  },
+  'Alajuela': {
+    cantonNombre: 'Alajuela',
+    cantonId: 2,
+    leyCreacion: 'Ley N° 30 de Ordenanzas Municipales (7 de diciembre de 1848)',
+    fechaFundacion: '12 de octubre de 1782 (Oratorio de La Lajuela)',
+    tituloCiudadFecha: '23 de noviembre de 1824 (Congreso Constituyente)',
+    presidenteAdministracion: 'Dr. José María Castro Madriz',
+    cabecera: 'Alajuela Centro',
+    superficieKm2: 388.43,
+    poblacionHabitantes: '312,500 hab.',
+    distritosOficiales: [
+      'Alajuela', 'San José', 'Carrizal', 'San Antonio', 'Guácima',
+      'San Isidro', 'Sabanilla', 'San Rafael', 'Río Segundo', 'Desamparados', 'Turrúcares', 'Tambor', 'Garita', 'Sarapiquí'
+    ],
+    lemaOficial: 'Cuna de Juan Santamaría y Baluarte de la Libertad Nacional',
+    escudoDescripcionBlason: 'Blasón en esmalte rojo gules con la tea fulgurante de Juan Santamaría en el corazón, orlada por ramas de laurel y la inscripción solemne de la gesta heroica del 11 de abril de 1856.',
+    banderaDescripcion: 'Bicolor rojo y negro con disposición horizontal, cargada al cantón con la antorcha cívica de la soberanía.',
+    banderaColores: [
+      { nombre: 'Rojo Heroico', hex: '#D31424', significado: 'El sacrificio y la valentía del pueblo alajuelense en defensa de la soberanía centroamericana.' },
+      { nombre: 'Negro Soberano', hex: '#111827', significado: 'La firmeza de sus convicciones cívicas y la constancia de sus agricultores.' }
+    ]
+  },
+  'Cartago': {
+    cantonNombre: 'Cartago',
+    cantonId: 3,
+    leyCreacion: 'Ley N° 30 de Ordenanzas Municipales (7 de diciembre de 1848)',
+    fechaFundacion: 'Marzo de 1563 (Por el Conquistador Juan Vázquez de Coronado)',
+    tituloCiudadFecha: '1565 (Por Cédula Real de Felipe II como "Muy Noble y Muy Leal Ciudad")',
+    presidenteAdministracion: 'Dr. José María Castro Madriz',
+    cabecera: 'Cartago (Oriental / Occidental)',
+    superficieKm2: 287.77,
+    poblacionHabitantes: '163,800 hab.',
+    distritosOficiales: [
+      'Oriental', 'Occidental', 'Carmen', 'San Nicolás', 'Aguacaliente',
+      'Guadalupe', 'Corralillo', 'Tierra Blanca', 'Dulce Nombre', 'Llano Grande', 'Quebradilla'
+    ],
+    lemaOficial: 'Cuna de la Patria, Custodia de las Tradiciones y la Fe Republicana',
+    escudoDescripcionBlason: 'Escudo histórico otorgado por el Rey Felipe II en 1565 con cruz paté en gules, dos leones rampantes en oro y corona real sobre campo azur.',
+    banderaDescripcion: 'Paño azul y rojo con cruz central que simboliza la herencia de la Vieja Metrópoli y el arraigo cultural del Valle de El Guarco.',
+    banderaColores: [
+      { nombre: 'Azul Colonial', hex: '#0A3282', significado: 'La devoción cívica, la serenidad del Irazú y las aguas del río Reventazón.' },
+      { nombre: 'Rojo Patriótico', hex: '#CE1126', significado: 'El fervor de los primeros cabildos abiertos y la independencia de 1821.' }
+    ]
+  }
+};
 
 export const CULTURA_MOCK_DATA: {
   hitos: Record<number, HitoHistorico[]>;
@@ -252,7 +350,7 @@ export const CULTURA_MOCK_DATA: {
       origenHistorico: 'Tradición oral del siglo XVIII que dio a Escazú su apodo mundial de "La Ciudad de las Brujas".',
       importanciaCultural: 'Preserva la memoria herbolaria indígena huetar y la resistencia comunitaria frente a imposiciones coloniales.',
       portadoresTradicion: 'Abuelos cuentacuentos y centros de cultura comunitaria de San Antonio de Escazú.',
-      imagenUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+      imagenUrl: 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=800&q=80',
       iconoCategoria: '📜'
     },
     {
@@ -283,6 +381,32 @@ export const CULTURA_MOCK_DATA: {
     }
   ]
 };
+
+export function getResennaFundacional(cantonNombre: string = 'San José'): ResennaFundacional {
+  if (RESENNAS_FUNDACIONALES[cantonNombre]) {
+    return RESENNAS_FUNDACIONALES[cantonNombre];
+  }
+  // Fallback con datos institucionales adaptados al cantón consultado
+  return {
+    cantonNombre,
+    cantonId: 1,
+    leyCreacion: 'Ley N° 30 de Ordenanzas Municipales (7 de diciembre de 1848)',
+    fechaFundacion: 'Erección Municipal Histórica del Cantón',
+    tituloCiudadFecha: 'Declaratoria Oficial por el Congreso Constitucional',
+    presidenteAdministracion: 'Dr. José María Castro Madriz',
+    cabecera: `${cantonNombre} Centro`,
+    superficieKm2: 85.5,
+    poblacionHabitantes: '82,400 hab.',
+    distritosOficiales: [`${cantonNombre} Centro`, 'Distrito 2', 'Distrito 3', 'Distrito 4'],
+    lemaOficial: `Honor, Democracia y Trabajo en el Cantón de ${cantonNombre}`,
+    escudoDescripcionBlason: `Blasón oficial del cantón de ${cantonNombre} con bordura en oro, cuarteles de honor patrio y la antorcha cívica de la libertad democrática costarricense.`,
+    banderaDescripcion: `Pabellón cantonal de dos franjas emblemáticas que representan el civismo y la paz del gobierno local de ${cantonNombre}.`,
+    banderaColores: [
+      { nombre: 'Azul Institucional', hex: '#002B7F', significado: 'La lealtad inquebrantable a las leyes de la República y la democracia local.' },
+      { nombre: 'Blanco Cívico', hex: '#FFFFFF', significado: 'La paz, la concordia civil y la transparencia activa.' }
+    ]
+  };
+}
 
 export function getHitosCanton(cantonId: number = 1): HitoHistorico[] {
   return CULTURA_MOCK_DATA.hitos[cantonId] || CULTURA_MOCK_DATA.hitos[1];

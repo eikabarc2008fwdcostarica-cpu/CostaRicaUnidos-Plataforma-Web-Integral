@@ -77,12 +77,35 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
 
         {/* Nombre y Razón Social */}
         <div>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
-            {comercio.nombreComercial}
-          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+              {comercio.nombreComercial}
+            </h3>
+            {comercio.patenteMunicipal && (
+              <span
+                style={{
+                  fontSize: '0.7rem',
+                  fontFamily: "var(--font-telemetry, monospace)",
+                  fontWeight: 700,
+                  color: '#7DD3FC',
+                  background: 'rgba(0, 43, 127, 0.4)',
+                  border: '1px solid rgba(125, 211, 252, 0.35)',
+                  padding: '0.15rem 0.45rem',
+                  borderRadius: '4px'
+                }}
+              >
+                {comercio.patenteMunicipal}
+              </span>
+            )}
+          </div>
           <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
             {comercio.razonSocial} &bull; Cédula: <strong style={{ color: '#E2E8F0', fontFamily: "var(--font-telemetry, monospace)" }}>{comercio.cedulaJuridicaOFisica}</strong>
           </span>
+          {comercio.actividadCiiu && (
+            <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', fontFamily: "var(--font-telemetry, monospace)" }}>
+              CIIU: {comercio.actividadCiiu}
+            </div>
+          )}
         </div>
 
         {/* Descripción */}
@@ -103,16 +126,33 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
           </div>
         </div>
 
-        {/* Badges de Pago */}
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        {/* Badges de Patente y Pago */}
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <span
+            style={{
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              color: '#A7F3D0',
+              background: 'rgba(16, 185, 129, 0.12)',
+              border: '1px solid rgba(52, 211, 153, 0.3)',
+              padding: '0.2rem 0.55rem',
+              borderRadius: '6px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.3rem'
+            }}
+          >
+            <Building size={12} color="#10B981" /> Patente Cantonal al Día
+          </span>
+
           {comercio.aceptaSinpeMovil && (
             <span
               style={{
                 fontSize: '0.72rem',
                 fontWeight: 600,
-                color: '#34D399',
-                background: 'rgba(16, 185, 129, 0.15)',
-                border: '1px solid rgba(52, 211, 153, 0.35)',
+                color: '#38BDF8',
+                background: 'rgba(56, 189, 248, 0.12)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
                 padding: '0.2rem 0.55rem',
                 borderRadius: '6px',
                 display: 'inline-flex',

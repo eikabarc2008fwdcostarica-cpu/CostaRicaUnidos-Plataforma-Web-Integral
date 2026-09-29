@@ -1,11 +1,27 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useMemo, useEffect } from 'react';
 import {
   Trophy,
   Dumbbell,
   Calendar,
   Users,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Shield,
+  Clock,
+  MapPin,
+  DollarSign,
+  Medal,
+  Award,
+  Search,
+  Filter,
+  FileCheck2,
+  Printer,
+  X,
+  Phone,
+  Send,
+  Building,
+  Sparkles,
+  ExternalLink
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { CivicBadge } from '../components/common/CivicBadge';
@@ -14,15 +30,127 @@ import { CivicCard } from '../components/common/CivicCard';
 import { FichaInstalacion } from '../components/deportes/FichaInstalacion';
 import { OrgulloCantonal } from '../components/deportes/OrgulloCantonal';
 import { FeedDeportivo } from '../components/deportes/FeedDeportivo';
-import { DEPORTES_MOCK_DATA, InstalacionDeportiva } from '../data/deportesData';
+import {
+  DEPORTES_MOCK_DATA,
+  InstalacionDeportiva,
+  ConvocatoriaJDN,
+  DisciplinaOficial
+} from '../data/deportesData';
 
 export const DeportesPage: FC = () => {
-  const [seccionActiva, setSeccionActiva] = useState<'instalaciones' | 'escuelas' | 'orgullo' | 'feed'>('instalaciones');
-  const [mensajeReserva, setMensajeReserva] = useState<string | null>(null);
+  // Cantón activo sincronizado con el Navbar y Theming Engine
+  const [cantonActivo, setCantonActivo] = useState<string>(() => {
+    try {
+      return localStorage.getItem('cr_canton_activo') || 'San José';
+    } catch {
+      return 'San José';
+    }
+  });
 
-  const handleReservar = (inst: InstalacionDeportiva) => {
-    setMensajeReserva(`Solicitud iniciada para ${inst.nombre}. Un gestor deportivo del CCDR se comunicará al teléfono oficial registrado.`);
-    setTimeout(() => setMensajeReserva(null), 5000);
+  useEffect(() => {
+    const handleCantonChange = (e: any) => {
+      if (e.detail?.nombre) setCantonActivo(e.detail.nombre);
+      else {
+        const saved = localStorage.getItem('cr_canton_activo');
+        if (saved) setCantonActivo(saved);
+      }
+    };
+    window.addEventListener('cantonChanged', handleCantonChange);
+    window.addEventListener('storage', handleCantonChange);
+    return () => {
+      window.removeEventListener('cantonChanged', handleCantonChange);
+      window.removeEventListener('storage', handleCantonChange);
+    };
+  }, []);
+
+  const [seccionActiva, setSeccionActiva] = useState<'instalaciones' | 'jdn' | 'escuelas' | 'orgullo' | 'feed'>('instalaciones');
+  const [filtroSemaforo, setFiltroSemaforo] = useState<string>('todos');
+  const [busquedaInstalacion, setBusquedaInstalacion] = useState<string>('');
+
+  // Modales de Reserva e Inscripción JDN
+  const [instalacionParaReservar, setInstalacionParaReservar] = useState<InstalacionDeportiva | null>(null);
+  const [convocatoriaSeleccionada, setConvocatoriaSeleccionada] = useState<ConvocatoriaJDN | null>(null);
+  const [comprobanteGenerado, setComprobanteGenerado] = useState<{ tipo: string; id: string; titulo: string; detalle: string } | null>(null);
+
+  // Formulario de Reserva de Instalación
+  const [formReserva, setFormReserva] = useState({
+    nombreCompleto: '',
+    cedula: '',
+    telefono: '',
+    correo: '',
+    fechaRequerida: '',
+    horaInicio: '08:00',
+    horaFin: '10:00',
+    motivoUso: 'practica_comunitaria'
+  });
+
+  // Formulario de Preinscripción a Visoría JDN
+  const [formJdn, setFormJdn] = useState({
+    nombreAtleta: '',
+    cedulaAtleta: '',
+    fechaNacimiento: '',
+    distritoResidencia: '',
+    nombreTutor: '',
+    telefonoTutor: '',
+    polizaIns: 'SI',
+    aceptaDeclaracion: false
+  });
+
+  const instalacionesFiltradas = useMemo(() => {
+    return DEPORTES_MOCK_DATA.instalaciones.filter((inst) => {
+      const matchEstado =
+        filtroSemaforo === 'todos' ||
+        (filtroSemaforo === 'abierto' && inst.estado === 'abierto') ||
+        (filtroSemaforo === 'mantenimiento' && inst.estado === 'mantenimiento') ||
+        (filtroSemaforo === 'reservado_escuelas' && inst.estado === 'reservado_escuelas');
+
+      const q = busquedaInstalacion.toLowerCase().trim();
+      const matchQuery =
+        !q ||
+        inst.nombre.toLowerCase().includes(q) ||
+        inst.distrito.toLowerCase().includes(q) ||
+        inst.disciplinaPrincipal.toLowerCase().includes(q);
+
+      return matchEstado && matchQuery;
+    });
+  }, [filtroSemaforo, busquedaInstalacion]);
+
+  const handleAbrirReserva = (inst: InstalacionDeportiva) => {
+    setInstalacionParaReservar(inst);
+  };
+
+  const handleConfirmarReserva = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formReserva.nombreCompleto || !formReserva.cedula) {
+      alert('Por favor complete los campos obligatorios.');
+      return;
+    }
+
+    const expId = `RES-CCDR-${cantonActivo.substring(0, 2).toUpperCase()}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    setComprobanteGenerado({
+      tipo: 'Reserva de Instalación Deportiva',
+      id: expId,
+      titulo: instalacionParaReservar?.nombre || 'Instalación Municipal',
+      detalle: `Fecha: ${formReserva.fechaRequerida || 'Próximo sábado'} de ${formReserva.horaInicio} a ${formReserva.horaFin} hrs. Solicitante: ${formReserva.nombreCompleto} (Cédula: ${formReserva.cedula}).`
+    });
+    setInstalacionParaReservar(null);
+  };
+
+  const handleConfirmarJdn = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formJdn.nombreAtleta || !formJdn.cedulaAtleta || !formJdn.aceptaDeclaracion) {
+      alert('Por favor complete los campos y marque la declaración jurada.');
+      return;
+    }
+
+    const jdnId = `JDN-VIS-${cantonActivo.substring(0, 2).toUpperCase()}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    setComprobanteGenerado({
+      tipo: 'Pase Técnico de Visoría JDN',
+      id: jdnId,
+      titulo: `Convocatoria: ${convocatoriaSeleccionada?.disciplina} (${convocatoriaSeleccionada?.categoriaEdad})`,
+      detalle: `Atleta: ${formJdn.nombreAtleta} (Cédula: ${formJdn.cedulaAtleta}). Sede: ${convocatoriaSeleccionada?.lugarVisorias}. Tutor legal: ${formJdn.nombreTutor}.`
+    });
+    setConvocatoriaSeleccionada(null);
   };
 
   return (
@@ -37,54 +165,117 @@ export const DeportesPage: FC = () => {
       <Navbar />
 
       <main className="civic-container" style={{ paddingTop: '2.5rem', paddingBottom: '4rem' }}>
-        {/* Cabecera Deportiva */}
+        {/* Membrete Institucional del CCDR Cantonal */}
         <div style={{ marginBottom: '2.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.65rem', flexWrap: 'wrap' }}>
             <CivicBadge variant="provincial" size="md">
-              MÓDULO 04 &bull; ECOSISTEMA DEPORTIVO CANTONAL
+              COMITÉ CANTONAL DE DEPORTES Y RECREACIÓN &bull; {cantonActivo.toUpperCase()}
             </CivicBadge>
-            <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
-              Comité Cantonal de Deportes y Recreación (CCDR)
+            <span style={{ fontSize: '0.825rem', color: '#94A3B8' }}>
+              Personería Jurídica Instrumental y Autonomía Administrativa (Artículos 164 al 172 del Código Municipal - Ley N° 7794)
             </span>
           </div>
 
           <h1
             style={{
               fontFamily: "var(--font-headline, 'Mistical Spring', serif)",
-              fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
+              fontSize: 'clamp(1.9rem, 4vw, 2.9rem)',
               fontWeight: 800,
               color: '#FFFFFF',
               letterSpacing: '-0.02em',
-              margin: '0 0 0.75rem 0'
+              margin: '0 0 0.85rem 0'
             }}
           >
-            Infraestructura Deportiva y Escuelas Formativas
+            Comité Cantonal de Deportes y Recreación de {cantonActivo} (CCDR)
           </h1>
 
-          <p style={{ fontSize: '1.05rem', color: '#CBD5E1', maxWidth: '850px', lineHeight: 1.6, margin: 0 }}>
-            Verifique la disponibilidad en tiempo real de polideportivos, canchas y piscinas mediante el semáforo cívico, inscríbase en escuelas gratuitas del CCDR y celebre los logros de nuestros atletas.
+          <p style={{ fontSize: '1.05rem', color: '#CBD5E1', maxWidth: '900px', lineHeight: 1.6, margin: 0 }}>
+            Órgano municipal autónomo responsable de democratizar el acceso a la infraestructura deportiva pública, fomentar las escuelas formativas formativas gratuitas para la niñez y juventud, y preparar a las delegaciones cantonales para los Juegos Deportivos Nacionales (JDN) del ICODER.
           </p>
         </div>
 
-        {mensajeReserva && (
-          <div
-            style={{
-              background: 'rgba(16, 185, 129, 0.18)',
-              border: '1px solid rgba(52, 211, 153, 0.45)',
-              borderRadius: '12px',
-              padding: '1rem 1.25rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.65rem',
-              marginBottom: '1.75rem',
-              color: '#D1FAE5',
-              fontSize: '0.9rem'
-            }}
-          >
-            <CheckCircle2 size={20} color="#10B981" />
-            <span>{mensajeReserva}</span>
-          </div>
-        )}
+        {/* Panel de Indicadores de Gestión y Membrete Legal */}
+        <div style={{ marginBottom: '2.5rem' }}>
+          <CivicCard level={2} provincialGlow>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  <div
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '10px',
+                      background: 'rgba(0, 43, 127, 0.4)',
+                      border: '1px solid rgba(125, 211, 252, 0.35)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Shield size={22} color="#7DD3FC" />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                      Gobernanza y Autonomía Deportiva Municipal (Ley N° 7794)
+                    </h3>
+                    <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+                      Junta Directiva conformada por 5 miembros ad honorem con representación cantonal plural
+                    </span>
+                  </div>
+                </div>
+
+                <CivicBadge variant="provincial" size="sm">
+                  Presupuesto Ley: Mínimo 3% Ingresos Ordinarios
+                </CivicBadge>
+              </div>
+
+              {/* Métricas de Infraestructura y Atletas */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+                  gap: '1rem',
+                  background: 'rgba(0, 0, 0, 0.35)',
+                  padding: '1.25rem',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(255, 255, 255, 0.08)'
+                }}
+              >
+                <div>
+                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block' }}>Instalaciones Administradas:</span>
+                  <strong style={{ fontSize: '1.4rem', color: '#7DD3FC', fontFamily: "var(--font-telemetry, monospace)" }}>
+                    {DEPORTES_MOCK_DATA.instalaciones.length} recintos
+                  </strong>
+                  <span style={{ fontSize: '0.72rem', color: '#34D399', display: 'block' }}>100% con Ley 7600</span>
+                </div>
+
+                <div>
+                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block' }}>Atletas en Selecciones JDN:</span>
+                  <strong style={{ fontSize: '1.4rem', color: '#FFFFFF', fontFamily: "var(--font-telemetry, monospace)" }}>
+                    284 atletas
+                  </strong>
+                  <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Fase Eliminatoria 2026</span>
+                </div>
+
+                <div>
+                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block' }}>Escuelas Formativas Comunitarias:</span>
+                  <strong style={{ fontSize: '1.4rem', color: '#A7F3D0', fontFamily: "var(--font-telemetry, monospace)" }}>
+                    {DEPORTES_MOCK_DATA.escuelas.length} gratuitas
+                  </strong>
+                  <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Cobertura en los distritos</span>
+                </div>
+
+                <div>
+                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block' }}>Medallero Histórico JDN:</span>
+                  <strong style={{ fontSize: '1.4rem', color: '#FCD34D', fontFamily: "var(--font-telemetry, monospace)" }}>
+                    9 Medallas Oro
+                  </strong>
+                  <span style={{ fontSize: '0.72rem', color: '#FDE68A', display: 'block' }}>Última edición nacional</span>
+                </div>
+              </div>
+            </div>
+          </CivicCard>
+        </div>
 
         {/* Barra de Pestañas Deportivas */}
         <div
@@ -92,12 +283,12 @@ export const DeportesPage: FC = () => {
             display: 'flex',
             gap: '0.5rem',
             borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-            marginBottom: '2rem',
+            marginBottom: '2.5rem',
             overflowX: 'auto',
             scrollbarWidth: 'none'
           }}
           role="tablist"
-          aria-label="Secciones Deportivas"
+          aria-label="Secciones Deportivas del CCDR"
         >
           <button
             type="button"
@@ -121,9 +312,37 @@ export const DeportesPage: FC = () => {
             }}
           >
             <Dumbbell size={18} />
-            <span>Instalaciones y Semáforo</span>
+            <span>Instalaciones Públicas y Semáforo</span>
             <CivicBadge variant="default" size="sm">
               {DEPORTES_MOCK_DATA.instalaciones.length}
+            </CivicBadge>
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected={seccionActiva === 'jdn'}
+            onClick={() => setSeccionActiva('jdn')}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              borderBottom: seccionActiva === 'jdn' ? '2.5px solid var(--color-provincial-primary, #002B7F)' : '2.5px solid transparent',
+              color: seccionActiva === 'jdn' ? '#FFFFFF' : '#94A3B8',
+              fontWeight: 700,
+              fontSize: '1rem',
+              padding: '0.75rem 1.25rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              whiteSpace: 'nowrap',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <Medal size={18} />
+            <span>Juegos Deportivos Nacionales (JDN)</span>
+            <CivicBadge variant="provincial" size="sm">
+              {DEPORTES_MOCK_DATA.convocatorias.length} Convocatorias
             </CivicBadge>
           </button>
 
@@ -174,7 +393,7 @@ export const DeportesPage: FC = () => {
             }}
           >
             <Trophy size={18} />
-            <span>Orgullo Cantonal</span>
+            <span>Salón de Honor y Medallas</span>
           </button>
 
           <button
@@ -199,19 +418,111 @@ export const DeportesPage: FC = () => {
             }}
           >
             <Calendar size={18} />
-            <span>Convocatorias y Feed</span>
+            <span>Feed Comunitario</span>
           </button>
         </div>
 
-        {/* Sección 1: Instalaciones */}
+        {/* PESTAÑA 1: Instalaciones Públicas con Semáforo Formal */}
         {seccionActiva === 'instalaciones' && (
-          <section aria-label="Instalaciones deportivas con semáforo de disponibilidad">
-            <div style={{ marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.85rem' }}>
-                <span style={{ color: '#94A3B8' }}>Semáforo Oficial:</span>
-                <span style={{ color: '#A7F3D0' }}>&bull; Verde: Abierto</span>
-                <span style={{ color: '#FDE68A' }}>&bull; Amarillo: Mantenimiento</span>
-                <span style={{ color: '#FECACA' }}>&bull; Rojo: Alquiler</span>
+          <section aria-label="Directorio de Instalaciones con Semáforo Cívico">
+            {/* Barra de Filtros del Semáforo */}
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '1rem',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                background: 'rgba(255, 255, 255, 0.03)',
+                padding: '1.25rem',
+                borderRadius: '14px',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                marginBottom: '2rem'
+              }}
+            >
+              <div style={{ position: 'relative', flex: '1 1 280px' }}>
+                <Search size={18} color="#94A3B8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+                <input
+                  type="text"
+                  value={busquedaInstalacion}
+                  onChange={(e) => setBusquedaInstalacion(e.target.value)}
+                  placeholder="Buscar instalación por nombre, disciplina o distrito..."
+                  style={{
+                    width: '100%',
+                    padding: '0.65rem 1rem 0.65rem 2.4rem',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '8px',
+                    color: '#FFFFFF',
+                    fontSize: '0.875rem',
+                    outline: 'none'
+                  }}
+                />
+              </div>
+
+              {/* Botonera de Semáforo Formal */}
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>Semáforo:</span>
+                <button
+                  type="button"
+                  onClick={() => setFiltroSemaforo('todos')}
+                  style={{
+                    background: filtroSemaforo === 'todos' ? 'rgba(0, 43, 127, 0.8)' : 'rgba(255, 255, 255, 0.05)',
+                    color: filtroSemaforo === 'todos' ? '#FFFFFF' : '#CBD5E1',
+                    border: filtroSemaforo === 'todos' ? '1px solid #7DD3FC' : '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '6px',
+                    padding: '0.35rem 0.65rem',
+                    fontSize: '0.78rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Todas ({DEPORTES_MOCK_DATA.instalaciones.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFiltroSemaforo('abierto')}
+                  style={{
+                    background: filtroSemaforo === 'abierto' ? 'rgba(16, 185, 129, 0.35)' : 'rgba(255, 255, 255, 0.05)',
+                    color: filtroSemaforo === 'abierto' ? '#A7F3D0' : '#CBD5E1',
+                    border: filtroSemaforo === 'abierto' ? '1px solid #34D399' : '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '6px',
+                    padding: '0.35rem 0.65rem',
+                    fontSize: '0.78rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🟢 Abierto al Público
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFiltroSemaforo('mantenimiento')}
+                  style={{
+                    background: filtroSemaforo === 'mantenimiento' ? 'rgba(245, 158, 11, 0.35)' : 'rgba(255, 255, 255, 0.05)',
+                    color: filtroSemaforo === 'mantenimiento' ? '#FDE68A' : '#CBD5E1',
+                    border: filtroSemaforo === 'mantenimiento' ? '1px solid #FBBF24' : '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '6px',
+                    padding: '0.35rem 0.65rem',
+                    fontSize: '0.78rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🟡 Mantenimiento
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFiltroSemaforo('reservado_escuelas')}
+                  style={{
+                    background: filtroSemaforo === 'reservado_escuelas' ? 'rgba(0, 43, 127, 0.5)' : 'rgba(255, 255, 255, 0.05)',
+                    color: filtroSemaforo === 'reservado_escuelas' ? '#BAE6FD' : '#CBD5E1',
+                    border: filtroSemaforo === 'reservado_escuelas' ? '1px solid #7DD3FC' : '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '6px',
+                    padding: '0.35rem 0.65rem',
+                    fontSize: '0.78rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🔵 Reservado para Escuelas
+                </button>
               </div>
             </div>
 
@@ -222,20 +533,169 @@ export const DeportesPage: FC = () => {
                 gap: '1.5rem'
               }}
             >
-              {DEPORTES_MOCK_DATA.instalaciones.map((inst) => (
+              {instalacionesFiltradas.map((inst) => (
                 <FichaInstalacion
                   key={inst.id}
                   instalacion={inst}
-                  onReservar={handleReservar}
+                  onReservar={() => handleAbrirReserva(inst)}
                 />
               ))}
             </div>
           </section>
         )}
 
-        {/* Sección 2: Escuelas CCDR */}
+        {/* PESTAÑA 2: Juegos Deportivos Nacionales (JDN) y Disciplinas */}
+        {seccionActiva === 'jdn' && (
+          <section aria-label="Convocatorias y Disciplinas para Juegos Deportivos Nacionales">
+            {/* Banner ICODER */}
+            <div
+              style={{
+                background: 'linear-gradient(135deg, rgba(0, 43, 127, 0.35) 0%, rgba(206, 17, 38, 0.2) 100%)',
+                border: '1px solid rgba(125, 211, 252, 0.3)',
+                borderRadius: '16px',
+                padding: '1.5rem 1.75rem',
+                marginBottom: '2.5rem',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '1.25rem'
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                  <Medal size={20} color="#FCD34D" />
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                    Programa Oficial Juegos Deportivos Nacionales (ICODER &bull; Ciclo 2026)
+                  </h3>
+                </div>
+                <p style={{ fontSize: '0.9rem', color: '#CBD5E1', maxWidth: '750px', margin: 0, lineHeight: 1.5 }}>
+                  Proceso de captación, visorías técnicas y conformación de las selecciones cantonales que representarán a {cantonActivo} en las etapas eliminatorias y finales nacionales.
+                </p>
+              </div>
+
+              <CivicBadge variant="provincial" size="md">
+                Avalado por el ICODER
+              </CivicBadge>
+            </div>
+
+            {/* Listado de Convocatorias Abiertas */}
+            <div style={{ marginBottom: '3rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '1.25rem' }}>
+                Convocatorias Abiertas a Pruebas Técnicas y Visorías
+              </h3>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+                {DEPORTES_MOCK_DATA.convocatorias.map((conv) => (
+                  <CivicCard key={conv.id} level={1} interactive>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                        <div>
+                          <CivicBadge variant="provincial" size="sm">
+                            {conv.etapaActual}
+                          </CivicBadge>
+                          <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#FFFFFF', margin: '0.4rem 0 0 0' }}>
+                            {conv.disciplina}
+                          </h4>
+                          <span style={{ fontSize: '0.78rem', color: '#7DD3FC', fontWeight: 600 }}>
+                            Rama: {conv.rama} &bull; {conv.categoriaEdad}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.85rem', color: '#CBD5E1' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                          <Calendar size={15} color="#FBBF24" />
+                          <span>{conv.fechasVisorias}</span>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                          <MapPin size={15} color="#7DD3FC" />
+                          <span>{conv.lugarVisorias} (<strong>{conv.distrito}</strong>)</span>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                          <Users size={15} color="#34D399" />
+                          <span>Entrenador: <strong style={{ color: '#FFFFFF' }}>{conv.entrenadorFederado}</strong></span>
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          padding: '0.75rem',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
+                          fontSize: '0.78rem',
+                          color: '#94A3B8'
+                        }}
+                      >
+                        <strong style={{ color: '#E2E8F0', display: 'block', marginBottom: '0.25rem' }}>Requisitos Obligatorios:</strong>
+                        <ul style={{ margin: 0, paddingLeft: '1rem' }}>
+                          {conv.requisitosObligatorios.map((req, i) => (
+                            <li key={i}>{req}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                          Cierre: <strong style={{ color: '#F87171' }}>{conv.fechaCierreInscripcion}</strong>
+                        </span>
+
+                        <CivicButton
+                          variant="primary"
+                          size="sm"
+                          onClick={() => setConvocatoriaSeleccionada(conv)}
+                        >
+                          Preinscribirse a Visoría
+                        </CivicButton>
+                      </div>
+                    </div>
+                  </CivicCard>
+                ))}
+              </div>
+            </div>
+
+            {/* Catálogo de Disciplinas Deportivas Oficiales */}
+            <div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '1.25rem' }}>
+                Disciplinas Deportivas Federadas del Cantón
+              </h3>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+                {DEPORTES_MOCK_DATA.disciplinas.map((disc) => (
+                  <CivicCard key={disc.id} level={1}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <span style={{ fontSize: '1.8rem' }}>{disc.icono}</span>
+                        <div>
+                          <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+                            {disc.nombre}
+                          </h4>
+                          <span style={{ fontSize: '0.75rem', color: '#7DD3FC' }}>
+                            Modalidad: {disc.categoria}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                        <div><strong>Sede: </strong>{disc.sedeEntrenamiento}</div>
+                        <div><strong>Entrenador Principal: </strong>{disc.entrenadorPrincipal}</div>
+                        <div><strong>Licencia: </strong><code style={{ color: '#A7F3D0' }}>{disc.licenciaFederativa}</code></div>
+                        <div><strong>Atletas Activos: </strong>{disc.atletasActivos} atletas</div>
+                      </div>
+                    </div>
+                  </CivicCard>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* PESTAÑA 3: Escuelas Formativas CCDR */}
         {seccionActiva === 'escuelas' && (
-          <section aria-label="Catálogo de Escuelas Deportivas Formatívas">
+          <section aria-label="Catálogo de Escuelas Deportivas Formativas">
             <div
               style={{
                 display: 'grid',
@@ -289,8 +749,15 @@ export const DeportesPage: FC = () => {
                       </ul>
                     </div>
 
-                    <CivicButton variant="provincial" size="sm" fullWidth>
-                      Inscribir Atleta
+                    <CivicButton
+                      variant="provincial"
+                      size="sm"
+                      fullWidth
+                      onClick={() => {
+                        alert(`Iniciando postulación a la escuela de ${esc.disciplina}. Se solicitarán documentos en ventanilla digital.`);
+                      }}
+                    >
+                      Inscribir Atleta (Gratuito CCDR)
                     </CivicButton>
                   </div>
                 </CivicCard>
@@ -299,18 +766,542 @@ export const DeportesPage: FC = () => {
           </section>
         )}
 
-        {/* Sección 3: Orgullo Cantonal */}
+        {/* PESTAÑA 4: Salón de Honor y Medallas JDN */}
         {seccionActiva === 'orgullo' && (
-          <section aria-label="Atletas de Orgullo Cantonal">
+          <section aria-label="Atletas de Orgullo Cantonal y Medallero">
             <OrgulloCantonal atletas={DEPORTES_MOCK_DATA.atletas} />
           </section>
         )}
 
-        {/* Sección 4: Feed Comunitario */}
+        {/* PESTAÑA 5: Feed Comunitario */}
         {seccionActiva === 'feed' && (
           <section aria-label="Feed Comunitario y Convocatorias">
             <FeedDeportivo postsIniciales={DEPORTES_MOCK_DATA.feed} />
           </section>
+        )}
+
+        {/* MODAL 1: Reserva de Espacio Deportivo */}
+        {instalacionParaReservar && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0, 4, 13, 0.88)',
+              backdropFilter: 'blur(16px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 9999,
+              padding: '1.5rem'
+            }}
+          >
+            <div
+              style={{
+                background: '#040B1A',
+                border: '1.5px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '18px',
+                maxWidth: '580px',
+                width: '100%',
+                padding: '2rem',
+                position: 'relative',
+                maxHeight: '90vh',
+                overflowY: 'auto'
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setInstalacionParaReservar(null)}
+                style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94A3B8',
+                  cursor: 'pointer'
+                }}
+              >
+                <X size={20} />
+              </button>
+
+              <div style={{ marginBottom: '1.5rem' }}>
+                <span style={{ fontSize: '0.8rem', color: '#7DD3FC', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>
+                  Solicitud Oficial de Espacio Público &bull; CCDR {cantonActivo.toUpperCase()}
+                </span>
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', margin: '0.35rem 0' }}>
+                  {instalacionParaReservar.nombre}
+                </h2>
+                <span style={{ fontSize: '0.85rem', color: '#CBD5E1' }}>
+                  Distrito: <strong>{instalacionParaReservar.distrito}</strong> &bull; {instalacionParaReservar.disciplinaPrincipal}
+                </span>
+              </div>
+
+              <form onSubmit={handleConfirmarReserva} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div>
+                  <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    Nombre del Solicitante / Organización Comunal *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formReserva.nombreCompleto}
+                    onChange={(e) => setFormReserva({ ...formReserva, nombreCompleto: e.target.value })}
+                    placeholder="Ej: Asociación de Vecinos de Hatillo o Juan Pérez..."
+                    style={{
+                      width: '100%',
+                      padding: '0.65rem 0.85rem',
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      borderRadius: '8px',
+                      color: '#FFFFFF'
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                      Cédula de Identidad *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formReserva.cedula}
+                      onChange={(e) => setFormReserva({ ...formReserva, cedula: e.target.value })}
+                      placeholder="1-0000-0000"
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        borderRadius: '8px',
+                        color: '#FFFFFF',
+                        fontFamily: "var(--font-telemetry, monospace)"
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                      Teléfono de Contacto *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={formReserva.telefono}
+                      onChange={(e) => setFormReserva({ ...formReserva, telefono: e.target.value })}
+                      placeholder="(506) 8888-8888"
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        borderRadius: '8px',
+                        color: '#FFFFFF'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                      Fecha Requerida
+                    </label>
+                    <input
+                      type="date"
+                      value={formReserva.fechaRequerida}
+                      onChange={(e) => setFormReserva({ ...formReserva, fechaRequerida: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        borderRadius: '8px',
+                        color: '#FFFFFF'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                      Horario
+                    </label>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <input
+                        type="time"
+                        value={formReserva.horaInicio}
+                        onChange={(e) => setFormReserva({ ...formReserva, horaInicio: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '0.65rem 0.5rem',
+                          background: 'rgba(255, 255, 255, 0.06)',
+                          border: '1px solid rgba(255, 255, 255, 0.15)',
+                          borderRadius: '8px',
+                          color: '#FFFFFF'
+                        }}
+                      />
+                      <span style={{ color: '#94A3B8' }}>a</span>
+                      <input
+                        type="time"
+                        value={formReserva.horaFin}
+                        onChange={(e) => setFormReserva({ ...formReserva, horaFin: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '0.65rem 0.5rem',
+                          background: 'rgba(255, 255, 255, 0.06)',
+                          border: '1px solid rgba(255, 255, 255, 0.15)',
+                          borderRadius: '8px',
+                          color: '#FFFFFF'
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '8px',
+                    padding: '0.75rem',
+                    fontSize: '0.78rem',
+                    color: '#94A3B8'
+                  }}
+                >
+                  Tarifa reglamentaria: <strong>{instalacionParaReservar.tarifaAlquiler}</strong>. El CCDR garantiza el cumplimiento de los Artículos 164-172 del Código Municipal.
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  <CivicButton
+                    variant="ghost"
+                    size="sm"
+                    type="button"
+                    onClick={() => setInstalacionParaReservar(null)}
+                  >
+                    Cancelar
+                  </CivicButton>
+                  <CivicButton
+                    variant="primary"
+                    size="sm"
+                    type="submit"
+                    leftIcon={<FileCheck2 size={16} />}
+                  >
+                    Radicar Solicitud de Reserva
+                  </CivicButton>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 2: Preinscripción a Visoría JDN */}
+        {convocatoriaSeleccionada && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0, 4, 13, 0.88)',
+              backdropFilter: 'blur(16px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 9999,
+              padding: '1.5rem'
+            }}
+          >
+            <div
+              style={{
+                background: '#040B1A',
+                border: '1.5px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '18px',
+                maxWidth: '580px',
+                width: '100%',
+                padding: '2rem',
+                position: 'relative',
+                maxHeight: '90vh',
+                overflowY: 'auto'
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setConvocatoriaSeleccionada(null)}
+                style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94A3B8',
+                  cursor: 'pointer'
+                }}
+              >
+                <X size={20} />
+              </button>
+
+              <div style={{ marginBottom: '1.5rem' }}>
+                <span style={{ fontSize: '0.8rem', color: '#FCD34D', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>
+                  Preinscripción Oficial a Visoría &bull; Juegos Deportivos Nacionales
+                </span>
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', margin: '0.35rem 0' }}>
+                  {convocatoriaSeleccionada.disciplina}
+                </h2>
+                <span style={{ fontSize: '0.85rem', color: '#7DD3FC' }}>
+                  Categoría: {convocatoriaSeleccionada.categoriaEdad} &bull; Sede: {convocatoriaSeleccionada.lugarVisorias}
+                </span>
+              </div>
+
+              <form onSubmit={handleConfirmarJdn} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div>
+                  <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    Nombre Completo del Atleta *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formJdn.nombreAtleta}
+                    onChange={(e) => setFormJdn({ ...formJdn, nombreAtleta: e.target.value })}
+                    placeholder="Nombre y apellidos del menor o atleta..."
+                    style={{
+                      width: '100%',
+                      padding: '0.65rem 0.85rem',
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      borderRadius: '8px',
+                      color: '#FFFFFF'
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                      Cédula / TIM del Atleta *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formJdn.cedulaAtleta}
+                      onChange={(e) => setFormJdn({ ...formJdn, cedulaAtleta: e.target.value })}
+                      placeholder="1-0000-0000"
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        borderRadius: '8px',
+                        color: '#FFFFFF',
+                        fontFamily: "var(--font-telemetry, monospace)"
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                      Distrito de Residencia *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formJdn.distritoResidencia}
+                      onChange={(e) => setFormJdn({ ...formJdn, distritoResidencia: e.target.value })}
+                      placeholder="Ej: Pavas, Hatillo, San Francisco..."
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        borderRadius: '8px',
+                        color: '#FFFFFF'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                      Nombre del Padre, Madre o Tutor *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formJdn.nombreTutor}
+                      onChange={(e) => setFormJdn({ ...formJdn, nombreTutor: e.target.value })}
+                      placeholder="Tutor responsable..."
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        borderRadius: '8px',
+                        color: '#FFFFFF'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                      Teléfono de Emergencia / Tutor *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={formJdn.telefonoTutor}
+                      onChange={(e) => setFormJdn({ ...formJdn, telefonoTutor: e.target.value })}
+                      placeholder="(506) 8888-8888"
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        borderRadius: '8px',
+                        color: '#FFFFFF'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem', marginTop: '0.25rem' }}>
+                  <input
+                    type="checkbox"
+                    id="declaracionJdn"
+                    required
+                    checked={formJdn.aceptaDeclaracion}
+                    onChange={(e) => setFormJdn({ ...formJdn, aceptaDeclaracion: e.target.checked })}
+                    style={{ marginTop: '0.25rem', accentColor: '#002B7F' }}
+                  />
+                  <label htmlFor="declaracionJdn" style={{ fontSize: '0.78rem', color: '#CBD5E1', lineHeight: 1.4 }}>
+                    Declaro bajo juramento que los datos suministrados son fidedignos, el atleta reside en el cantón de {cantonActivo} y cuenta con póliza de accidentes activa para la visoría oficial.
+                  </label>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  <CivicButton
+                    variant="ghost"
+                    size="sm"
+                    type="button"
+                    onClick={() => setConvocatoriaSeleccionada(null)}
+                  >
+                    Cancelar
+                  </CivicButton>
+                  <CivicButton
+                    variant="primary"
+                    size="sm"
+                    type="submit"
+                    leftIcon={<Award size={16} />}
+                  >
+                    Generar Pase de Visoría JDN
+                  </CivicButton>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 3: Comprobante Formal Descargable / Imprimible */}
+        {comprobanteGenerado && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0, 4, 13, 0.88)',
+              backdropFilter: 'blur(16px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 9999,
+              padding: '1.5rem'
+            }}
+          >
+            <div
+              style={{
+                background: '#040B1A',
+                border: '1.5px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '18px',
+                maxWidth: '600px',
+                width: '100%',
+                padding: '2rem',
+                position: 'relative',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.85)'
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setComprobanteGenerado(null)}
+                style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94A3B8',
+                  cursor: 'pointer'
+                }}
+              >
+                <X size={20} />
+              </button>
+
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ fontSize: '0.8rem', letterSpacing: '0.1em', color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                  COMITÉ CANTONAL DE DEPORTES Y RECREACIÓN &bull; {cantonActivo.toUpperCase()}
+                </div>
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.5rem 0' }}>
+                  {comprobanteGenerado.tipo}
+                </h2>
+                <div style={{ fontSize: '0.9rem', color: '#7DD3FC', fontWeight: 700, fontFamily: "var(--font-telemetry, monospace)" }}>
+                  {comprobanteGenerado.id}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '12px',
+                  padding: '1.25rem',
+                  fontSize: '0.875rem',
+                  color: '#E2E8F0',
+                  lineHeight: 1.6,
+                  marginBottom: '1.5rem'
+                }}
+              >
+                <div style={{ fontWeight: 700, color: '#FFFFFF', marginBottom: '0.5rem' }}>
+                  {comprobanteGenerado.titulo}
+                </div>
+                <p style={{ margin: '0 0 0.75rem 0' }}>
+                  {comprobanteGenerado.detalle}
+                </p>
+                <div style={{ fontSize: '0.78rem', color: '#94A3B8', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.5rem' }}>
+                  Trámite oficial registrado bajo los Artículos 164-172 del Código Municipal (Ley N° 7794). Presente este comprobante digital o impreso ante el administrador de la instalación o cuerpo técnico en la sede.
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                  Sello Cívico Digital &bull; CCDR {cantonActivo}
+                </span>
+
+                <div style={{ display: 'flex', gap: '0.65rem' }}>
+                  <CivicButton
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setComprobanteGenerado(null)}
+                  >
+                    Cerrar
+                  </CivicButton>
+                  <CivicButton
+                    variant="primary"
+                    size="sm"
+                    onClick={() => window.print()}
+                    leftIcon={<Printer size={15} />}
+                  >
+                    Imprimir Comprobante
+                  </CivicButton>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>

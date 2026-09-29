@@ -1,7 +1,6 @@
 import React, { FC, useState, useMemo } from 'react';
-import { Search, Filter, FileText, Download, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Filter, FileText, Download, Eye, ChevronLeft, ChevronRight, CheckCircle2, ShieldAlert, FileCheck } from 'lucide-react';
 import { ActaMunicipal } from '../../data/gobernanzaData';
-import { CivicButton } from '../common/CivicButton';
 import { CivicBadge } from '../common/CivicBadge';
 import { VisorActaModal } from './VisorActaModal';
 
@@ -10,6 +9,11 @@ export interface TablaActasProps {
   isLoading?: boolean;
 }
 
+/**
+ * TablaActas — Visor Avanzado de Actas y Acuerdos Municipales
+ * Diseño formal de Gaceta Municipal • Columnas reglamentarias • Previsualizador Modal Oficial
+ * WCAG 2.1 AA Compliant: Alto contraste, semántica de tabla accesible, etiquetas claras
+ */
 export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) => {
   const [busqueda, setBusqueda] = useState<string>('');
   const [filtroTipo, setFiltroTipo] = useState<string>('todos');
@@ -19,12 +23,11 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
 
   const ITEMS_POR_PAGINA = 5;
 
-  // Early return pattern para estado de carga asíncrona (Skeleton)
   if (isLoading) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-        <div style={{ height: '48px', background: 'rgba(255,255,255,0.06)', borderRadius: '8px', animation: 'civicPing 2s infinite' }} />
-        <div style={{ height: '300px', background: 'rgba(255,255,255,0.04)', borderRadius: '16px' }} />
+        <div style={{ height: '52px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px' }} />
+        <div style={{ height: '320px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '16px' }} />
       </div>
     );
   }
@@ -40,7 +43,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
         acta.numeroActa.toLowerCase().includes(q) ||
         acta.resumenEjecutivo.toLowerCase().includes(q) ||
         acta.temasClave.some((t) => t.toLowerCase().includes(q)) ||
-        acta.acuerdosDestacados.some((a) => a.descripcion.toLowerCase().includes(q));
+        acta.acuerdosDestacados.some((a) => a.descripcion.toLowerCase().includes(q) || a.numeroAcuerdo.toLowerCase().includes(q));
 
       return coincideTipo && coincideAnno && coincideBusqueda;
     });
@@ -61,27 +64,30 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
 
   return (
     <div style={{ width: '100%' }}>
-      {/* Barra de Filtros y Búsqueda */}
+      {/* Barra de Filtros Rápidos Estilo Gaceta Municipal */}
       <div
         style={{
           display: 'flex',
           flexWrap: 'wrap',
-          gap: '0.85rem',
+          gap: '1rem',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginBottom: '1.25rem',
-          background: 'rgba(255, 255, 255, 0.03)',
-          padding: '1rem',
-          borderRadius: '12px',
-          border: '1px solid rgba(255, 255, 255, 0.08)'
+          marginBottom: '1.5rem',
+          backgroundColor: 'rgba(0, 15, 45, 0.65)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          padding: '1.25rem 1.5rem',
+          borderRadius: '18px',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '0 8px 30px rgba(0, 4, 13, 0.6)'
         }}
       >
-        {/* Input de Búsqueda */}
-        <div style={{ position: 'relative', flex: '1 1 260px' }}>
+        {/* Buscador por Número de Acta o Materia */}
+        <div style={{ position: 'relative', flex: '1 1 280px' }}>
           <Search
             size={18}
-            color="#94A3B8"
-            style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }}
+            color="#79a6ff"
+            style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
           />
           <input
             type="text"
@@ -90,73 +96,81 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
               setBusqueda(e.target.value);
               setPaginaActual(1);
             }}
-            placeholder="Buscar por número, tema, acuerdo o palabra clave..."
-            aria-label="Buscar actas municipales"
+            placeholder="Buscar por número de acta, materia, acuerdo o tema..."
+            aria-label="Buscar actas y acuerdos del concejo municipal"
             style={{
               width: '100%',
-              padding: '0.6rem 1rem 0.6rem 2.4rem',
-              background: 'rgba(255, 255, 255, 0.06)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              borderRadius: '8px',
+              padding: '0.65rem 1rem 0.65rem 2.6rem',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.16)',
+              borderRadius: '10px',
               color: '#FFFFFF',
-              fontSize: '0.875rem',
+              fontSize: '0.9rem',
               outline: 'none',
-              fontFamily: "var(--font-body, sans-serif)"
+              fontFamily: 'inherit',
+              transition: 'all 0.2s ease'
             }}
           />
         </div>
 
-        {/* Filtros Dropdown */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            <Filter size={16} color="#94A3B8" />
+        {/* Filtros por Año y Tipo de Sesión */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          {/* Selector de Tipo de Sesión */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <Filter size={15} color="#94A3B8" />
             <select
               value={filtroTipo}
               onChange={(e) => {
                 setFiltroTipo(e.target.value);
                 setPaginaActual(1);
               }}
-              aria-label="Filtrar por tipo de sesión"
+              aria-label="Filtrar por tipo de sesión municipal"
               style={{
-                background: 'rgba(0, 4, 13, 0.85)',
+                backgroundColor: 'rgba(0, 8, 25, 0.9)',
                 color: '#FFFFFF',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '8px',
-                padding: '0.55rem 0.85rem',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+                borderRadius: '10px',
+                padding: '0.6rem 0.95rem',
                 fontSize: '0.85rem',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                outline: 'none',
+                fontWeight: 600
               }}
             >
-              <option value="todos">Todos los tipos de sesión</option>
+              <option value="todos">Todos los Tipos de Sesión</option>
               <option value="ordinaria">Sesión Ordinaria</option>
               <option value="extraordinaria">Sesión Extraordinaria</option>
               <option value="solemne">Sesión Solemne</option>
             </select>
           </div>
 
+          {/* Selector de Año */}
           <select
             value={filtroAnno}
             onChange={(e) => {
               setFiltroAnno(e.target.value);
               setPaginaActual(1);
             }}
-            aria-label="Filtrar por año"
+            aria-label="Filtrar por año de la gaceta de actas"
             style={{
-              background: 'rgba(0, 4, 13, 0.85)',
+              backgroundColor: 'rgba(0, 8, 25, 0.9)',
               color: '#FFFFFF',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '8px',
-              padding: '0.55rem 0.85rem',
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+              borderRadius: '10px',
+              padding: '0.6rem 0.95rem',
               fontSize: '0.85rem',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              outline: 'none',
+              fontWeight: 600
             }}
           >
             <option value="todos">Todos los Años</option>
-            <option value="2026">2026</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
+            <option value="2026">Año 2026</option>
+            <option value="2025">Año 2025</option>
+            <option value="2024">Año 2024</option>
           </select>
 
+          {/* Botón Restablecer Filtros */}
           {(busqueda || filtroTipo !== 'todos' || filtroAnno !== 'todos') && (
             <button
               type="button"
@@ -169,9 +183,10 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: '#F87171',
-                fontSize: '0.8rem',
+                color: '#FF6B6B',
+                fontSize: '0.82rem',
                 cursor: 'pointer',
+                fontWeight: 600,
                 textDecoration: 'underline'
               }}
             >
@@ -181,44 +196,69 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
         </div>
       </div>
 
-      {/* Tabla de Resultados */}
+      {/* Tabla Oficial de la Gaceta Municipal */}
       {actasPaginadas.length === 0 ? (
         <div
           style={{
-            padding: '3rem 1.5rem',
+            padding: '3.5rem 1.5rem',
             textAlign: 'center',
-            background: 'rgba(255, 255, 255, 0.02)',
-            borderRadius: '16px',
-            border: '1px dashed rgba(255, 255, 255, 0.15)',
+            backgroundColor: 'rgba(0, 15, 45, 0.4)',
+            borderRadius: '18px',
+            border: '1px dashed rgba(255, 255, 255, 0.16)',
             color: '#94A3B8'
           }}
         >
-          <FileText size={40} color="#64748B" style={{ marginBottom: '0.75rem' }} />
-          <h4 style={{ color: '#FFFFFF', fontSize: '1.1rem', marginBottom: '0.35rem' }}>
-            No se encontraron actas con los filtros aplicados
+          <FileText size={44} color="#64748B" style={{ marginBottom: '0.85rem' }} />
+          <h4 style={{ color: '#FFFFFF', fontSize: '1.15rem', marginBottom: '0.4rem', fontWeight: 700 }}>
+            No se encontraron actas con los criterios especificados
           </h4>
-          <p style={{ fontSize: '0.875rem' }}>
-            Intente con otros términos de búsqueda o restablezca los filtros.
+          <p style={{ fontSize: '0.88rem', margin: 0 }}>
+            Verifique el número de acta o ajuste los selectores de año y tipo de sesión municipal.
           </p>
         </div>
       ) : (
-        <div style={{ overflowX: 'auto', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+        <div
+          style={{
+            overflowX: 'auto',
+            borderRadius: '18px',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            backgroundColor: 'rgba(0, 15, 45, 0.65)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            boxShadow: '0 12px 40px rgba(0, 4, 13, 0.7)'
+          }}
+        >
           <table
             style={{
               width: '100%',
               borderCollapse: 'collapse',
               textAlign: 'left',
-              fontFamily: "var(--font-body, sans-serif)",
-              fontSize: '0.875rem'
+              fontSize: '0.88rem',
+              color: '#FFFFFF'
             }}
           >
             <thead>
-              <tr style={{ background: 'rgba(255, 255, 255, 0.04)', borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}>
-                <th style={{ padding: '0.9rem 1.25rem', color: '#CBD5E1', fontWeight: 600 }}>Número de Acta</th>
-                <th style={{ padding: '0.9rem 1rem', color: '#CBD5E1', fontWeight: 600 }}>Tipo</th>
-                <th style={{ padding: '0.9rem 1rem', color: '#CBD5E1', fontWeight: 600 }}>Fecha y Hora</th>
-                <th style={{ padding: '0.9rem 1rem', color: '#CBD5E1', fontWeight: 600 }}>Estado</th>
-                <th style={{ padding: '0.9rem 1.25rem', color: '#CBD5E1', fontWeight: 600, textAlign: 'right' }}>Acciones</th>
+              <tr
+                style={{
+                  backgroundColor: 'rgba(0, 20, 137, 0.35)',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.15)'
+                }}
+              >
+                <th style={{ padding: '1rem 1.25rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  Fecha Oficial
+                </th>
+                <th style={{ padding: '1rem 1.25rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  Sesión N°
+                </th>
+                <th style={{ padding: '1rem 1.5rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  Resumen de Acuerdos Tomados
+                </th>
+                <th style={{ padding: '1rem 1rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  Estado de Aprobación
+                </th>
+                <th style={{ padding: '1rem 1.25rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.08em', textAlign: 'right' }}>
+                  Acciones
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -226,63 +266,187 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                 <tr
                   key={acta.id}
                   style={{
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-                    background: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.015)' : 'transparent',
-                    transition: 'background 0.2s ease'
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    backgroundColor: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.015)' : 'transparent',
+                    transition: 'all 0.2s ease'
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = idx % 2 === 0 ? 'rgba(255, 255, 255, 0.015)' : 'transparent')}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.25)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = idx % 2 === 0 ? 'rgba(255, 255, 255, 0.015)' : 'transparent';
+                  }}
                 >
-                  <td style={{ padding: '1rem 1.25rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <FileText size={18} color="#7DD3FC" />
-                      <div>
-                        <strong style={{ color: '#FFFFFF', display: 'block' }}>{acta.numeroActa}</strong>
-                        <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{acta.presidenteSesion}</span>
+                  {/* Columna 1: Fecha Oficial */}
+                  <td style={{ padding: '1.15rem 1.25rem', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                      <strong style={{ color: '#FFFFFF', fontSize: '0.9rem', fontFamily: 'monospace' }}>
+                        {acta.fecha}
+                      </strong>
+                      <span style={{ fontSize: '0.76rem', color: '#79a6ff' }}>
+                        {acta.hora}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* Columna 2: Sesión N° */}
+                  <td style={{ padding: '1.15rem 1.25rem', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                      <span style={{ fontWeight: 800, color: '#FFFFFF', fontSize: '0.92rem' }}>
+                        {acta.numeroActa}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          padding: '0.15rem 0.55rem',
+                          borderRadius: '9999px',
+                          display: 'inline-block',
+                          width: 'fit-content',
+                          textTransform: 'uppercase',
+                          backgroundColor:
+                            acta.tipo === 'Solemne'
+                              ? 'rgba(251, 191, 36, 0.15)'
+                              : acta.tipo === 'Extraordinaria'
+                              ? 'rgba(239, 68, 68, 0.15)'
+                              : 'rgba(56, 189, 248, 0.15)',
+                          color:
+                            acta.tipo === 'Solemne'
+                              ? '#FBBF24'
+                              : acta.tipo === 'Extraordinaria'
+                              ? '#F87171'
+                              : '#38BDF8',
+                          border: `1px solid ${
+                            acta.tipo === 'Solemne'
+                              ? 'rgba(251, 191, 36, 0.3)'
+                              : acta.tipo === 'Extraordinaria'
+                              ? 'rgba(239, 68, 68, 0.3)'
+                              : 'rgba(56, 189, 248, 0.3)'
+                          }`
+                        }}
+                      >
+                        Sesión {acta.tipo}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* Columna 3: Resumen de Acuerdos Tomados */}
+                  <td style={{ padding: '1.15rem 1.5rem', verticalAlign: 'top' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <p style={{ margin: 0, fontSize: '0.88rem', color: '#E2E8F0', lineHeight: 1.55 }}>
+                        {acta.resumenEjecutivo}
+                      </p>
+
+                      {/* Lista de Acuerdos Principales de la Sesión */}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.2rem' }}>
+                        {acta.acuerdosDestacados.map((a) => (
+                          <span
+                            key={a.numeroAcuerdo}
+                            style={{
+                              fontSize: '0.72rem',
+                              fontFamily: 'monospace',
+                              padding: '0.2rem 0.5rem',
+                              borderRadius: '6px',
+                              backgroundColor: 'rgba(0, 20, 137, 0.4)',
+                              color: '#79a6ff',
+                              border: '1px solid rgba(121, 166, 255, 0.25)'
+                            }}
+                            title={a.descripcion}
+                          >
+                            {a.numeroAcuerdo} ({a.votacion})
+                          </span>
+                        ))}
                       </div>
                     </div>
                   </td>
 
-                  <td style={{ padding: '1rem' }}>
-                    <CivicBadge variant={acta.tipo === 'Ordinaria' ? 'default' : 'provincial'} size="sm">
-                      {acta.tipo}
-                    </CivicBadge>
-                  </td>
-
-                  <td style={{ padding: '1rem', fontFamily: "var(--font-telemetry, monospace)", color: '#E2E8F0' }}>
-                    <div>{acta.fecha}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{acta.hora}</div>
-                  </td>
-
-                  <td style={{ padding: '1rem' }}>
-                    <CivicBadge variant="success" size="sm" dot>
-                      {acta.estado}
-                    </CivicBadge>
-                  </td>
-
-                  <td style={{ padding: '1rem 1.25rem', textAlign: 'right' }}>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <CivicButton
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<Eye size={14} />}
-                        onClick={() => setActaSeleccionada(acta)}
-                        aria-label={`Ver acta oficial ${acta.numeroActa}`}
+                  {/* Columna 4: Estado de Aprobación */}
+                  <td style={{ padding: '1.15rem 1rem', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <CheckCircle2 size={15} color="#34D399" />
+                      <span
+                        style={{
+                          fontSize: '0.76rem',
+                          fontWeight: 700,
+                          padding: '0.2rem 0.65rem',
+                          borderRadius: '9999px',
+                          backgroundColor: 'rgba(52, 211, 153, 0.12)',
+                          color: '#34D399',
+                          border: '1px solid rgba(52, 211, 153, 0.3)'
+                        }}
                       >
-                        Ver Acta
-                      </CivicButton>
+                        {acta.estado}
+                      </span>
+                    </div>
+                  </td>
 
+                  {/* Columna 5: Acciones (Previsualizar + Descargar) */}
+                  <td style={{ padding: '1.15rem 1.25rem', verticalAlign: 'top', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem' }}>
+                      {/* Botón Principal: Previsualizar Documento Oficial */}
+                      <button
+                        type="button"
+                        onClick={() => setActaSeleccionada(acta)}
+                        aria-label={`Previsualizar Documento Oficial del ${acta.numeroActa}`}
+                        style={{
+                          backgroundColor: 'rgba(0, 20, 137, 0.35)',
+                          border: '1px solid rgba(121, 166, 255, 0.45)',
+                          color: '#FFFFFF',
+                          padding: '0.48rem 0.95rem',
+                          borderRadius: '10px',
+                          fontSize: '0.82rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.45rem',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#002B7F';
+                          e.currentTarget.style.borderColor = '#79a6ff';
+                          e.currentTarget.style.boxShadow = '0 0 14px rgba(0, 20, 137, 0.5)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.35)';
+                          e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.45)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                      >
+                        <Eye size={15} color="#79a6ff" />
+                        <span>Previsualizar Documento Oficial</span>
+                      </button>
+
+                      {/* Botón Descarga Rápida */}
                       <a
                         href={acta.pdfUrl}
                         download={`${acta.numeroActa.replace(/\s+/g, '_')}.pdf`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ textDecoration: 'none' }}
-                        aria-label={`Descargar PDF del acta ${acta.numeroActa}`}
+                        aria-label={`Descargar archivo PDF del ${acta.numeroActa}`}
+                        style={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(255, 255, 255, 0.16)',
+                          color: '#CBD5E1',
+                          padding: '0.48rem 0.65rem',
+                          borderRadius: '10px',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.2s ease',
+                          textDecoration: 'none'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+                          e.currentTarget.style.color = '#FFFFFF';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                          e.currentTarget.style.color = '#CBD5E1';
+                        }}
                       >
-                        <CivicButton variant="ghost" size="sm" style={{ padding: '0.45rem' }}>
-                          <Download size={16} color="#7DD3FC" />
-                        </CivicButton>
+                        <Download size={15} />
                       </a>
                     </div>
                   </td>
@@ -290,65 +454,84 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
               ))}
             </tbody>
           </table>
-        </div>
-      )}
 
-      {/* Paginación Accesible */}
-      {totalPaginas > 1 && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: '1.25rem',
-            padding: '0.5rem 0'
-          }}
-        >
-          <span style={{ fontSize: '0.85rem', color: '#94A3B8' }}>
-            Mostrando {indexInicio + 1} - {Math.min(indexInicio + ITEMS_POR_PAGINA, actasFiltradas.length)} de{' '}
-            {actasFiltradas.length} actas oficiales
-          </span>
+          {/* Barra de Paginación de la Gaceta */}
+          <div
+            style={{
+              padding: '1rem 1.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              backgroundColor: 'rgba(0, 4, 13, 0.4)',
+              fontSize: '0.82rem',
+              color: '#94A3B8'
+            }}
+          >
+            <div>
+              Mostrando <strong style={{ color: '#FFFFFF' }}>{actasPaginadas.length}</strong> de <strong style={{ color: '#FFFFFF' }}>{actasFiltradas.length}</strong> actas oficiales registradas
+            </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <CivicButton
-              variant="secondary"
-              size="sm"
-              onClick={handlePaginaAnterior}
-              disabled={paginaActual === 1}
-              aria-label="Página anterior"
-              leftIcon={<ChevronLeft size={16} />}
-            >
-              Anterior
-            </CivicButton>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={handlePaginaAnterior}
+                disabled={paginaActual === 1}
+                aria-label="Página anterior de actas"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  color: paginaActual === 1 ? '#475569' : '#FFFFFF',
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '8px',
+                  cursor: paginaActual === 1 ? 'not-allowed' : 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <ChevronLeft size={14} />
+                <span>Anterior</span>
+              </button>
 
-            <span
-              style={{
-                fontFamily: "var(--font-telemetry, monospace)",
-                fontSize: '0.85rem',
-                padding: '0.35rem 0.75rem',
-                background: 'rgba(255, 255, 255, 0.06)',
-                borderRadius: '6px',
-                color: '#FFFFFF'
-              }}
-            >
-              {paginaActual} / {totalPaginas}
-            </span>
+              <span style={{ padding: '0 0.5rem', color: '#CBD5E1', fontWeight: 600 }}>
+                Página {paginaActual} de {totalPaginas}
+              </span>
 
-            <CivicButton
-              variant="secondary"
-              size="sm"
-              onClick={handlePaginaSiguiente}
-              disabled={paginaActual === totalPaginas}
-              aria-label="Página siguiente"
-              rightIcon={<ChevronRight size={16} />}
-            >
-              Siguiente
-            </CivicButton>
+              <button
+                type="button"
+                onClick={handlePaginaSiguiente}
+                disabled={paginaActual === totalPaginas}
+                aria-label="Página siguiente de actas"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  color: paginaActual === totalPaginas ? '#475569' : '#FFFFFF',
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '8px',
+                  cursor: paginaActual === totalPaginas ? 'not-allowed' : 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span>Siguiente</span>
+                <ChevronRight size={14} />
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Modal con Visor PDF Embebido */}
+      {/* Modal Visor de Documento Oficial con Fe Pública */}
       <VisorActaModal
         acta={actaSeleccionada}
         isOpen={Boolean(actaSeleccionada)}

@@ -152,6 +152,12 @@ export const TimelineHistorico: FC<TimelineHistoricoProps> = ({ hitos }) => {
                     {hito.titulo}
                   </h3>
 
+                  {hito.decretoRespaldo && (
+                    <div style={{ fontSize: '0.75rem', color: '#7DD3FC', fontFamily: "var(--font-telemetry, monospace)" }}>
+                      Marco Legal: {hito.decretoRespaldo}
+                    </div>
+                  )}
+
                   <p style={{ fontSize: '0.9rem', color: '#CBD5E1', lineHeight: 1.6, margin: 0 }}>
                     {hito.descripcion}
                   </p>
@@ -164,10 +170,18 @@ export const TimelineHistorico: FC<TimelineHistoricoProps> = ({ hitos }) => {
                       borderLeft: '3px solid var(--color-provincial-primary, #002B7F)',
                       borderRadius: '0 8px 8px 0',
                       fontSize: '0.825rem',
-                      color: '#E0F2FE'
+                      color: '#E0F2FE',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.25rem'
                     }}
                   >
-                    <strong>Legado Institucional: </strong> {hito.impacto}
+                    <div><strong>Legado Institucional: </strong> {hito.impacto}</div>
+                    {hito.impactoDistrital && (
+                      <div style={{ color: '#A7F3D0', fontSize: '0.8rem' }}>
+                        <strong>Impacto Territorial: </strong> {hito.impactoDistrital}
+                      </div>
+                    )}
                   </div>
                 </div>
               </CivicCard>
