@@ -6,11 +6,15 @@ import Navbar from '../components/Navbar';
 export default function Dashboard() {
   const modulosCivicos = [
     { id: 'M01', nombre: 'Portal Nacional', desc: 'Alertas cívicas y cabecera de noticias oficiales', icono: Newspaper, color: '#38BDF8', ruta: '/' },
-    { id: 'M03', nombre: 'Sistema de Trámites', desc: 'Digitalización y consulta de solicitudes públicas', icono: FileEdit, color: '#A78BFA' },
-    { id: 'M05', nombre: 'Visor Cartográfico GIS', desc: 'Capas GeoJSON y relieve 3D cantonal fotorrealista', icono: Map, color: '#34D399', ruta: '/mapa-gis' },
-    { id: 'M06', nombre: 'Gestión de Desastres', desc: 'Protocolos de emergencia y albergues en tiempo real', icono: AlertOctagon, color: '#F87171', ruta: '/mapa-gis' },
-    { id: 'M08', nombre: 'Feria del Agricultor', desc: 'Rutas de abastecimiento y comercio local cantonal', icono: Store, color: '#FBBF24' },
-    { id: 'M10', nombre: 'Observatorio Económico', desc: 'Verificación tributaria mediante API Hacienda', icono: BarChart3, color: '#60A5FA' }
+    { id: 'M02', nombre: 'Gobernanza y Actas', desc: 'Organigrama municipal, actas del Concejo y visor PDF', icono: FileEdit, color: '#60A5FA', ruta: '/gobernanza' },
+    { id: 'M03', nombre: 'Cultura e Identidad', desc: 'Línea histórica, escudos, reproductor de himnos y patrimonio', icono: Store, color: '#F472B6', ruta: '/cultura' },
+    { id: 'M04', nombre: 'Deportes y CCDR', desc: 'Escuelas deportivas, instalaciones con semáforo y orgullo cantonal', icono: BarChart3, color: '#34D399', ruta: '/deportes' },
+    { id: 'M05', nombre: 'Visor Cartográfico GIS', desc: 'Capas GeoJSON y relieve 3D cantonal fotorrealista', icono: Map, color: '#2DD4BF', ruta: '/mapa-gis' },
+    { id: 'M06', nombre: 'Educación y CTPs', desc: 'Directorio de escuelas con POI y especialidades técnicas CTP', icono: AlertOctagon, color: '#A78BFA', ruta: '/educacion' },
+    { id: 'M08', nombre: 'Comercio & Feria Agrícola', desc: 'Directorio PyMEs verificado con Hacienda y croquis de feria', icono: Store, color: '#FBBF24', ruta: '/comercio' },
+    { id: 'M09', nombre: 'Turismo Cantonal', desc: 'Destinos accesibles Ley 7600, rutas 4x4 y exportador GeoJSON', icono: Map, color: '#38BDF8', ruta: '/turismo' },
+    { id: 'M11', nombre: 'Participación Ciudadana', desc: 'Presupuesto participativo, votación blindada y audiencias', icono: BarChart3, color: '#10B981', ruta: '/participacion' },
+    { id: 'M12', nombre: 'Itinerario Pura Vida (IA)', desc: 'Planificador generativo multivariable y relieve topográfico 3D', icono: FileEdit, color: '#F59E0B', ruta: '/itinerario-ia' }
   ];
 
   return (

@@ -51,13 +51,14 @@ export default function FullScreenMenu({ isOpen, onClose }) {
     { number: '02', key: 'territorio', label: 'Territorio 3D & Cartografía', path: '/mapa-gis' },
     { number: '03', key: 'reportes', label: 'Reportes de Infraestructura', path: '/reportar-incidencia' },
     { number: '04', key: 'seguridad', label: 'Seguridad y Emergencias 911', path: '/seguridad-emergencias' },
-    { number: '05', key: 'gobernanza', label: 'Gobernanza y Transparencia', path: '/dashboard' },
-    { number: '06', key: 'cultura', label: 'Cultura y Patrimonio', path: '/dashboard' },
-    { number: '07', key: 'deportes', label: 'Deportes y Recreación', path: '/dashboard' },
-    { number: '08', key: 'educacion', label: 'Educación y Juventud', path: '/dashboard' },
-    { number: '09', key: 'comercio', label: 'Comercio y PYMEs', path: '/dashboard' },
-    { number: '10', key: 'turismo', label: 'Turismo y Naturaleza', path: '/mapa-gis' },
-    { number: '11', key: 'participacion', label: 'Participación Ciudadana', path: '/reportar-incidencia' }
+    { number: '05', key: 'gobernanza', label: 'Gobernanza y Transparencia', path: '/gobernanza' },
+    { number: '06', key: 'cultura', label: 'Cultura y Patrimonio', path: '/cultura' },
+    { number: '07', key: 'deportes', label: 'Deportes y Recreación', path: '/deportes' },
+    { number: '08', key: 'educacion', label: 'Educación y Juventud', path: '/educacion' },
+    { number: '09', key: 'comercio', label: 'Comercio y PYMEs', path: '/comercio' },
+    { number: '10', key: 'turismo', label: 'Turismo y Naturaleza', path: '/turismo' },
+    { number: '11', key: 'participacion', label: 'Participación Ciudadana', path: '/participacion' },
+    { number: '12', key: 'itinerario', label: 'Itinerario Pura Vida (IA)', path: '/itinerario-ia' }
   ];
 
   return (
