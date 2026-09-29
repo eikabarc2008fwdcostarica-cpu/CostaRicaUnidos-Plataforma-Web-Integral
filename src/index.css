@@ -73,6 +73,105 @@
 
   /* Motor de Accesibilidad Universal (RNF-05.1 / Ley 7600) */
   --text-scale: 1;
+
+  /* Variables del Tema Activo (Default: Dark) */
+  --theme-bg: #00040D;
+  --theme-bg-gradient: radial-gradient(circle at 15% 20%, rgba(0, 43, 127, 0.28) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(206, 17, 38, 0.16) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(0, 4, 13, 0.95) 0%, rgba(0, 4, 13, 1) 100%);
+  --theme-text-primary: #FFFFFF;
+  --theme-text-secondary: #94A3B8;
+  --theme-text-muted: #64748B;
+  --theme-card-bg: rgba(255, 255, 255, 0.05);
+  --theme-card-border: rgba(255, 255, 255, 0.12);
+  --theme-card-shadow: 0 10px 30px rgba(0, 4, 13, 0.6);
+  --theme-input-bg: rgba(0, 4, 13, 0.75);
+  --theme-input-border: rgba(255, 255, 255, 0.2);
+  --theme-input-text: #FFFFFF;
+  --theme-header-bg: rgba(0, 4, 13, 0.85);
+  --theme-header-border: rgba(255, 255, 255, 0.12);
+  --theme-topbar-bg: #000818;
+  --theme-topbar-text: #94A3B8;
+}
+
+/* Modo Claro (Sede Electrónica Oficial) */
+html.light {
+  --color-obsidian: #F8FAFC;
+  --color-obsidian-sovereign: #F8FAFC;
+  --theme-bg: #F8FAFC;
+  --theme-bg-gradient: radial-gradient(circle at 20% 15%, rgba(0, 43, 127, 0.07) 0%, transparent 50%),
+    radial-gradient(circle at 80% 85%, rgba(206, 17, 38, 0.05) 0%, transparent 45%),
+    linear-gradient(180deg, #F8FAFC 0%, #EEF2F6 100%);
+  --theme-text-primary: #0F172A; /* Slate 900 - Contraste WCAG 2.1 AA > 7:1 */
+  --theme-text-secondary: #334155; /* Slate 700 */
+  --theme-text-muted: #64748B; /* Slate 500 */
+  --theme-card-bg: #FFFFFF;
+  --theme-card-border: #E2E8F0; /* Slate 200 */
+  --theme-card-shadow: 0 4px 20px rgba(0, 20, 137, 0.06), 0 1px 3px rgba(0, 0, 0, 0.05);
+  --theme-input-bg: #FFFFFF;
+  --theme-input-border: #CBD5E1; /* Slate 300 */
+  --theme-input-text: #0F172A;
+  --theme-header-bg: rgba(255, 255, 255, 0.94);
+  --theme-header-border: #E2E8F0;
+  --theme-topbar-bg: #001489;
+  --theme-topbar-text: #FFFFFF;
+  --glass-level-1-bg: #FFFFFF;
+  --glass-level-1-border: #E2E8F0;
+  --glass-level-2-bg: #FFFFFF;
+  --glass-level-2-border: #CBD5E1;
+  --glass-level-3-bg: #FFFFFF;
+  --glass-level-3-border: #94A3B8;
+  --color-radiant-white: #0F172A;
+}
+
+html.light body {
+  background-color: var(--theme-bg);
+  background-image: var(--theme-bg-gradient);
+  color: var(--theme-text-primary);
+}
+
+html.light .civic-glass-card,
+html.light .glass-card,
+html.light .civic-card {
+  background-color: var(--theme-card-bg) !important;
+  border-color: var(--theme-card-border) !important;
+  color: var(--theme-text-primary) !important;
+  box-shadow: var(--theme-card-shadow) !important;
+}
+
+html.light header {
+  background-color: var(--theme-header-bg) !important;
+  border-color: var(--theme-header-border) !important;
+}
+
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: var(--theme-input-bg) !important;
+  border-color: var(--theme-input-border) !important;
+  color: var(--theme-input-text) !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: var(--theme-text-muted) !important;
+}
+
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4,
+html.light h5,
+html.light h6 {
+  color: var(--theme-text-primary);
+}
+
+html.light a {
+  color: inherit;
+}
+
+html.light .civic-container {
+  color: var(--theme-text-primary);
 }
 
 html {
@@ -107,21 +206,19 @@ select:focus-visible {
 
 body {
   font-family: var(--font-main);
-  background-color: var(--color-obsidian);
-  color: var(--color-radiant-white);
+  background-color: var(--theme-bg, var(--color-obsidian));
+  color: var(--theme-text-primary, var(--color-radiant-white));
   min-height: 100vh;
   line-height: 1.6;
   font-size: 1rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: 
-    radial-gradient(circle at 15% 20%, rgba(0, 43, 127, 0.28) 0%, transparent 45%),
-    radial-gradient(circle at 85% 80%, rgba(206, 17, 38, 0.16) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(0, 4, 13, 0.95) 0%, rgba(0, 4, 13, 1) 100%);
+  background-image: var(--theme-bg-gradient);
   background-attachment: fixed;
   overflow-x: hidden;
   max-width: 100%;
   width: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {

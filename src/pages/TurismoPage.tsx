@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, Search, Filter, Sparkles, MapPin, Database, Check, Copy, Share2, Mountain, ShieldCheck, HeartHandshake } from 'lucide-react';
+import { Compass, Search, Filter, Sparkles, MapPin, Database, Check, Copy, Share2, Mountain, ShieldCheck, HeartHandshake, X } from 'lucide-react';
 import { DESTINOS_TURISTICOS_DATA, DestinoTuristicoPOI, getGeoJsonTurismoPOI } from '../data/turismoData';
 import { FichaDestinoTuristico } from '../components/turismo/FichaDestinoTuristico';
 import { RutasPreconfiguradas } from '../components/turismo/RutasPreconfiguradas';
@@ -183,9 +183,9 @@ export default function TurismoPage() {
                 className="w-full px-3 py-2.5 rounded-xl bg-slate-900/80 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-400"
               >
                 <option value="todos">Toda accesibilidad y tracción</option>
-                <option value="ley-7600">♿ Solo Ley 7600 Accesible</option>
-                <option value="acceso-4x4">🚙 Solo Exige Tracción 4x4</option>
-                <option value="pet-friendly">🐾 Solo Pet-Friendly</option>
+                <option value="ley-7600">Solo Ley 7600 Accesible</option>
+                <option value="acceso-4x4">Solo Exige Tracción 4x4</option>
+                <option value="pet-friendly">Solo Pet-Friendly</option>
               </select>
             </div>
           </div>
@@ -282,9 +282,10 @@ export default function TurismoPage() {
                 </div>
                 <button
                   onClick={() => setMostrarGeoJsonModal(false)}
-                  className="text-slate-400 hover:text-white text-sm"
+                  className="text-slate-400 hover:text-white transition-colors p-1"
+                  aria-label="Cerrar modal"
                 >
-                  ✕
+                  <X size={18} />
                 </button>
               </div>
 

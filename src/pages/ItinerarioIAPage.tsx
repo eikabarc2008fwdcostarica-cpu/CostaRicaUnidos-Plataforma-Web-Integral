@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, BrainCircuit, Mountain, Map, Compass, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Sparkles, BrainCircuit, Mountain, Map, Compass, ShieldCheck, ArrowRight, Accessibility, Car, Sprout } from 'lucide-react';
 import { SolicitudItinerarioIA, ItinerarioGeneradoResultado, generarItinerarioPuraVida } from '../services/itinerarioIAPlanner';
 import { FormularioItinerarioIA } from '../components/ia/FormularioItinerarioIA';
 import { VisorItinerarioGenerado } from '../components/ia/VisorItinerarioGenerado';
@@ -89,21 +89,30 @@ export default function ItinerarioIAPage() {
             {/* Presets Informativos */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
               <CivicCard level={1} className="p-4 border-white/5 space-y-2">
-                <span className="font-bold text-cyan-300 block">♿ Ruta Accesible Ciudadana</span>
+                <span className="font-bold text-cyan-300 flex items-center gap-1.5">
+                  <Accessibility className="w-4 h-4" />
+                  <span>Ruta Accesible Ciudadana</span>
+                </span>
                 <p className="text-slate-400">
                   Limita pendientes a un máximo de 8%. Prioriza aceras continuas, sodas típicas con rampa y museos nacionales.
                 </p>
               </CivicCard>
 
               <CivicCard level={1} className="p-4 border-white/5 space-y-2">
-                <span className="font-bold text-amber-300 block">🚙 Travesía Cumbres 4x4</span>
+                <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                  <Car className="w-4 h-4" />
+                  <span>Travesía Cumbres 4x4</span>
+                </span>
                 <p className="text-slate-400">
                   Desbloquea senderos de lastre, miradores montañosos y pasos de quebradas con pendientes superiores al 16%.
                 </p>
               </CivicCard>
 
               <CivicCard level={1} className="p-4 border-white/5 space-y-2">
-                <span className="font-bold text-emerald-300 block">🌱 Circuito Feria & PyMEs</span>
+                <span className="font-bold text-emerald-300 flex items-center gap-1.5">
+                  <Sprout className="w-4 h-4" />
+                  <span>Circuito Feria & PyMEs</span>
+                </span>
                 <p className="text-slate-400">
                   Incentiva el consumo en puestos de agricultores locales y cafeterías registradas ante el Ministerio de Hacienda.
                 </p>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, X, Volume2, RotateCcw, Shield, Map, Siren } from 'lucide-react';
+import { Sparkles, X, Volume2, RotateCcw, Shield, Map, Siren, Check, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAccessibility } from './AccessibilityContext';
 import { ONBOARDING_STEPS_MULTILINGUE, IDIOMAS_SOPORTADOS } from './accessibilityData';
 
@@ -303,7 +303,7 @@ export default function VoiceGuidedOnboardingModal() {
                   color: '#E2E8F0'
                 }}
               >
-                <span>✓</span>
+                <Check size={12} strokeWidth={2.5} color="#79a6ff" />
                 <span>{item}</span>
               </span>
             ))}
@@ -413,7 +413,10 @@ export default function VoiceGuidedOnboardingModal() {
                   cursor: 'pointer'
                 }}
               >
-                ← Anterior
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <ArrowLeft size={14} />
+                  <span>Anterior</span>
+                </span>
               </button>
             )}
 
@@ -437,7 +440,14 @@ export default function VoiceGuidedOnboardingModal() {
                 gap: '0.4rem'
               }}
             >
-              <span>{currentStepIndex === stepsList.length - 1 ? '¡Comenzar Exploración!' : 'Siguiente →'}</span>
+              {currentStepIndex === stepsList.length - 1 ? (
+                <span>¡Comenzar Exploración!</span>
+              ) : (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <span>Siguiente</span>
+                  <ArrowRight size={14} />
+                </span>
+              )}
             </button>
           </div>
         </div>

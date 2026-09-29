@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Zap } from 'lucide-react';
+import { Zap, RotateCcw } from 'lucide-react';
 import { PROVINCIAS_DATA, TEMA_NACIONAL } from '../data/costaRicaTerritorialData';
 
 /**
@@ -167,8 +167,17 @@ export default function ProvincialThemeEngine({
               borderRadius: '8px'
             }}
             aria-label="Restablecer tema al estándar Tricolor Nacional"
+            style={{
+              fontSize: '0.78rem',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '8px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
           >
-            ↺ Restablecer Tricolor Nacional
+            <RotateCcw size={12} />
+            <span>Restablecer Tricolor Nacional</span>
           </button>
         )}
       </div>

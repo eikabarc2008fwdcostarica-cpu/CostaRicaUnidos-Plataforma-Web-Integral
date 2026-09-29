@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, DollarSign, Car, Accessibility, Store, Clock, Calendar, Check, Compass, Sliders } from 'lucide-react';
+import { Sparkles, DollarSign, Car, Accessibility, Store, Clock, Calendar, Check, Compass, Sliders, Building2, Leaf, Coffee, Bike } from 'lucide-react';
 import { SolicitudItinerarioIA } from '../../services/itinerarioIAPlanner';
 import { CivicCard } from '../common/CivicCard';
 import { CivicButton } from '../common/CivicButton';
@@ -283,25 +283,27 @@ export const FormularioItinerarioIA: React.FC<FormularioItinerarioIAProps> = ({
           <div className="flex flex-wrap gap-2 text-xs">
             {(
               [
-                { id: 'cultura', label: '🏛️ Cultura e Historia' },
-                { id: 'naturaleza', label: '🌿 Naturaleza y Parques' },
-                { id: 'gastronomia', label: '☕ Gastronomía y Café' },
-                { id: 'aventura', label: '🚵 Aventura y Senderos' }
+                { id: 'cultura', label: 'Cultura e Historia', Icon: Building2 },
+                { id: 'naturaleza', label: 'Naturaleza y Parques', Icon: Leaf },
+                { id: 'gastronomia', label: 'Gastronomía y Café', Icon: Coffee },
+                { id: 'aventura', label: 'Aventura y Senderos', Icon: Bike }
               ] as const
             ).map((item) => {
               const seleccionado = intereses.includes(item.id);
+              const IconComp = item.Icon;
               return (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => toggleInteres(item.id)}
-                  className={`px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
                     seleccionado
                       ? 'bg-cyan-500 text-slate-950 border-cyan-400'
                       : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
                   }`}
                 >
-                  {item.label}
+                  <IconComp className="w-3.5 h-3.5" />
+                  <span>{item.label}</span>
                 </button>
               );
             })}

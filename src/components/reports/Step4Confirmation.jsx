@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Camera, Send, Loader2, AlertTriangle } from 'lucide-react';
+import { Building2, Camera, Send, Loader2, AlertTriangle, Check } from 'lucide-react';
 import { TIPOLOGIAS_DANO } from './Step1DamageType';
 import { getEntidadResponsable } from './ticketService';
 
@@ -55,7 +55,20 @@ export default function Step4Confirmation({
             Tipología & Entidad Competente
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-            <span style={{ fontSize: '2rem' }}>{tipologiaObj.icono}</span>
+            <div style={{
+              width: '42px',
+              height: '42px',
+              borderRadius: '10px',
+              backgroundColor: 'rgba(0, 20, 137, 0.35)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0
+            }}>
+              {typeof tipologiaObj.icono === 'function'
+                ? React.createElement(tipologiaObj.icono, { size: 24, color: '#79a6ff' })
+                : <Building2 size={24} color="#79a6ff" />}
+            </div>
             <div>
               <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
                 {tipologiaObj.titulo}
@@ -141,8 +154,9 @@ export default function Step4Confirmation({
               <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#FFFFFF' }}>
                 {photoData ? `Peso: ${photoData.compressedSizeFormatted}` : 'Foto procesada'}
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#00D166', marginTop: '0.2rem' }}>
-                ✓ Ley N° 8968 Verificada
+              <div style={{ fontSize: '0.75rem', color: '#00D166', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Check size={13} strokeWidth={2.5} />
+                <span>Ley N° 8968 Verificada</span>
               </div>
               <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontFamily: 'var(--font-telemetry)' }}>
                 {photoData ? photoData.dimensiones : '1920x1080'} &bull; WebP

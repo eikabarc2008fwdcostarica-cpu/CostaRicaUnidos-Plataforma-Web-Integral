@@ -528,8 +528,9 @@ export default function Step2PhotoPrivacy({
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
-                <span className="telemetry-badge" style={{ backgroundColor: 'rgba(0, 209, 102, 0.2)', color: '#00D166', borderColor: '#00D166', fontSize: '0.75rem', fontWeight: 800 }}>
-                  ✓ &lt; 1 MB ({photoData.compressedSizeFormatted})
+                <span className="telemetry-badge" style={{ backgroundColor: 'rgba(0, 209, 102, 0.2)', color: '#00D166', borderColor: '#00D166', fontSize: '0.75rem', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <Check size={13} strokeWidth={2.5} />
+                  <span>&lt; 1 MB ({photoData.compressedSizeFormatted})</span>
                 </span>
                 <span style={{ fontSize: '0.75rem', color: '#94A3B8', fontFamily: 'var(--font-telemetry)' }}>
                   {photoData.dimensiones} &bull; {photoData.formato?.split('/')[1]?.toUpperCase() || 'WEBP'}

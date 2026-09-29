@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Newspaper, FileEdit, Map, AlertOctagon, Store, BarChart3 } from 'lucide-react';
+import { Newspaper, FileEdit, Map, AlertOctagon, Store, BarChart3, ArrowRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
 
 export default function Dashboard() {
@@ -115,9 +115,10 @@ export default function Dashboard() {
                   <Link
                     to={modulo.ruta}
                     className="btn-glass-secondary"
-                    style={{ width: '100%', fontSize: '0.85rem', padding: '0.55rem', textAlign: 'center', display: 'block' }}
+                    style={{ width: '100%', fontSize: '0.85rem', padding: '0.55rem', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
                   >
-                    Abrir Módulo →
+                    <span>Abrir Módulo</span>
+                    <ArrowRight size={13} />
                   </Link>
                 ) : (
                   <button

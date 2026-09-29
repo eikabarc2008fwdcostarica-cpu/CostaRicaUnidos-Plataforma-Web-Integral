@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ChevronDown, Search, X, Check, FileText, Vote, AlertTriangle, Building2, MapPin } from 'lucide-react';
+import { ChevronDown, Search, X, Check, FileText, Vote, AlertTriangle, Building2, MapPin, Sun, Moon } from 'lucide-react';
 import FullScreenMenu from './FullScreenMenu';
 import Logo from './common/Logo';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { CANTONES_OFICIALES, PROVINCIAS_DATA } from '../data/costaRicaTerritorialData';
 
 /**
@@ -15,6 +16,7 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Estado del cantón activo (persiste en localStorage, por defecto San José)
@@ -203,7 +205,7 @@ export default function Navbar() {
                 }}
               />
 
-              {/* Botón Selector del Gobierno Local Activo [ 🏛️ Municipalidad: San José ▼ ] */}
+              {/* Botón Selector del Gobierno Local Activo [ Municipalidad: San José ] */}
               <button
                 type="button"
                 onClick={() => setIsCantonModalOpen(!isCantonModalOpen)}
@@ -239,7 +241,7 @@ export default function Navbar() {
                   }
                 }}
               >
-                <span style={{ fontSize: '1rem', lineHeight: 1 }}>🏛️</span>
+                <Building2 size={16} color="#79a6ff" />
                 <span style={{ color: '#94A3B8', fontWeight: 500, fontSize: '0.78rem' }}>Municipalidad:</span>
                 <span style={{ color: '#FFFFFF', fontWeight: 800 }}>{activeCanton}</span>
                 <ChevronDown
@@ -366,8 +368,43 @@ export default function Navbar() {
               </Link>
             </nav>
 
-            {/* LADO DERECHO: BOTÓN SOS 911 + BOTÓN MENÚ + */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexShrink: 0 }}>
+            {/* LADO DERECHO: CONMUTADOR TEMA + BOTÓN SOS 911 + BOTÓN MENÚ + */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+              {/* Botón Conmutador de Modo Claro / Modo Oscuro */}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                aria-label={theme === 'dark' ? 'Cambiar a Modo Claro (Sede Electrónica Oficial)' : 'Cambiar a Modo Oscuro (Sovereign Glass)'}
+                title={theme === 'dark' ? 'Cambiar a Modo Claro (Sede Electrónica Oficial)' : 'Cambiar a Modo Oscuro (Sovereign Glass)'}
+                style={{
+                  background: theme === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 20, 137, 0.08)',
+                  border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.22)' : '1px solid rgba(0, 20, 137, 0.25)',
+                  color: theme === 'dark' ? '#FFFFFF' : '#0F172A',
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.25s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 20, 137, 0.15)';
+                  e.currentTarget.style.borderColor = '#79a6ff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 20, 137, 0.08)';
+                  e.currentTarget.style.borderColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.22)' : 'rgba(0, 20, 137, 0.25)';
+                }}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-4 h-4 text-amber-400" />
+                ) : (
+                  <Moon className="w-4 h-4 text-blue-700" />
+                )}
+              </button>
+
               {/* Botón Rojo Sobrio SOS 911 */}
               <Link
                 to="/seguridad-emergencias"

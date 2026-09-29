@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { BarChart3 } from 'lucide-react';
+import { BarChart3, X } from 'lucide-react';
 import { PROVINCIAS_DATA, CANTONES_OFICIALES } from '../data/costaRicaTerritorialData';
 
 export default function TerritorialDrawer({
@@ -72,11 +72,15 @@ export default function TerritorialDrawer({
             className="btn-glass-secondary"
             style={{
               padding: '0.4rem 0.75rem',
-              fontSize: '1rem',
-              borderRadius: '8px'
+              fontSize: '0.9rem',
+              borderRadius: '8px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
             }}
           >
-            ✕ Cerrar
+            <X size={15} />
+            <span>Cerrar</span>
           </button>
         </div>
 

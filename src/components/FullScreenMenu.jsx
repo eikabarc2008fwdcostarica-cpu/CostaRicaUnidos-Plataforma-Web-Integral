@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, LogIn, UserPlus, Globe2, Sparkles } from 'lucide-react';
+import { X, LogIn, UserPlus, Globe2, Sparkles, Sun, Moon } from 'lucide-react';
 import { useAccessibility, TypographicScaleSelector } from './accessibility';
 import { IDIOMAS_SOPORTADOS } from './accessibility/accessibilityData';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import Logo from './common/Logo';
 
 /**
@@ -15,6 +16,7 @@ export default function FullScreenMenu({ isOpen, onClose }) {
   const location = useLocation();
   const { selectedLang, setSelectedLang, openOnboarding } = useAccessibility();
   const { idioma, cambiarIdioma, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
 
   // Sincronizar selectedLang de accesibilidad cuando cambie el idioma del LanguageContext
   useEffect(() => {
@@ -100,37 +102,80 @@ export default function FullScreenMenu({ isOpen, onClose }) {
           <Logo showText={true} />
         </div>
 
-        {/* Botón CERRAR ✕ */}
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={t('cerrarBoton') || 'Cerrar menú de navegación'}
-          style={{
-            background: 'transparent',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
-            color: '#FFFFFF',
-            padding: '0.5rem 1.4rem',
-            borderRadius: '9999px',
-            fontSize: '0.82rem',
-            fontWeight: 700,
-            letterSpacing: '0.12em',
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            transition: 'all 0.2s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
-            e.currentTarget.style.borderColor = '#FFFFFF';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
-          }}
-        >
-          <span>{t('cerrarBoton') || 'CERRAR ✕'}</span>
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {/* Botón Conmutador de Modo Claro / Oscuro */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Cambiar a Modo Claro (Sede Electrónica)' : 'Cambiar a Modo Oscuro'}
+            title={theme === 'dark' ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#FFFFFF',
+              padding: '0.5rem 0.85rem',
+              borderRadius: '9999px',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+            }}
+          >
+            {theme === 'dark' ? (
+              <>
+                <Sun className="w-4 h-4 text-amber-300" />
+                <span className="hidden sm:inline">Modo Claro</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-4 h-4 text-blue-300" />
+                <span className="hidden sm:inline">Modo Oscuro</span>
+              </>
+            )}
+          </button>
+
+          {/* Botón CERRAR */}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t('cerrarBoton') || 'Cerrar menú de navegación'}
+            style={{
+              background: 'transparent',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              color: '#FFFFFF',
+              padding: '0.5rem 1.4rem',
+              borderRadius: '9999px',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+              e.currentTarget.style.borderColor = '#FFFFFF';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+            }}
+          >
+            <span>{t('cerrarBoton') || 'CERRAR'}</span>
+            <X size={15} color="#FFFFFF" />
+          </button>
+        </div>
       </div>
 
       {/* Cuerpo Central del Overlay (Dos Columnas Editoriales) */}
@@ -423,6 +468,55 @@ export default function FullScreenMenu({ isOpen, onClose }) {
                 <span>{t('guiaVoz') || 'Guía Asistida por Voz'}</span>
               </button>
             </div>
+          </div>
+
+          {/* 4. Conmutador de Modo Visual (Sede Electrónica / Modo Oscuro) */}
+          <div>
+            <span
+              style={{
+                fontSize: '0.74rem',
+                fontWeight: 700,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: 'rgba(255, 255, 255, 0.45)',
+                display: 'block',
+                marginBottom: '0.75rem'
+              }}
+            >
+              MODO VISUAL & ESTÉTICA
+            </span>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              style={{
+                background: theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 43, 127, 0.65)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '8px',
+                padding: '0.6rem 1rem',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                fontSize: '0.84rem',
+                fontWeight: 600,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                transition: 'all 0.2s ease',
+                width: '100%',
+                justifyContent: 'center'
+              }}
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun className="w-4 h-4 text-amber-300" />
+                  <span>Cambiar a Modo Claro (Sede Electrónica)</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-4 h-4 text-blue-300" />
+                  <span>Cambiar a Modo Oscuro (Sovereign Glass)</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
       </div>

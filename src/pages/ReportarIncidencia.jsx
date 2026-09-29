@@ -815,7 +815,7 @@ export default function ReportarIncidencia() {
 
         {/* ==========================================================================
             3. VISTA TABLERO: TRAZABILIDAD OFICIAL EN 4 ETAPAS
-            Radicado ➔ Inspección de Campo ➔ En Ejecución Presupuestaria ➔ Subsanado
+            Radicado -> Inspección de Campo -> En Ejecución Presupuestaria -> Subsanado
             ========================================================================== */}
         {activeTab === 'tablero' && (
           <div>

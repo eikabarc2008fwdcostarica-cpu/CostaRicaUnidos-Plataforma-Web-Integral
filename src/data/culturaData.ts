@@ -338,7 +338,7 @@ export const CULTURA_MOCK_DATA: {
       importanciaCultural: 'Declarado Símbolo Nacional de Costa Rica en 2022 y manifestación central del 31 de octubre (Día Nacional de la Mascarada).',
       portadoresTradicion: 'Familias artesanas mascareras de Escazú, Desamparados y Cartago.',
       imagenUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
-      iconoCategoria: '🎭'
+      iconoCategoria: 'celebracion'
     },
     {
       id: 'patrimonio-2',
@@ -351,7 +351,7 @@ export const CULTURA_MOCK_DATA: {
       importanciaCultural: 'Preserva la memoria herbolaria indígena huetar y la resistencia comunitaria frente a imposiciones coloniales.',
       portadoresTradicion: 'Abuelos cuentacuentos y centros de cultura comunitaria de San Antonio de Escazú.',
       imagenUrl: 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=800&q=80',
-      iconoCategoria: '📜'
+      iconoCategoria: 'oral'
     },
     {
       id: 'patrimonio-3',
@@ -364,7 +364,7 @@ export const CULTURA_MOCK_DATA: {
       importanciaCultural: 'Patrimonio de la gastronomía urbana costarricense y atractivo turístico gastronómico central de San José.',
       portadoresTradicion: 'Cocineros populares y fondas del Mercado Central de San José.',
       imagenUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80',
-      iconoCategoria: '🍲'
+      iconoCategoria: 'gastronomia'
     },
     {
       id: 'patrimonio-4',
@@ -377,7 +377,7 @@ export const CULTURA_MOCK_DATA: {
       importanciaCultural: 'Obra Maestra del Patrimonio Oral e Inmaterial de la Humanidad declarada por la UNESCO.',
       portadoresTradicion: 'Boyeros tradicionales y artesanos pintores de carretas.',
       imagenUrl: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
-      iconoCategoria: '🎨'
+      iconoCategoria: 'artesania'
     }
   ]
 };

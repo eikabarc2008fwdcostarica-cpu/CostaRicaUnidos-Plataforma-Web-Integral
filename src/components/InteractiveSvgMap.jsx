@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Map, FileText, Maximize2 } from 'lucide-react';
+import { Map, FileText, Maximize2, X } from 'lucide-react';
 import { MAPA_PROVINCIAS_SVG, PROVINCIAS_DATA } from '../data/costaRicaTerritorialData';
 
 export default function InteractiveSvgMap({
@@ -331,10 +331,11 @@ export default function InteractiveSvgMap({
                 type="button"
                 onClick={() => setIsFullscreen(false)}
                 className="btn-sovereign"
-                style={{ padding: '0.45rem 1rem', fontSize: '0.9rem' }}
+                style={{ padding: '0.45rem 1rem', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                 aria-label="Cerrar pantalla completa"
               >
-                ✕ Salir
+                <X size={15} />
+                <span>Salir</span>
               </button>
             </div>
           </div>

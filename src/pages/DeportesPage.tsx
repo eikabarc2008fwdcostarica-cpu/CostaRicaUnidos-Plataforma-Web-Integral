@@ -21,8 +21,31 @@ import {
   Send,
   Building,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Circle,
+  Activity,
+  Waves,
+  Accessibility
 } from 'lucide-react';
+
+const renderDeporteIcon = (icono?: string) => {
+  switch (icono) {
+    case 'atletismo':
+      return <Activity className="w-7 h-7 text-cyan-400" />;
+    case 'natacion':
+      return <Waves className="w-7 h-7 text-blue-400" />;
+    case 'baloncesto':
+      return <Trophy className="w-7 h-7 text-amber-400" />;
+    case 'futbol':
+      return <Trophy className="w-7 h-7 text-emerald-400" />;
+    case 'taekwondo':
+      return <Shield className="w-7 h-7 text-red-400" />;
+    case 'adaptado':
+      return <Accessibility className="w-7 h-7 text-purple-400" />;
+    default:
+      return <Activity className="w-7 h-7 text-cyan-400" />;
+  }
+};
 import Navbar from '../components/Navbar';
 import { CivicBadge } from '../components/common/CivicBadge';
 import { CivicButton } from '../components/common/CivicButton';
@@ -488,10 +511,14 @@ export const DeportesPage: FC = () => {
                     borderRadius: '6px',
                     padding: '0.35rem 0.65rem',
                     fontSize: '0.78rem',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
                   }}
                 >
-                  🟢 Abierto al Público
+                  <Circle className="w-2.5 h-2.5 fill-emerald-400 text-emerald-400" />
+                  <span>Abierto al Público</span>
                 </button>
                 <button
                   type="button"
@@ -503,10 +530,14 @@ export const DeportesPage: FC = () => {
                     borderRadius: '6px',
                     padding: '0.35rem 0.65rem',
                     fontSize: '0.78rem',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
                   }}
                 >
-                  🟡 Mantenimiento
+                  <Circle className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+                  <span>Mantenimiento</span>
                 </button>
                 <button
                   type="button"
@@ -518,10 +549,14 @@ export const DeportesPage: FC = () => {
                     borderRadius: '6px',
                     padding: '0.35rem 0.65rem',
                     fontSize: '0.78rem',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
                   }}
                 >
-                  🔵 Reservado para Escuelas
+                  <Circle className="w-2.5 h-2.5 fill-blue-400 text-blue-400" />
+                  <span>Reservado para Escuelas</span>
                 </button>
               </div>
             </div>
@@ -668,7 +703,7 @@ export const DeportesPage: FC = () => {
                   <CivicCard key={disc.id} level={1}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                        <span style={{ fontSize: '1.8rem' }}>{disc.icono}</span>
+                        {renderDeporteIcon(disc.icono)}
                         <div>
                           <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
                             {disc.nombre}
@@ -707,8 +742,8 @@ export const DeportesPage: FC = () => {
                 <CivicCard key={esc.id} level={1} interactive>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ fontSize: '1.8rem' }}>{esc.icono}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        {renderDeporteIcon(esc.icono)}
                         <div>
                           <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
                             {esc.disciplina}

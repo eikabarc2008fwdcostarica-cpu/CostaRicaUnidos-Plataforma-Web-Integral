@@ -25,7 +25,7 @@ export const SUPPORTED_LANGUAGES: Record<SupportedLanguage, LanguageMetadata> = 
     localeCode: 'es-CR',
     nativeName: 'Español (Costa Rica)',
     englishName: 'Spanish (Latin America / Costa Rica)',
-    flagEmoji: '🇨🇷',
+    flagEmoji: 'CR',
     flagCode: 'CR',
     direction: 'ltr'
   },
@@ -34,7 +34,7 @@ export const SUPPORTED_LANGUAGES: Record<SupportedLanguage, LanguageMetadata> = 
     localeCode: 'es-ES',
     nativeName: 'Español (España)',
     englishName: 'Spanish (Spain)',
-    flagEmoji: '🇪🇸',
+    flagEmoji: 'ES',
     flagCode: 'ES',
     direction: 'ltr'
   },
@@ -43,7 +43,7 @@ export const SUPPORTED_LANGUAGES: Record<SupportedLanguage, LanguageMetadata> = 
     localeCode: 'en-US',
     nativeName: 'English (US)',
     englishName: 'English',
-    flagEmoji: '🇺🇸',
+    flagEmoji: 'US',
     flagCode: 'US',
     direction: 'ltr'
   },
@@ -52,7 +52,7 @@ export const SUPPORTED_LANGUAGES: Record<SupportedLanguage, LanguageMetadata> = 
     localeCode: 'zh-CN',
     nativeName: '中文 (简体)',
     englishName: 'Chinese (Mandarin)',
-    flagEmoji: '🇨🇳',
+    flagEmoji: 'CN',
     flagCode: 'CN',
     direction: 'ltr'
   },
@@ -61,7 +61,7 @@ export const SUPPORTED_LANGUAGES: Record<SupportedLanguage, LanguageMetadata> = 
     localeCode: 'pt-BR',
     nativeName: 'Português',
     englishName: 'Portuguese',
-    flagEmoji: '🇧🇷',
+    flagEmoji: 'BR',
     flagCode: 'BR',
     direction: 'ltr'
   },
@@ -70,7 +70,7 @@ export const SUPPORTED_LANGUAGES: Record<SupportedLanguage, LanguageMetadata> = 
     localeCode: 'fr-FR',
     nativeName: 'Français',
     englishName: 'French',
-    flagEmoji: '🇫🇷',
+    flagEmoji: 'FR',
     flagCode: 'FR',
     direction: 'ltr'
   },
@@ -79,7 +79,7 @@ export const SUPPORTED_LANGUAGES: Record<SupportedLanguage, LanguageMetadata> = 
     localeCode: 'ru-RU',
     nativeName: 'Русский',
     englishName: 'Russian',
-    flagEmoji: '🇷🇺',
+    flagEmoji: 'RU',
     flagCode: 'RU',
     direction: 'ltr'
   },
@@ -88,7 +88,7 @@ export const SUPPORTED_LANGUAGES: Record<SupportedLanguage, LanguageMetadata> = 
     localeCode: 'ja-JP',
     nativeName: '日本語',
     englishName: 'Japanese',
-    flagEmoji: '🇯🇵',
+    flagEmoji: 'JP',
     flagCode: 'JP',
     direction: 'ltr'
   }
