@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Compass, Mountain, RotateCw, Loader2, MapPin, PlaneTakeoff, ChevronUp, ChevronDown } from 'lucide-react';
 import { VUELOS_3D_DESTINOS } from './gisLayersData';
 
 export default function CameraFlyControls({
@@ -54,8 +55,8 @@ export default function CameraFlyControls({
             borderRadius: '8px'
           }}
         >
-          <span style={{ transform: `rotate(${-currentHeading}deg)`, display: 'inline-block', transition: 'transform 0.3s' }}>
-            🧭
+          <span style={{ transform: `rotate(${-currentHeading}deg)`, display: 'inline-flex', alignItems: 'center', transition: 'transform 0.3s' }}>
+            <Compass size={16} />
           </span>
         </button>
 
@@ -75,10 +76,12 @@ export default function CameraFlyControls({
             fontFamily: 'var(--font-telemetry)',
             fontWeight: 700,
             borderRadius: '8px',
+            display: 'inline-flex',
+            alignItems: 'center',
             gap: '0.4rem'
           }}
         >
-          <span>🏔️</span>
+          <Mountain size={14} />
           <span>{currentTilt > 0 ? `3D (${currentTilt}°)` : '2D PLANO'}</span>
         </button>
 
@@ -92,10 +95,13 @@ export default function CameraFlyControls({
           style={{
             padding: '0.45rem 0.65rem',
             fontSize: '0.85rem',
-            borderRadius: '8px'
+            borderRadius: '8px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem'
           }}
         >
-          ↻ 45°
+          <RotateCw size={13} /> <span>45°</span>
         </button>
 
         {/* Botón Mi Ubicación (navigator.geolocation) */}
@@ -112,10 +118,13 @@ export default function CameraFlyControls({
             borderRadius: '8px',
             color: isLocating ? '#F59E0B' : '#00D166',
             borderColor: isLocating ? '#F59E0B' : 'rgba(0, 209, 102, 0.4)',
-            backgroundColor: 'rgba(0, 209, 102, 0.12)'
+            backgroundColor: 'rgba(0, 209, 102, 0.12)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem'
           }}
         >
-          <span>{isLocating ? '⏳' : '📍'}</span>
+          {isLocating ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <MapPin size={14} />}
           <span>{isLocating ? 'LOCALIZANDO...' : 'MI UBICACIÓN'}</span>
         </button>
       </div>
@@ -135,10 +144,12 @@ export default function CameraFlyControls({
           }}
         >
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span>🛫</span>
+            <PlaneTakeoff size={15} />
             <span style={{ fontWeight: 700 }}>Vuelos 3D Fly-To</span>
           </span>
-          <span style={{ fontSize: '0.75rem' }}>{flyMenuOpen ? '▲' : '▼'}</span>
+          <span style={{ display: 'flex', alignItems: 'center' }}>
+            {flyMenuOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </span>
         </button>
 
         {flyMenuOpen && (

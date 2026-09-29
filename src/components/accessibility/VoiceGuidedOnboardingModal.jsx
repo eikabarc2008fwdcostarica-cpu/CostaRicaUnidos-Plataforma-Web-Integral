@@ -1,6 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Sparkles, X, Volume2, RotateCcw, Shield, Map, Siren } from 'lucide-react';
 import { useAccessibility } from './AccessibilityContext';
 import { ONBOARDING_STEPS_MULTILINGUE, IDIOMAS_SOPORTADOS } from './accessibilityData';
+
+function renderStepIcon(stepId) {
+  switch (stepId) {
+    case 1:
+      return <Shield size={32} color="#00D166" />;
+    case 2:
+      return <Map size={32} color="#3B82F6" />;
+    case 3:
+      return <Siren size={32} color="#EF4444" />;
+    default:
+      return <Sparkles size={32} color="#79a6ff" />;
+  }
+}
 
 /**
  * Onboarding Interactivo Animado Asistido por Voz (3 Pasos)
@@ -134,7 +148,7 @@ export default function VoiceGuidedOnboardingModal() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <span style={{ fontSize: '1.2rem' }}>✨</span>
+            <Sparkles size={16} color="#79a6ff" />
             <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#79a6ff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
               Recorrido Asistido por Voz (Paso {currentStepIndex + 1} de {stepsList.length})
             </span>
@@ -160,7 +174,7 @@ export default function VoiceGuidedOnboardingModal() {
             >
               {IDIOMAS_SOPORTADOS.map((item) => (
                 <option key={item.codigo} value={item.codigo} style={{ backgroundColor: '#00081E', color: '#FFFFFF' }}>
-                  {item.bandera} {item.nativo}
+                  [{item.bandera}] {item.nativo}
                 </option>
               ))}
             </select>
@@ -181,7 +195,11 @@ export default function VoiceGuidedOnboardingModal() {
                 fontWeight: 700
               }}
             >
-              {voiceGender === 'female' ? '👩 Voz Mujer' : '👨 Voz Hombre'}
+              {voiceGender === 'female' ? (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Volume2 size={13} color="#79a6ff" /> Voz Femenina</span>
+              ) : (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Volume2 size={13} color="#79a6ff" /> Voz Masculina</span>
+              )}
             </button>
 
             <button
@@ -193,11 +211,12 @@ export default function VoiceGuidedOnboardingModal() {
                 border: 'none',
                 color: '#94A3B8',
                 cursor: 'pointer',
-                fontSize: '1.25rem',
+                display: 'flex',
+                alignItems: 'center',
                 padding: '0.2rem'
               }}
             >
-              ✕
+              <X size={18} />
             </button>
           </div>
         </div>
@@ -230,12 +249,11 @@ export default function VoiceGuidedOnboardingModal() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '2rem',
                 boxShadow: '0 8px 25px rgba(0, 20, 137, 0.5)',
                 flexShrink: 0
               }}
             >
-              {step.icono}
+              {renderStepIcon(step.id)}
             </div>
 
             <div>
@@ -308,8 +326,9 @@ export default function VoiceGuidedOnboardingModal() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#00D166', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                🔊 Subtítulo de Locución en Tiempo Real ({activeLangObj.nativo}):
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#00D166', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Volume2 size={13} color="#00D166" />
+                <span>Subtítulo de Locución en Tiempo Real ({activeLangObj.nativo}):</span>
               </span>
               <button
                 type="button"
@@ -327,7 +346,7 @@ export default function VoiceGuidedOnboardingModal() {
                   gap: '0.3rem'
                 }}
               >
-                <span>🔁</span>
+                <RotateCcw size={13} />
                 <span>Repetir Voz</span>
               </button>
             </div>

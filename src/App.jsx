@@ -1,5 +1,6 @@
 import React from 'react';
 import Routing from './routes/Routing';
+import { LanguageProvider } from './context/LanguageContext';
 import {
   AccessibilityProvider,
   VoiceReaderFloatingButton,
@@ -8,12 +9,14 @@ import {
 
 export default function App() {
   return (
-    <AccessibilityProvider>
-      <Routing />
-      {/* Botón flotante accesible de lectura asistida (TTS) con Web Speech API en 8 idiomas */}
-      <VoiceReaderFloatingButton />
-      {/* Modal de Onboarding Interactivo Animado Asistido por Voz */}
-      <VoiceGuidedOnboardingModal />
-    </AccessibilityProvider>
+    <LanguageProvider>
+      <AccessibilityProvider>
+        <Routing />
+        {/* Botón flotante accesible de lectura asistida (TTS) con Web Speech API en 8 idiomas */}
+        <VoiceReaderFloatingButton />
+        {/* Modal de Onboarding Interactivo Animado Asistido por Voz */}
+        <VoiceGuidedOnboardingModal />
+      </AccessibilityProvider>
+    </LanguageProvider>
   );
 }

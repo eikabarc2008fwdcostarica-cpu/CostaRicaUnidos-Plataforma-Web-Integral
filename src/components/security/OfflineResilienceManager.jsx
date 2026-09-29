@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Wifi, WifiOff, Archive, RefreshCw, CheckCircle2 } from 'lucide-react';
 import {
   getOfflineQueue,
   syncOfflineQueue,
@@ -36,7 +37,7 @@ export default function OfflineResilienceManager() {
     setIsSyncing(false);
 
     if (res.count > 0) {
-      setSyncStatusMsg(`⚡ Se sincronizaron exitosamente ${res.count} reporte(s) con la central nacional.`);
+      setSyncStatusMsg(`Se sincronizaron exitosamente ${res.count} reporte(s) con la central nacional.`);
       setTimeout(() => setSyncStatusMsg(null), 5000);
     }
   };
@@ -98,11 +99,24 @@ export default function OfflineResilienceManager() {
             fontSize: '0.82rem',
             padding: '0.45rem 0.9rem',
             color: isSimulatedOffline ? '#00D166' : '#F59E0B',
-            borderColor: isSimulatedOffline ? 'rgba(0, 209, 102, 0.4)' : 'rgba(245, 158, 11, 0.4)'
+            borderColor: isSimulatedOffline ? 'rgba(0, 209, 102, 0.4)' : 'rgba(245, 158, 11, 0.4)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px'
           }}
           aria-label="Simular desconexión de red"
         >
-          {isSimulatedOffline ? '📶 Restaurar Conexión Simulada' : '📴 Simular Desconexión de Red'}
+          {isSimulatedOffline ? (
+            <>
+              <Wifi size={14} />
+              <span>Restaurar Conexión Simulada</span>
+            </>
+          ) : (
+            <>
+              <WifiOff size={14} />
+              <span>Simular Desconexión de Red</span>
+            </>
+          )}
         </button>
       </div>
 
@@ -125,7 +139,7 @@ export default function OfflineResilienceManager() {
         border: '1px solid rgba(255, 255, 255, 0.1)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <span style={{ fontSize: '1.2rem' }}>📦</span>
+          <Archive size={16} color="#79a6ff" />
           <span style={{ fontSize: '0.85rem', color: '#E2E8F0' }}>
             Reportes en Cola Offline Local: <strong>{offlineReports.length}</strong>
           </span>
@@ -137,9 +151,10 @@ export default function OfflineResilienceManager() {
             onClick={handleManualSync}
             disabled={isSyncing || !estadoReal}
             className="btn-sovereign-blue"
-            style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}
+            style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
-            {isSyncing ? '⏳ Transmitiendo...' : '🔄 Sincronizar Cola Ahora'}
+            <RefreshCw size={13} className={isSyncing ? "animate-spin" : ""} />
+            <span>{isSyncing ? 'Transmitiendo...' : 'Sincronizar Cola Ahora'}</span>
           </button>
         )}
       </div>

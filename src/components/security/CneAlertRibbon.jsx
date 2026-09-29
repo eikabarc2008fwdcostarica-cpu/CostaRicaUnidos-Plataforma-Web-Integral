@@ -9,7 +9,6 @@ export const CNE_ALERT_LEVELS = {
     borderColor: '#00D166',
     textColor: '#002914',
     badgeText: 'ALERTA VERDE',
-    icono: '🟢',
     protocolo: 'Monitoreo preventivo del Instituto Meteorológico Nacional (IMN) y comités locales de emergencia.',
     zonas: 'Territorio Nacional / Vigilancia Rutinaria'
   },
@@ -21,7 +20,6 @@ export const CNE_ALERT_LEVELS = {
     borderColor: '#F59E0B',
     textColor: '#331B00',
     badgeText: 'ALERTA AMARILLA',
-    icono: '🟡',
     protocolo: 'Preparación de albergues y activación de comités cantonales ante incremento de lluvias o sismicidad.',
     zonas: 'Pacífico Central, Caribe Sur y Valle Central'
   },
@@ -33,7 +31,6 @@ export const CNE_ALERT_LEVELS = {
     borderColor: '#F36717',
     textColor: '#FFFFFF',
     badgeText: 'ALERTA NARANJA',
-    icono: '🟠',
     protocolo: 'Despliegue táctico de Fuerza Pública, Bomberos y Cruz Roja. Movilización voluntaria de población en riesgo.',
     zonas: 'Zona Norte, Guanacaste y Cuencas del Río Sarapiquí'
   },
@@ -45,7 +42,6 @@ export const CNE_ALERT_LEVELS = {
     borderColor: '#DA291C',
     textColor: '#FFFFFF',
     badgeText: 'ALERTA ROJA',
-    icono: '🔴',
     protocolo: 'Evacuación obligatoria inmediata a refugios CNE habilitados. Máxima prioridad para el 9-1-1 y rescatistas.',
     zonas: 'Litoral Pacífico Sur y Cuencas Desbordadas'
   }
@@ -135,7 +131,14 @@ export default function CneAlertRibbon({ currentAlert = 'amarilla', onAlertChang
             letterSpacing: '0.05em'
           }}
         >
-          <span style={{ fontSize: '0.85rem' }}>{alertConfig.icono}</span>
+          <span style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            backgroundColor: alertConfig.color,
+            boxShadow: `0 0 8px ${alertConfig.color}`,
+            display: 'inline-block'
+          }} />
           <span>CNE &bull; {alertConfig.badgeText}</span>
         </div>
 
@@ -203,7 +206,15 @@ export default function CneAlertRibbon({ currentAlert = 'amarilla', onAlertChang
                     textAlign: 'left'
                   }}
                 >
-                  <span>{lvl.icono}</span>
+                  <span style={{
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    backgroundColor: lvl.color,
+                    boxShadow: `0 0 8px ${lvl.color}`,
+                    display: 'inline-block',
+                    flexShrink: 0
+                  }} />
                   <div>
                     <div style={{ fontWeight: 700 }}>{lvl.badgeText}</div>
                     <div style={{ fontSize: '0.68rem', color: '#94A3B8' }}>{lvl.titulo.split(' (')[1]?.replace(')', '')}</div>

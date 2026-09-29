@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MapPin, Zap, Archive, Map, FileText } from 'lucide-react';
 import { getProvincias, getCantones, getDistritos } from '../services/ubicacionesService';
 
 export default function TerritorialSelector({
@@ -127,7 +128,7 @@ export default function TerritorialSelector({
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.2rem' }}>
-            <span style={{ fontSize: '1.3rem' }}>📍</span>
+            <MapPin size={22} color="var(--color-provincial-primary, #38BDF8)" />
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#F8FAFC' }}>
               División Territorial en Cascada (DTA / INEC)
             </h3>
@@ -146,13 +147,15 @@ export default function TerritorialSelector({
             </span>
           )}
           {dataSource === 'cache' && (
-            <span className="telemetry-badge" style={{ borderColor: '#FFC700', color: '#FFC700', backgroundColor: 'rgba(255, 199, 0, 0.15)' }}>
-              ⚡ CACHÉ OFFLINE LOCAL
+            <span className="telemetry-badge" style={{ borderColor: '#FFC700', color: '#FFC700', backgroundColor: 'rgba(255, 199, 0, 0.15)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <Zap size={12} />
+              CACHÉ OFFLINE LOCAL
             </span>
           )}
           {dataSource === 'fallback' && (
-            <span className="telemetry-badge" style={{ borderColor: '#79a6ff', color: '#79a6ff', backgroundColor: 'rgba(121, 166, 255, 0.15)' }}>
-              📦 DATASET OFICIAL DE RESPALDO
+            <span className="telemetry-badge" style={{ borderColor: '#79a6ff', color: '#79a6ff', backgroundColor: 'rgba(121, 166, 255, 0.15)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <Archive size={12} />
+              DATASET OFICIAL DE RESPALDO
             </span>
           )}
         </div>
@@ -314,18 +317,20 @@ export default function TerritorialSelector({
                 if (mapEl) mapEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
               className="btn-glass-secondary"
-              style={{ fontSize: '0.85rem', padding: '0.55rem 1rem' }}
+              style={{ fontSize: '0.85rem', padding: '0.55rem 1rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
             >
-              🗺️ Ver en Mapa SVG
+              <Map size={15} />
+              <span>Ver en Mapa SVG</span>
             </button>
 
             <button
               type="button"
               onClick={() => onOpenDrawer && onOpenDrawer(provinciaObj.id)}
               className="btn-sovereign"
-              style={{ fontSize: '0.85rem', padding: '0.55rem 1rem' }}
+              style={{ fontSize: '0.85rem', padding: '0.55rem 1rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
             >
-              📑 Abrir Ficha Cívica (Drawer)
+              <FileText size={15} />
+              <span>Abrir Ficha Cívica (Drawer)</span>
             </button>
           </div>
         </div>

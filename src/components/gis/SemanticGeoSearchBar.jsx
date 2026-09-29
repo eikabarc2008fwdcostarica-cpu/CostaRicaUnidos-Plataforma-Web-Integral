@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Sparkles, X, Radio, Mic, Loader2, Zap, AlertTriangle, Lightbulb, Search } from 'lucide-react';
 import {
   procesarConsultaSemantica,
   obtenerSugerenciasPopulares,
@@ -158,7 +159,7 @@ export default function SemanticGeoSearchBar({
             flexShrink: 0
           }}
         >
-          <span style={{ fontSize: '0.95rem' }}>✨</span>
+          <Sparkles size={14} color="#79a6ff" />
           <span>IA NLP</span>
         </div>
 
@@ -203,7 +204,7 @@ export default function SemanticGeoSearchBar({
               justifyContent: 'center'
             }}
           >
-            ✕
+            <X size={16} />
           </button>
         )}
 
@@ -232,7 +233,7 @@ export default function SemanticGeoSearchBar({
             flexShrink: 0
           }}
         >
-          <span>{isListening ? '🔴' : '🎙️'}</span>
+          {isListening ? <Radio size={15} color="#FFFFFF" /> : <Mic size={15} />}
           <span style={{ display: isListening ? 'inline' : 'none' }}>Escuchando...</span>
         </button>
 
@@ -261,12 +262,12 @@ export default function SemanticGeoSearchBar({
         >
           {isProcessing ? (
             <>
-              <span style={{ display: 'inline-block', animation: 'spin 1s linear infinite' }}>⏳</span>
+              <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />
               <span>Interpretando...</span>
             </>
           ) : (
             <>
-              <span>⚡</span>
+              <Zap size={16} />
               <span>Explorar con IA</span>
             </>
           )}
@@ -283,11 +284,13 @@ export default function SemanticGeoSearchBar({
             backgroundColor: 'rgba(220, 38, 38, 0.2)',
             border: '1px solid #DC2626',
             borderRadius: '8px',
-            fontSize: '0.78rem',
-            color: '#FCA5A5'
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem'
           }}
         >
-          ⚠️ {speechError}
+          <AlertTriangle size={14} color="#FCA5A5" />
+          <span>{speechError}</span>
         </div>
       )}
 
@@ -311,10 +314,11 @@ export default function SemanticGeoSearchBar({
             whiteSpace: 'nowrap',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.3rem'
+            gap: '0.35rem'
           }}
         >
-          💡 Sugerencias:
+          <Lightbulb size={13} color="#FBBF24" />
+          <span>Sugerencias:</span>
         </span>
 
         {sugerencias.map((sug, idx) => (
@@ -347,7 +351,7 @@ export default function SemanticGeoSearchBar({
               e.currentTarget.style.color = '#CBD5E1';
             }}
           >
-            <span>🔍</span>
+            <Search size={12} color="#79a6ff" />
             <span>{sug}</span>
           </button>
         ))}

@@ -1,5 +1,23 @@
 import React, { useState } from 'react';
+import { Layers, ChevronUp, ChevronDown, HeartPulse, GraduationCap, Bus, Trophy, Siren, MapPin, Check, X } from 'lucide-react';
 import { GIS_LAYERS_CONFIG } from './gisLayersData';
+
+function renderLayerIcon(layerId, color) {
+  switch (layerId) {
+    case 'salud':
+      return <HeartPulse size={15} color={color} />;
+    case 'educacion':
+      return <GraduationCap size={15} color={color} />;
+    case 'transporte':
+      return <Bus size={15} color={color} />;
+    case 'recreativa':
+      return <Trophy size={15} color={color} />;
+    case 'albergues':
+      return <Siren size={15} color={color} />;
+    default:
+      return <MapPin size={15} color={color} />;
+  }
+}
 
 export default function LayerControlPanel({
   activeLayers = {},
@@ -43,8 +61,8 @@ export default function LayerControlPanel({
         }}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.1rem' }}>🥞</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+          <Layers size={17} color="#79a6ff" />
           <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#FFFFFF' }}>
             Capas Cívicas ({activeCount}/5)
           </span>
@@ -57,11 +75,12 @@ export default function LayerControlPanel({
             background: 'none',
             border: 'none',
             color: '#79a6ff',
-            fontSize: '0.85rem',
+            display: 'flex',
+            alignItems: 'center',
             cursor: 'pointer'
           }}
         >
-          {isExpanded ? '▲' : '▼'}
+          {isExpanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
         </button>
       </div>
 
@@ -100,7 +119,9 @@ export default function LayerControlPanel({
                         cursor: 'pointer'
                       }}
                     />
-                    <span style={{ fontSize: '1rem' }}>{layer.icono}</span>
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      {renderLayerIcon(layer.id, layer.color)}
+                    </span>
                     <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#E2E8F0' }}>
                       {layer.nombre.split(' (')[0]}
                     </span>
@@ -142,10 +163,13 @@ export default function LayerControlPanel({
                 color: '#79a6ff',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
-                fontFamily: 'var(--font-telemetry)'
+                fontFamily: 'var(--font-telemetry)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem'
               }}
             >
-              ✓ Todas
+              <Check size={12} /> Todas
             </button>
             <button
               type="button"
@@ -156,10 +180,13 @@ export default function LayerControlPanel({
                 color: '#94A3B8',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
-                fontFamily: 'var(--font-telemetry)'
+                fontFamily: 'var(--font-telemetry)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem'
               }}
             >
-              ✕ Ninguna
+              <X size={12} /> Ninguna
             </button>
           </div>
         </div>

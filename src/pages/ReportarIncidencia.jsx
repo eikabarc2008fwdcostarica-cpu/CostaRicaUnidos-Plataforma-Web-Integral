@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ClipboardEdit, BarChart3, AlertTriangle } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import {
   Step1DamageType,
@@ -107,7 +108,7 @@ export default function ReportarIncidencia() {
       reportId: reportId,
       categoria: selectedType,
       categoriaTitulo: tipologiaObj ? tipologiaObj.titulo : 'Incidencia Vial',
-      categoriaIcono: tipologiaObj ? tipologiaObj.icono : '⚠️',
+      categoriaIcono: '',
       provincia: provinciaNombre,
       provinciaId: provinciaId,
       canton: cantonNombre,
@@ -220,10 +221,14 @@ export default function ReportarIncidencia() {
                 padding: '0.65rem 1.6rem',
                 fontSize: '0.9rem',
                 border: 'none',
-                borderRadius: '12px'
+                borderRadius: '12px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
               }}
             >
-              📝 Asistente de Reporte (4 Pasos)
+              <ClipboardEdit size={16} />
+              <span>Asistente de Reporte (4 Pasos)</span>
             </button>
 
             <button
@@ -234,10 +239,14 @@ export default function ReportarIncidencia() {
                 padding: '0.65rem 1.6rem',
                 fontSize: '0.9rem',
                 border: 'none',
-                borderRadius: '12px'
+                borderRadius: '12px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
               }}
             >
-              📊 Tablero de Trazabilidad de Tickets
+              <BarChart3 size={16} />
+              <span>Tablero de Trazabilidad de Tickets</span>
             </button>
           </div>
         </div>
@@ -319,9 +328,10 @@ export default function ReportarIncidencia() {
                   setCreatedTicket(null);
                 }}
                 className="btn-sovereign-blue"
-                style={{ padding: '0.85rem 1.6rem', fontSize: '0.95rem' }}
+                style={{ padding: '0.85rem 1.6rem', fontSize: '0.95rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
               >
-                📊 Rastrear en Tablero de Trazabilidad
+                <BarChart3 size={16} />
+                <span>Rastrear en Tablero de Trazabilidad</span>
               </button>
 
               <button
@@ -445,9 +455,14 @@ export default function ReportarIncidencia() {
                 color: '#FF6B6B',
                 fontSize: '0.9rem',
                 textAlign: 'center',
-                animation: 'shake 0.3s ease'
+                animation: 'shake 0.3s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}>
-                ⚠️ {validationError}
+                <AlertTriangle size={16} />
+                <span>{validationError}</span>
               </div>
             )}
 

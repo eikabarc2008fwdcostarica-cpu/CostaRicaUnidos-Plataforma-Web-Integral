@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Type, X } from 'lucide-react';
 import { useAccessibility } from './AccessibilityContext';
 import { FASES_TIPOGRAFICAS } from './accessibilityData';
 
@@ -108,16 +109,17 @@ export default function TypographicScaleSelector({ variant = 'navbar' }) {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#79a6ff', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              ♿ Escala Tipográfica (Ley 7600)
+            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#79a6ff', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Type size={15} />
+              <span>Escala Tipográfica (Ley 7600)</span>
             </span>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Cerrar selector de escala"
-              style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: '1rem' }}
+              style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.2rem' }}
             >
-              ✕
+              <X size={16} />
             </button>
           </div>
 

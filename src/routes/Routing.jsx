@@ -21,6 +21,8 @@ export default function Routing() {
         <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mapa-gis" element={<MapaGIS />} />
+        <Route path="/territorio-3d" element={<MapaGIS />} />
+        <Route path="/visor-3d" element={<MapaGIS />} />
         <Route path="/gis" element={<MapaGIS />} />
         <Route path="/reportar-incidencia" element={<ReportarIncidencia />} />
         <Route path="/reportes" element={<ReportarIncidencia />} />

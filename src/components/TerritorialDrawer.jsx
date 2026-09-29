@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { BarChart3 } from 'lucide-react';
 import { PROVINCIAS_DATA, CANTONES_OFICIALES } from '../data/costaRicaTerritorialData';
 
 export default function TerritorialDrawer({
@@ -245,9 +246,10 @@ export default function TerritorialDrawer({
             <Link
               to="/dashboard"
               className="btn-sovereign"
-              style={{ width: '100%', textAlign: 'center' }}
+              style={{ width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
             >
-              📊 Auditar Proyectos en {provData.nombre}
+              <BarChart3 size={16} />
+              <span>Auditar Proyectos en {provData.nombre}</span>
             </Link>
 
             <button

@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { MapPin, Radio, Loader2, AlertTriangle, Crosshair, Zap, Navigation } from 'lucide-react';
 import { PROVINCIAS_DATA, CANTONES_OFICIALES } from '../../data/costaRicaTerritorialData';
 import { getProvincias, getCantones, getDistritos } from '../../services/ubicacionesService';
 import { GEOFENCING_COSTA_RICA } from '../gis/darkMapStyles';
 
-// Coordenadas aproximadas de cabeceras cantonales para Georreferenciación Inversa Matemática en Cliente
+// Coordenadas aproximadas de cabeceras cantonales para Georreferenciación Inversa
 const COORDENADAS_CANTONES = [
   { provinciaId: 1, cantonId: 1, nombre: 'San José', lat: 9.9333, lng: -84.0833 },
   { provinciaId: 1, cantonId: 2, nombre: 'Escazú', lat: 9.9190, lng: -84.1400 },
@@ -54,7 +57,10 @@ export default function Step3Georeferencing({
   const [distritos, setDistritos] = useState([]);
   const [isLocating, setIsLocating] = useState(false);
   const [reverseGeocodingNotice, setReverseGeocodingNotice] = useState(null);
+
   const mapContainerRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markerRef = useRef(null);
 
   // 1. Cargar Provincias
   useEffect(() => {
@@ -91,7 +97,7 @@ export default function Step3Georeferencing({
     loadDist();
   }, [provinciaId, cantonId]);
 
-  // 4. Georreferenciación Inversa Automática basada en Coordenadas
+  // 4. Georreferenciación Inversa basada en Coordenadas
   const ejecutarGeorreferenciacionInversa = async (lat, lng) => {
     let cantonCercano = null;
     let menorDistancia = Infinity;
@@ -118,7 +124,108 @@ export default function Step3Georeferencing({
     }
   };
 
-  // 5. Botón GPS "Mi Ubicación Actual"
+  // 5. Inicialización del Mini-Mapa Real de Costa Rica (Leaflet + Esri Dark Gray)
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    if (mapInstanceRef.current) return;
+
+    const initialLat = coordenadas?.lat || 9.9333;
+    const initialLng = coordenadas?.lng || -84.0833;
+
+    // Crear mapa real
+    const map = L.map(mapContainerRef.current, {
+      center: [initialLat, initialLng],
+      zoom: 12,
+      minZoom: 7,
+      maxZoom: 18,
+      maxBounds: [
+        [7.5, -86.5],
+        [11.5, -82.0]
+      ],
+      zoomControl: true,
+      attributionControl: false
+    });
+
+    // Tiles Esri Dark Gray Base de alta precisión
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 18 }
+    ).addTo(map);
+
+    // Capa de nombres de calles, cantones y referencias viales
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 18 }
+    ).addTo(map);
+
+    // Icono de Pin Cívico Soberano Arrastrable
+    const pinIcon = L.divIcon({
+      className: 'custom-report-pin',
+      html: `
+        <div style="position: relative; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; transform: translate(-50%, -100%); cursor: grab;">
+          <div style="position: absolute; width: 26px; height: 26px; background-color: #DA291C; border: 2.5px solid #FFFFFF; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 0 16px rgba(218, 41, 28, 0.9), 0 4px 10px rgba(0,0,0,0.6);"></div>
+          <div style="position: absolute; width: 9px; height: 9px; background-color: #FFFFFF; border-radius: 50%; top: 7px;"></div>
+          <div style="position: absolute; bottom: -4px; width: 10px; height: 5px; background: rgba(0,0,0,0.5); border-radius: 50%; filter: blur(1px);"></div>
+        </div>
+      `,
+      iconSize: [0, 0],
+      iconAnchor: [0, 0]
+    });
+
+    const marker = L.marker([initialLat, initialLng], {
+      icon: pinIcon,
+      draggable: true
+    }).addTo(map);
+
+    // Clic en el mapa para colocar el pin
+    map.on('click', (e) => {
+      const { lat, lng } = e.latlng;
+      marker.setLatLng([lat, lng]);
+      const nuevasCoords = {
+        lat: parseFloat(lat.toFixed(5)),
+        lng: parseFloat(lng.toFixed(5))
+      };
+      onCoordenadasChange(nuevasCoords);
+      ejecutarGeorreferenciacionInversa(lat, lng);
+    });
+
+    // Evento de fin de arrastre del pin
+    marker.on('dragend', (e) => {
+      const pos = e.target.getLatLng();
+      const nuevasCoords = {
+        lat: parseFloat(pos.lat.toFixed(5)),
+        lng: parseFloat(pos.lng.toFixed(5))
+      };
+      onCoordenadasChange(nuevasCoords);
+      ejecutarGeorreferenciacionInversa(pos.lat, pos.lng);
+    });
+
+    mapInstanceRef.current = map;
+    markerRef.current = marker;
+
+    return () => {
+      map.remove();
+      mapInstanceRef.current = null;
+      markerRef.current = null;
+    };
+  }, []);
+
+  // 6. Sincronizar el mapa cuando el usuario selecciona cantón en el dropdown
+  useEffect(() => {
+    if (!mapInstanceRef.current || !markerRef.current) return;
+    if (provinciaId && cantonId) {
+      const match = COORDENADAS_CANTONES.find(
+        (c) => c.provinciaId === Number(provinciaId) && c.cantonId === Number(cantonId)
+      );
+      if (match) {
+        mapInstanceRef.current.flyTo([match.lat, match.lng], 13, { duration: 1.2 });
+        markerRef.current.setLatLng([match.lat, match.lng]);
+        onCoordenadasChange({ lat: match.lat, lng: match.lng });
+      }
+    }
+  }, [provinciaId, cantonId]);
+
+  // 7. Botón GPS "Mi Ubicación Actual"
   const handleUsarGps = () => {
     if (!navigator.geolocation) {
       alert('La geolocalización no es compatible con su dispositivo.');
@@ -129,10 +236,10 @@ export default function Step3Georeferencing({
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setIsLocating(false);
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
+        const lat = parseFloat(pos.coords.latitude.toFixed(5));
+        const lng = parseFloat(pos.coords.longitude.toFixed(5));
 
-        // Validar que esté dentro de Costa Rica
+        // Validar límites de Costa Rica
         if (
           lat < GEOFENCING_COSTA_RICA.south ||
           lat > GEOFENCING_COSTA_RICA.north ||
@@ -145,6 +252,12 @@ export default function Step3Georeferencing({
 
         const nuevasCoords = { lat, lng };
         onCoordenadasChange(nuevasCoords);
+
+        if (mapInstanceRef.current && markerRef.current) {
+          mapInstanceRef.current.flyTo([lat, lng], 15, { duration: 1.2 });
+          markerRef.current.setLatLng([lat, lng]);
+        }
+
         ejecutarGeorreferenciacionInversa(lat, lng);
       },
       (err) => {
@@ -155,38 +268,6 @@ export default function Step3Georeferencing({
       { enableHighAccuracy: true, timeout: 8000 }
     );
   };
-
-  // 6. Clic interactivo en el Mini-Mapa para fijar el Pin
-  const handleMapClick = (e) => {
-    if (!mapContainerRef.current) return;
-    const rect = mapContainerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    // Convertir x, y porcentual a Lat/Lng aproximado sobre el cuadrante de Costa Rica
-    const pctX = Math.min(Math.max(x / rect.width, 0), 1);
-    const pctY = Math.min(Math.max(y / rect.height, 0), 1);
-
-    const minLat = 8.03;
-    const maxLat = 11.22;
-    const minLng = -85.95;
-    const maxLng = -82.55;
-
-    const lng = minLng + pctX * (maxLng - minLng);
-    const lat = maxLat - pctY * (maxLat - minLat);
-
-    const nuevasCoords = {
-      lat: parseFloat(lat.toFixed(5)),
-      lng: parseFloat(lng.toFixed(5))
-    };
-
-    onCoordenadasChange(nuevasCoords);
-    ejecutarGeorreferenciacionInversa(lat, lng);
-  };
-
-  // Posición en porcentaje para el Pin del Mini-Mapa
-  const pinX = ((coordenadas.lng - -85.95) / (-82.55 - -85.95)) * 100;
-  const pinY = (1 - (coordenadas.lat - 8.03) / (11.22 - 8.03)) * 100;
 
   const cantonActualObj = cantones.find((c) => c.id === Number(cantonId));
   const provinciaActualObj = provincias.find((p) => p.id === Number(provinciaId));
@@ -207,12 +288,12 @@ export default function Step3Georeferencing({
           Ubique la Avería en el Territorio Nacional
         </h3>
         <p style={{ color: '#CBD5E1', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto' }}>
-          Toque el mapa para colocar el pin o active su GPS. El sistema determina automáticamente la provincia, cantón y distrito oficial DTA.
+          Toque cualquier calle o cantón real en el mapa para colocar o arrastrar el pin, o active su GPS para fijar la posición automáticamente.
         </p>
       </div>
 
-      {/* Mini-Mapa Interactivo con Pin Soberano */}
-      <div className="civic-glass-card" style={{ padding: '1.25rem', marginBottom: '1.75rem', borderRadius: '20px' }}>
+      {/* Mini-Mapa Cartográfico Real de Costa Rica */}
+      <div className="civic-glass-card" style={{ padding: '1.25rem', marginBottom: '1.75rem', borderRadius: '24px' }}>
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -222,12 +303,12 @@ export default function Step3Georeferencing({
           marginBottom: '1rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.2rem' }}>📍</span>
+            <MapPin size={18} color="#79a6ff" />
             <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#FFFFFF' }}>
-              Mini-Mapa Cartográfico de Ubicación
+              Mapa Cartográfico Real de Costa Rica
             </span>
             <span className="telemetry-badge" style={{ fontSize: '0.72rem' }}>
-              COORDS: {coordenadas.lat.toFixed(4)}, {coordenadas.lng.toFixed(4)}
+              LAT: {coordenadas.lat.toFixed(4)} &bull; LNG: {coordenadas.lng.toFixed(4)}
             </span>
           </div>
 
@@ -235,102 +316,58 @@ export default function Step3Georeferencing({
             type="button"
             onClick={handleUsarGps}
             disabled={isLocating}
-            className="btn-sovereign"
-            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
+            className="btn-sovereign-blue"
+            style={{
+              padding: '0.55rem 1.1rem',
+              fontSize: '0.85rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: '#002B7F',
+              color: '#FFFFFF',
+              borderRadius: '9999px',
+              border: '1px solid rgba(121, 166, 255, 0.4)',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
           >
-            <span>{isLocating ? '⏳' : '📡'}</span>
+            {isLocating ? <Loader2 size={15} className="animate-spin" /> : <Radio size={15} />}
             <span>{isLocating ? 'Capturando GPS...' : 'Usar Mi Ubicación GPS'}</span>
           </button>
         </div>
 
-        {/* Lienzo del Mini-Mapa Interactivo */}
-        <div
-          ref={mapContainerRef}
-          onClick={handleMapClick}
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: '320px',
-            backgroundColor: '#000714',
-            borderRadius: '14px',
-            border: '1px solid rgba(121, 166, 255, 0.25)',
-            overflow: 'hidden',
-            cursor: 'crosshair',
-            backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(0, 20, 80, 0.5) 0%, rgba(0, 4, 13, 0.95) 100%)',
-            boxShadow: 'inset 0 0 40px rgba(0, 0, 0, 0.8)'
-          }}
-        >
-          {/* Cuadrícula de coordenadas */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: 'linear-gradient(rgba(121, 166, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(121, 166, 255, 0.08) 1px, transparent 1px)',
-              backgroundSize: '30px 30px'
-            }}
-          />
+        {/* Contenedor del Mapa Leaflet Real */}
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          height: '350px',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          border: '1px solid rgba(255, 255, 255, 0.16)',
+          boxShadow: '0 12px 30px rgba(0, 0, 0, 0.7)'
+        }}>
+          <div ref={mapContainerRef} style={{ width: '100%', height: '100%', zIndex: 1 }} />
 
-          {/* Rótulos geográficos indicativos */}
-          <div style={{ position: 'absolute', bottom: '12px', left: '16px', fontSize: '0.75rem', color: '#5588DD', fontFamily: 'var(--font-telemetry)' }}>
-            OCÉANO PACÍFICO
-          </div>
-          <div style={{ position: 'absolute', top: '12px', right: '16px', fontSize: '0.75rem', color: '#5588DD', fontFamily: 'var(--font-telemetry)' }}>
-            MAR CARIBE
-          </div>
-
-          {/* Pin interactivo soberano con resplandor */}
-          <div
-            style={{
-              position: 'absolute',
-              left: `${Math.min(Math.max(pinX, 5), 95)}%`,
-              top: `${Math.min(Math.max(pinY, 5), 95)}%`,
-              transform: 'translate(-50%, -100%)',
-              pointerEvents: 'none',
-              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              zIndex: 30
-            }}
-          >
-            <div style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '50% 50% 50% 0',
-              backgroundColor: '#DA291C',
-              transform: 'rotate(-45deg)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 0 20px #DA291C, 0 4px 10px rgba(0,0,0,0.5)',
-              border: '2px solid #FFFFFF'
-            }}>
-              <span style={{ transform: 'rotate(45deg)', fontSize: '0.9rem' }}>⚠️</span>
-            </div>
-            <div style={{
-              width: '10px',
-              height: '5px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              marginTop: '2px',
-              filter: 'blur(1px)'
-            }} />
-          </div>
-
-          {/* Mensaje de ayuda sobre el mapa */}
+          {/* Ayuda flotante inferior */}
           <div style={{
             position: 'absolute',
             bottom: '12px',
-            right: '16px',
-            backgroundColor: 'rgba(0, 4, 13, 0.8)',
-            padding: '0.25rem 0.65rem',
-            borderRadius: '6px',
-            fontSize: '0.72rem',
+            right: '12px',
+            backgroundColor: 'rgba(0, 4, 13, 0.88)',
+            backdropFilter: 'blur(8px)',
+            padding: '0.35rem 0.75rem',
+            borderRadius: '9999px',
+            fontSize: '0.74rem',
             color: '#CBD5E1',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            zIndex: 1000,
+            pointerEvents: 'none'
           }}>
-            👆 Toque cualquier punto para fijar la avería
+            <Crosshair size={12} color="#79a6ff" />
+            <span>Haga clic o arrastre el pin para fijar la avería</span>
           </div>
         </div>
 
@@ -338,18 +375,18 @@ export default function Step3Georeferencing({
         {reverseGeocodingNotice && (
           <div style={{
             marginTop: '0.85rem',
-            padding: '0.6rem 1rem',
-            borderRadius: '8px',
+            padding: '0.65rem 1rem',
+            borderRadius: '10px',
             backgroundColor: 'rgba(0, 209, 102, 0.12)',
             border: '1px solid rgba(0, 209, 102, 0.3)',
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            fontSize: '0.82rem',
+            fontSize: '0.84rem',
             color: '#00D166'
           }}>
-            <span>⚡</span>
-            <span><strong>Georreferenciación inversa aplicada:</strong> {reverseGeocodingNotice}</span>
+            <Zap size={14} />
+            <span><strong>DTA Detectada Automáticamente:</strong> {reverseGeocodingNotice}</span>
           </div>
         )}
       </div>
@@ -370,7 +407,9 @@ export default function Step3Georeferencing({
           marginBottom: '1rem',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '0.5rem'
         }}>
           <span>División Territorial Administrativa (DTA Oficial)</span>
           {provinciaActualObj && cantonActualObj && (
@@ -403,6 +442,15 @@ export default function Step3Georeferencing({
                 onCantonChange('');
                 onDistritoChange('');
               }}
+              style={{
+                width: '100%',
+                padding: '0.65rem 0.9rem',
+                backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '10px',
+                color: '#FFFFFF',
+                fontSize: '0.88rem'
+              }}
             >
               <option value="">-- Seleccionar Provincia --</option>
               {provincias.map((p) => (
@@ -431,6 +479,15 @@ export default function Step3Georeferencing({
                 onCantonChange(val);
                 onDistritoChange('');
               }}
+              style={{
+                width: '100%',
+                padding: '0.65rem 0.9rem',
+                backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '10px',
+                color: '#FFFFFF',
+                fontSize: '0.88rem'
+              }}
             >
               <option value="">{provinciaId ? '-- Seleccionar Cantón --' : 'Primero elija provincia'}</option>
               {cantones.map((c) => (
@@ -455,6 +512,15 @@ export default function Step3Georeferencing({
               value={distritoId || ''}
               disabled={!cantonId}
               onChange={(e) => onDistritoChange(parseInt(e.target.value, 10) || '')}
+              style={{
+                width: '100%',
+                padding: '0.65rem 0.9rem',
+                backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '10px',
+                color: '#FFFFFF',
+                fontSize: '0.88rem'
+              }}
             >
               <option value="">{cantonId ? '-- Seleccionar Distrito --' : 'Primero elija cantón'}</option>
               {distritos.map((d) => (

@@ -9,7 +9,7 @@ export const IDIOMAS_SOPORTADOS = [
     bcp47: 'es-419',
     nombre: 'Español (Latinoamérica)',
     nativo: 'Español (América)',
-    bandera: '🇨🇷',
+    bandera: 'CR',
     synthLang: 'es-CR',
     synthFallback: 'es-419'
   },
@@ -18,7 +18,7 @@ export const IDIOMAS_SOPORTADOS = [
     bcp47: 'es-ES',
     nombre: 'Español (España)',
     nativo: 'Español (España)',
-    bandera: '🇪🇸',
+    bandera: 'ES',
     synthLang: 'es-ES',
     synthFallback: 'es'
   },
@@ -27,7 +27,7 @@ export const IDIOMAS_SOPORTADOS = [
     bcp47: 'en-US',
     nombre: 'English (US)',
     nativo: 'English',
-    bandera: '🇺🇸',
+    bandera: 'US',
     synthLang: 'en-US',
     synthFallback: 'en'
   },
@@ -36,7 +36,7 @@ export const IDIOMAS_SOPORTADOS = [
     bcp47: 'zh-CN',
     nombre: 'Chino Mandarín',
     nativo: '中文 (普通话)',
-    bandera: '🇨🇳',
+    bandera: 'CN',
     synthLang: 'zh-CN',
     synthFallback: 'zh'
   },
@@ -45,7 +45,7 @@ export const IDIOMAS_SOPORTADOS = [
     bcp47: 'pt-BR',
     nombre: 'Português (Brasil)',
     nativo: 'Português',
-    bandera: '🇧🇷',
+    bandera: 'BR',
     synthLang: 'pt-BR',
     synthFallback: 'pt'
   },
@@ -54,7 +54,7 @@ export const IDIOMAS_SOPORTADOS = [
     bcp47: 'fr-FR',
     nombre: 'Français',
     nativo: 'Français',
-    bandera: '🇫🇷',
+    bandera: 'FR',
     synthLang: 'fr-FR',
     synthFallback: 'fr'
   },
@@ -63,7 +63,7 @@ export const IDIOMAS_SOPORTADOS = [
     bcp47: 'ru-RU',
     nombre: 'Ruso',
     nativo: 'Русский',
-    bandera: '🇷🇺',
+    bandera: 'RU',
     synthLang: 'ru-RU',
     synthFallback: 'ru'
   },
@@ -72,7 +72,7 @@ export const IDIOMAS_SOPORTADOS = [
     bcp47: 'ja-JP',
     nombre: 'Japonés',
     nativo: '日本語',
-    bandera: '🇯🇵',
+    bandera: 'JP',
     synthLang: 'ja-JP',
     synthFallback: 'ja'
   }
@@ -115,7 +115,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 1,
       titulo: 'Bienvenida y Soberanía Cívica',
       subtitulo: 'Costa Rica Unidos — Sistema Sovereign Civic Glass v2.1',
-      icono: '🇨🇷',
+      icono: 'soberania',
       narracion:
         'Bienvenido a Costa Rica Unidos. Esta es la plataforma cívica digital soberana que conecta las siete provincias y los ochenta y cuatro cantones de nuestra patria. Puede navegar con total inclusión y ajustar la escala visual en cualquier momento.',
       subtitulos:
@@ -126,7 +126,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 2,
       titulo: 'Exploración 3D del Territorio',
       subtitulo: 'Visor Cartográfico y Búsqueda Semántica con IA',
-      icono: '🗺️',
+      icono: 'mapa',
       narracion:
         'Explore el mapa tridimensional con geofencing nacional estricto, incluyendo la Isla del Coco. Ahora puede consultar en lenguaje natural costarricense mediante texto o dictado por voz para activar capas de salud, educación y albergues.',
       subtitulos:
@@ -137,7 +137,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 3,
       titulo: 'Reportes Ciudadanos y Emergencias',
       subtitulo: 'Trazabilidad de Averías y Resiliencia Offline',
-      icono: '🚨',
+      icono: 'emergencias',
       narracion:
         'Reporte incidencias viales en cuatro pasos bajo la Ley 8968. En caso de crisis o desconexión, el centro de resiliencia le garantiza acceso inmediato a la botonera SOS del 911 y albergues temporales sin conexión celular.',
       subtitulos:
@@ -150,7 +150,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 1,
       titulo: 'Bienvenida y Soberanía Cívica',
       subtitulo: 'Costa Rica Unidos — Sistema Sovereign Civic Glass v2.1',
-      icono: '🇨🇷',
+      icono: 'soberania',
       narracion:
         'Bienvenido a Costa Rica Unidos. Esta es la plataforma cívica soberana que conecta las siete provincias y los ochenta y cuatro cantones de la nación con accesibilidad universal.',
       subtitulos:
@@ -161,7 +161,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 2,
       titulo: 'Exploración 3D del Territorio',
       subtitulo: 'Visor Cartográfico y Búsqueda Semántica con IA',
-      icono: '🗺️',
+      icono: 'mapa',
       narracion:
         'Explore el mapa en tres dimensiones con límites soberanos estrictos y consulte en lenguaje natural mediante voz o teclado.',
       subtitulos:
@@ -172,7 +172,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 3,
       titulo: 'Reportes Ciudadanos y Emergencias',
       subtitulo: 'Trazabilidad y Resiliencia Offline',
-      icono: '🚨',
+      icono: 'emergencias',
       narracion:
         'Envíe incidencias ciudadanas y acceda a la botonera de emergencias 911 incluso en ausencia de conexión a internet.',
       subtitulos:
@@ -185,7 +185,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 1,
       titulo: 'Welcome & Civic Sovereignty',
       subtitulo: 'Costa Rica Unidos — Sovereign Civic Glass System v2.1',
-      icono: '🇨🇷',
+      icono: 'soberania',
       narracion:
         'Welcome to Costa Rica Unidos. This is the sovereign digital civic platform unifying all seven provinces and eighty-four cantons. Experience complete accessibility with customizable text scale and voice assistance.',
       subtitulos:
@@ -196,7 +196,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 2,
       titulo: '3D Territorial Exploration',
       subtitulo: 'Cartographic 3D Viewer & Natural Language AI Search',
-      icono: '🗺️',
+      icono: 'mapa',
       narracion:
         'Explore the 3D map with strict national geofencing, including Cocos Island. You can search using natural language or voice dictation to automatically activate health, education, and shelter layers.',
       subtitulos:
@@ -207,7 +207,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 3,
       titulo: 'Citizen Reports & Emergency Center',
       subtitulo: 'Incident Traceability & Offline Resilience PWA',
-      icono: '🚨',
+      icono: 'emergencias',
       narracion:
         'File public infrastructure reports in 4 steps with privacy protection. During crises or network outages, the offline resilience center guarantees immediate access to 911 SOS dials and emergency shelters.',
       subtitulos:
@@ -220,7 +220,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 1,
       titulo: '欢迎体验公民数字主权',
       subtitulo: '哥斯达黎加联合平台 — 主权玻璃拟态系统 v2.1',
-      icono: '🇨🇷',
+      icono: 'soberania',
       narracion:
         '欢迎来到哥斯达黎加联合平台。这是连接全国七个省份和八十四个市县的主权数字公民平台，具备全面的无障碍辅助功能。',
       subtitulos: '欢迎来到哥斯达黎加联合数字公民平台，连接7个省与84个市县。',
@@ -230,7 +230,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 2,
       titulo: '三维国土立体探索',
       subtitulo: '三维地图观察器与自然语言人工智能搜索',
-      icono: '🗺️',
+      icono: 'mapa',
       narracion:
         '探索具备严格主权地理围栏的三维地图。您可以使用自然语言或语音听写，自动开启医疗、教育和应急避难所图层。',
       subtitulos: '具备地形起伏的三维地图，支持自然语言与语音搜索。',
@@ -240,7 +240,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 3,
       titulo: '公民事件汇报与应急中心',
       subtitulo: '事件溯源与离线渐进式网络应用',
-      icono: '🚨',
+      icono: 'emergencias',
       narracion:
         '依法提交公共设施报修。在网络中断或突发危机时，离线中心确保立即拨打911求救电话并查询避难所。',
       subtitulos: '四步报修向导与离线求救应急键盘。',
@@ -252,7 +252,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 1,
       titulo: 'Boas-vindas e Soberania Cívica',
       subtitulo: 'Costa Rica Unidos — Sistema Sovereign Civic Glass v2.1',
-      icono: '🇨🇷',
+      icono: 'soberania',
       narracion:
         'Bem-vindo ao Costa Rica Unidos. Esta é a plataforma cívica digital soberana que conecta as sete províncias e os oitenta e quatro cantões com acessibilidade universal.',
       subtitulos: 'Bem-vindo ao Costa Rica Unidos. Plataforma soberana das 7 províncias e 84 cantões.',
@@ -262,7 +262,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 2,
       titulo: 'Exploração Territorial em 3D',
       subtitulo: 'Visor Cartográfico 3D e Busca Semântica com IA',
-      icono: '🗺️',
+      icono: 'mapa',
       narracion:
         'Explore o mapa 3D com delimitação soberana estrita e faça consultas em linguagem natural por voz ou texto.',
       subtitulos: 'Mapa 3D com relevo topográfico e busca por voz em linguagem natural.',
@@ -272,7 +272,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 3,
       titulo: 'Relatos de Incidentes e Emergências',
       subtitulo: 'Rastreabilidade e Resiliência Offline PWA',
-      icono: '🚨',
+      icono: 'emergencias',
       narracion:
         'Envie relatórios de infraestrutura e acesse o teclado de emergência SOS 911 mesmo sem qualquer conexão celular.',
       subtitulos: 'Assistente de relatórios e teclado SOS 911 com modo offline PWA.',
@@ -284,7 +284,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 1,
       titulo: 'Bienvenue et Souveraineté Civique',
       subtitulo: 'Costa Rica Unidos — Système Sovereign Civic Glass v2.1',
-      icono: '🇨🇷',
+      icono: 'soberania',
       narracion:
         'Bienvenue sur Costa Rica Unidos. Il s’agit de la plateforme civique souveraine connectant les sept provinces et quatre-vingt-quatre cantons avec une accessibilité universelle.',
       subtitulos: 'Bienvenue sur Costa Rica Unidos. Plateforme civique des 7 provinces et 84 cantons.',
@@ -294,7 +294,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 2,
       titulo: 'Exploration Territoriale 3D',
       subtitulo: 'Visualiseur Cartographique 3D et Recherche IA',
-      icono: '🗺️',
+      icono: 'mapa',
       narracion:
         'Explorez la carte 3D avec délimitation stricte et effectuez des recherches en langage naturel par commande vocale.',
       subtitulos: 'Carte 3D avec relief et recherche vocale intelligente.',
@@ -304,7 +304,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 3,
       titulo: 'Signalements et Urgences SOS',
       subtitulo: 'Traçabilité et Résilience Hors-Ligne PWA',
-      icono: '🚨',
+      icono: 'emergencias',
       narracion:
         'Signalez des anomalies et accédez au clavier d’urgence 911 même en cas de coupure totale d’Internet.',
       subtitulos: 'Signalement citoyen et clavier d’urgence SOS opérationnel hors-ligne.',
@@ -316,7 +316,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 1,
       titulo: 'Добро пожаловать и Гражданский Суверенитет',
       subtitulo: 'Costa Rica Unidos — Система Sovereign Civic Glass v2.1',
-      icono: '🇨🇷',
+      icono: 'soberania',
       narracion:
         'Добро пожаловать в Costa Rica Unidos. Это суверенная цифровая платформа, объединяющая семь провинций и восемьдесят четыре кантона с универсальной доступностью.',
       subtitulos: 'Добро пожаловать в Costa Rica Unidos — цифровую платформу 7 провинций и 84 кантонов.',
@@ -326,7 +326,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 2,
       titulo: '3D Исследование Территории',
       subtitulo: '3D Карта и Семантический Поиск с ИИ',
-      icono: '🗺️',
+      icono: 'mapa',
       narracion:
         'Исследуйте 3D карту со строгими государственными границами и голосовым поиском на естественном языке.',
       subtitulos: '3D рельефная карта со строгими границами и голосовым управлением.',
@@ -336,7 +336,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 3,
       titulo: 'Обращения Граждан и Экстренная Помощь',
       subtitulo: 'Прослеживаемость и Автономный Режим PWA',
-      icono: '🚨',
+      icono: 'emergencias',
       narracion:
         'Отправляйте отчеты об инфраструктуре и используйте кнопки вызова 911 даже при полном отсутствии сети.',
       subtitulos: 'Мастер отчетов и панель SOS 911, работающая полностью офлайн.',
@@ -348,7 +348,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 1,
       titulo: 'ようこそ 主権ある市民プラットフォームへ',
       subtitulo: 'コスタリカ連合 — ソブリン・シビック・グラス v2.1',
-      icono: '🇨🇷',
+      icono: 'soberania',
       narracion:
         'コスタリカ連合へようこそ。これは7つの州と84のカントンを結ぶ主権デジタル市民プラットフォームです。包括的なアクセシビリティを備えています。',
       subtitulos: 'コスタリカ連合へようこそ。7州と84自治体を結ぶ市民プラットフォームです。',
@@ -358,7 +358,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 2,
       titulo: '3D国土ナビゲーション',
       subtitulo: '3D地図ビューアとAI自然言語検索',
-      icono: '🗺️',
+      icono: 'mapa',
       narracion:
         '厳格な主権ジオフェンシングを備えた3D立体地図を探索できます。音声またはテキスト入力で自然言語検索が可能です。',
       subtitulos: '地形レリーフを備えた3D地図と音声による自然言語検索。',
@@ -368,7 +368,7 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
       id: 3,
       titulo: '市民レポートと緊急支援センター',
       subtitulo: 'トレーサビリティとオフライン回復力 PWA',
-      icono: '🚨',
+      icono: 'emergencias',
       narracion:
         'インフラの異常を報告できます。ネットワーク遮断時でも911への直接緊急発信と避難所情報に即時アクセス可能です。',
       subtitulos: '報告ウィザードとオフライン対応の911 SOS緊急発信ボタン。',

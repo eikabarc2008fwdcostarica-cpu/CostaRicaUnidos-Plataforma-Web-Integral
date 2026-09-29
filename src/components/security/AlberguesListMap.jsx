@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Home, MapPin, Navigation, Map } from 'lucide-react';
 import { generarEnlaceWaze, generarEnlaceGoogleMaps } from '../gis/gisLayersData';
 
 export const ALBERGUES_CNE_DATA = [
@@ -139,7 +140,7 @@ export default function AlberguesListMap() {
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.2rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🏕️</span>
+            <Home size={22} color="#38BDF8" />
             <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>
               Red Nacional de Albergues y Refugios Temporales CNE
             </h3>
@@ -240,8 +241,9 @@ export default function AlberguesListMap() {
                     {alb.estado === 'activo' ? '● ALBERGUE ACTIVO' : '● EN PREPARACIÓN'}
                   </span>
 
-                  <span style={{ fontSize: '0.78rem', color: '#79a6ff', fontFamily: 'var(--font-telemetry)' }}>
-                    📍 {alb.canton}, {alb.provincia}
+                  <span style={{ fontSize: '0.78rem', color: '#79a6ff', fontFamily: 'var(--font-telemetry)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                    <MapPin size={12} />
+                    <span>{alb.canton}, {alb.provincia}</span>
                   </span>
                 </div>
 
@@ -327,10 +329,15 @@ export default function AlberguesListMap() {
                     fontSize: '0.8rem',
                     textAlign: 'center',
                     backgroundColor: 'rgba(0, 160, 255, 0.18)',
-                    borderColor: 'rgba(0, 160, 255, 0.35)'
+                    borderColor: 'rgba(0, 160, 255, 0.35)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '5px'
                   }}
                 >
-                  🚗 Ruta en Waze
+                  <Navigation size={13} />
+                  <span>Ruta en Waze</span>
                 </a>
 
                 <a
@@ -341,10 +348,15 @@ export default function AlberguesListMap() {
                   style={{
                     padding: '0.55rem',
                     fontSize: '0.8rem',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '5px'
                   }}
                 >
-                  🗺️ Google Maps
+                  <Map size={13} />
+                  <span>Google Maps</span>
                 </a>
               </div>
             </div>
