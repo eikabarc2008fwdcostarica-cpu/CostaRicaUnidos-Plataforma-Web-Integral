@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { Vote, Users, ShieldCheck, Mail, Coins, CheckCircle, Award, Sparkles, AlertCircle } from 'lucide-react';
+import {
+  Vote,
+  Users,
+  ShieldCheck,
+  Mail,
+  Coins,
+  CheckCircle,
+  Award,
+  Sparkles,
+  AlertCircle,
+  TrendingUp,
+  FileCheck
+} from 'lucide-react';
 import { PROYECTOS_VECINALES_DATA, ProyectoVecinal, SolicitudAudienciaConcejo } from '../data/participacionData';
 import { GraficoPresupuestoParticipativo } from '../components/participacion/GraficoPresupuestoParticipativo';
 import { ModalVotacionAntifraude } from '../components/participacion/ModalVotacionAntifraude';
@@ -12,9 +24,9 @@ import Navbar from '../components/Navbar';
  * ParticipacionPage — Módulo 11: Participación Ciudadana y Presupuesto Participativo
  * 
  * Centraliza la soberanía vecinal con:
- * - Banco de proyectos de presupuesto participativo.
- * - Sistema de votación con validación tributaria antifraude (1 voto por cédula legal).
- * - Gráficos reactivos en tiempo real para asignación presupuestaria y votos.
+ * - Banco de proyectos de presupuesto participativo con barra reactiva porcentual.
+ * - Sistema de votación con validación tributaria y de padrón (1 voto por cédula legal).
+ * - Gráficos y métricas reactivas en tiempo real.
  * - Buzón formal de audiencias públicas ante el Concejo Municipal.
  */
 export default function ParticipacionPage() {
@@ -22,10 +34,13 @@ export default function ParticipacionPage() {
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<ProyectoVecinal | null>(null);
   const [modalVotacionAbierto, setModalVotacionAbierto] = useState(false);
   const [modalAudienciaAbierto, setModalAudienciaAbierto] = useState(false);
-  const [notificacionVoto, setNotificacionVoto] = useState<string | null>(null);
+  const [notificacionVoto, setNotificacionVoto] = useState<{
+    mensaje: string;
+    comprobante: string;
+  } | null>(null);
 
-  // Manejo de voto exitoso con actualización reactiva en vivo
-  const handleVotoExitoso = (proyectoId: string) => {
+  // Manejo de voto exitoso con actualización reactiva en vivo y comprobante oficial
+  const handleVotoExitoso = (proyectoId: string, comprobante: string) => {
     setProyectos((prev) =>
       prev.map((proj) =>
         proj.id === proyectoId
@@ -35,10 +50,11 @@ export default function ParticipacionPage() {
     );
 
     const proy = proyectos.find((p) => p.id === proyectoId);
-    setNotificacionVoto(
-      `¡Su voto fue registrado con éxito para "${proy?.titulo || 'Proyecto'}"! Los gráficos se han actualizado.`
-    );
-    setTimeout(() => setNotificacionVoto(null), 6000);
+    setNotificacionVoto({
+      mensaje: `¡Su voto soberano fue registrado con éxito para "${proy?.titulo || 'Iniciativa Comunal'}"!`,
+      comprobante
+    });
+    setTimeout(() => setNotificacionVoto(null), 8000);
   };
 
   const abrirVotacionParaProyecto = (proyecto: ProyectoVecinal) => {
@@ -71,8 +87,8 @@ export default function ParticipacionPage() {
                 </span>
               </h1>
               <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-                Prioriza las obras de tu barrio con certificación de identidad ante el Ministerio
-                de Hacienda (1 voto por cédula legal) y solicita audiencias directas con el Concejo Municipal.
+                Prioriza las obras de tu barrio con certificación de identidad en tiempo real ante el Ministerio
+                de Hacienda (1 voto por cédula legal activa) y emisión inmutable de comprobantes digitales de sufragio.
               </p>
             </div>
 
@@ -94,11 +110,21 @@ export default function ParticipacionPage() {
           </div>
         </div>
 
-        {/* Notificación Flotante de Voto Exitoso */}
+        {/* Notificación Flotante de Voto Exitoso con Comprobante */}
         {notificacionVoto && (
-          <div className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-200 text-sm flex items-center gap-3 animate-in fade-in duration-300">
-            <CheckCircle size={20} className="text-emerald-400 shrink-0" />
-            <span>{notificacionVoto}</span>
+          <div className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-100 text-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-300 shadow-lg">
+            <div className="flex items-center gap-3">
+              <CheckCircle size={22} className="text-emerald-400 shrink-0" />
+              <div>
+                <span className="font-semibold block">{notificacionVoto.mensaje}</span>
+                <span className="text-xs text-emerald-300 font-mono">
+                  Comprobante Oficial: <strong>{notificacionVoto.comprobante}</strong> (La barra de progreso se ha actualizado)
+                </span>
+              </div>
+            </div>
+            <span className="self-end sm:self-center px-2.5 py-1 rounded bg-emerald-500/30 text-emerald-200 text-xs font-mono font-bold border border-emerald-500/40">
+              INMUTABLE
+            </span>
           </div>
         )}
 
@@ -114,8 +140,9 @@ export default function ParticipacionPage() {
 
           <CivicCard level={1} className="p-5 border-white/5 space-y-1">
             <span className="text-xs text-slate-400 font-medium">Votos Ciudadanos Emitidos</span>
-            <div className="text-2xl font-bold font-mono text-white">
-              {totalVotos.toLocaleString()}
+            <div className="text-2xl font-bold font-mono text-white flex items-center gap-2">
+              <span>{totalVotos.toLocaleString()}</span>
+              <TrendingUp size={18} className="text-emerald-400" />
             </div>
             <p className="text-[11px] text-emerald-400 font-semibold">100% Verificados por Cédula</p>
           </CivicCard>
@@ -137,7 +164,7 @@ export default function ParticipacionPage() {
           </CivicCard>
         </div>
 
-        {/* Gráficos Reactivos Interactivos (Recharts SVG nativo de 60fps) */}
+        {/* Gráficos Reactivos Interactivos */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -169,8 +196,10 @@ export default function ParticipacionPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {proyectos.map((proyecto, idx) => {
-              const porcentaje = ((proyecto.votosAcumulados / totalVotos) * 100).toFixed(1);
+            {proyectos.map((proyecto) => {
+              const porcentajeNumerico = totalVotos > 0 ? (proyecto.votosAcumulados / totalVotos) * 100 : 0;
+              const porcentaje = porcentajeNumerico.toFixed(1);
+
               return (
                 <CivicCard
                   key={proyecto.id}
@@ -206,17 +235,31 @@ export default function ParticipacionPage() {
                     </div>
                   </div>
 
-                  {/* Estado de Votación y Botón */}
-                  <div className="space-y-3 pt-3 border-t border-white/5">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-mono text-cyan-400 font-bold text-base">
-                        {proyecto.presupuestoFormateado}
-                      </span>
-                      <div className="text-right">
-                        <span className="font-bold text-white text-sm">
-                          {proyecto.votosAcumulados} votos
-                        </span>{' '}
-                        <span className="text-slate-400 text-xs">({porcentaje}%)</span>
+                  {/* Estado de Votación, Barra de Progreso Reactiva y Botón */}
+                  <div className="space-y-4 pt-3 border-t border-white/5">
+                    {/* Barra de Progreso Porcentual Reactiva */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-mono text-cyan-400 font-bold text-base">
+                          {proyecto.presupuestoFormateado}
+                        </span>
+                        <div className="text-right">
+                          <span className="font-bold text-white text-sm">
+                            {proyecto.votosAcumulados} votos
+                          </span>{' '}
+                          <span className="text-cyan-300 font-mono text-xs font-semibold">
+                            ({porcentaje}%)
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="w-full bg-slate-900/90 rounded-full h-3 overflow-hidden border border-white/10 p-0.5">
+                        <div
+                          className="bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 h-full rounded-full transition-all duration-700 ease-out shadow-[0_0_12px_rgba(6,182,212,0.6)]"
+                          style={{
+                            width: `${Math.min(100, Math.max(3, porcentajeNumerico))}%`
+                          }}
+                        />
                       </div>
                     </div>
 
@@ -236,7 +279,7 @@ export default function ParticipacionPage() {
           </div>
         </div>
 
-        {/* Modal Antifraude */}
+        {/* Modal Solemne de Votación Antifraude */}
         <ModalVotacionAntifraude
           isOpen={modalVotacionAbierto}
           onClose={() => setModalVotacionAbierto(false)}
