@@ -176,6 +176,23 @@ Módulo que integra capacidades generativas y de NLP; agrupa RF-12.1 y RF-12.2 d
     - M02: Fiscalización de Obra Pública (Integración con SICOP / Cartografía de contratos).
     - M03: Transparencia Tributaria y Hacienda (Validador de situación fiscal y facturación electrónica).
     - Sustitución de mocks de persistencia local por API RESTful institucional autenticada mediante JWT/OAuth2 estatal.
+- **2026-09-28 / 2026-09-29 (Desarrollador / Agente Eiker):**
+  - **Hitos implementados en rama `feature/Eiker`:**
+    - **Sistema Global de Internacionalización Reactiva (i18n):**
+      - Se implementó `src/context/LanguageContext.jsx` con diccionario completo para los 8 idiomas oficiales (`CR`, `ES`, `US`, `CN`, `BR`, `FR`, `RU`, `JP`), persistencia en `localStorage` con la clave `'idioma_preferido'` y hook personalizado `useLanguage()`.
+      - Se integró `<LanguageProvider>` envolviendo la raíz de la aplicación en `App.jsx`.
+      - Se tradujo reactivamente el menú a pantalla completa (`FullScreenMenu.jsx`): títulos de sección, módulos 01 al 11 (`portal`, `territorio`, `reportes`, `seguridad`, etc.), botones de acceso y registro, botón de cierre (`cerrarBoton`) y barra inferior de metadatos distritales.
+      - Se sincronizó la selección de idioma en el menú con el motor de síntesis de voz Web Speech API (`useAccessibility` y `VoiceReaderFloatingButton.jsx`), de manera que cambiar el idioma visual actualiza en lockstep la locución asistida.
+      - Se tradujo reactivamente la cabecera fija (`Navbar.jsx`) y el portal principal (`Inicio.jsx`), incluyendo el titular del Hero (`tituloHero`), subtítulo, descripción cívica, placeholder del buscador semántico, botón de exploración (`botonExplorar`) y contadores cívicos (`07 Provincias`, `84 Cantones`, `492 Distritos`).
+    - **Identidad de Marca y Favicon Oficial:**
+      - Se reemplazó el componente SVG deformado por el activo oficial en alta resolución con fondo transparente en `public/logo.png` (isotipo de corazón y manos con mano interior blanca preservada y borde anti-aliased).
+      - Se actualizó `src/components/common/Logo.jsx` imponiendo restricciones estrictas de altura (`height: 40px`, `maxHeight: 40px`, `width: 'auto'`, `objectFit: 'contain'`), evitando cualquier estiramiento o desbordamiento en el Navbar y menú overlay.
+      - Se actualizó `index.html` con parámetros rompedores de caché (`/logo.png?v=2`), soporte para `apple-touch-icon` y título institucional oficial (`Costa Rica Unidos — Plataforma Territorial Soberana`).
+      - Se limpió `public/favicon.svg` retirando el fondo circular negro obsoleto y se generó `public/favicon.ico`.
+  - **Decisiones Técnicas Fundamentales:**
+    - *React Context Puro sin Dependencias Pesadas:* Se adoptó una arquitectura i18n nativa en React Context API que provee traducción instantánea en tiempo de ejecución sin añadir el overhead de bundles de librerías externas.
+    - *Preservación de Espacios Negativos en Isotipo:* El procesamiento de transparencia del isotipo se ejecutó mediante algoritmo de inundación (flood-fill) desde los bordes externos, protegiendo la mano blanca interior de quedar accidentalmente vacía.
+    - *Restricción de Dimensiones en Línea:* Para blindar la maquetación frente a variaciones en motores CSS o clases no compiladas, se forzaron dimensiones explícitas de 40px a nivel de estilo en línea en `Logo.jsx`.
 
 > Evita repetir errores y rediscutir lo acordado. Esta sección se actualiza de forma acumulativa, nunca se sobrescribe.
  

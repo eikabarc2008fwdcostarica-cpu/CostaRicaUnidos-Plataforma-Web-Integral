@@ -41,6 +41,22 @@ El diseño, arquitectura e implementación de la plataforma se rigen estrictamen
 - La botonera de emergencia (`src/components/security/SosKeypadFullscreen.jsx`) utiliza el protocolo nativo `tel:` del sistema operativo del dispositivo para enlazar directamente con los cuerpos de auxilio (9-1-1, Bomberos, Cruz Roja, Fuerza Pública, OIJ).
 - La plataforma **no rastrea, registra ni almacena el historial de llamadas de auxilio**, protegiendo la confidencialidad y seguridad de personas en situaciones de pánico o amenaza inminente.
 
+### 2.6. Privacidad y Seguridad en el Motor de Internacionalización (i18n)
+- El subsistema multilingüe (`src/context/LanguageContext.jsx`) procesa la totalidad de los diccionarios de traducción en memoria directamente en el cliente.
+- **Sin Dependencias de APIs Externas de Traducción**: No se envían consultas, textos de interfaz ni preferencias de navegación a servicios externos de traducción en la nube (ej. Google Translate API, Microsoft Translator), garantizando soberanía de datos y eliminando vectores de exfiltración de metadatos de uso.
+- **Inyección Segura de Cadenas**: Todas las claves de traducción se insertan en el Virtual DOM mediante React JSX, previniendo ataques de Cross-Site Scripting (XSS) derivados de inyecciones de código malicioso en strings localizados.
+
+### 2.7. Soberanía y Almacenamiento Local No Identificable
+- En estricto cumplimiento del principio de minimización de la **Ley N° 8968**, la plataforma restringe el uso del almacenamiento local (`localStorage`) exclusivamente a variables de estado funcional anónimas y no identificables:
+  * `idioma_preferido`: Código de idioma/variante cívica (`CR`, `ES`, `US`, `CN`, `BR`, `FR`, `RU`, `JP`).
+  * `cr_text_phase`: Fase de escala de accesibilidad tipográfica (1 a 4).
+  * Contexto territorial seleccionado (Provincia, Cantón, Distrito).
+- **Prohibición de Datos PII**: Se prohíbe explícitamente el almacenamiento en `localStorage` o `sessionStorage` de datos personales identificables (cédulas de identidad, nombres reales, números telefónicos o coordenadas de geolocalización continua).
+
+### 2.8. Integridad y Control de Versión de Activos Estáticos
+- La plataforma emplea estrategias de rompimiento de caché (*cache-busting*) mediante parámetros de versión explícitos (ej. `/logo.png?v=2`, `/favicon.ico?v=2`).
+- Esta práctica mitiga el riesgo de ataques por envenenamiento de caché (*cache poisoning*) o retención de recursos desactualizados en redes de distribución de contenido (CDN) y proxies intermediarios, asegurando la autenticidad e integridad gráfica de la identidad visual oficial del Estado.
+
 ---
 
 ## 3. Versiones con Soporte Activo de Seguridad
@@ -49,8 +65,9 @@ Actualmente, solo la rama principal y las versiones mayores recientes reciben pa
 
 | Versión | Rama de Desarrollo | Estado de Soporte | Soporte de Parches |
 | :--- | :--- | :--- | :--- |
-| **v2.1.x** | `develop` / `feature/Eiker` | **Activo y Prioritario** | ✅ Parches inmediatos |
-| **v2.0.x** | `main` | **Soporte de Mantenimiento** | ✅ Parches de seguridad críticos |
+| **v2.2.x** | `develop` / `feature/Eiker` | **Activo y Prioritario** | ✅ Parches inmediatos |
+| **v2.1.x** | `release/v2.1.0` | **Soporte de Mantenimiento** | ✅ Parches de seguridad críticos |
+| **v2.0.x** | `main` | **Soporte Extendido** | ✅ Parches de seguridad críticos |
 | **< v2.0.0** | Varias | **Obsoleta** | ❌ Sin soporte |
 
 ---

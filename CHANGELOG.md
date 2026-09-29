@@ -16,6 +16,30 @@ El formato de este registro se basa estrictamente en [Keep a Changelog](https://
 
 ---
 
+## [2.2.0] - 2026-09-28
+
+### Added
+- **Sistema Global de Internacionalización Reactiva (i18n)**:
+  - Contexto y Diccionario Multilingüe (`src/context/LanguageContext.jsx`): Diccionario nativo para 8 idiomas oficiales (`CR`, `ES`, `US`, `CN`, `BR`, `FR`, `RU`, `JP`), hook `useLanguage` y función de traducción reactiva `t()` con fallback automático a `CR`.
+  - Persistencia en almacenamiento local (`localStorage`) mediante la clave `'idioma_preferido'`.
+  - Integración en la raíz de la aplicación (`src/App.jsx`) envolviendo el árbol de rutas en `<LanguageProvider>`.
+  - Conmutador reactivo de 8 idiomas en el menú a pantalla completa (`src/components/FullScreenMenu.jsx`), traduciendo los 11 módulos, accesos de identidad, títulos y metadatos.
+  - Sincronización en tiempo real entre la selección de idioma y el motor de síntesis de voz Web Speech API (`VoiceReaderFloatingButton.jsx` y `useAccessibility`).
+  - Traducción dinámica del Hero, buscador semántico, botón de exploración y contadores cívicos (`07 Provincias`, `84 Cantones`, `492 Distritos`) en `src/pages/Inicio.jsx`.
+- **Identidad Gráfica y Favicon Oficial**:
+  - Activo oficial de alta resolución con fondo transparente en `public/logo.png` (isotipo de corazón y manos con mano interior blanca preservada).
+  - Favicon estándar multiplataforma `public/favicon.ico`.
+  - Enlaces con control de versión de caché (`/logo.png?v=2`) y soporte `apple-touch-icon` en `index.html`.
+
+### Changed
+- `src/components/common/Logo.jsx`: Sustitución de trazados SVG deformados por la imagen oficial, aplicando restricciones estrictas de altura (`height: 40px`, `maxHeight: 40px`, `width: 'auto'`, `objectFit: 'contain'`) para prevenir desbordamientos en la barra de navegación.
+- `src/components/Navbar.jsx`: Integración de traducción del botón `MENÚ` y normalización de proporciones del logo.
+- `src/components/FullScreenMenu.jsx`: Adaptación de estilos para el selector de banderas y soporte de traducción de todos los módulos.
+- `index.html`: Actualización del título a `Costa Rica Unidos — Plataforma Territorial Soberana`.
+- `public/favicon.svg`: Eliminación del fondo circular negro para garantizar compatibilidad con temas claros y oscuros del navegador.
+
+---
+
 ## [2.1.0] - 2026-09-26
 
 ### Added
