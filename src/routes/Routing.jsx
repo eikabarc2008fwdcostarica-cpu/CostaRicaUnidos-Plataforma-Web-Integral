@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PrivateRoutes from './PrivateRoutes';
 import Inicio from '../pages/Inicio';
-import Login from '../pages/Login';
+import LoginPage from '../pages/LoginPage';
 import Dashboard from '../pages/Dashboard';
 import MapaGIS from '../pages/MapaGIS';
 import ReportarIncidencia from '../pages/ReportarIncidencia';
@@ -30,7 +30,7 @@ export default function Routing() {
       <Routes>
         {/* Rutas Públicas de Infraestructura Central */}
         <Route path="/" element={<Inicio />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/mapa-gis" element={<MapaGIS />} />
         <Route path="/territorio-3d" element={<MapaGIS />} />
         <Route path="/visor-3d" element={<MapaGIS />} />
@@ -57,6 +57,7 @@ export default function Routing() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/participacion/votar" element={<ParticipacionPage />} />
           <Route path="/gobernanza/audiencia" element={<ParticipacionPage />} />
+          <Route path="/gobernanza/municipalidad-dashboard" element={<GobernanzaPage />} />
         </Route>
 
         {/* Ruta Comodín 404 */}

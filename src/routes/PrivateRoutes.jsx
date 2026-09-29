@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * Componente Guardián de Rutas Privadas
@@ -7,8 +8,7 @@ import { Navigate, Outlet } from 'react-router-dom';
  * Devuelve <Outlet /> si está autenticado, o redirige a /login si no lo está.
  */
 export default function PrivateRoutes() {
-  // Estado base de autenticación cívica para la demostración
-  const isAuthenticated = true;
+  const { isAuthenticated } = useAuth();
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 }
