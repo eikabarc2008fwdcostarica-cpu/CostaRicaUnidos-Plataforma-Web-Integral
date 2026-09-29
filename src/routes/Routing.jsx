@@ -16,6 +16,9 @@ import DeportesPage from '../pages/DeportesPage';
 import EducacionPage from '../pages/EducacionPage';
 import ComercioPage from '../pages/ComercioPage';
 import FeriaPage from '../pages/FeriaPage';
+import TurismoPage from '../pages/TurismoPage';
+import ParticipacionPage from '../pages/ParticipacionPage';
+import ItinerarioIAPage from '../pages/ItinerarioIAPage';
 
 /**
  * Enrutador principal de la aplicación Costa Rica Unidos
@@ -45,10 +48,15 @@ export default function Routing() {
         <Route path="/educacion" element={<EducacionPage />} />
         <Route path="/comercio" element={<ComercioPage />} />
         <Route path="/feria-agricultor" element={<FeriaPage />} />
+        <Route path="/turismo" element={<TurismoPage />} />
+        <Route path="/participacion" element={<ParticipacionPage />} />
+        <Route path="/itinerario-ia" element={<ItinerarioIAPage />} />
 
         {/* Rutas Privadas Protegidas */}
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/participacion/votar" element={<ParticipacionPage />} />
+          <Route path="/gobernanza/audiencia" element={<ParticipacionPage />} />
         </Route>
 
         {/* Ruta Comodín 404 */}
