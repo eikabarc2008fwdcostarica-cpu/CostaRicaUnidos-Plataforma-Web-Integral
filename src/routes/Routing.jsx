@@ -9,6 +9,10 @@ import ReportarIncidencia from '../pages/ReportarIncidencia';
 import SeguridadEmergencias from '../pages/SeguridadEmergencias';
 import NotFound from '../pages/NotFound';
 
+// Módulos Funcionales — Alanie
+import GobernanzaPage from '../pages/GobernanzaPage';
+import CulturaPage from '../pages/CulturaPage';
+
 /**
  * Enrutador principal de la aplicación Costa Rica Unidos
  * Define las rutas públicas, las rutas privadas protegidas y la ruta comodín 404.
@@ -17,7 +21,7 @@ export default function Routing() {
   return (
     <Router>
       <Routes>
-        {/* Rutas Públicas */}
+        {/* Rutas Públicas de Infraestructura Central */}
         <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mapa-gis" element={<MapaGIS />} />
@@ -30,6 +34,10 @@ export default function Routing() {
         <Route path="/emergencias" element={<SeguridadEmergencias />} />
         <Route path="/sos" element={<SeguridadEmergencias />} />
 
+        {/* Rutas Públicas Asignadas a Alanie */}
+        <Route path="/gobernanza" element={<GobernanzaPage />} />
+        <Route path="/cultura" element={<CulturaPage />} />
+
         {/* Rutas Privadas Protegidas */}
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<Dashboard />} />
@@ -41,3 +49,4 @@ export default function Routing() {
     </Router>
   );
 }
+
