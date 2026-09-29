@@ -7,6 +7,7 @@ import { RutasPreconfiguradas } from '../components/turismo/RutasPreconfiguradas
 import { CivicCard } from '../components/common/CivicCard';
 import { CivicButton } from '../components/common/CivicButton';
 import { AccessibilityBadge } from '../components/common/AccessibilityBadge';
+import Navbar from '../components/Navbar';
 
 type CategoriaFiltro = 'todas' | 'Naturaleza y Parques' | 'Cultura e Historia' | 'Aventura y Senderismo';
 type LogisticaFiltro = 'todos' | 'ley-7600' | 'acceso-4x4' | 'pet-friendly';
@@ -60,8 +61,9 @@ export default function TurismoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#00040D] text-slate-100 py-10 px-4 sm:px-6 lg:px-8 selection:bg-cyan-500 selection:text-slate-950">
-      <div className="max-w-7xl mx-auto space-y-12">
+    <div className="min-h-screen bg-[#00040D] text-slate-100 selection:bg-cyan-500 selection:text-slate-950">
+      <Navbar />
+      <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Banner Hero Principal */}
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-[#000b1a] to-slate-950 p-8 sm:p-12 shadow-2xl">
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />

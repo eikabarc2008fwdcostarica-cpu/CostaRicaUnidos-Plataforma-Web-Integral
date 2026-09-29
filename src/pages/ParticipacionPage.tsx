@@ -6,6 +6,7 @@ import { ModalVotacionAntifraude } from '../components/participacion/ModalVotaci
 import { BuzonAudienciaModal } from '../components/participacion/BuzonAudienciaModal';
 import { CivicCard } from '../components/common/CivicCard';
 import { CivicButton } from '../components/common/CivicButton';
+import Navbar from '../components/Navbar';
 
 /**
  * ParticipacionPage — Módulo 11: Participación Ciudadana y Presupuesto Participativo
@@ -49,8 +50,9 @@ export default function ParticipacionPage() {
   const totalVotos = proyectos.reduce((acc, p) => acc + p.votosAcumulados, 0);
 
   return (
-    <div className="min-h-screen bg-[#00040D] text-slate-100 py-10 px-4 sm:px-6 lg:px-8 selection:bg-cyan-500 selection:text-slate-950">
-      <div className="max-w-7xl mx-auto space-y-10">
+    <div className="min-h-screen bg-[#00040D] text-slate-100 selection:bg-cyan-500 selection:text-slate-950">
+      <Navbar />
+      <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Banner Hero Cívico */}
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-[#021024] to-slate-950 p-8 sm:p-12 shadow-2xl">
           <div className="absolute top-0 right-0 -mr-24 -mt-24 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />

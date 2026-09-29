@@ -4,6 +4,7 @@ import { SolicitudItinerarioIA, ItinerarioGeneradoResultado, generarItinerarioPu
 import { FormularioItinerarioIA } from '../components/ia/FormularioItinerarioIA';
 import { VisorItinerarioGenerado } from '../components/ia/VisorItinerarioGenerado';
 import { CivicCard } from '../components/common/CivicCard';
+import Navbar from '../components/Navbar';
 
 /**
  * ItinerarioIAPage — Módulo 12 (RF-12.2): Planificador 'Itinerario Pura Vida'
@@ -33,8 +34,9 @@ export default function ItinerarioIAPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#00040D] text-slate-100 py-10 px-4 sm:px-6 lg:px-8 selection:bg-cyan-500 selection:text-slate-950">
-      <div className="max-w-6xl mx-auto space-y-10">
+    <div className="min-h-screen bg-[#00040D] text-slate-100 selection:bg-cyan-500 selection:text-slate-950">
+      <Navbar />
+      <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Banner Hero Principal */}
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-[#00172e] to-slate-950 p-8 sm:p-12 shadow-2xl">
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-cyan-500/15 blur-3xl pointer-events-none" />

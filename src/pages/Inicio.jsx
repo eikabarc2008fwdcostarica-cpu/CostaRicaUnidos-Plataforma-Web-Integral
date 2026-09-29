@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ArrowRight, Map, ClipboardEdit, ShieldCheck, ArrowUpRight } from 'lucide-react';
+import { Search, ArrowRight, Map, ClipboardEdit, ShieldCheck, ArrowUpRight, Building2, Music, Trophy, GraduationCap, Store, Compass, Vote, Sparkles } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -17,11 +17,16 @@ export default function Inicio() {
   // Lista de destinos y trámites sugeridos
   const sugerencias = [
     { label: 'Visor Cartográfico 3D y Relieve', path: '/mapa-gis' },
+    { label: 'Turismo Cantonal y Rutas Accesibles (Ley 7600)', path: '/turismo' },
+    { label: 'Planificador de Rutas IA: Itinerario Pura Vida', path: '/itinerario-ia' },
+    { label: 'Participación Ciudadana y Votación Presupuestaria', path: '/participacion' },
+    { label: 'Directorio de Colegios Técnicos (CTP) y Educación', path: '/educacion' },
+    { label: 'Comercio Local PYMEs y Feria del Agricultor', path: '/comercio' },
+    { label: 'Gobernanza Municipal y Visor de Actas Oficiales', path: '/gobernanza' },
+    { label: 'Identidad Cultural, Himnos y Patrimonio', path: '/cultura' },
+    { label: 'Escuelas Deportivas CCDR e Instalaciones', path: '/deportes' },
     { label: 'Reportar avería o hueco en carretera', path: '/reportar-incidencia' },
-    { label: 'Centro de Emergencias y Albergues 911', path: '/seguridad-emergencias' },
-    { label: 'San Carlos • Volcán Arenal y Huetar Norte', path: '/mapa-gis' },
-    { label: 'Escazú • Valle Central', path: '/mapa-gis' },
-    { label: 'Puntarenas • Costa Pacífica y Golfito', path: '/mapa-gis' }
+    { label: 'Centro de Emergencias y Albergues 911', path: '/seguridad-emergencias' }
   ];
 
   const handleSearchSubmit = (e) => {
@@ -29,7 +34,23 @@ export default function Inicio() {
     if (!searchQuery.trim()) return;
 
     const queryLower = searchQuery.toLowerCase();
-    if (queryLower.includes('report') || queryLower.includes('aver') || queryLower.includes('hueco') || queryLower.includes('luz')) {
+    if (queryLower.includes('turism') || queryLower.includes('destin') || queryLower.includes('playa') || queryLower.includes('volcan')) {
+      navigate('/turismo');
+    } else if (queryLower.includes('itinerari') || queryLower.includes('viaje') || queryLower.includes('ia') || queryLower.includes('pura vida')) {
+      navigate('/itinerario-ia');
+    } else if (queryLower.includes('voto') || queryLower.includes('votar') || queryLower.includes('participa') || queryLower.includes('presupuesto')) {
+      navigate('/participacion');
+    } else if (queryLower.includes('educa') || queryLower.includes('colegio') || queryLower.includes('ctp') || queryLower.includes('escuela')) {
+      navigate('/educacion');
+    } else if (queryLower.includes('comercio') || queryLower.includes('pyme') || queryLower.includes('feria') || queryLower.includes('agricultor')) {
+      navigate('/comercio');
+    } else if (queryLower.includes('gobernan') || queryLower.includes('acta') || queryLower.includes('municipal') || queryLower.includes('alcalde')) {
+      navigate('/gobernanza');
+    } else if (queryLower.includes('cultur') || queryLower.includes('himno') || queryLower.includes('escudo') || queryLower.includes('patrimonio')) {
+      navigate('/cultura');
+    } else if (queryLower.includes('deport') || queryLower.includes('ccdr') || queryLower.includes('cancha') || queryLower.includes('estadio')) {
+      navigate('/deportes');
+    } else if (queryLower.includes('report') || queryLower.includes('aver') || queryLower.includes('hueco') || queryLower.includes('luz')) {
       navigate('/reportar-incidencia');
     } else if (queryLower.includes('emergen') || queryLower.includes('sos') || queryLower.includes('albergue') || queryLower.includes('911')) {
       navigate('/seguridad-emergencias');
@@ -710,6 +731,236 @@ export default function Inicio() {
                 </Link>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ==========================================================================
+            4. SECCIÓN DE MÓDULOS DE GESTIÓN CANTONAL Y CIUDADANÍA (ALANIE)
+            Acceso directo e interactivo a todos los módulos funcionales
+            ========================================================================== */}
+        <section
+          style={{
+            maxWidth: '1280px',
+            margin: '0 auto',
+            padding: '2rem 2rem 6rem'
+          }}
+        >
+          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 3.5rem' }}>
+            <span
+              style={{
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: '#38BDF8',
+                display: 'block',
+                marginBottom: '0.75rem'
+              }}
+            >
+              Servicios Cantonales y Participación
+            </span>
+            <h2
+              style={{
+                fontSize: 'clamp(2rem, 3.5vw, 2.75rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                margin: '0 0 1rem',
+                color: '#FFFFFF'
+              }}
+            >
+              Módulos Ciudadanos Activos
+            </h2>
+            <p style={{ fontSize: '1rem', color: '#94A3B8', lineHeight: 1.6 }}>
+              Herramientas de gobernanza transparente, patrimonio, educación técnica, comercio local, turismo accesible y votación ciudadana blindada.
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '1.5rem'
+            }}
+          >
+            {[
+              {
+                id: 'M02',
+                titulo: 'Gobernanza y Actas',
+                desc: 'Organigrama municipal, sesiones del Concejo y visor PDF oficial.',
+                icono: Building2,
+                color: '#60A5FA',
+                ruta: '/gobernanza',
+                badge: 'Transparencia'
+              },
+              {
+                id: 'M03',
+                titulo: 'Cultura e Identidad',
+                desc: 'Línea de tiempo histórica, heráldica y reproductor de himnos cantonales.',
+                icono: Music,
+                color: '#F472B6',
+                ruta: '/cultura',
+                badge: 'Patrimonio'
+              },
+              {
+                id: 'M04',
+                titulo: 'Deportes y CCDR',
+                desc: 'Escuelas deportivas, instalaciones con semáforo y orgullo cantonal.',
+                icono: Trophy,
+                color: '#34D399',
+                ruta: '/deportes',
+                badge: 'Comunidad'
+              },
+              {
+                id: 'M06',
+                titulo: 'Educación y CTPs',
+                desc: 'Directorio escolar con POIs y especialidades técnicas CTP.',
+                icono: GraduationCap,
+                color: '#A78BFA',
+                ruta: '/educacion',
+                badge: 'Juventud'
+              },
+              {
+                id: 'M08',
+                titulo: 'Comercio y Ferias',
+                desc: 'PyMEs verificadas con Hacienda y croquis de feria del agricultor.',
+                icono: Store,
+                color: '#FBBF24',
+                ruta: '/comercio',
+                badge: 'Economía'
+              },
+              {
+                id: 'M09',
+                titulo: 'Turismo Cantonal',
+                desc: 'Destinos certificados Ley 7600, rutas 4x4 y exportador GeoJSON.',
+                icono: Compass,
+                color: '#38BDF8',
+                ruta: '/turismo',
+                badge: 'Aventura'
+              },
+              {
+                id: 'M11',
+                titulo: 'Participación Ciudadana',
+                desc: 'Presupuesto participativo con votación blindada (1 voto por cédula legal).',
+                icono: Vote,
+                color: '#10B981',
+                ruta: '/participacion',
+                badge: 'Antifraude'
+              },
+              {
+                id: 'M12',
+                titulo: 'Itinerario Pura Vida (IA)',
+                desc: 'Planificador generativo multivariable con análisis topográfico 3D.',
+                icono: Sparkles,
+                color: '#F59E0B',
+                ruta: '/itinerario-ia',
+                badge: 'Motor IA'
+              }
+            ].map((mod) => (
+              <Link
+                key={mod.id}
+                to={mod.ruta}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <div
+                  className="civic-glass-card"
+                  style={{
+                    padding: '1.75rem',
+                    borderRadius: '16px',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    transition: 'all 0.3s ease',
+                    boxSizing: 'border-box'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = mod.color;
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '1rem'
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '42px',
+                          height: '42px',
+                          borderRadius: '10px',
+                          backgroundColor: `${mod.color}15`,
+                          border: `1px solid ${mod.color}40`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        {React.createElement(mod.icono, { size: 20, color: mod.color })}
+                      </div>
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          padding: '0.2rem 0.6rem',
+                          borderRadius: '9999px',
+                          backgroundColor: `${mod.color}15`,
+                          color: mod.color,
+                          border: `1px solid ${mod.color}35`,
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        {mod.badge}
+                      </span>
+                    </div>
+
+                    <h3
+                      style={{
+                        fontSize: '1.15rem',
+                        fontWeight: 700,
+                        color: '#FFFFFF',
+                        marginBottom: '0.4rem'
+                      }}
+                    >
+                      {mod.titulo}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: '0.85rem',
+                        color: '#94A3B8',
+                        lineHeight: 1.5,
+                        margin: 0
+                      }}
+                    >
+                      {mod.desc}
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: '1.25rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      color: mod.color
+                    }}
+                  >
+                    <span>Explorar módulo</span>
+                    <ArrowUpRight size={14} />
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
       </main>
