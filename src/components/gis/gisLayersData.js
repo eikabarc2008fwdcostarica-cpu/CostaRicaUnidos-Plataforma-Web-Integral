@@ -7,41 +7,119 @@ export const GIS_LAYERS_CONFIG = [
   {
     id: 'salud',
     nombre: 'Salud (EBAIS y Clínicas)',
-    icono: '🏥',
+    icono: 'salud',
     color: '#00D166', // Verde Salud
     descripcion: 'Red de Ebais, clínicas mayores y hospitales de la CCSS en los 84 cantones.'
   },
   {
     id: 'educacion',
     nombre: 'Educación (Escuelas y CTPs)',
-    icono: '🎓',
+    icono: 'educacion',
     color: '#3B82F6', // Azul Educación
     descripcion: 'Colegios Técnicos Profesionales, escuelas públicas e institutos del MEP.'
   },
   {
     id: 'transporte',
     nombre: 'Transporte (Terminales y Buses)',
-    icono: '🚌',
+    icono: 'transporte',
     color: '#F59E0B', // Ámbar Transporte
     descripcion: 'Terminales de autobuses intercantonales y paradas de alta afluencia.'
   },
   {
     id: 'recreativa',
     nombre: 'Recreativa (Polideportivos CCDR)',
-    icono: '⚽',
+    icono: 'recreativa',
     color: '#EC4899', // Magenta Recreativo
     descripcion: 'Centros deportivos, pistas de atletismo y plazas cantonales del ICODER / CCDR.'
   },
   {
     id: 'albergues',
     nombre: 'Albergues de Emergencia CNE (M10)',
-    icono: '🚨',
+    icono: 'albergues',
     color: '#EF4444', // Rojo Alerta CNE
     descripcion: 'Puntos habilitados por la Comisión Nacional de Emergencias para evacuación.'
   }
 ];
 
 export const GIS_POI_DATA = [
+  // --- Puntos Cívicos Oficiales de Referencia ---
+  {
+    id: 'sal-mexico',
+    layer: 'salud',
+    nombre: 'Hospital México / Ebais',
+    categoria: 'Hospital Nacional de Referencia • CCSS',
+    provincia: 'San José',
+    canton: 'San José',
+    distrito: 'La Uruca',
+    lat: 9.953,
+    lng: -84.108,
+    foto: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=600&q=80',
+    horario: 'Emergencias 24 Horas / Consulta Externa',
+    telefono: '+506 2242-6700',
+    descripcion: 'Centro hospitalario nacional de alta complejidad médica y quirúrgica en La Uruca.'
+  },
+  {
+    id: 'sal-limon-centro',
+    layer: 'salud',
+    nombre: 'Clínica Limón Centro',
+    categoria: 'Clínica de Atención Integral • CCSS',
+    provincia: 'Limón',
+    canton: 'Limón',
+    distrito: 'Limón Centro',
+    lat: 9.991,
+    lng: -83.033,
+    foto: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=600&q=80',
+    horario: 'Lunes a Viernes: 06:00 - 22:00',
+    telefono: '+506 2758-2200',
+    descripcion: 'Atención primaria y ambulatoria para la población del cantón central de Limón.'
+  },
+  {
+    id: 'edu-ctp-san-carlos',
+    layer: 'educacion',
+    nombre: 'CTP de San Carlos',
+    categoria: 'Colegio Técnico Profesional • MEP',
+    provincia: 'Alajuela',
+    canton: 'San Carlos',
+    distrito: 'Quesada',
+    lat: 10.324,
+    lng: -84.428,
+    foto: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80',
+    horario: 'Lunes a Viernes: 07:00 - 17:00',
+    telefono: '+506 2460-0120',
+    descripcion: 'Formación técnica agroindustrial, informática y electromecánica en la Zona Norte.'
+  },
+  {
+    id: 'alb-polideportivo-puntarenas',
+    layer: 'albergues',
+    nombre: 'Albergue CNE Polideportivo',
+    categoria: 'Albergue de Emergencia CNE',
+    provincia: 'Puntarenas',
+    canton: 'Puntarenas',
+    distrito: 'Puntarenas Centro',
+    lat: 9.976,
+    lng: -84.832,
+    foto: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80',
+    horario: 'Operatividad 24/7 en Alertas CNE',
+    telefono: '+506 2661-3000',
+    capacidad: '350 personas',
+    descripcion: 'Centro de evacuación y albergue temporal para el litoral del Pacífico Central.'
+  },
+  {
+    id: 'alb-santa-cruz',
+    layer: 'albergues',
+    nombre: 'Refugio CNE Santa Cruz',
+    categoria: 'Refugio de Emergencia Temporal CNE',
+    provincia: 'Guanacaste',
+    canton: 'Santa Cruz',
+    distrito: 'Santa Cruz',
+    lat: 10.262,
+    lng: -85.585,
+    foto: 'https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=600&q=80',
+    horario: 'Activación Inmediata 24/7 ante Alerta CNE',
+    telefono: '+506 2680-0450',
+    capacidad: '280 personas',
+    descripcion: 'Instalación acondicionada para atención humanitaria y resguardo de familias en la pampa guanacasteca.'
+  },
   // --- CAPA SALUD ---
   {
     id: 'sal-01',

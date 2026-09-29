@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { Search, Copy, Check, MapPin, Building2, Construction, Lightbulb, Droplets, Trash2, AlertTriangle } from 'lucide-react';
 import { getTickets, buscarTicketPorId, ESTADOS_TICKET } from './ticketService';
+
+function getCategoryIcon(categoria, size = 18) {
+  switch (categoria) {
+    case 'hueco_vial':
+      return <Construction size={size} color="#FF6B6B" />;
+    case 'luminaria':
+      return <Lightbulb size={size} color="#FBBF24" />;
+    case 'fuga_agua':
+      return <Droplets size={size} color="#38BDF8" />;
+    case 'basurero':
+      return <Trash2 size={size} color="#34D399" />;
+    default:
+      return <AlertTriangle size={size} color="#F59E0B" />;
+  }
+}
 
 export default function TicketTraceabilityBoard({
   initialTicketId = null,
@@ -81,8 +97,8 @@ export default function TicketTraceabilityBoard({
           }}
         >
           <div style={{ flex: 1, minWidth: '280px', position: 'relative' }}>
-            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '1.2rem', color: '#79a6ff' }}>
-              🔍
+            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#79a6ff', display: 'flex', alignItems: 'center' }}>
+              <Search size={18} />
             </span>
             <input
               type="text"
@@ -150,7 +166,17 @@ export default function TicketTraceabilityBoard({
           }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '1.8rem' }}>{activeTicket.categoriaIcono || '⚠️'}</span>
+                <div style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  {getCategoryIcon(activeTicket.categoria, 22)}
+                </div>
                 <h4 style={{
                   fontFamily: 'var(--font-telemetry)',
                   fontSize: '1.4rem',
@@ -165,9 +191,10 @@ export default function TicketTraceabilityBoard({
                   type="button"
                   onClick={() => handleCopyId(activeTicket.reportId)}
                   className="btn-glass-secondary"
-                  style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem', borderRadius: '6px' }}
+                  style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                 >
-                  {copiedId ? '✓ Copiado' : '📋 Copiar'}
+                  {copiedId ? <Check size={12} color="#00D166" /> : <Copy size={12} />}
+                  <span>{copiedId ? 'Copiado' : 'Copiar'}</span>
                 </button>
               </div>
 
@@ -323,7 +350,7 @@ export default function TicketTraceabilityBoard({
                 color: '#79a6ff',
                 marginBottom: '1rem'
               }}>
-                <span>📍 COORDENADAS:</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><MapPin size={13} /> COORDENADAS:</span>
                 <span>{activeTicket.coordenadas?.lat.toFixed(5)}, {activeTicket.coordenadas?.lng.toFixed(5)}</span>
               </div>
 
@@ -392,9 +419,12 @@ export default function TicketTraceabilityBoard({
                   backgroundColor: 'rgba(0, 43, 127, 0.25)',
                   border: '1px solid rgba(121, 166, 255, 0.2)',
                   fontSize: '0.8rem',
-                  color: '#CBD5E1'
+                  color: '#CBD5E1',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
                 }}>
-                  🏛️ <strong>Unidad Técnica Asignada:</strong> {activeTicket.entidadResponsable}
+                  <Building2 size={15} color="#79a6ff" /> <span><strong>Unidad Técnica Asignada:</strong> {activeTicket.entidadResponsable}</span>
                 </div>
               )}
             </div>
@@ -483,8 +513,8 @@ export default function TicketTraceabilityBoard({
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '1.2rem' }}>{ticket.categoriaIcono || '⚠️'}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
+                  <span style={{ display: 'flex', alignItems: 'center' }}>{getCategoryIcon(ticket.categoria, 18)}</span>
                   <h5 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF' }}>
                     {ticket.categoriaTitulo}
                   </h5>
@@ -505,7 +535,7 @@ export default function TicketTraceabilityBoard({
                   paddingTop: '0.5rem',
                   borderTop: '1px solid rgba(255, 255, 255, 0.08)'
                 }}>
-                  <span>📍 {ticket.canton}, {ticket.provincia}</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><MapPin size={12} /> {ticket.canton}, {ticket.provincia}</span>
                   <span style={{ color: '#79a6ff' }}>Ver Trazabilidad →</span>
                 </div>
               </div>

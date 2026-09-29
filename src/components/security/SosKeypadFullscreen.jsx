@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Siren, Shield, Flame, HeartPulse, Scale, Maximize2, PhoneCall, Flashlight, Megaphone, MapPin, Check } from 'lucide-react';
 
 export const SOS_NUMEROS = [
   {
@@ -9,7 +10,7 @@ export const SOS_NUMEROS = [
     entidad: 'Sistema Nacional de Emergencias',
     descripcion: 'Línea unificada para riesgo de vida, rescate, accidentes mayores y siniestros.',
     color: '#DA291C',
-    icono: '🚨',
+    icono: Siren,
     prioridad: 'Crítica / Inmediata',
     bg: 'linear-gradient(135deg, #DA291C 0%, #8A0A00 100%)',
     textColor: '#FFFFFF'
@@ -22,7 +23,7 @@ export const SOS_NUMEROS = [
     entidad: 'Ministerio de Seguridad Pública',
     descripcion: 'Seguridad ciudadana, asaltos, alteración del orden público y patrullaje.',
     color: '#002B7F',
-    icono: '👮',
+    icono: Shield,
     prioridad: 'Orden Público',
     bg: 'linear-gradient(135deg, #002B7F 0%, #001240 100%)',
     textColor: '#FFFFFF'
@@ -35,7 +36,7 @@ export const SOS_NUMEROS = [
     entidad: 'Cuerpo de Bomberos de Costa Rica',
     descripcion: 'Incendios estructurales, forestales, escapes de gas y rescate en estructuras colapsadas.',
     color: '#F36717',
-    icono: '🚒',
+    icono: Flame,
     prioridad: 'Incendios & Materiales Peligrosos',
     bg: 'linear-gradient(135deg, #F36717 0%, #9C3800 100%)',
     textColor: '#FFFFFF'
@@ -48,7 +49,7 @@ export const SOS_NUMEROS = [
     entidad: 'Sociedad Nacional Cruz Roja',
     descripcion: 'Atención prehospitalaria, soporte de ambulancias, rescate acuático y de montaña.',
     color: '#CE1126',
-    icono: '🚑',
+    icono: HeartPulse,
     prioridad: 'Urgencias Médicas',
     bg: 'linear-gradient(135deg, #CE1126 0%, #6E000B 100%)',
     textColor: '#FFFFFF'
@@ -61,7 +62,7 @@ export const SOS_NUMEROS = [
     entidad: 'Poder Judicial de Costa Rica',
     descripcion: 'Línea Confidencial para denuncias de delitos, personas desaparecidas y crimen organizado.',
     color: '#F59E0B',
-    icono: '⚖️',
+    icono: Scale,
     prioridad: 'Línea Confidencial OIJ',
     bg: 'linear-gradient(135deg, #D97706 0%, #78350F 100%)',
     textColor: '#FFFFFF'
@@ -131,7 +132,7 @@ export default function SosKeypadFullscreen() {
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.2rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🚨</span>
+            <Siren size={24} color="#EF4444" />
             <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF' }}>
               Botonera Táctil de Emergencia SOS
             </h3>
@@ -149,11 +150,13 @@ export default function SosKeypadFullscreen() {
             padding: '0.65rem 1.4rem',
             fontSize: '0.92rem',
             fontWeight: 800,
-            gap: '0.5rem'
+            gap: '0.5rem',
+            display: 'inline-flex',
+            alignItems: 'center'
           }}
           aria-label="Abrir botonera SOS en modo táctil a pantalla completa"
         >
-          <span>⛶</span>
+          <Maximize2 size={16} />
           <span>Modo Pantalla Completa SOS</span>
         </button>
       </div>
@@ -195,7 +198,18 @@ export default function SosKeypadFullscreen() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ fontSize: '2.2rem', lineHeight: 1 }}>{sos.icono}</span>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: '14px',
+                backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                {React.createElement(sos.icono, { size: 26, color: '#FFFFFF' })}
+              </div>
               <div>
                 <h4 style={{ fontSize: '1.15rem', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.01em' }}>
                   {sos.titulo}
@@ -209,15 +223,19 @@ export default function SosKeypadFullscreen() {
             <div style={{ textAlign: 'right' }}>
               <div style={{
                 fontFamily: 'var(--font-telemetry)',
-                fontSize: '1.35rem',
+                fontSize: '1.25rem',
                 fontWeight: 900,
                 letterSpacing: '0.04em',
                 padding: '0.35rem 0.75rem',
                 backgroundColor: 'rgba(0, 0, 0, 0.45)',
                 borderRadius: '10px',
-                border: '1px solid rgba(255, 255, 255, 0.2)'
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
               }}>
-                📞 {sos.numero.split(' /')[0]}
+                <PhoneCall size={16} />
+                <span>{sos.numero.split(' /')[0]}</span>
               </div>
             </div>
           </a>
@@ -253,7 +271,7 @@ export default function SosKeypadFullscreen() {
             marginBottom: '1.5rem'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-              <span style={{ fontSize: '2rem' }}>🚨</span>
+              <Siren size={32} color="#EF4444" />
               <div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: beaconFlash ? '#000000' : '#FFFFFF' }}>
                   CENTRAL SOS DE EMERGENCIA A PANTALLA COMPLETA
@@ -294,10 +312,15 @@ export default function SosKeypadFullscreen() {
                 fontSize: '0.95rem',
                 backgroundColor: beaconFlash ? '#FFC700' : 'rgba(255, 255, 255, 0.12)',
                 color: beaconFlash ? '#000000' : '#FFFFFF',
-                fontWeight: 700
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
             >
-              🔦 {beaconFlash ? 'Apagar Baliza Visual' : 'Baliza Visual de Destello'}
+              <Flashlight size={18} />
+              <span>{beaconFlash ? 'Apagar Baliza Visual' : 'Baliza Visual de Destello'}</span>
             </button>
 
             <button
@@ -308,10 +331,15 @@ export default function SosKeypadFullscreen() {
                 minHeight: '56px',
                 fontSize: '0.95rem',
                 backgroundColor: isSirenOn ? '#DA291C' : 'rgba(255, 255, 255, 0.12)',
-                fontWeight: 700
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
             >
-              📢 {isSirenOn ? 'Sonando Alerta...' : 'Emitir Tono Sonoro de Auxilio'}
+              <Megaphone size={18} />
+              <span>{isSirenOn ? 'Sonando Alerta...' : 'Emitir Tono Sonoro de Auxilio'}</span>
             </button>
 
             <button
@@ -323,10 +351,15 @@ export default function SosKeypadFullscreen() {
                 fontSize: '0.95rem',
                 color: '#00D166',
                 borderColor: 'rgba(0, 209, 102, 0.4)',
-                fontWeight: 700
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
             >
-              📍 {copiedCoords ? '¡Coordenadas Copiadas!' : 'Copiar Coordenadas GPS'}
+              {copiedCoords ? <Check size={18} /> : <MapPin size={18} />}
+              <span>{copiedCoords ? '¡Coordenadas Copiadas!' : 'Copiar Coordenadas GPS'}</span>
             </button>
           </div>
 
@@ -361,7 +394,18 @@ export default function SosKeypadFullscreen() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                  <span style={{ fontSize: '3rem' }}>{sos.icono}</span>
+                  <div style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '16px',
+                    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    {React.createElement(sos.icono, { size: 34, color: '#FFFFFF' })}
+                  </div>
                   <div>
                     <h4 style={{ fontSize: '1.4rem', fontWeight: 900 }}>{sos.titulo}</h4>
                     <p style={{ fontSize: '0.9rem', opacity: 0.9 }}>{sos.descripcion}</p>
@@ -370,13 +414,17 @@ export default function SosKeypadFullscreen() {
 
                 <div style={{
                   fontFamily: 'var(--font-telemetry)',
-                  fontSize: '1.8rem',
+                  fontSize: '1.6rem',
                   fontWeight: 900,
                   backgroundColor: 'rgba(0, 0, 0, 0.55)',
                   padding: '0.5rem 1.25rem',
-                  borderRadius: '12px'
+                  borderRadius: '12px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '10px'
                 }}>
-                  📞 {sos.numero.split(' /')[0]}
+                  <PhoneCall size={22} />
+                  <span>{sos.numero.split(' /')[0]}</span>
                 </div>
               </a>
             ))}

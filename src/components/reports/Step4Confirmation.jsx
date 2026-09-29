@@ -1,4 +1,5 @@
 import React from 'react';
+import { Building2, Camera, Send, Loader2, AlertTriangle } from 'lucide-react';
 import { TIPOLOGIAS_DANO } from './Step1DamageType';
 import { getEntidadResponsable } from './ticketService';
 
@@ -70,9 +71,13 @@ export default function Step4Confirmation({
             borderRadius: '6px',
             backgroundColor: 'rgba(0, 43, 127, 0.3)',
             border: '1px solid rgba(121, 166, 255, 0.25)',
-            color: '#79a6ff'
+            color: '#79a6ff',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px'
           }}>
-            🏛️ Asignado a: {entidadAsignada}
+            <Building2 size={13} />
+            <span>Asignado a: {entidadAsignada}</span>
           </div>
         </div>
 
@@ -127,10 +132,9 @@ export default function Step4Confirmation({
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1.5rem'
+                justifyContent: 'center'
               }}>
-                📷
+                <Camera size={26} color="#94A3B8" />
               </div>
             )}
             <div>
@@ -221,15 +225,29 @@ export default function Step4Confirmation({
             backgroundColor: '#DA291C',
             boxShadow: '0 8px 30px rgba(218, 41, 28, 0.55)',
             cursor: isSubmitting || observaciones.trim().length < 10 ? 'not-allowed' : 'pointer',
-            opacity: isSubmitting || observaciones.trim().length < 10 ? 0.5 : 1
+            opacity: isSubmitting || observaciones.trim().length < 10 ? 0.5 : 1,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '10px'
           }}
         >
-          {isSubmitting ? '⏳ Generando Ticket y Notificando...' : '🚀 Emitir Reporte y Generar Ticket Soberano'}
+          {isSubmitting ? (
+            <>
+              <Loader2 size={18} className="animate-spin" />
+              <span>Generando Ticket y Notificando...</span>
+            </>
+          ) : (
+            <>
+              <Send size={18} />
+              <span>Emitir Reporte y Generar Ticket Soberano</span>
+            </>
+          )}
         </button>
 
         {observaciones.trim().length < 10 && (
-          <p style={{ color: '#F59E0B', fontSize: '0.8rem', marginTop: '0.5rem' }}>
-            ⚠️ Ingrese una dirección exacta o descripción mínima antes de continuar.
+          <p style={{ color: '#F59E0B', fontSize: '0.8rem', marginTop: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            <AlertTriangle size={14} />
+            <span>Ingrese una dirección exacta o descripción mínima antes de continuar.</span>
           </p>
         )}
       </div>

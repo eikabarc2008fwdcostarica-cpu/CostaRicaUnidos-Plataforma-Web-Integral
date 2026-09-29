@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { Landmark, BarChart3, Leaf, Play, Pause } from 'lucide-react';
 
 const SLIDES = [
   {
@@ -7,7 +8,7 @@ const SLIDES = [
     tag: 'SOBERANÍA TERRITORIAL & CIVIC GLASS v2.1',
     titulo: 'Costa Rica Unidos: La Plataforma Soberana de la República',
     bajada: 'Unificando la gestión territorial, la fiscalización de obra pública y la transparencia cívica de los 84 cantones y 492 distritos bajo un estándar digital transparente y auditable.',
-    badgeIcon: '🏛️',
+    badgeIcon: Landmark,
     ctaPrimary: { text: 'Explorar Mapa Nacional', targetId: 'seccion-mapa-svg' },
     ctaSecondary: { text: 'Auditoría Cívica', href: '/dashboard' },
     statNumber: '84',
@@ -19,7 +20,7 @@ const SLIDES = [
     tag: 'FISCALIZACIÓN TRIBUTARIA & OBRAS MOPT',
     titulo: 'Vigilancia Presupuestaria y Control Ciudadano en Tiempo Real',
     bajada: 'Supervisión activa del avance físico y financiero de las obras de infraestructura vial, contratos estatales SICOP y situación tributaria de contribuyentes con datos abiertos.',
-    badgeIcon: '📊',
+    badgeIcon: BarChart3,
     ctaPrimary: { text: 'Filtrar por Territorio', targetId: 'seccion-selector-territorial' },
     ctaSecondary: { text: 'Ver Módulo de Hacienda', href: '/dashboard' },
     statNumber: '₡ 617,450 M',
@@ -31,7 +32,7 @@ const SLIDES = [
     tag: 'IDENTIDAD PROVINCIAL & RESILIENCIA',
     titulo: 'Identidad Territorial Viva: 7 Provincias, Un Solo Destino',
     bajada: 'Conectividad directa con el motor de temas provinciales dinámicos y la División Territorial Administrativa (DTA) para salvaguardar la autonomía cantonal y comunitaria.',
-    badgeIcon: '🌿',
+    badgeIcon: Leaf,
     ctaPrimary: { text: 'Conmutar Provincia Activa', targetId: 'seccion-theming-engine' },
     ctaSecondary: { text: 'Acceso Identidad Cívica', href: '/login' },
     statNumber: '492+',
@@ -186,11 +187,14 @@ export default function HeroCarousel({ onSelectSlideCta }) {
               style={{
                 borderColor: 'rgba(255, 255, 255, 0.25)',
                 backgroundColor: 'rgba(0, 43, 127, 0.35)',
-                color: '#99BEFF'
+                color: '#99BEFF',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem'
               }}
             >
-              <span style={{ fontSize: '1rem' }}>{activeSlideData.badgeIcon}</span>
-              {activeSlideData.tag}
+              {React.createElement(activeSlideData.badgeIcon, { size: 14 })}
+              <span>{activeSlideData.tag}</span>
             </span>
 
             {/* Contador de slides accesible */}
@@ -392,11 +396,13 @@ export default function HeroCarousel({ onSelectSlideCta }) {
             padding: '0.4rem 0.85rem',
             fontSize: '0.78rem',
             fontFamily: 'var(--font-telemetry)',
+            display: 'inline-flex',
+            alignItems: 'center',
             gap: '0.4rem',
             borderRadius: '8px'
           }}
         >
-          <span>{isPlaying ? '⏸' : '▶'}</span>
+          {isPlaying ? <Pause size={13} /> : <Play size={13} />}
           <span>{isPlaying ? 'PAUSAR' : 'REANUDAR'}</span>
         </button>
       </div>

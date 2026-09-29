@@ -1,10 +1,11 @@
 import React from 'react';
+import { Construction, Lightbulb, Droplets, Trash2, Clock } from 'lucide-react';
 
 export const TIPOLOGIAS_DANO = [
   {
     id: 'hueco_vial',
     titulo: 'Hueco vial / bache en asfalto',
-    icono: '🕳️',
+    icono: Construction,
     entidad: 'MOPT / Municipalidad',
     plazoEstimado: '3 a 5 días hábiles',
     descripcion: 'Deterioro de la carpeta asfáltica, baches profundos, hundimientos o grietas que comprometen la seguridad vehicular y peatonal.',
@@ -13,7 +14,7 @@ export const TIPOLOGIAS_DANO = [
   {
     id: 'luminaria',
     titulo: 'Luminaria pública dañada o apagada',
-    icono: '💡',
+    icono: Lightbulb,
     entidad: 'CNFL / ICE / JASEC / ESPH',
     plazoEstimado: '48 a 72 horas',
     descripcion: 'Postes sin iluminación, lámparas intermitentes, fotoceldas sulfatadas o cableado aéreo expuesto en calles públicas.',
@@ -22,7 +23,7 @@ export const TIPOLOGIAS_DANO = [
   {
     id: 'fuga_agua',
     titulo: 'Fuga de agua potable / alcantarilla colapsada',
-    icono: '🚰',
+    icono: Droplets,
     entidad: 'AyA / ASADA Cantonal',
     plazoEstimado: '24 a 48 horas (Prioritaria)',
     descripcion: 'Rotura de tubería de agua potable en vía pública, tapas de alcantarilla faltantes o desbordamiento de aguas pluviales.',
@@ -31,7 +32,7 @@ export const TIPOLOGIAS_DANO = [
   {
     id: 'basurero',
     titulo: 'Basurero clandestino / escombros',
-    icono: '🗑️',
+    icono: Trash2,
     entidad: 'Gestión Ambiental Municipal',
     plazoEstimado: '3 a 7 días hábiles',
     descripcion: 'Disposición ilícita de residuos sólidos, acumulación de escombros de construcción o chatarra en zonas públicas protegidas.',
@@ -136,10 +137,9 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '1.8rem',
                   marginBottom: '1rem'
                 }}>
-                  {tipo.icono}
+                  {React.createElement(tipo.icono, { size: 28, color: isSelected ? '#FFFFFF' : '#79a6ff' })}
                 </div>
 
                 <h4 style={{
@@ -175,8 +175,9 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                 fontFamily: 'var(--font-telemetry)'
               }}>
                 <span style={{ color: '#79a6ff' }}>{tipo.entidad}</span>
-                <span style={{ color: '#00D166', backgroundColor: 'rgba(0, 209, 102, 0.12)', padding: '0.15rem 0.45rem', borderRadius: '4px' }}>
-                  ⏱ {tipo.plazoEstimado}
+                <span style={{ color: '#00D166', backgroundColor: 'rgba(0, 209, 102, 0.12)', padding: '0.15rem 0.45rem', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <Clock size={12} />
+                  <span>{tipo.plazoEstimado}</span>
                 </span>
               </div>
             </div>

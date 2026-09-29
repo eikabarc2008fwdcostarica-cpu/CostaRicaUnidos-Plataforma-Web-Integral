@@ -106,6 +106,8 @@ Cada commit debe describir con precisión atómica la modificación introducida 
 - [ ] Mantiene contraste de color WCAG 2.1 AA (mínimo 4.5:1 en textos).
 - [ ] Botones interactivos poseen tamaño mínimo de 54px (o 64px en modo 200%).
 - [ ] Cumple con la sanitización de metadatos EXIF (Ley N° 8968).
+- [ ] Textos de interfaz integrados al sistema de traducción multilingüe en los 8 idiomas oficiales (`src/context/LanguageContext.jsx`).
+- [ ] Logotipo implementado a través de `src/components/common/Logo.jsx` respetando la altura máxima de 40px.
 - [ ] `npm run build` ejecuta en 0 errores.
 ```
 
@@ -133,6 +135,14 @@ El frontend está construido sobre **React 18**, **Vite** y CSS Vanilla modular 
    - **Mistical Spring**: Encabezados patrios, declaraciones de Estado y títulos cantonales.
    - **Paloseco**: Textos de lectura, botones, navegación e interfaz general.
    - **JetBrains Mono**: Telemetría técnica, coordenadas cartográficas (latitud/longitud), marcas temporales CST e identificadores de tickets (`CR-2026-XXXX`).
+4. **Sistema de Internacionalización Reactiva (i18n)**:
+   - Ningún texto visible debe dejarse codificado de forma estática (hardcoded).
+   - Toda etiqueta debe consumirse a través del hook `useLanguage` y la función `t('clave')`.
+   - Si se introducen nuevas cadenas de texto, deben agregarse sus equivalentes en los 8 idiomas oficiales (`CR`, `ES`, `US`, `CN`, `BR`, `FR`, `RU`, `JP`) en el diccionario de `src/context/LanguageContext.jsx`.
+5. **Uso y Dimensionamiento del Logotipo Oficial**:
+   - Todo componente que requiera mostrar el logotipo de Costa Rica Unidos debe importar el componente `<Logo />` de `src/components/common/Logo.jsx`.
+   - Se debe utilizar el activo oficial `public/logo.png` con transparencia limpia.
+   - La altura máxima de la imagen está estrictamente acotada a 40px (`maxHeight: 40px`) para salvaguardar la compacidad y alineación de la barra de navegación superior.
 
 ---
 

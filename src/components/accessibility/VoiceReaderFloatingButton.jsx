@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Volume2, Square, Languages, X, User, Play, Sparkles, Settings } from 'lucide-react';
 import { useAccessibility } from './AccessibilityContext';
 import { IDIOMAS_SOPORTADOS } from './accessibilityData';
+import { useLanguage } from '../../context/LanguageContext';
 
 /**
  * Botón Accesible Flotante de Lectura en Voz Alta (TTS Web Speech API)
@@ -19,6 +21,7 @@ export default function VoiceReaderFloatingButton() {
     setVoiceGender,
     openOnboarding
   } = useAccessibility();
+  const { t, idioma, cambiarIdioma } = useLanguage();
 
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const configRef = useRef(null);
@@ -101,8 +104,9 @@ export default function VoiceReaderFloatingButton() {
             }}
           />
           <div style={{ flex: 1, fontSize: '0.9rem', color: '#FFFFFF', fontWeight: 600, lineHeight: 1.45 }}>
-            <span style={{ fontSize: '0.74rem', color: '#79a6ff', textTransform: 'uppercase', display: 'block', marginBottom: '2px' }}>
-              🔊 Narración Asistida Activa ({activeLangObj.nativo} &bull; {voiceGender === 'female' ? 'Mujer' : 'Hombre'}):
+            <span style={{ fontSize: '0.74rem', color: '#79a6ff', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '2px' }}>
+              <Volume2 size={13} color="#79a6ff" />
+              <span>Narración Asistida Activa ({activeLangObj.nativo} &bull; {voiceGender === 'female' ? 'Mujer' : 'Hombre'}):</span>
             </span>
             {currentSubtitle}
           </div>
@@ -118,10 +122,14 @@ export default function VoiceReaderFloatingButton() {
               borderRadius: '8px',
               cursor: 'pointer',
               fontWeight: 700,
-              fontSize: '0.78rem'
+              fontSize: '0.78rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem'
             }}
           >
-            ⏹️ Detener
+            <Square size={12} />
+            <span>Detener</span>
           </button>
         </aside>
       )}
@@ -129,15 +137,7 @@ export default function VoiceReaderFloatingButton() {
       {/* Controles Flotantes en la Esquina Inferior Derecha */}
       <div
         ref={configRef}
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          zIndex: 9990,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem'
-        }}
+        className="voice-reader-widget"
       >
         {/* Panel de Configuración de Voz e Idioma */}
         {isConfigOpen && (
@@ -146,33 +146,36 @@ export default function VoiceReaderFloatingButton() {
             aria-label="Configuración de Voz y Lenguaje Universal"
             style={{
               position: 'absolute',
-              bottom: 'calc(100% + 12px)',
+              bottom: 'calc(100% + 14px)',
               right: 0,
               width: '320px',
-              backgroundColor: 'rgba(0, 8, 30, 0.96)',
-              backdropFilter: 'blur(30px)',
-              WebkitBackdropFilter: 'blur(30px)',
-              border: '1px solid rgba(121, 166, 255, 0.35)',
-              borderRadius: '18px',
+              maxWidth: 'calc(100vw - 2.5rem)',
+              backgroundColor: 'rgba(0, 4, 13, 0.96)',
+              backdropFilter: 'blur(28px)',
+              WebkitBackdropFilter: 'blur(28px)',
+              border: '1px solid rgba(255, 255, 255, 0.20)',
+              borderRadius: '20px',
               padding: '1.25rem',
-              boxShadow: '0 20px 50px rgba(0, 4, 13, 0.95), 0 0 25px rgba(0, 43, 127, 0.4)',
+              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 43, 127, 0.35)',
               display: 'flex',
               flexDirection: 'column',
               gap: '1rem',
-              color: '#FFFFFF'
+              color: '#FFFFFF',
+              boxSizing: 'border-box'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#79a6ff', textTransform: 'uppercase' }}>
-                🌐 Voz e Idiomas (8 Oficiales)
+              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#79a6ff', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Languages size={15} color="#79a6ff" />
+                <span>Voz e Idiomas (8 Oficiales)</span>
               </span>
               <button
                 type="button"
                 onClick={() => setIsConfigOpen(false)}
                 aria-label="Cerrar ajustes de voz"
-                style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: '1rem' }}
+                style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.2rem' }}
               >
-                ✕
+                <X size={16} />
               </button>
             </div>
 
@@ -184,7 +187,12 @@ export default function VoiceReaderFloatingButton() {
               <select
                 id="select-tts-lang"
                 value={selectedLang}
-                onChange={(e) => setSelectedLang(e.target.value)}
+                onChange={(e) => {
+                  const newCode = e.target.value;
+                  setSelectedLang(newCode);
+                  const found = IDIOMAS_SOPORTADOS.find((i) => i.codigo === newCode);
+                  if (found) cambiarIdioma(found.bandera);
+                }}
                 style={{
                   width: '100%',
                   padding: '0.6rem 0.8rem',
@@ -200,7 +208,7 @@ export default function VoiceReaderFloatingButton() {
               >
                 {IDIOMAS_SOPORTADOS.map((item) => (
                   <option key={item.codigo} value={item.codigo} style={{ backgroundColor: '#00081E', color: '#FFFFFF' }}>
-                    {item.bandera} {item.nombre} ({item.nativo})
+                    [{item.bandera}] {item.nombre} ({item.nativo})
                   </option>
                 ))}
               </select>
@@ -231,7 +239,7 @@ export default function VoiceReaderFloatingButton() {
                     gap: '0.35rem'
                   }}
                 >
-                  <span>👩</span>
+                  <User size={14} color="#FF69B4" />
                   <span>Femenina</span>
                 </button>
 
@@ -254,7 +262,7 @@ export default function VoiceReaderFloatingButton() {
                     gap: '0.35rem'
                   }}
                 >
-                  <span>👨</span>
+                  <User size={14} color="#38BDF8" />
                   <span>Masculina</span>
                 </button>
               </div>
@@ -280,7 +288,7 @@ export default function VoiceReaderFloatingButton() {
                   gap: '0.4rem'
                 }}
               >
-                <span>🧪</span>
+                <Play size={13} />
                 <span>Probar Muestra de Voz</span>
               </button>
 
@@ -306,7 +314,7 @@ export default function VoiceReaderFloatingButton() {
                   boxShadow: '0 4px 15px rgba(218, 41, 28, 0.4)'
                 }}
               >
-                <span>✨</span>
+                <Sparkles size={14} />
                 <span>Iniciar Recorrido Guiado por Voz</span>
               </button>
             </div>
@@ -321,23 +329,9 @@ export default function VoiceReaderFloatingButton() {
           aria-haspopup="dialog"
           aria-label="Configurar idioma y género de voz asistida"
           title="Configurar voz e idioma (8 disponibles)"
-          style={{
-            backgroundColor: 'rgba(0, 8, 30, 0.9)',
-            border: '1px solid rgba(121, 166, 255, 0.4)',
-            borderRadius: '50%',
-            width: '46px',
-            height: '46px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#FFFFFF',
-            fontSize: '1.15rem',
-            cursor: 'pointer',
-            boxShadow: '0 8px 25px rgba(0, 4, 13, 0.8)',
-            transition: 'all 0.2s ease'
-          }}
+          className={`voice-reader-btn-settings ${isConfigOpen ? 'is-open' : ''}`}
         >
-          ⚙️
+          <Settings size={18} />
         </button>
 
         {/* Botón Principal Flotante con Icono de Altavoz */}
@@ -352,37 +346,16 @@ export default function VoiceReaderFloatingButton() {
           }}
           aria-label={isSpeaking ? 'Detener lectura en voz alta' : 'Leer contenido textual de la página en voz alta'}
           title={isSpeaking ? 'Detener lectura en voz alta' : 'Leer página en voz alta con Web Speech API'}
-          style={{
-            backgroundColor: isSpeaking ? '#DC2626' : '#001489',
-            border: isSpeaking ? '2px solid #EF4444' : '2px solid #79a6ff',
-            borderRadius: '999px',
-            padding: '0.65rem 1.25rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.55rem',
-            color: '#FFFFFF',
-            fontWeight: 800,
-            fontSize: '0.92rem',
-            cursor: 'pointer',
-            boxShadow: isSpeaking
-              ? '0 0 25px rgba(220, 38, 38, 0.7)'
-              : '0 10px 30px rgba(0, 20, 137, 0.6), 0 0 15px rgba(121, 166, 255, 0.4)',
-            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-            animation: isSpeaking ? 'pulse 1.2s infinite' : 'none'
-          }}
+          className={`voice-reader-btn-main ${isSpeaking ? 'is-speaking' : ''}`}
         >
-          <span style={{ fontSize: '1.2rem' }}>{isSpeaking ? '⏹️' : '🔊'}</span>
-          <span>{isSpeaking ? 'Detener' : 'Leer en Voz Alta'}</span>
-          <span
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              padding: '0.1rem 0.45rem',
-              borderRadius: '999px',
-              fontSize: '0.72rem',
-              fontFamily: 'var(--font-telemetry, monospace)'
-            }}
-          >
-            {activeLangObj.bandera}
+          <span style={{ display: 'flex', alignItems: 'center' }}>
+            {isSpeaking ? <Square size={16} /> : <Volume2 size={16} />}
+          </span>
+          <span className="voice-reader-label">
+            {isSpeaking ? (t('detener') || 'Detener') : (t('leerVozAlta') || 'Leer en Voz Alta')}
+          </span>
+          <span className="voice-reader-lang-badge">
+            {idioma || activeLangObj.bandera}
           </span>
         </button>
       </div>

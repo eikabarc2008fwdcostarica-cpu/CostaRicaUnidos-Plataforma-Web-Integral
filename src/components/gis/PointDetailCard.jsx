@@ -1,4 +1,5 @@
 import React from 'react';
+import { X, MapPin, Clock, Phone, ShieldCheck, Globe2, Navigation, Map } from 'lucide-react';
 import { generarEnlaceWaze, generarEnlaceGoogleMaps } from './gisLayersData';
 
 export default function PointDetailCard({ point, onClose }) {
@@ -38,47 +39,58 @@ export default function PointDetailCard({ point, onClose }) {
             height: '100%',
             objectFit: 'cover'
           }}
-          onError={(e) => {
-            e.target.style.display = 'none';
-          }}
         />
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(180deg, rgba(0,4,13,0.2) 0%, rgba(0,8,25,0.95) 100%)'
+          background: 'linear-gradient(to top, rgba(0, 8, 25, 0.95) 0%, transparent 60%)'
         }} />
 
-        {/* Badge de Categoría */}
-        <div style={{ position: 'absolute', top: '12px', left: '12px' }}>
-          <span className="telemetry-badge" style={{ backgroundColor: 'rgba(0, 20, 80, 0.8)' }}>
-            {point.categoria}
-          </span>
-        </div>
+        {/* Categoría Badge */}
+        <span
+          style={{
+            position: 'absolute',
+            top: '12px',
+            left: '12px',
+            backgroundColor: 'rgba(0, 20, 137, 0.85)',
+            border: '1px solid rgba(121, 166, 255, 0.4)',
+            backdropFilter: 'blur(10px)',
+            color: '#FFFFFF',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            padding: '0.25rem 0.65rem',
+            borderRadius: '999px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.04em'
+          }}
+        >
+          {point.categoria}
+        </span>
 
         {/* Botón Cerrar */}
         <button
           type="button"
           onClick={onClose}
-          aria-label="Cerrar detalle de punto"
+          aria-label="Cerrar detalle"
           style={{
             position: 'absolute',
             top: '12px',
             right: '12px',
+            backgroundColor: 'rgba(0, 4, 13, 0.75)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '50%',
             width: '32px',
             height: '32px',
-            borderRadius: '50%',
-            backgroundColor: 'rgba(0, 0, 0, 0.65)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
             color: '#FFFFFF',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1rem',
+            backdropFilter: 'blur(8px)',
             transition: 'background 0.2s ease'
           }}
         >
-          ✕
+          <X size={16} />
         </button>
       </div>
 
@@ -94,8 +106,9 @@ export default function PointDetailCard({ point, onClose }) {
           }}>
             {point.nombre}
           </h4>
-          <p style={{ fontSize: '0.82rem', color: '#79a6ff', fontWeight: 600 }}>
-            📍 {point.provincia} › {point.canton} › {point.distrito}
+          <p style={{ fontSize: '0.82rem', color: '#79a6ff', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <MapPin size={13} />
+            <span>{point.provincia} › {point.canton} › {point.distrito}</span>
           </p>
         </div>
 
@@ -121,13 +134,13 @@ export default function PointDetailCard({ point, onClose }) {
           marginBottom: '1.25rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span>🕒</span>
+            <Clock size={14} color="#79a6ff" />
             <span style={{ color: '#E2E8F0' }}>{point.horario}</span>
           </div>
 
           {point.telefono && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span>📞</span>
+              <Phone size={14} color="#79a6ff" />
               <a href={`tel:${point.telefono}`} style={{ color: '#79a6ff', textDecoration: 'none' }}>
                 {point.telefono}
               </a>
@@ -136,13 +149,13 @@ export default function PointDetailCard({ point, onClose }) {
 
           {point.capacidad && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span>🛡️</span>
+              <ShieldCheck size={14} color="#EF4444" />
               <span style={{ color: '#EF4444', fontWeight: 600 }}>Capacidad: {point.capacidad}</span>
             </div>
           )}
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'var(--font-telemetry)', fontSize: '0.74rem' }}>
-            <span>🌐</span>
+            <Globe2 size={14} color="#79a6ff" />
             <span>COORDS: {point.lat.toFixed(4)}, {point.lng.toFixed(4)}</span>
           </div>
         </div>
@@ -159,10 +172,15 @@ export default function PointDetailCard({ point, onClose }) {
               fontSize: '0.82rem',
               backgroundColor: 'rgba(0, 160, 255, 0.2)',
               borderColor: 'rgba(0, 160, 255, 0.4)',
-              textAlign: 'center'
+              textAlign: 'center',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.4rem'
             }}
           >
-            🚗 Ir con Waze
+            <Navigation size={14} />
+            <span>Ir con Waze</span>
           </a>
 
           <a
@@ -173,10 +191,15 @@ export default function PointDetailCard({ point, onClose }) {
             style={{
               padding: '0.65rem 0.5rem',
               fontSize: '0.82rem',
-              textAlign: 'center'
+              textAlign: 'center',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.4rem'
             }}
           >
-            🗺️ Google Maps
+            <Map size={14} />
+            <span>Google Maps</span>
           </a>
         </div>
       </div>

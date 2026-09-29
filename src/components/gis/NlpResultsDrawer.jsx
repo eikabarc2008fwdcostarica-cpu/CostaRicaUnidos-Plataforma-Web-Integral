@@ -1,5 +1,40 @@
 import React, { useState } from 'react';
+import {
+  HelpCircle,
+  X,
+  ChevronRight,
+  Sparkles,
+  ChevronUp,
+  ChevronDown,
+  Crosshair,
+  Phone,
+  Navigation,
+  Map,
+  HeartPulse,
+  GraduationCap,
+  Bus,
+  Trophy,
+  Siren,
+  MapPin
+} from 'lucide-react';
 import { GIS_LAYERS_CONFIG, generarEnlaceWaze, generarEnlaceGoogleMaps } from './gisLayersData';
+
+function renderLayerIcon(layerId, color, size = 14) {
+  switch (layerId) {
+    case 'salud':
+      return <HeartPulse size={size} color={color || '#00D166'} />;
+    case 'educacion':
+      return <GraduationCap size={size} color={color || '#3B82F6'} />;
+    case 'transporte':
+      return <Bus size={size} color={color || '#F59E0B'} />;
+    case 'recreativa':
+      return <Trophy size={size} color={color || '#EC4899'} />;
+    case 'albergues':
+      return <Siren size={size} color={color || '#EF4444'} />;
+    default:
+      return <MapPin size={size} color={color || '#79a6ff'} />;
+  }
+}
 
 /**
  * Componente: Cajón Flotante de Resultados de IA y Feedback Semántico (RF-12.1)
@@ -38,8 +73,8 @@ export default function NlpResultsDrawer({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.2rem' }}>🤔</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+            <HelpCircle size={20} color="#FCA5A5" />
             <h3 style={{ fontSize: '1rem', fontWeight: 800, margin: 0, color: '#FCA5A5' }}>
               No se reconoció la entidad o capa
             </h3>
@@ -53,10 +88,12 @@ export default function NlpResultsDrawer({
               border: 'none',
               color: '#94A3B8',
               cursor: 'pointer',
-              fontSize: '1.1rem'
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0.2rem'
             }}
           >
-            ✕
+            <X size={18} />
           </button>
         </div>
 
@@ -85,6 +122,9 @@ export default function NlpResultsDrawer({
                     fontSize: '0.82rem',
                     fontWeight: 600,
                     cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
                     transition: 'all 0.15s ease'
                   }}
                   onMouseEnter={(e) => {
@@ -96,7 +136,8 @@ export default function NlpResultsDrawer({
                     e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
                   }}
                 >
-                  👉 "{sug}"
+                  <ChevronRight size={14} color="#79a6ff" />
+                  <span>"{sug}"</span>
                 </button>
               ))}
             </div>
@@ -154,11 +195,10 @@ export default function NlpResultsDrawer({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '0.9rem',
               boxShadow: '0 0 10px rgba(0, 209, 102, 0.5)'
             }}
           >
-            ✨
+            <Sparkles size={16} color="#00040D" />
           </div>
           <div>
             <div style={{ fontSize: '0.7rem', color: '#79a6ff', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
@@ -182,10 +222,23 @@ export default function NlpResultsDrawer({
               color: '#FFFFFF',
               cursor: 'pointer',
               padding: '0.25rem 0.55rem',
-              fontSize: '0.75rem'
+              fontSize: '0.75rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.3rem'
             }}
           >
-            {isMinimized ? '▲ Expandir' : '▼ Minimizar'}
+            {isMinimized ? (
+              <>
+                <ChevronUp size={13} />
+                <span>Expandir</span>
+              </>
+            ) : (
+              <>
+                <ChevronDown size={13} />
+                <span>Minimizar</span>
+              </>
+            )}
           </button>
 
           <button
@@ -197,11 +250,12 @@ export default function NlpResultsDrawer({
               border: 'none',
               color: '#94A3B8',
               cursor: 'pointer',
-              fontSize: '1.1rem',
+              display: 'flex',
+              alignItems: 'center',
               padding: '0.2rem 0.4rem'
             }}
           >
-            ✕
+            <X size={18} />
           </button>
         </div>
       </div>
@@ -269,7 +323,7 @@ export default function NlpResultsDrawer({
                       color: conf?.color || '#FFFFFF'
                     }}
                   >
-                    <span>{conf?.icono || '📍'}</span>
+                    <span>{renderLayerIcon(layerId, conf?.color, 13)}</span>
                     <span>{conf?.nombre.split(' (')[0] || layerId}</span>
                   </span>
                 );
@@ -319,8 +373,9 @@ export default function NlpResultsDrawer({
                     <div style={{ marginLeft: '0.4rem' }}>
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem' }}>
                         <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFFFFF' }}>
-                            {conf?.icono} {poi.nombre}
+                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            {renderLayerIcon(poi.layer, conf?.color, 14)}
+                            <span>{poi.nombre}</span>
                           </div>
                           <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
                             {poi.categoria} &bull; {poi.canton}, {poi.provincia}
@@ -341,16 +396,21 @@ export default function NlpResultsDrawer({
                             fontWeight: 700,
                             padding: '0.25rem 0.55rem',
                             cursor: 'pointer',
-                            flexShrink: 0
+                            flexShrink: 0,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem'
                           }}
                         >
-                          🎯 Centrar
+                          <Crosshair size={12} />
+                          <span>Centrar</span>
                         </button>
                       </div>
 
                       {poi.telefono && (
-                        <div style={{ fontSize: '0.75rem', color: '#CBD5E1', marginTop: '0.35rem' }}>
-                          📞 {poi.telefono}
+                        <div style={{ fontSize: '0.75rem', color: '#CBD5E1', marginTop: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <Phone size={12} color="#94A3B8" />
+                          <span>{poi.telefono}</span>
                         </div>
                       )}
 
@@ -367,10 +427,14 @@ export default function NlpResultsDrawer({
                             backgroundColor: 'rgba(56, 189, 248, 0.1)',
                             padding: '0.2rem 0.5rem',
                             borderRadius: '6px',
-                            border: '1px solid rgba(56, 189, 248, 0.3)'
+                            border: '1px solid rgba(56, 189, 248, 0.3)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem'
                           }}
                         >
-                          🚗 Waze
+                          <Navigation size={12} />
+                          <span>Waze</span>
                         </a>
 
                         <a
@@ -384,10 +448,14 @@ export default function NlpResultsDrawer({
                             backgroundColor: 'rgba(74, 222, 128, 0.1)',
                             padding: '0.2rem 0.5rem',
                             borderRadius: '6px',
-                            border: '1px solid rgba(74, 222, 128, 0.3)'
+                            border: '1px solid rgba(74, 222, 128, 0.3)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem'
                           }}
                         >
-                          📍 Google Maps
+                          <Map size={12} />
+                          <span>Google Maps</span>
                         </a>
                       </div>
                     </div>

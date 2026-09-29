@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Search, Map, Landmark, Sparkles, ClipboardList } from 'lucide-react';
 import { CANTONES_OFICIALES, PROVINCIAS_DATA, SERVICIOS_CIVICOS } from '../data/costaRicaTerritorialData';
 
 export default function PredictiveSearch({ onSelectResult }) {
@@ -82,7 +83,7 @@ export default function PredictiveSearch({ onSelectResult }) {
     const aiNlpHit = {
       type: 'nlp-ia',
       id: 'ai-nlp-query',
-      titulo: `✨ Consultar en Visor 3D con IA: "${debouncedQuery}"`,
+      titulo: `Consultar en Visor 3D con IA: "${debouncedQuery}"`,
       subtitulo: 'Activar capas automáticas y volar a la zona en el Visor GIS (RF-12.1)',
       badge: 'IA NLP',
       ruta: `/mapa-gis?q=${encodeURIComponent(debouncedQuery)}`,
@@ -194,14 +195,13 @@ export default function PredictiveSearch({ onSelectResult }) {
         <span
           style={{
             paddingLeft: '1.25rem',
-            fontSize: '1.25rem',
             color: '#79a6ff',
             display: 'flex',
             alignItems: 'center'
           }}
           aria-hidden="true"
         >
-          🔍
+          <Search size={20} />
         </span>
 
         <input
@@ -312,9 +312,26 @@ export default function PredictiveSearch({ onSelectResult }) {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <span style={{ fontSize: '1.2rem' }}>
-                    {item.type === 'provincia' ? '🗺️' : item.type === 'canton' ? '🏛️' : '📋'}
-                  </span>
+                  <div style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    {item.type === 'provincia' ? (
+                      <Map size={17} color="#38BDF8" />
+                    ) : item.type === 'canton' ? (
+                      <Landmark size={17} color="#818CF8" />
+                    ) : item.type === 'nlp-ia' ? (
+                      <Sparkles size={17} color="#F59E0B" />
+                    ) : (
+                      <ClipboardList size={17} color="#34D399" />
+                    )}
+                  </div>
                   <div>
                     <div style={{ color: '#FFFFFF', fontWeight: 600, fontSize: '0.95rem' }}>
                       {renderHighlighted(item.titulo, debouncedQuery)}

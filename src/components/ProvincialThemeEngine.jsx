@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Zap } from 'lucide-react';
 import { PROVINCIAS_DATA, TEMA_NACIONAL } from '../data/costaRicaTerritorialData';
 
 /**
@@ -141,7 +142,7 @@ export default function ProvincialThemeEngine({
         marginBottom: '0.85rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.2rem' }}>⚡</span>
+          <Zap size={18} color="#FBBF24" />
           <h3 style={{
             fontSize: '1.05rem',
             fontWeight: 700,

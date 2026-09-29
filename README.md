@@ -1,13 +1,14 @@
-# Costa Rica Unidos — Plataforma Web Integral
+# Costa Rica Unidos — Plataforma Territorial Soberana
 
 [![Arquitectura: React + Vite](https://img.shields.io/badge/Architecture-React%2018%20%7C%20Vite%20SPA-61dafb?style=for-the-badge&logo=react)](https://react.dev/)
 [![Design System: Sovereign Civic Glass v2.1](https://img.shields.io/badge/Design%20System-Sovereign%20Civic%20Glass%20v2.1-002B7F?style=for-the-badge)](https://costaricaunidos.cr)
 [![Cobertura Territorial: 7 Provincias](https://img.shields.io/badge/Territorial-7%20Provincias%20%7C%2084%20Cantones%20%7C%20492%20Distritos-007A3D?style=for-the-badge)](https://inec.cr)
+[![i18n: 8 Idiomas Oficiales](https://img.shields.io/badge/i18n-8%20Idiomas%20Oficiales-001489?style=for-the-badge)](https://costaricaunidos.cr)
 [![Accesibilidad: Ley 7600 / WCAG 2.1 AA](https://img.shields.io/badge/Accessibility-Ley%207600%20%7C%20WCAG%202.1%20AA-FFC700?style=for-the-badge)](https://www.w3.org/WAI/WCAG21/quickref/)
 [![Privacidad: Ley N° 8968](https://img.shields.io/badge/Privacy-Ley%20N°%208968%20%7C%20EXIF%20Stripped-CE1126?style=for-the-badge)](https://pgrweb.go.cr)
 [![Modo Resiliencia: Offline-First PWA](https://img.shields.io/badge/PWA-Offline%20First%20%7C%20Service%20Worker-9C27B0?style=for-the-badge)](https://web.dev/progressive-web-apps/)
 
-Plataforma digital integral para la soberanía ciudadana, transparencia presupuestaria, fiscalización de obra pública, resiliencia ante emergencias nacionales y navegación territorial tridimensional en la República de Costa Rica.
+Plataforma digital integral para la soberanía ciudadana, transparencia presupuestaria, fiscalización de obra pública, resiliencia ante emergencias nacionales, navegación territorial tridimensional e internacionalización reactiva en la República de Costa Rica.
 
 ---
 
@@ -53,6 +54,11 @@ Plataforma digital integral para la soberanía ciudadana, transparencia presupue
   - **Hero Carousel Tricolor**: Carrusel institucional interactivo accesible con controles de pausa, telemetría técnica en vivo y enlaces rápidos a servicios cívicos.
   - **Cajón Flotante Territorial (Drawer)**: Exploración rápida de códigos postales y datos demográficos por distrito.
   - **Búsqueda Predictiva con Atajo de Teclado**: Acceso global mediante `Ctrl + K`.
+  - **Sistema de Internacionalización Reactiva (8 Idiomas Oficiales)**:
+    * Selector dinámico integrado en el menú a pantalla completa (`FullScreenMenu.jsx`) con soporte para 8 banderas e idiomas: `CR` (Español Costa Rica), `ES` (Español España), `US` (Inglés), `CN` (Chino Mandarín), `BR` (Portugués), `FR` (Francés), `RU` (Ruso) y `JP` (Japonés).
+    * Traducción en tiempo real sin recarga de página del Hero, buscador semántico, botón de exploración, los 11 módulos nacionales y las métricas territoriales (`07 Provincias`, `84 Cantones`, `492 Distritos`).
+    * Persistencia automática de la preferencia lingüística en `localStorage` (`idioma_preferido`).
+    * Sincronización bidireccional inmediata con el motor de voz asistida Web Speech API TTS (`VoiceReaderFloatingButton.jsx`).
 
 ### Módulo 05: Sistema GIS y Visor Cartográfico 3D Soberano
 - **Ruta**: `/mapa-gis`
@@ -180,14 +186,18 @@ CostaRicaUnidos-Plataforma-Web-Integral/
 ├── SECURITY.md                       # Políticas de ciberseguridad y cumplimiento Ley N° 8968
 ├── vite.config.js                    # Configuración de empaquetado y plugins de Vite
 ├── public/
+│   ├── favicon.ico                   # Favicon clásico multiplataforma
+│   ├── favicon.svg                   # Favicon vectorial con isotipo transparente
+│   ├── logo.png                      # Isotipo oficial de alta resolución con transparencia
 │   ├── manifest.webmanifest          # Manifiesto de aplicación PWA (instalabilidad)
 │   └── sw.js                         # Service Worker con estrategia de caché offline
 └── src/
-    ├── App.jsx                       # Componente orquestador y contenedor de temas
+    ├── App.jsx                       # Componente orquestador con Language y Accessibility Providers
     ├── main.jsx                      # Punto de renderizado en el DOM de React 18
     ├── index.css                     # Sistema de estilos Sovereign Civic Glass v2.1
     ├── serviceWorkerRegistration.js  # Registro y control de ciclo de vida del Service Worker
     ├── components/
+    │   ├── FullScreenMenu.jsx        # Menú overlay con selector de 8 idiomas y 11 módulos
     │   ├── HeroCarousel.jsx          # Carrusel institucional tricolor
     │   ├── InteractiveSvgMap.jsx     # Mapa vectorial provincial SVG
     │   ├── Navbar.jsx                # Barra de navegación cívica con accesibilidad
@@ -202,6 +212,8 @@ CostaRicaUnidos-Plataforma-Web-Integral/
     │   │   ├── VoiceReaderFloatingButton.jsx
     │   │   ├── accessibilityData.js
     │   │   └── index.js
+    │   ├── common/                   # Componentes comunes de diseño
+    │   │   └── Logo.jsx              # Logotipo oficial (Isotipo + Wordmark, máx. 40px)
     │   ├── gis/                      # Visor cartográfico 3D y búsqueda NLP (M05 / M12)
     │   │   ├── CameraFlyControls.jsx
     │   │   ├── LayerControlPanel.jsx
@@ -227,6 +239,8 @@ CostaRicaUnidos-Plataforma-Web-Integral/
     │       ├── OfflineResilienceManager.jsx
     │       ├── SosKeypadFullscreen.jsx
     │       └── index.js
+    ├── context/
+    │   └── LanguageContext.jsx       # Contexto y diccionario reactivo para 8 idiomas oficiales
     ├── data/
     │   └── territorialData.js        # DTA oficial: 7 provincias, 84 cantones, distritos
     ├── pages/
@@ -238,7 +252,7 @@ CostaRicaUnidos-Plataforma-Web-Integral/
     │   ├── ReportarIncidencia.jsx    # Asistente y trazabilidad de reportes viales
     │   └── SeguridadEmergencias.jsx  # Centro de resiliencia y emergencias SOS
     ├── routes/
-    │   └── index.jsx                 # Declaración de rutas con React Router DOM v6
+    │   └── Routing.jsx               # Declaración de rutas con React Router DOM v6
     └── services/
         ├── geoSemanticNlpService.js  # Motor NLP de búsqueda geoespacial semántica
         ├── offlineSyncService.js     # Gestor de cola y sincronización diferida

@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Newspaper, FileEdit, Map, AlertOctagon, Store, BarChart3 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 
 export default function Dashboard() {
   const modulosCivicos = [
-    { id: 'M01', nombre: 'Portal Nacional', desc: 'Alertas cívicas y cabecera de noticias oficiales', icono: '📰', ruta: '/' },
-    { id: 'M03', nombre: 'Sistema de Trámites', desc: 'Digitalización y consulta de solicitudes públicas', icono: '📝' },
-    { id: 'M05', nombre: 'Visor Cartográfico GIS', desc: 'Capas GeoJSON y relieve 3D cantonal fotorrealista', icono: '🗺️', ruta: '/mapa-gis' },
-    { id: 'M06', nombre: 'Gestión de Desastres', desc: 'Protocolos de emergencia y albergues en tiempo real', icono: '🚨', ruta: '/mapa-gis' },
-    { id: 'M08', nombre: 'Feria del Agricultor', desc: 'Rutas de abastecimiento y comercio local cantonal', icono: '🌽' },
-    { id: 'M10', nombre: 'Observatorio Económico', desc: 'Verificación tributaria mediante API Hacienda', icono: '📊' }
+    { id: 'M01', nombre: 'Portal Nacional', desc: 'Alertas cívicas y cabecera de noticias oficiales', icono: Newspaper, color: '#38BDF8', ruta: '/' },
+    { id: 'M03', nombre: 'Sistema de Trámites', desc: 'Digitalización y consulta de solicitudes públicas', icono: FileEdit, color: '#A78BFA' },
+    { id: 'M05', nombre: 'Visor Cartográfico GIS', desc: 'Capas GeoJSON y relieve 3D cantonal fotorrealista', icono: Map, color: '#34D399', ruta: '/mapa-gis' },
+    { id: 'M06', nombre: 'Gestión de Desastres', desc: 'Protocolos de emergencia y albergues en tiempo real', icono: AlertOctagon, color: '#F87171', ruta: '/mapa-gis' },
+    { id: 'M08', nombre: 'Feria del Agricultor', desc: 'Rutas de abastecimiento y comercio local cantonal', icono: Store, color: '#FBBF24' },
+    { id: 'M10', nombre: 'Observatorio Económico', desc: 'Verificación tributaria mediante API Hacienda', icono: BarChart3, color: '#60A5FA' }
   ];
 
   return (
@@ -81,7 +82,18 @@ export default function Dashboard() {
                   alignItems: 'flex-start',
                   marginBottom: '1rem'
                 }}>
-                  <span style={{ fontSize: '2rem' }}>{modulo.icono}</span>
+                  <div style={{
+                    width: '46px',
+                    height: '46px',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    {React.createElement(modulo.icono, { size: 24, color: modulo.color || '#79a6ff' })}
+                  </div>
                   <span className="telemetry-badge">{modulo.id}</span>
                 </div>
 

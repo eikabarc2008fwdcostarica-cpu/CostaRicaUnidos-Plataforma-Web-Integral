@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Map, FileText, Maximize2 } from 'lucide-react';
 import { MAPA_PROVINCIAS_SVG, PROVINCIAS_DATA } from '../data/costaRicaTerritorialData';
 
 export default function InteractiveSvgMap({
@@ -192,7 +193,7 @@ export default function InteractiveSvgMap({
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.2rem' }}>
-            <span style={{ fontSize: '1.4rem' }}>🗺️</span>
+            <Map size={22} color="var(--color-provincial-primary, #38BDF8)" />
             <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#F8FAFC' }}>
               Mapa Cartográfico SVG Interactivo
             </h3>
@@ -208,10 +209,11 @@ export default function InteractiveSvgMap({
             type="button"
             onClick={() => onOpenDrawer && onOpenDrawer(selectedProvinciaId || 1)}
             className="btn-glass-secondary"
-            style={{ fontSize: '0.85rem', padding: '0.55rem 1rem' }}
+            style={{ fontSize: '0.85rem', padding: '0.55rem 1rem', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
             aria-label="Abrir panel drawer lateral"
           >
-            📑 Ficha Territorial (Drawer)
+            <FileText size={15} />
+            <span>Ficha Territorial (Drawer)</span>
           </button>
 
           <button
@@ -221,10 +223,11 @@ export default function InteractiveSvgMap({
               setZoomLevel(1);
             }}
             className="btn-sovereign-blue"
-            style={{ fontSize: '0.85rem', padding: '0.55rem 1rem' }}
+            style={{ fontSize: '0.85rem', padding: '0.55rem 1rem', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
             aria-label="Expandir mapa a pantalla completa"
           >
-            ⛶ Pantalla Completa
+            <Maximize2 size={15} />
+            <span>Pantalla Completa</span>
           </button>
         </div>
       </div>
