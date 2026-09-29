@@ -4,8 +4,11 @@
    ========================================================================== */
 
 :root {
-  /* Paleta Primaria Institucional Tricolor */
+  /* Sustrato Base Soberano */
   --color-obsidian: #00040D;
+  --color-obsidian-sovereign: #00040D;
+
+  /* Paleta Primaria Institucional Tricolor */
   --color-sovereign-blue: #002B7F;
   --color-institutional-blue: #001489;
   --color-solidarity-red: #CE1126;
@@ -14,24 +17,55 @@
   --color-radiant-white: #FFFFFF;
   --color-biodiversity-green: #007A3D;
 
+  /* Theming Engine Provincial (7 Provincias Oficiales) */
+  --color-province-sanjose: #601438;
+  --color-province-alajuela: #D31424;
+  --color-province-heredia: #FFC700;
+  --color-province-cartago: #0A3282;
+  --color-province-guanacaste: #05853B;
+  --color-province-puntarenas: #F36717;
+  --color-province-limon: #349E35;
+
   /* Theming Engine Provincial Dinámico (Valores por defecto: Tricolor Nacional) */
   --color-provincial-primary: #002B7F;
   --color-provincial-secondary: #CE1126;
   --color-provincial-accent: #FFFFFF;
+  --color-provincial-text: #FFFFFF;
   --color-provincial-surface: rgba(0, 43, 127, 0.18);
-  --color-provincial-border: rgba(0, 43, 127, 0.35);
+  --color-provincial-surface-hover: rgba(0, 43, 127, 0.28);
+  --color-provincial-border: rgba(0, 43, 127, 0.38);
   --glow-provincial: 0 0 25px rgba(0, 43, 127, 0.45), 0 0 50px rgba(206, 17, 38, 0.25);
 
-  /* Glassmorphism Levels */
+  /* Tokens de Radios de Curvatura Normados */
+  --radius-control: 8px;
+  --radius-card: 16px;
+  --radius-modal: 24px;
+  --radius-pill: 9999px;
+
+  /* Glassmorphism Levels Sovereign Civic Glass v2.1 */
+  --glass-level-1-bg: rgba(255, 255, 255, 0.04);
+  --glass-level-1-border: rgba(255, 255, 255, 0.08);
+  --glass-level-1-blur: 16px;
+
+  --glass-level-2-bg: rgba(255, 255, 255, 0.07);
+  --glass-level-2-border: rgba(255, 255, 255, 0.15);
+  --glass-level-2-blur: 24px;
+
+  --glass-level-3-bg: rgba(0, 4, 13, 0.88);
+  --glass-level-3-border: rgba(255, 255, 255, 0.22);
+  --glass-level-3-blur: 32px;
+
   --glass-surface-bg: rgba(0, 20, 137, 0.22);
   --glass-surface-border: rgba(255, 255, 255, 0.14);
   --glass-floating-bg: rgba(0, 20, 137, 0.38);
   --glass-floating-border: rgba(255, 255, 255, 0.24);
   --glass-card-hover: rgba(255, 255, 255, 0.04);
 
-  /* Typography */
-  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-telemetry: 'JetBrains Mono', monospace;
+  /* Tipografía Sovereign Civic Glass v2.1 */
+  --font-headline: 'Mistical Spring', 'Plus Jakarta Sans', Georgia, serif;
+  --font-body: 'Paloseco', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-main: 'Paloseco', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-telemetry: 'JetBrains Mono', 'Courier New', monospace;
 
   /* Transitions */
   --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -797,5 +831,139 @@ body {
   filter: invert(1) !important;
   top: 6px !important;
   right: 6px !important;
+}
+
+/* ==========================================================================
+   SOVEREIGN CIVIC GLASS v2.1 — COMPONENTES ATÓMICOS Y ANIMACIONES
+   ========================================================================== */
+
+/* CivicButton micro-interactions */
+.civic-btn {
+  position: relative;
+  outline: none;
+}
+
+.civic-btn:focus-visible {
+  outline: 2px solid #79A6FF !important;
+  outline-offset: 3px !important;
+}
+
+.civic-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.civic-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.civic-btn-primary:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(0, 43, 127, 0.6);
+}
+
+.civic-btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  box-shadow: 0 6px 18px rgba(0, 4, 13, 0.5) !important;
+}
+
+.civic-btn-outline:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.civic-btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.civic-btn-danger:hover:not(:disabled) {
+  box-shadow: 0 6px 22px rgba(206, 17, 38, 0.65) !important;
+}
+
+.civic-btn-provincial:hover:not(:disabled) {
+  filter: brightness(1.15);
+  box-shadow: var(--glow-provincial, 0 6px 22px rgba(0, 43, 127, 0.65)) !important;
+}
+
+/* CivicCard interactive micro-interactions */
+.civic-card-interactive {
+  cursor: pointer;
+}
+
+.civic-card-interactive:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  box-shadow: 0 16px 40px rgba(0, 4, 13, 0.75) !important;
+}
+
+.civic-card-interactive:focus-visible {
+  outline: 2px solid #79A6FF !important;
+  outline-offset: 3px;
+}
+
+/* CivicBadge & StatusPill */
+.civic-badge, .status-pill, .accessibility-badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+.status-pill-abierto, .status-pill-open, .status-pill-disponible {
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.status-pill-mantenimiento, .status-pill-maintenance {
+  border-color: rgba(245, 158, 11, 0.55);
+}
+
+.status-pill-alquiler, .status-pill-occupied, .status-pill-ocupado {
+  border-color: rgba(239, 68, 68, 0.55);
+}
+
+/* CivicModal close button */
+.civic-modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #FFFFFF !important;
+}
+
+.civic-modal-close-btn:focus-visible {
+  outline: 2px solid #79A6FF !important;
+  outline-offset: 2px;
+}
+
+/* Animaciones Cívicas */
+@keyframes civicSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes civicPing {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes civicModalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes civicModalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
