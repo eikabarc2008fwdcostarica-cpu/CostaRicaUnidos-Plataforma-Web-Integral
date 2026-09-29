@@ -36,7 +36,8 @@ main (Producción estable, solo releases y hotfixes etiquetados)
   │
   └── develop (Integración continua, base para nuevas características)
         │
-        ├── feature/Eiker (Desarrollo de módulos asignados al rol técnico/auditor)
+        ├── feature/Eiker (Módulos 01, 05, 07, 10, 12.1, Accesibilidad y Layout Global)
+        ├── feature/Alanie (Módulos 02, 03, 04, 06, 08, 09, 11, 12.2, Hacienda y Datasets POI)
         ├── feature/<modulo>-<descripcion> (Nuevas funcionalidades cívicas)
         ├── release/vX.Y.Z (Fase de estabilización y control de calidad previo a producción)
         └── hotfix/vX.Y.Z (Parches urgentes dirigidos a corregir incidencias en main)
@@ -45,8 +46,8 @@ main (Producción estable, solo releases y hotfixes etiquetados)
 ### Reglas de Ramas:
 1. **Nunca realizar commits directos en `main` ni en `develop`**: Todos los cambios deben ingresar a través de Pull Requests revisados.
 2. **Nomenclatura de ramas de características**:
-   - `feature/<id-o-rol>-<descripcion-corta>` (ejemplo: `feature/Eiker`, `feature/m05-gis-3d-tiles`).
-   - `fix/<modulo>-<descripcion-corta>` (ejemplo: `fix/m07-exif-stripper-leak`).
+   - `feature/<id-o-rol>-<descripcion-corta>` (ejemplo: `feature/Eiker`, `feature/Alanie`, `feature/m05-gis-3d-tiles`).
+   - `fix/<modulo>-<descripcion-corta>` (ejemplo: `fix/m07-exif-stripper-leak`, `fix/m11-voto-duplicado`).
    - `docs/<tema>` (ejemplo: `docs/actualizacion-arquitectura-srs`).
 
 ---
@@ -64,10 +65,10 @@ Cada commit debe describir con precisión atómica la modificación introducida 
 ```
 
 ### Tipos Permitidos:
-- `feat`: Nueva capacidad o módulo cívico para el usuario (ej. `feat(gis): incorporar geofencing estricto de Costa Rica`).
-- `fix`: Corrección de un defecto o error de lógica (ej. `fix(reports): sanitizar metadatos EXIF en canvas`).
+- `feat`: Nueva capacidad o módulo cívico para el usuario (ej. `feat(gis): incorporar geofencing estricto de Costa Rica`, `feat(hacienda): validar cedulas en tiempo real`).
+- `fix`: Corrección de un defecto o error de lógica (ej. `fix(reports): sanitizar metadatos EXIF en canvas`, `fix(votacion): impedir doble sufragio por cedula`).
 - `docs`: Modificaciones exclusivas en documentación (ej. `docs: actualizar CHANGELOG y guías de contribución`).
-- `style`: Ajustes estéticos, espaciados o CSS sin alteración de comportamiento (ej. `style(glass): ajustar blur nivel 2`).
+- `style`: Ajustes estéticos, espaciados o CSS sin alteración de comportamiento (ej. `style(glass): ajustar blur nivel 2 en CivicCard`).
 - `refactor`: Refactorización de código sin alterar la API pública ni añadir funciones (ej. `refactor(nlp): modularizar diccionario cantonal`).
 - `perf`: Optimización de rendimiento, tiempos de carga o consumo de memoria (ej. `perf(sw): afinar estrategia cache-first`).
 - `test`: Incorporación o actualización de pruebas unitarias o de integración.
@@ -85,7 +86,7 @@ Cada commit debe describir con precisión atómica la modificación introducida 
    ```
 2. Crear o actualizar la rama de trabajo (`feature/...`):
    ```bash
-   git checkout feature/Eiker
+   git checkout feature/Alanie
    git merge develop
    ```
 3. Ejecutar la compilación de producción y verificar que termine sin errores:
@@ -105,8 +106,12 @@ Cada commit debe describir con precisión atómica la modificación introducida 
 - [ ] No genera desbordamiento horizontal en pantallas móviles (360px).
 - [ ] Mantiene contraste de color WCAG 2.1 AA (mínimo 4.5:1 en textos).
 - [ ] Botones interactivos poseen tamaño mínimo de 54px (o 64px en modo 200%).
+- [ ] Componentes interactivos usan la biblioteca atómica Sovereign Civic Glass (`src/components/common/`).
 - [ ] Cumple con la sanitización de metadatos EXIF (Ley N° 8968).
-- [ ] Textos de interfaz integrados al sistema de traducción multilingüe en los 8 idiomas oficiales (`src/context/LanguageContext.jsx`).
+- [ ] En votaciones cívicas (M11), se garantiza el principio de 1 voto por cédula legal activa validada ante Hacienda.
+- [ ] Destinos e itinerarios turísticos incluyen badges normados (Ley 7600, 4x4, Pet-friendly) y análisis de pendientes.
+- [ ] Puntos de interés geográficos se registran bajo el esquema estándar POI (`src/data/poiDatasets.ts`).
+- [ ] Textos de interfaz integrados al sistema de traducción multilingüe en los 8 idiomas oficiales (`src/context/LanguageContext.jsx` y glosario tico).
 - [ ] Logotipo implementado a través de `src/components/common/Logo.jsx` respetando la altura máxima de 40px.
 - [ ] `npm run build` ejecuta en 0 errores.
 ```
@@ -120,11 +125,45 @@ Cada commit debe describir con precisión atómica la modificación introducida 
 
 ## 5. Estándares de Código y Diseño (Sovereign Civic Glass v2.1)
 
-El frontend está construido sobre **React 18**, **Vite** y CSS Vanilla modular gobernado por el sistema de diseño **Sovereign Civic Glass v2.1**.
+El frontend está construido sobre **React 18**, **TypeScript**, **Vite** y CSS Vanilla modular gobernado por el sistema de diseño **Sovereign Civic Glass v2.1**.
+
+### Biblioteca de Componentes Atómicos Soberanos (`src/components/common/`):
+Para asegurar coherencia visual y cumplimiento accesible en todos los módulos, se debe utilizar la suite de componentes atómicos:
+- **`CivicButton.tsx`**: Botón táctil estándar con variantes (`primary`, `secondary`, `danger`, `ghost`), soporte de carga `isLoading`, micro-interacciones a 60fps y altura mínima táctil accesible de 48px a 54px.
+- **`CivicCard.tsx`**: Contenedor con 3 niveles de vidrio esmerilado (`level: 1 | 2 | 3`), soporte de resplandor provincial (`provincialGlow`) y bordes adaptativos.
+- **`CivicBadge.tsx`**: Etiqueta de categorización con variantes semánticas (`default`, `accent`, `success`, `warning`, `danger`, `outline`).
+- **`CivicModal.tsx`**: Diálogo modal accesible con trampa de foco (`focus-trap`), bloqueo de scroll en el `body`, cierre por tecla `Escape` y accesibilidad WAI-ARIA (`role="dialog"`, `aria-modal="true"`).
+- **`StatusPill.tsx`**: Semáforo dinámico de estatus operativo (Verde = Abierto/Disponible, Amarillo = Mantenimiento/Cupo Limitado, Rojo = Cerrado/Alquiler).
+- **`AccessibilityBadge.tsx`**: Indicadores normalizados de accesibilidad universal:
+  * Ley 7600 (Acceso para personas con discapacidad motriz/visual).
+  * Tracción 4x4 (Acceso en caminos rurales de lastre o alta pendiente).
+  * Pet-Friendly (Acceso con animales de compañía).
+
+### Integración con el Ministerio de Hacienda (`src/services/haciendaService.ts`):
+- Toda validación de identidad ciudadana o verificación tributaria comercial debe canalizarse a través de `haciendaService.ts`.
+- Consume el endpoint oficial: `https://api.hacienda.go.cr/fe/ae?identificacion={cedula}`.
+- Sanitiza automáticamente cédulas físicas (9 dígitos), jurídicas (10 dígitos) y DIMEX (11-12 dígitos).
+- Dispone de caché en memoria con TTL de 15 minutos para prevenir saturación de la API estatal.
+- Garantiza la minimización de datos: no almacena datos PII de forma permanente en `localStorage` o cookies (Ley N° 8968).
+
+### Esquema Estándar de Datasets POI para GIS (`src/data/poiDatasets.ts`):
+Para integrar puntos de interés en el visor cartográfico de Eiker (M05 / M12), los módulos deben suministrar datasets compatibles con el esquema:
+```typescript
+export interface POIItem {
+  id: string;
+  name: string;
+  category: 'educacion' | 'comercio' | 'turismo' | 'deportes' | 'salud' | 'seguridad';
+  canton?: string;
+  lat: number;
+  lng: number;
+  details?: Record<string, any>;
+}
+```
+Y exportar la colección con la utilidad `toGeoJSONFeatureCollection(items)`.
 
 ### Directrices Estéticas:
 1. **Tokens Dinámicos Provinciales**:
-   - Todo componente contextualizado territorialmente debe respetar las variables CSS inyectadas por el `ProvincialThemeEngine`:
+   - Todo componente contextualizado territorialmente debe respetar las variables CSS inyectadas por el `ProvincialThemeEngine` y `src/styles/themeEngine.ts`:
      * `--province-primary` (Color representativo provincial).
      * `--glow-provincial` (Efecto de resplandor sombreado con difusión).
 2. **Niveles de Vidrio Esmerilado (Glassmorphism)**:
@@ -138,7 +177,7 @@ El frontend está construido sobre **React 18**, **Vite** y CSS Vanilla modular 
 4. **Sistema de Internacionalización Reactiva (i18n)**:
    - Ningún texto visible debe dejarse codificado de forma estática (hardcoded).
    - Toda etiqueta debe consumirse a través del hook `useLanguage` y la función `t('clave')`.
-   - Si se introducen nuevas cadenas de texto, deben agregarse sus equivalentes en los 8 idiomas oficiales (`CR`, `ES`, `US`, `CN`, `BR`, `FR`, `RU`, `JP`) en el diccionario de `src/context/LanguageContext.jsx`.
+   - Si se introducen nuevas cadenas de texto, deben agregarse sus equivalentes en los 8 idiomas oficiales (`CR`, `ES`, `US`, `CN`, `BR`, `FR`, `RU`, `JP`) en el diccionario de `src/context/LanguageContext.jsx` o en `src/i18n/index.ts`.
 5. **Uso y Dimensionamiento del Logotipo Oficial**:
    - Todo componente que requiera mostrar el logotipo de Costa Rica Unidos debe importar el componente `<Logo />` de `src/components/common/Logo.jsx`.
    - Se debe utilizar el activo oficial `public/logo.png` con transparencia limpia.

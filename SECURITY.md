@@ -57,15 +57,34 @@ El diseño, arquitectura e implementación de la plataforma se rigen estrictamen
 - La plataforma emplea estrategias de rompimiento de caché (*cache-busting*) mediante parámetros de versión explícitos (ej. `/logo.png?v=2`, `/favicon.ico?v=2`).
 - Esta práctica mitiga el riesgo de ataques por envenenamiento de caché (*cache poisoning*) o retención de recursos desactualizados en redes de distribución de contenido (CDN) y proxies intermediarios, asegurando la autenticidad e integridad gráfica de la identidad visual oficial del Estado.
 
+### 2.9. Blindaje Electoral Antifraude y Soberanía del Sufragio (Módulo 11)
+- En el subsistema de Presupuesto Participativo (`src/components/participacion/ModalVotacionAntifraude.tsx`), se implementa una política inviolable de **un voto por cédula legal activa** validada ante el Ministerio de Hacienda:
+  * **Verificación de Identidad Oficial**: Toda emisión de voto requiere la validación en tiempo real de la cédula física (9 dígitos), jurídica (10 dígitos) o DIMEX (11-12 dígitos) contra el endpoint oficial `https://api.hacienda.go.cr/fe/ae`. Si el estado tributario/legal no está activo, el sistema rechaza la postulación del voto.
+  * **Prevención de Sufragio Duplicado**: El motor valida en memoria contra el registro seguro `VOTOS_REGISTRADOS_CEDULAS`. Si la cédula ya ejerció el derecho al voto en el período electoral comunal vigente, se emite una excepción de rechazo inmediato impidiendo el fraude por duplicación o manipulación de estado en cliente.
+  * **Control de Acceso Basado en Roles (RBAC)**: Solo los usuarios acreditados con el rol *Ciudadano Verificado Nivel 2* tienen habilitada la interacción con la urna digital.
+  * **Comprobante Criptocívico e Inmutabilidad**: Al consumarse el sufragio, se genera un identificador único con hash de recibo formal (`CRU-XXX-POA26`) para auditoría pública y trazabilidad en el Concejo Municipal, sin ligar el sentido del voto con datos que permitan la reidentificación del elector (secreto del sufragio cívico).
+
+### 2.10. Tratamiento Efímero de Cédulas y Minimización Tributaria (Ley N° 8968)
+- En cumplimiento estricto del Principio de Minimización de la **Ley N° 8968**, la plataforma prohíbe el almacenamiento permanente de cédulas de identidad o razones sociales de los ciudadanos en `localStorage`, cookies o encabezados de red:
+  * El servicio de verificación de Hacienda (`src/services/haciendaService.ts`) procesa las consultas de forma transitoria en memoria volátil.
+  * Los resultados de verificación tributaria se retienen en una capa de caché volátil SWR (`src/services/swrCache.ts`) con un tiempo de vida (TTL) máximo de 15 minutos, destruyéndose de forma automática al cerrar la sesión o pestaña del navegador.
+  * No se envían números de cédula a ningún servicio analítico o servidor intermediario ajeno a la infraestructura soberana del Estado.
+
+### 2.11. Certificación Topográfica de Seguridad y Prevención de Riesgos Viales (RF-12.2)
+- El planificador de viajes inteligentes `Itinerario Pura Vida` (`src/services/itinerarioIAPlanner.ts` y `src/components/itinerario/PerfilElevacion3D.tsx`) integra un motor algorítmico de seguridad vial y topográfica preventiva:
+  * **Verificación de Accesibilidad Ley N° 7600**: Analiza las pendientes continuas en el perfil de elevación 3D de cada ruta peatonal o urbana, certificando que no superen el **8%** de gradiente máximo establecido para tránsito seguro de personas usuarias de silla de ruedas o con movilidad reducida.
+  * **Alerta Activa de Tracción 4x4**: Evalúa las cotas altimétricas y pendientes del terreno; si el gradiente de la vía supera el **16%** o discurre por tramos no pavimentados de alta montaña, el sistema bloquea itinerarios para vehículos convencionales (4x2) y emite una advertencia preventiva de seguridad vial exigiendo tracción 4x4 y equipo de contingencia.
+
 ---
 
 ## 3. Versiones con Soporte Activo de Seguridad
 
-Actualmente, solo la rama principal y las versiones mayores recientes reciben parches de seguridad y correcciones de vulnerabilidades:
+Actualmente, las versiones mayores y ramas de desarrollo activo reciben parches de seguridad y correcciones de vulnerabilidades:
 
 | Versión | Rama de Desarrollo | Estado de Soporte | Soporte de Parches |
 | :--- | :--- | :--- | :--- |
-| **v2.2.x** | `develop` / `feature/Eiker` | **Activo y Prioritario** | ✅ Parches inmediatos |
+| **v2.3.x** | `feature/Alanie` | **Activo y Prioritario** | ✅ Parches inmediatos (Módulos cívicos, Hacienda y Votación) |
+| **v2.2.x** | `develop` / `feature/Eiker` | **Activo y Prioritario** | ✅ Parches inmediatos (GIS 3D, Reportes y SOS) |
 | **v2.1.x** | `release/v2.1.0` | **Soporte de Mantenimiento** | ✅ Parches de seguridad críticos |
 | **v2.0.x** | `main` | **Soporte Extendido** | ✅ Parches de seguridad críticos |
 | **< v2.0.0** | Varias | **Obsoleta** | ❌ Sin soporte |

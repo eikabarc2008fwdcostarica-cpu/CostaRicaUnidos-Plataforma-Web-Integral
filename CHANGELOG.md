@@ -9,10 +9,74 @@ El formato de este registro se basa estrictamente en [Keep a Changelog](https://
 ## [Unreleased]
 
 ### Planned
-- **Módulo 02 (Fiscalización de Obra Pública / SICOP)**: Integración de compras públicas y licitaciones del Estado.
-- **Módulo 03 (Transparencia Tributaria y Situación Fiscal)**: Validador en tiempo real de situación tributaria ante el Ministerio de Hacienda.
-- **Módulo 04 (Directorio Comercial y Emprendimiento Cantonal)**: Directorio económico local con geolocalización.
 - **Backend API Persistente**: Reemplazo de mocks en memoria y `localStorage` por API RESTful institucional autenticada con JWT/OAuth2.
+- **Integración SICOP y ATV**: Enlace con expedientes de contratación administrativa y declaraciones tributarias.
+
+---
+
+## [2.3.0] - 2026-09-29
+
+### Added
+- **Core Design System Sovereign Civic Glass v2.1**:
+  - Tokens dinámicos y Theming Engine Provincial en `src/styles/themeEngine.ts` e `src/index.css`.
+  - Biblioteca de componentes atómicos soberanos en `src/components/common/`:
+    - `CivicButton.tsx`: Botones con micro-interacciones, focus ring accesible y soporte WCAG 2.1 AA.
+    - `CivicCard.tsx`: Tarjetas con 3 niveles de glassmorphism esmerilado y resplandor provincial.
+    - `CivicBadge.tsx`: Badges de estatus y categorías.
+    - `CivicModal.tsx`: Diálogos modales accesibles con trampa de foco (`focus-trap`) y tecla Escape.
+    - `StatusPill.tsx`: Semáforo dinámico de estatus operativo.
+    - `AccessibilityBadge.tsx`: Badges normados para Ley 7600, Tracción 4x4 y Pet-Friendly.
+- **Servicios Transversales e Integración con Ministerio de Hacienda**:
+  - Consumo directo del endpoint oficial `https://api.hacienda.go.cr/fe/ae` en `src/services/haciendaService.ts` para validación de cédulas físicas, jurídicas y DIMEX con autocompletado de razón social.
+  - Motor de internacionalización enriquecido con glosario cultural costarricense (`src/i18n/costaRicaGlossary.ts`, `src/i18n/index.ts`).
+  - Capa de caché nativo SWR (`src/services/swrCache.ts`) y hooks `useDirectoryData.ts` y `useHaciendaValidation.ts`.
+- **Módulo 02 — Espacio Administrativo Cantonal y Actas (`/gobernanza`)**:
+  - Organigrama institucional colapsable e interactivo (`OrganigramaMunicipal.tsx`).
+  - Tabla paginada de actas con filtros por año, tipo de sesión ordinaria/extraordinaria y búsqueda (`TablaActas.tsx`).
+  - Visor modal embebido de actas oficiales en PDF con descarga directa (`VisorActaModal.tsx`).
+- **Módulo 03 — Identidad Cultural, Tradiciones e Himnos (`/cultura`)**:
+  - Línea de tiempo histórica interactiva (`TimelineHistorico.tsx`).
+  - Galería de escudos y banderas con heráldica (`GaleriaSimbolos.tsx`).
+  - Reproductor multimedia de himnos cantonales con visualizador de audio y letras sincronizadas (`HimnoPlayer.tsx`).
+  - Lightbox de patrimonio cultural tangible e inmaterial (`PatrimonioLightbox.tsx`).
+- **Módulo 04 — Deportes y CCDR (`/deportes`)**:
+  - Catálogo de escuelas formativas del Comité Cantonal de Deportes y Recreación.
+  - Fichas de recintos (`FichaInstalacion.tsx`) con semáforo dinámico de disponibilidad y aforo.
+  - Feed comunitario participativo y muro "Orgullo Cantonal".
+- **Módulo 06 — Directorio de Infraestructura Educativa y CTPs (`/educacion`)**:
+  - Directorio de centros educativos con coordenadas WGS84 e indicadores de accesibilidad Ley 7600 y comedor escolar (`FichaCentroEducativo.tsx`).
+  - Malla curricular técnica de especialidades CTP (Software, Ciberseguridad, Contabilidad).
+- **Módulo 08 — Comercio Local y Feria del Agricultor (`/comercio`, `/feria-agricultor`)**:
+  - Catálogo de PYMEs con sello de verificación tributaria de Hacienda y CTAs a WhatsApp y Waze (`FichaComercio.tsx`).
+  - Croquis interactivo SVG de la feria comunal con distribución de sectores y calendario estacional de cosechas (`CroquisFeria.tsx`).
+- **Módulo 09 — Guía de Turismo Cantonal Sostenible (`/turismo`)**:
+  - Galerías fotográficas de alto rendimiento visual con visor modal (lightbox) (`FichaDestinoTuristico.tsx`).
+  - Rutas e itinerarios sugeridos oficiales de 1 Día (patrimonial accesible Ley 7600) y 2 Días (alta montaña 4x4) (`RutasPreconfiguradas.tsx`).
+  - Generador y exportador de dataset GeoJSON de puntos de interés para el visor cartográfico.
+- **Módulo 11 — Participación Ciudadana y Presupuesto Participativo (`/participacion`, `/participacion/votar`)**:
+  - Banco interactivo de proyectos vecinales comunitarios.
+  - Sistema de votación blindado antifraude (`ModalVotacionAntifraude.tsx`) restringido a rol *Ciudadano Verificado Nivel 2* con validación de 1 voto por cédula legal activa y emisión de comprobante de auditoría.
+  - Gráficos reactivos SVG a 60fps para escrutinio en vivo y distribución presupuestaria de ₡ 307 Millones (`GraficoPresupuestoParticipativo.tsx`).
+  - Buzón formal de audiencias ciudadanas ante el Concejo Municipal (`BuzonAudienciaModal.tsx`).
+- **Módulo 12 / RF-12.2 — Planificador Generativo 'Itinerario Pura Vida' (`/itinerario-ia`)**:
+  - Formulario multivariable (presupuesto en colones, tracción 4x2/4x4, Ley 7600, ferias activas) (`FormularioItinerarioIA.tsx`).
+  - Algoritmo de optimización y perfil altimétrico 3D en `itinerarioIAPlanner.ts`.
+  - Visualizador de curvas de elevación y pendientes 3D (`PerfilElevacion3D.tsx`) con dictamen de accesibilidad universal (≤ 8%) o alerta de tracción 4x4 (> 16%).
+  - Cronograma diario interactivo con exportación de paradas a Waze y Google Maps (`VisorItinerarioGenerado.tsx`).
+- **Consolidación de Datasets GIS (`src/data/poiDatasets.ts`)**:
+  - Unificación de puntos de interés bajo el formato `{ id, name, category, lat, lng, details }` y `toGeoJSONFeatureCollection()` para capas vectoriales de Leaflet / MapLibre de Eiker.
+
+### Changed
+- `src/routes/Routing.jsx`: Registro oficial de las rutas públicas y protegidas de Alanie.
+- `src/components/FullScreenMenu.jsx`: Conexión de todos los ítems del menú a sus rutas de módulo reales.
+- `src/pages/Dashboard.jsx`: Actualización de la consola operativa con enlaces funcionales a todos los módulos.
+- `src/pages/Inicio.jsx`: Incorporación de la sección interactiva "Módulos Ciudadanos Activos" con tarjetas glassmórficas y sugerencias de búsqueda automática.
+- Inclusión del componente `<Navbar />` en `TurismoPage.tsx`, `ParticipacionPage.tsx` e `ItinerarioIAPage.tsx`.
+
+### Security
+- **Blindaje Electoral Antifraude**: Garantía de voto único inmutable por cédula física o jurídica activa verificada ante Hacienda (`VOTOS_REGISTRADOS_CEDULAS`), evitando duplicidad en elecciones vecinales de presupuesto participativo.
+- **Minimización de Datos Personales (Ley N° 8968)**: Las validaciones de cédula son efímeras y no persisten información personal sensible en almacenamiento local.
+- **Certificación Topográfica de Seguridad**: Advertencias automáticas de pendientes pronunciadas para salvaguardar la integridad de usuarios en silla de ruedas o vehículos no 4x4.
 
 ---
 

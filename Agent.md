@@ -148,7 +148,7 @@ Módulo que integra capacidades generativas y de NLP; agrupa RF-12.1 y RF-12.2 d
 4. Documentación: manual de usuario y documentación de API actualizados en Swagger/OpenAPI.
 5. Desempeño: validación de latencia en carga de capas GIS y generación de itinerarios.
 6. Integración de APIs y accesibilidad: validación completa de contratos de API (Hacienda, Ubicaciones Costa Rica, Google Maps 3D), caché offline (IndexedDB), soporte multilingüe en 8 idiomas y pruebas de accesibilidad RNF-05.1/05.2.
-**Prioridades actuales:** Se completó exitosamente la fase inicial en la rama `feature/Eiker`: Módulo 01 (Portal Nacional & Theming), Módulo 05 (Google Maps 3D & GIS), Módulo 07 (Reportes Ciudadanos & Trazabilidad), Módulo 10 (Seguridad, Emergencias SOS & Modo Offline PWA), Módulo 12 / RF-12.1 (Búsqueda Semántica NLP & Dictado por Voz) y el Motor Universal de Accesibilidad (Escala Tipográfica 4 fases, Sintetizador TTS en 8 idiomas y Onboarding guiado por voz). Prioridad siguiente: Integración de backend/persistencia y desarrollo de M02 (Fiscalización de Obra Pública / SICOP) y M03 (Hacienda / ATV).
+**Prioridades actuales:** Se completó exitosamente la fase inicial en la rama `feature/Eiker` (Módulos 01, 05, 07, 10, 12.1 y Accesibilidad) y la fase funcional en la rama `feature/Alanie` (Módulos 02, 03, 04, 06, 08, 09, 11, 12.2, Theming Engine, validación con Ministerio de Hacienda, datasets POI unificados y enrutamiento central). Prioridad siguiente: Integración y merge de ambas ramas hacia `develop`/`main` y despliegue continuo.
 
 > Ayuda a la IA a decidir cuando hay que elegir entre opciones.
 
@@ -172,23 +172,67 @@ Módulo que integra capacidades generativas y de NLP; agrupa RF-12.1 y RF-12.2 d
     - *NLP Client-Side sin Latencia ni Costos:* Se optó por una arquitectura ligera basada en tokenización, stopwords y diccionarios ontológicos territoriales en cliente (`geoSemanticNlpService.js`), eliminando la latencia de red en emergencias y asegurando funcionamiento offline.
     - *Soberanía de Datos y Ley N° 8968:* El stripping de EXIF se realiza directamente sobre el HTML Canvas antes de crear el Blob/Base64, garantizando que ninguna coordenada GPS oculta salga del dispositivo del usuario sin su consentimiento.
     - *Escalabilidad CSS Tipográfica:* El selector de texto inyecta `--text-scale` a nivel `:root`, permitiendo que todos los elementos calculados en `rem` o `em` respondan armónicamente sin romper la grilla ni provocar overflow horizontal en pantallas de 360px.
-  - **Pendientes para próximas sesiones:**
-    - M02: Fiscalización de Obra Pública (Integración con SICOP / Cartografía de contratos).
-    - M03: Transparencia Tributaria y Hacienda (Validador de situación fiscal y facturación electrónica).
-    - Sustitución de mocks de persistencia local por API RESTful institucional autenticada mediante JWT/OAuth2 estatal.
 - **2026-09-28 / 2026-09-29 (Desarrollador / Agente Eiker):**
   - **Hitos implementados en rama `feature/Eiker`:**
     - **Sistema Global de Internacionalización Reactiva (i18n):**
       - Se implementó `src/context/LanguageContext.jsx` con diccionario completo para los 8 idiomas oficiales (`CR`, `ES`, `US`, `CN`, `BR`, `FR`, `RU`, `JP`), persistencia en `localStorage` con la clave `'idioma_preferido'` y hook personalizado `useLanguage()`.
       - Se integró `<LanguageProvider>` envolviendo la raíz de la aplicación en `App.jsx`.
-      - Se tradujo reactivamente el menú a pantalla completa (`FullScreenMenu.jsx`): títulos de sección, módulos 01 al 11 (`portal`, `territorio`, `reportes`, `seguridad`, etc.), botones de acceso y registro, botón de cierre (`cerrarBoton`) y barra inferior de metadatos distritales.
-      - Se sincronizó la selección de idioma en el menú con el motor de síntesis de voz Web Speech API (`useAccessibility` y `VoiceReaderFloatingButton.jsx`), de manera que cambiar el idioma visual actualiza en lockstep la locución asistida.
-      - Se tradujo reactivamente la cabecera fija (`Navbar.jsx`) y el portal principal (`Inicio.jsx`), incluyendo el titular del Hero (`tituloHero`), subtítulo, descripción cívica, placeholder del buscador semántico, botón de exploración (`botonExplorar`) y contadores cívicos (`07 Provincias`, `84 Cantones`, `492 Distritos`).
+      - Se tradujo reactivamente el menú a pantalla completa (`FullScreenMenu.jsx`): títulos de sección, módulos 01 al 11, botones de acceso y registro y barra inferior de metadatos distritales.
+      - Sincronización en tiempo real entre la selección de idioma y el motor de síntesis de voz Web Speech API (`useAccessibility` y `VoiceReaderFloatingButton.jsx`).
+      - Traducción dinámica del portal principal (`Inicio.jsx`), incluyendo titulares, búsqueda semántica y métricas territoriales.
     - **Identidad de Marca y Favicon Oficial:**
-      - Se reemplazó el componente SVG deformado por el activo oficial en alta resolución con fondo transparente en `public/logo.png` (isotipo de corazón y manos con mano interior blanca preservada y borde anti-aliased).
-      - Se actualizó `src/components/common/Logo.jsx` imponiendo restricciones estrictas de altura (`height: 40px`, `maxHeight: 40px`, `width: 'auto'`, `objectFit: 'contain'`), evitando cualquier estiramiento o desbordamiento en el Navbar y menú overlay.
-      - Se actualizó `index.html` con parámetros rompedores de caché (`/logo.png?v=2`), soporte para `apple-touch-icon` y título institucional oficial (`Costa Rica Unidos — Plataforma Territorial Soberana`).
-      - Se limpió `public/favicon.svg` retirando el fondo circular negro obsoleto y se generó `public/favicon.ico`.
+      - Reemplazo por el activo oficial en alta resolución con fondo transparente en `public/logo.png`.
+      - Normalización de dimensiones estrictas en `src/components/common/Logo.jsx` (altura 40px, sin deformación).
+      - Actualización de `index.html` con parámetros rompedores de caché (`/logo.png?v=2`) y `favicon.ico`.
+- **2026-09-29 (Desarrollador / Agente Alanie — Rama `feature/Alanie`):**
+  - **Hitos implementados en rama `feature/Alanie`:**
+    - **Core & Theming Sovereign Civic Glass v2.1:**
+      - Se codificó `src/styles/themeEngine.ts` e `index.css` con variables CSS dinámicas sobre el sustrato *Obsidiana Soberana* (`#00040D`), 3 niveles de glassmorphism esmerilado, radios normados (8px, 16px, 24px, 9999px) y tipografías (*Mistical Spring*, *Paloseco*, *JetBrains Mono*).
+      - Biblioteca de componentes atómicos en `src/components/common/`: `CivicButton.tsx`, `CivicCard.tsx`, `CivicBadge.tsx`, `CivicModal.tsx` (con focus-trap y WCAG 2.1 AA), `StatusPill.tsx` y `AccessibilityBadge.tsx` (Ley 7600, 4x4, Pet-friendly).
+    - **Servicios Transversales e Integración con Hacienda:**
+      - `src/services/haciendaService.ts`: Integración directa con el endpoint oficial `https://api.hacienda.go.cr/fe/ae` para validar cédulas físicas, jurídicas y DIMEX, con sanitización, caché en memoria (TTL 15 min) y autocompletado obligatorio de razón social.
+      - Motor i18n extendido con glosario cultural costarricense (`costaRicaGlossary.ts`, `src/i18n/index.ts`).
+      - Caché nativo SWR con revalidación en segundo plano (`swrCache.ts`, `useDirectoryData.ts`, `useHaciendaValidation.ts`).
+    - **Módulo 02 — Espacio Administrativo Cantonal y Actas (`/gobernanza`):**
+      - `OrganigramaMunicipal.tsx`: Estructura jerárquica municipal colapsable e interactiva.
+      - `TablaActas.tsx`: Tabla paginada de actas del Concejo Municipal con filtros por año y tipo de sesión.
+      - `VisorActaModal.tsx`: Visor accesible embebido con descarga de actas oficiales en PDF.
+    - **Módulo 03 — Identidad Cultural, Tradiciones e Himnos (`/cultura`):**
+      - `TimelineHistorico.tsx`: Línea de tiempo histórica interactiva.
+      - `GaleriaSimbolos.tsx`: Evolución histórica y heráldica de escudos y banderas.
+      - `HimnoPlayer.tsx`: Reproductor accesible con visualizador de frecuencias de audio y letras oficiales.
+      - `PatrimonioLightbox.tsx`: Lightbox de patrimonio cultural tangible e inmaterial.
+    - **Módulo 04 — Deportes y CCDR (`/deportes`):**
+      - Directorio de escuelas deportivas cantonales y fichas de instalaciones (`FichaInstalacion.tsx`) con semáforo dinámico de aforo y estado operativo (`StatusPill`).
+      - Feed comunitario moderado y muro "Orgullo Cantonal".
+    - **Módulo 06 — Educación y CTPs (`/educacion`):**
+      - Directorio de centros educativos con coordenadas WGS84, niveles e indicadores de accesibilidad Ley 7600 y comedor estudiantil (`FichaCentroEducativo.tsx`).
+      - Malla curricular técnica de especialidades CTP (Software, Ciberseguridad, Contabilidad).
+    - **Módulo 08 — Comercio Local y Feria del Agricultor (`/comercio`, `/feria-agricultor`):**
+      - Directorio de PYMEs con sello de verificación tributaria de Hacienda y CTAs a WhatsApp y Waze (`FichaComercio.tsx`).
+      - Croquis interactivo SVG de la feria con zonificación por sectores y calendario estacional de cosechas (`CroquisFeria.tsx`).
+    - **Módulo 09 — Guía de Turismo Cantonal Sostenible (`/turismo`):**
+      - Galerías visuales de alto rendimiento y visor modal (`FichaDestinoTuristico.tsx`).
+      - Rutas preconfiguradas de 1 día (patrimonial accesible Ley 7600) y 2 días (alta montaña 4x4) (`RutasPreconfiguradas.tsx`).
+      - Exportador de dataset GeoJSON de destinos turísticos con cotas altimétricas.
+    - **Módulo 11 — Participación Ciudadana y Presupuesto Participativo (`/participacion`, `/participacion/votar`):**
+      - Banco interactivo de proyectos vecinales comunitarios.
+      - Sistema de votación blindado antifraude (`ModalVotacionAntifraude.tsx`): Restringido a *Ciudadano Verificado Nivel 2*, validación estricta de **1 voto por cédula legal activa** contra la API de Hacienda, prevención de sufragio duplicado y emisión de hash de recibo criptográfico (`CRU-XXX-POA26`).
+      - Gráficos reactivos SVG a 60fps para escrutinio en vivo y distribución del presupuesto de ₡ 307 Millones (`GraficoPresupuestoParticipativo.tsx`).
+      - Buzón formal de audiencias públicas ante el Concejo Municipal (`BuzonAudienciaModal.tsx`).
+    - **Módulo 12 / RF-12.2 — Planificador Generativo 'Itinerario Pura Vida' (`/itinerario-ia`):**
+      - Formulario generativo multivariable por presupuesto, tracción (4x2 vs 4x4), Ley 7600 y ferias activas (`FormularioItinerarioIA.tsx`).
+      - Algoritmo de ruteo e itinerario diario con exportación a Waze y Google Maps (`itinerarioIAPlanner.ts`, `VisorItinerarioGenerado.tsx`).
+      - Análisis y visualizador del perfil altimétrico y pendientes topográficas 3D (`PerfilElevacion3D.tsx`) certificando Ley 7600 (pendiente ≤ 8%) o exigencia 4x4 (> 16%).
+    - **Consolidación de Datasets GIS (`src/data/poiDatasets.ts`):**
+      - Unificación de puntos de interés de Educación, Comercio, Turismo y Deportes bajo el esquema `{ id, name, category, lat, lng, details }` y `toGeoJSONFeatureCollection()` listos para las capas Leaflet / MapLibre de Eiker.
+    - **Navegación e Integración de UI Central:**
+      - Registro ordenado de rutas en `src/routes/Routing.jsx`.
+      - Enlace directo en el menú a pantalla completa (`FullScreenMenu.jsx`), consola (`Dashboard.jsx`), portada (`Inicio.jsx`) y cabecera (`Navbar.jsx`).
+  - **Decisiones Técnicas Fundamentales:**
+    - *Zero-Dependency Data Visualization:* Implementación de gráficos analíticos interactivos y perfiles de elevación en SVG nativo reactivo, evitando el sobrepeso de librerías como Recharts o Chart.js.
+    - *Criptocívica Antifraude con API de Hacienda:* Comprobación en memoria contra `VOTOS_REGISTRADOS_CEDULAS` combinada con la verificación oficial del Ministerio de Hacienda, imposibilitando la duplicación del voto sin persistir datos sensibles.
+    - *Certificación Topográfica de Pendientes:* Evaluación algorítmica de la cota altimétrica acumulada para cumplir con la norma de pendientes peatonales de la Ley 7600 (≤ 8%).
   - **Decisiones Técnicas Fundamentales:**
     - *React Context Puro sin Dependencias Pesadas:* Se adoptó una arquitectura i18n nativa en React Context API que provee traducción instantánea en tiempo de ejecución sin añadir el overhead de bundles de librerías externas.
     - *Preservación de Espacios Negativos en Isotipo:* El procesamiento de transparencia del isotipo se ejecutó mediante algoritmo de inundación (flood-fill) desde los bordes externos, protegiendo la mano blanca interior de quedar accidentalmente vacía.
