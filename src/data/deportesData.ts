@@ -48,6 +48,33 @@ export interface AtletaOrgulloCantonal {
   fotoUrl: string;
 }
 
+export interface ConvocatoriaJDN {
+  id: string;
+  disciplina: string;
+  rama: 'Femenino' | 'Masculino' | 'Mixto';
+  categoriaEdad: string; // ej. Sub-13 (2013-2014), Sub-15 (2011-2012), Sub-18 (2008-2010), Sub-21
+  fechasVisorias: string;
+  lugarVisorias: string;
+  distrito: string;
+  entrenadorFederado: string;
+  requisitosObligatorios: string[];
+  etapaActual: 'Convocatoria Abierta' | 'Fase Eliminatoria Cantonal' | 'Entrenamientos de Selección';
+  fechaCierreInscripcion: string;
+  cuposPreseleccion: number;
+}
+
+export interface DisciplinaOficial {
+  id: string;
+  nombre: string;
+  categoria: 'Individual' | 'Conjunto' | 'Combate' | 'Adaptado (Ley 7600)';
+  icono: string;
+  sedeEntrenamiento: string;
+  entrenadorPrincipal: string;
+  licenciaFederativa: string;
+  atletasActivos: number;
+  vigenteJDN: boolean;
+}
+
 export interface PostFeedComunitario {
   id: string;
   autor: string;
@@ -59,12 +86,145 @@ export interface PostFeedComunitario {
   moderado: boolean;
 }
 
+export const DISCIPLINAS_OFICIALES_DATA: DisciplinaOficial[] = [
+  {
+    id: 'disc-01',
+    nombre: 'Atletismo y Pista',
+    categoria: 'Individual',
+    icono: '🏃',
+    sedeEntrenamiento: 'Pista Sintética de La Sabana / Polideportivo San Francisco',
+    entrenadorPrincipal: 'Prof. Marco Tulio Brenes (Nivel III FECOA)',
+    licenciaFederativa: 'LIC-FECOA-2026-081',
+    atletasActivos: 48,
+    vigenteJDN: true
+  },
+  {
+    id: 'disc-02',
+    nombre: 'Natación Olímpica y Aguas Abiertas',
+    categoria: 'Individual',
+    icono: '🏊',
+    sedeEntrenamiento: 'Piscina Olímpica Polideportivo San Francisco',
+    entrenadorPrincipal: 'Licda. Mariana Fallas Castro',
+    licenciaFederativa: 'LIC-FECODA-2025-144',
+    atletasActivos: 36,
+    vigenteJDN: true
+  },
+  {
+    id: 'disc-03',
+    nombre: 'Baloncesto Femenino y Masculino',
+    categoria: 'Conjunto',
+    icono: '🏀',
+    sedeEntrenamiento: 'Gimnasio Nacional La Sabana',
+    entrenadorPrincipal: 'Coach Javier Ureña Solano',
+    licenciaFederativa: 'LIC-FECOBA-2024-092',
+    atletasActivos: 42,
+    vigenteJDN: true
+  },
+  {
+    id: 'disc-04',
+    nombre: 'Fútbol Sala (Futsal)',
+    categoria: 'Conjunto',
+    icono: '⚽',
+    sedeEntrenamiento: 'Gimnasio Municipal Barrio Cuba / San Sebastián',
+    entrenadorPrincipal: 'Prof. Carlos Santana Mora',
+    licenciaFederativa: 'LIC-LIFUTSAL-2026-018',
+    atletasActivos: 30,
+    vigenteJDN: true
+  },
+  {
+    id: 'disc-05',
+    nombre: 'Taekwondo Olímpico (WT)',
+    categoria: 'Combate',
+    icono: '🥋',
+    sedeEntrenamiento: 'Doyang Cantonal Hatillo 2',
+    entrenadorPrincipal: 'Master Roberto Chen Vargas (5to Dan)',
+    licenciaFederativa: 'LIC-FCT-2025-055',
+    atletasActivos: 28,
+    vigenteJDN: true
+  },
+  {
+    id: 'disc-06',
+    nombre: 'Para-Atletismo y Boccia Inclusiva (Ley 7600)',
+    categoria: 'Adaptado (Ley 7600)',
+    icono: '♿',
+    sedeEntrenamiento: 'Centro de Alto Rendimiento Adaptado La Sabana',
+    entrenadorPrincipal: 'Licda. Katherine Solano Quirós',
+    licenciaFederativa: 'LIC-FEDEPARA-2026-004',
+    atletasActivos: 24,
+    vigenteJDN: true
+  }
+];
+
+export const CONVOCATORIAS_JDN_DATA: ConvocatoriaJDN[] = [
+  {
+    id: 'conv-01',
+    disciplina: 'Atletismo (Velocidad, Fondo y Saltos)',
+    rama: 'Mixto',
+    categoriaEdad: 'Sub-15 (2011-2012) y Sub-18 (2008-2010)',
+    fechasVisorias: 'Sábado 10 y Domingo 11 de Octubre &bull; 07:30 hrs',
+    lugarVisorias: 'Pista Atlética de La Sabana, San José',
+    distrito: 'Mata Redonda',
+    entrenadorFederado: 'Prof. Marco Tulio Brenes (Licencia FECOA)',
+    requisitosObligatorios: [
+      'Tarjeta de Identidad de Menores (TIM) o Cédula Física',
+      'Comprobante de Residencia en el cantón (Recibo de servicio público)',
+      'Póliza Estudiantil INS vigente o Seguro CCSS al día',
+      'Carta de Consentimiento Informado firmada por padre/tutor legal'
+    ],
+    etapaActual: 'Convocatoria Abierta',
+    fechaCierreInscripcion: '8 de Octubre, 2026',
+    cuposPreseleccion: 35
+  },
+  {
+    id: 'conv-02',
+    disciplina: 'Baloncesto Formativo y Competitivo',
+    rama: 'Femenino',
+    categoriaEdad: 'Sub-14 (2012-2013) y Sub-17 (2009-2011)',
+    fechasVisorias: 'Sábado 17 de Octubre &bull; 09:00 hrs',
+    lugarVisorias: 'Gimnasio Nacional La Sabana (Cancha Central)',
+    distrito: 'Mata Redonda',
+    entrenadorFederado: 'Coach Javier Ureña Solano (FECOBA)',
+    requisitosObligatorios: [
+      'TIM o pasaporte vigente',
+      'Residencia demostrable en distritos del cantón',
+      'Dictamen médico deportivo de aptitud cardiovascular',
+      'Calzado reglamentario para duela'
+    ],
+    etapaActual: 'Convocatoria Abierta',
+    fechaCierreInscripcion: '15 de Octubre, 2026',
+    cuposPreseleccion: 20
+  },
+  {
+    id: 'conv-03',
+    disciplina: 'Natación de Carreras y Relevos',
+    rama: 'Mixto',
+    categoriaEdad: 'Infantil B (11-12 años) y Juvenil A (13-14 años)',
+    fechasVisorias: 'Viernes 23 de Octubre &bull; 15:30 hrs',
+    lugarVisorias: 'Piscina Semiolímpica Polideportivo San Francisco',
+    distrito: 'San Francisco de Dos Ríos',
+    entrenadorFederado: 'Licda. Mariana Fallas Castro (FECODA)',
+    requisitosObligatorios: [
+      'Cédula de Menor / TIM',
+      'Tiempos acreditados en torneos locales o prueba técnica de 200m combinados',
+      'Póliza de accidentes estudiantil vigente',
+      'Autorización legal del CCDR'
+    ],
+    etapaActual: 'Fase Eliminatoria Cantonal',
+    fechaCierreInscripcion: '20 de Octubre, 2026',
+    cuposPreseleccion: 16
+  }
+];
+
 export const DEPORTES_MOCK_DATA: {
   instalaciones: InstalacionDeportiva[];
   escuelas: EscuelaDeportivaCCDR[];
   atletas: AtletaOrgulloCantonal[];
+  convocatorias: ConvocatoriaJDN[];
+  disciplinas: DisciplinaOficial[];
   feed: PostFeedComunitario[];
 } = {
+  convocatorias: CONVOCATORIAS_JDN_DATA,
+  disciplinas: DISCIPLINAS_OFICIALES_DATA,
   instalaciones: [
     {
       id: 'inst-1',
@@ -89,8 +249,8 @@ export const DEPORTES_MOCK_DATA: {
       distrito: 'Mata Redonda',
       direccion: 'Costado sureste del Parque Metropolitano La Sabana',
       capacidad: '4,000 personas',
-      estado: 'alquiler',
-      tarifaAlquiler: '₡ 35,000 / hora para eventos privados',
+      estado: 'reservado_escuelas',
+      tarifaAlquiler: 'Uso priorizado selecciones cantonales / ₡ 35,000 hr privados',
       horario: 'Martes a Domingo: 07:00 - 22:00 hrs',
       esPublica: true,
       telefonoContacto: '(506) 2256-1122',
@@ -107,7 +267,7 @@ export const DEPORTES_MOCK_DATA: {
       capacidad: '800 personas',
       estado: 'mantenimiento',
       tarifaAlquiler: 'Tarifa social municipal ₡ 2,000 / sesión',
-      horario: 'Cerrado temporalmente por pintura y filtración',
+      horario: 'Cerrado temporalmente por mantenimiento de filtros y bombas',
       esPublica: true,
       telefonoContacto: '(506) 2283-4411',
       lat: 9.9234,
@@ -122,13 +282,45 @@ export const DEPORTES_MOCK_DATA: {
       direccion: 'Frente a la Delegación Policial de Pavas',
       capacidad: '450 personas',
       estado: 'abierto',
-      tarifaAlquiler: 'Gratuito para escuelas formativas CCDR',
+      tarifaAlquiler: 'Gratuito para escuelas formativas y vecinos',
       horario: 'Todos los días: 06:00 - 20:00 hrs',
       esPublica: true,
       telefonoContacto: '(506) 2231-7788',
       lat: 9.9467,
       lng: -84.1356,
       servicios: ['Césped Sintético Monofilamento', 'Malla Perimetral', 'Bebederos Inclusivos']
+    },
+    {
+      id: 'inst-5',
+      nombre: 'Velódromo y Pista de Patinaje Parque de La Paz',
+      disciplinaPrincipal: 'Ciclismo de Pista y Patinaje de Carreras',
+      distrito: 'San Sebastián',
+      direccion: 'Sector sur del Parque Recreativo de La Paz',
+      capacidad: '1,200 personas',
+      estado: 'abierto',
+      tarifaAlquiler: 'Uso libre comunitario / Prácticas federadas',
+      horario: 'Lunes a Domingo: 05:30 - 20:30 hrs',
+      esPublica: true,
+      telefonoContacto: '(506) 2227-8901',
+      lat: 9.9078,
+      lng: -84.0782,
+      servicios: ['Pista de Cemento Pulido', 'Iluminación Solar LED', 'Bicicleteros Seguros']
+    },
+    {
+      id: 'inst-6',
+      nombre: 'Centro Formativo de Artes Marciales Hatillo 2',
+      disciplinaPrincipal: 'Taekwondo, Judo y Boxeo Olímpico',
+      distrito: 'Hatillo',
+      direccion: 'Costado norte de la Plaza de Deportes Hatillo 2',
+      capacidad: '350 personas',
+      estado: 'reservado_escuelas',
+      tarifaAlquiler: 'Exclusivo para Escuelas Formativas CCDR y Selecciones JDN',
+      horario: 'Lunes a Viernes: 14:00 - 21:00 hrs',
+      esPublica: true,
+      telefonoContacto: '(506) 2254-3322',
+      lat: 9.9165,
+      lng: -84.1045,
+      servicios: ['Tatami Oficial WT', 'Ring de Boxeo Reglamentario', 'Petos Electrónicos Daedo']
     }
   ],
 

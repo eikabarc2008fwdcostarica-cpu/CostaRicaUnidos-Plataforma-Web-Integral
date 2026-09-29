@@ -178,15 +178,37 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
                 <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
                   {puestoSeleccionado.productorNombre}
                 </h4>
-                <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
-                  Cédula: <strong style={{ color: '#E2E8F0', fontFamily: "var(--font-telemetry, monospace)" }}>{puestoSeleccionado.cedulaProductor}</strong>
-                </span>
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.25rem', fontSize: '0.8rem', color: '#94A3B8' }}>
+                  <span>Cédula: <strong style={{ color: '#E2E8F0', fontFamily: "var(--font-telemetry, monospace)" }}>{puestoSeleccionado.cedulaProductor}</strong></span>
+                  {puestoSeleccionado.carneCacNumero && (
+                    <span>Carné CAC: <strong style={{ color: '#7DD3FC', fontFamily: "var(--font-telemetry, monospace)" }}>{puestoSeleccionado.carneCacNumero}</strong></span>
+                  )}
+                </div>
               </div>
 
               <div style={{ fontSize: '0.85rem', color: '#CBD5E1', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                <div><strong>Finca: </strong>{puestoSeleccionado.fincaOrigen}</div>
-                <div><strong>Cantón de Origen: </strong>{puestoSeleccionado.cantonOrigen}</div>
+                <div><strong>Finca de Origen: </strong>{puestoSeleccionado.fincaOrigen}</div>
+                <div><strong>Procedencia: </strong>{puestoSeleccionado.cantonOrigen}</div>
               </div>
+
+              {puestoSeleccionado.esOrganicoCertificado && puestoSeleccionado.enteCertificador && (
+                <div
+                  style={{
+                    background: 'rgba(0, 122, 61, 0.2)',
+                    border: '1px solid rgba(52, 211, 153, 0.4)',
+                    borderRadius: '8px',
+                    padding: '0.45rem 0.75rem',
+                    color: '#6EE7B7',
+                    fontSize: '0.8rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
+                  }}
+                >
+                  <Sparkles size={15} color="#34D399" />
+                  <span><strong>Producción Orgánica: </strong>{puestoSeleccionado.enteCertificador}</span>
+                </div>
+              )}
 
               {puestoSeleccionado.verificadoHacienda && (
                 <div
@@ -203,13 +225,13 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
                   }}
                 >
                   <ShieldCheck size={16} color="#10B981" />
-                  <span>Productor Verificado por Hacienda &bull; Régimen Simplificado</span>
+                  <span>Productor al Día &bull; {puestoSeleccionado.regimenTributario || 'Régimen Simplificado Agropecuario'}</span>
                 </div>
               )}
 
               <div>
                 <strong style={{ fontSize: '0.825rem', color: '#F8FAFC', display: 'block', marginBottom: '0.35rem' }}>
-                  Productos que ofrece hoy:
+                  Productos que ofrece hoy en feria:
                 </strong>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                   {puestoSeleccionado.productosPrincipales.map((prod, i) => (

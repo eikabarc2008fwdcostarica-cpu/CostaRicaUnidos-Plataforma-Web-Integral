@@ -376,22 +376,68 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
         onClose={() => setShowPartituraModal(false)}
         size="lg"
         title="Partitura Oficial del Himno Cantonal"
-        description={`Registro Histórico Musical • Partitura de César Nieto (1954)`}
+        description={`Registro Histórico Musical • Partitura de ${himno.autorMusica} (${himno.annoDeclaratoria})`}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-          <img
-            src={himno.partituraUrl}
-            alt={`Partitura oficial del ${himno.titulo}`}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {/* Ficha Técnica de la Partitura */}
+          <div
             style={{
-              width: '100%',
-              maxHeight: '450px',
-              objectFit: 'cover',
-              borderRadius: '12px',
-              border: '1px solid rgba(255, 255, 255, 0.2)'
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+              gap: '0.75rem',
+              background: 'rgba(255, 255, 255, 0.03)',
+              padding: '0.85rem',
+              borderRadius: '10px',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              fontSize: '0.825rem'
             }}
-          />
-          <div style={{ fontSize: '0.85rem', color: '#94A3B8', textAlign: 'center' }}>
-            Partitura transcrita para banda sinfónica municipal y coro escolar. Custodiada por el Archivo Histórico Cantonal.
+          >
+            <div>
+              <span style={{ color: '#94A3B8', display: 'block', fontSize: '0.72rem' }}>Tonalidad:</span>
+              <strong style={{ color: '#7DD3FC' }}>Sol Mayor (G Maj)</strong>
+            </div>
+            <div>
+              <span style={{ color: '#94A3B8', display: 'block', fontSize: '0.72rem' }}>Compás:</span>
+              <strong style={{ color: '#FFFFFF' }}>4/4 (C)</strong>
+            </div>
+            <div>
+              <span style={{ color: '#94A3B8', display: 'block', fontSize: '0.72rem' }}>Tempo:</span>
+              <strong style={{ color: '#A7F3D0' }}>Maestoso &bull; 108 BPM</strong>
+            </div>
+            <div>
+              <span style={{ color: '#94A3B8', display: 'block', fontSize: '0.72rem' }}>Instrumentación:</span>
+              <strong style={{ color: '#FFFFFF' }}>Banda Municipal & Coro</strong>
+            </div>
+          </div>
+
+          <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', border: '1.5px solid rgba(255, 255, 255, 0.15)' }}>
+            <img
+              src={himno.partituraUrl}
+              alt={`Partitura oficial del ${himno.titulo}`}
+              style={{
+                width: '100%',
+                maxHeight: '380px',
+                objectFit: 'cover',
+                display: 'block'
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
+              Archivo Histórico Cantonal &bull; Custodia bajo la Ley N° 7210 de Archivo Nacional.
+            </span>
+
+            <CivicButton
+              variant="provincial"
+              size="sm"
+              onClick={() => {
+                alert(`Descargando partitura oficial de "${himno.titulo}" certificada por el Gobierno Local.`);
+              }}
+              leftIcon={<FileMusic size={16} />}
+            >
+              Descargar Partitura Oficial (PDF)
+            </CivicButton>
           </div>
         </div>
       </CivicModal>

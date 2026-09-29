@@ -8,7 +8,9 @@ export type StatusPillType =
   | 'mantenimiento'
   | 'occupied'
   | 'alquiler'
-  | 'ocupado';
+  | 'ocupado'
+  | 'reservado_escuelas'
+  | 'reservado';
 
 export type StatusPillSize = 'sm' | 'md' | 'lg';
 
@@ -32,8 +34,9 @@ interface StatusVisualConfig {
  * StatusPill — Semáforo Dinámico Cantonal (Sovereign Civic Glass v2.1)
  * 
  * Utilizado ampliamente en el Ecosistema Deportivo CCDR (M04), instalaciones y ferias:
- * - Verde: Abierto / Disponible
- * - Amarillo: Mantenimiento
+ * - Verde: Abierto al Público
+ * - Amarillo: Mantenimiento Programado
+ * - Azul: Reservado para Escuelas Formativas y Selecciones
  * - Rojo: Alquiler / Ocupado
  * - Radio normado: 9999px (--radius-pill)
  * - Cumplimiento WCAG 2.1 AA con contraste riguroso y marcado semántico accesible
@@ -62,7 +65,7 @@ export const StatusPill = forwardRef<HTMLSpanElement, StatusPillProps>(
       normalizedStatus === 'disponible'
     ) {
       config = {
-        defaultLabel: 'Abierto',
+        defaultLabel: 'Abierto al Público',
         bg: 'rgba(5, 133, 59, 0.22)',
         border: 'rgba(16, 185, 129, 0.5)',
         text: '#A7F3D0',
@@ -74,17 +77,29 @@ export const StatusPill = forwardRef<HTMLSpanElement, StatusPillProps>(
       normalizedStatus === 'mantenimiento'
     ) {
       config = {
-        defaultLabel: 'Mantenimiento',
+        defaultLabel: 'Mantenimiento Programado',
         bg: 'rgba(217, 119, 6, 0.22)',
         border: 'rgba(245, 158, 11, 0.55)',
         text: '#FDE68A',
         dotColor: '#F59E0B',
         glow: '0 0 10px rgba(245, 158, 11, 0.45)'
       };
+    } else if (
+      normalizedStatus === 'reservado_escuelas' ||
+      normalizedStatus === 'reservado'
+    ) {
+      config = {
+        defaultLabel: 'Reservado para Escuelas Formativas',
+        bg: 'rgba(0, 43, 127, 0.35)',
+        border: 'rgba(125, 211, 252, 0.5)',
+        text: '#BAE6FD',
+        dotColor: '#38BDF8',
+        glow: '0 0 10px rgba(56, 189, 248, 0.45)'
+      };
     } else {
       // occupied / alquiler / ocupado
       config = {
-        defaultLabel: 'Alquiler',
+        defaultLabel: 'Uso Reglamentado',
         bg: 'rgba(211, 20, 36, 0.22)',
         border: 'rgba(239, 68, 68, 0.55)',
         text: '#FECACA',

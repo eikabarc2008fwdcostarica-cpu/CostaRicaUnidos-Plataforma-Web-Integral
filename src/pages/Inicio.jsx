@@ -1,32 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ArrowRight, Map, ClipboardEdit, ShieldCheck, ArrowUpRight, Building2, Music, Trophy, GraduationCap, Store, Compass, Vote, Sparkles } from 'lucide-react';
+import {
+  Search,
+  ArrowRight,
+  FileText,
+  Vote,
+  ClipboardEdit,
+  Trophy,
+  ShieldCheck,
+  Building2,
+  MapPin,
+  Compass,
+  GraduationCap,
+  Store,
+  Music,
+  Sparkles,
+  CheckCircle2,
+  ExternalLink,
+  ChevronRight,
+  ShieldAlert
+} from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { useLanguage } from '../context/LanguageContext';
+import { CANTONES_OFICIALES } from '../data/costaRicaTerritorialData';
 
 /**
- * Inicio — Minimalismo Editorial, Fotografía Inmersiva y Glassmorphism Refinado
- * Swiss Design • 0% Jerga Técnica • 100% Ciudadanía y Turismo
+ * INICIO — Portal Oficial de Gobierno Local y Servicios Ciudadanos
+ * Sistema Sovereign Civic Glass v2.1 • Sede Digital Oficial de la República de Costa Rica
+ * Fondo: Cordillera Soberana Costarricense • Sin elementos de videojuegos ni castillos medievales
  */
 export default function Inicio() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeCantonName, setActiveCantonName] = useState(() => {
+    try {
+      return localStorage.getItem('cr_canton_activo') || 'San José';
+    } catch {
+      return 'San José';
+    }
+  });
 
-  // Lista de destinos y trámites sugeridos
-  const sugerencias = [
-    { label: 'Visor Cartográfico 3D y Relieve', path: '/mapa-gis' },
-    { label: 'Turismo Cantonal y Rutas Accesibles (Ley 7600)', path: '/turismo' },
-    { label: 'Planificador de Rutas IA: Itinerario Pura Vida', path: '/itinerario-ia' },
-    { label: 'Participación Ciudadana y Votación Presupuestaria', path: '/participacion' },
-    { label: 'Directorio de Colegios Técnicos (CTP) y Educación', path: '/educacion' },
-    { label: 'Comercio Local PYMEs y Feria del Agricultor', path: '/comercio' },
-    { label: 'Gobernanza Municipal y Visor de Actas Oficiales', path: '/gobernanza' },
-    { label: 'Identidad Cultural, Himnos y Patrimonio', path: '/cultura' },
-    { label: 'Escuelas Deportivas CCDR e Instalaciones', path: '/deportes' },
-    { label: 'Reportar avería o hueco en carretera', path: '/reportar-incidencia' },
-    { label: 'Centro de Emergencias y Albergues 911', path: '/seguridad-emergencias' }
+  // Escuchar cambios de cantón desde el Navbar
+  useEffect(() => {
+    const handleCantonChange = (e) => {
+      if (e.detail?.nombre) {
+        setActiveCantonName(e.detail.nombre);
+      }
+    };
+    window.addEventListener('cantonChanged', handleCantonChange);
+    return () => window.removeEventListener('cantonChanged', handleCantonChange);
+  }, []);
+
+  // Sugerencias de trámites, actas y servicios municipales oficiales
+  const sugerenciasOficiales = [
+    {
+      categoria: 'Trámites & Hacienda',
+      items: [
+        { label: 'Validación de Cédula y Situación Tributaria (ATV)', path: '/dashboard' },
+        { label: 'Consulta de Patentes Comerciales y Pago Municipal', path: '/dashboard' },
+        { label: 'Declaración de Bienes Inmuebles y Tasas', path: '/dashboard' }
+      ]
+    },
+    {
+      categoria: 'Concejo & Actas',
+      items: [
+        { label: 'Visor Oficial de Actas Municipales en PDF', path: '/gobernanza' },
+        { label: 'Directorio de Alcaldía, Regidores y Síndicos', path: '/gobernanza' },
+        { label: 'Presupuesto Participativo y Votación Ciudadana', path: '/participacion' }
+      ]
+    },
+    {
+      categoria: 'Obras & Fiscalización',
+      items: [
+        { label: 'Reportar hueco vial o bacheo prioritario', path: '/reportar-incidencia' },
+        { label: 'Reporte de alumbrado público o luminaria dañada', path: '/reportar-incidencia' },
+        { label: 'Fiscalización comunal de contratos MOPT/SICOP', path: '/dashboard' }
+      ]
+    },
+    {
+      categoria: 'Desarrollo & CCDR',
+      items: [
+        { label: 'Comité Cantonal de Deportes (CCDR) e Instalaciones', path: '/deportes' },
+        { label: 'Calendario y Rutas de la Feria del Agricultor', path: '/comercio' },
+        { label: 'Directorio de PYMES Locales Verificadas', path: '/comercio' }
+      ]
+    },
+    {
+      categoria: 'Territorio & Seguridad',
+      items: [
+        { label: 'Visor Cartográfico 3D y Relieve Nacional', path: '/mapa-gis' },
+        { label: 'Centro de Auxilio 911 y Albergues CNE', path: '/seguridad-emergencias' }
+      ]
+    }
   ];
 
   const handleSearchSubmit = (e) => {
@@ -34,166 +101,228 @@ export default function Inicio() {
     if (!searchQuery.trim()) return;
 
     const queryLower = searchQuery.toLowerCase();
-    if (queryLower.includes('turism') || queryLower.includes('destin') || queryLower.includes('playa') || queryLower.includes('volcan')) {
-      navigate('/turismo');
-    } else if (queryLower.includes('itinerari') || queryLower.includes('viaje') || queryLower.includes('ia') || queryLower.includes('pura vida')) {
-      navigate('/itinerario-ia');
-    } else if (queryLower.includes('voto') || queryLower.includes('votar') || queryLower.includes('participa') || queryLower.includes('presupuesto')) {
-      navigate('/participacion');
-    } else if (queryLower.includes('educa') || queryLower.includes('colegio') || queryLower.includes('ctp') || queryLower.includes('escuela')) {
-      navigate('/educacion');
-    } else if (queryLower.includes('comercio') || queryLower.includes('pyme') || queryLower.includes('feria') || queryLower.includes('agricultor')) {
-      navigate('/comercio');
-    } else if (queryLower.includes('gobernan') || queryLower.includes('acta') || queryLower.includes('municipal') || queryLower.includes('alcalde')) {
+    if (queryLower.includes('tramit') || queryLower.includes('cedula') || queryLower.includes('hacienda') || queryLower.includes('patente') || queryLower.includes('tributo')) {
+      navigate('/dashboard');
+    } else if (queryLower.includes('acta') || queryLower.includes('concejo') || queryLower.includes('alcald') || queryLower.includes('regidor') || queryLower.includes('gobernan')) {
       navigate('/gobernanza');
-    } else if (queryLower.includes('cultur') || queryLower.includes('himno') || queryLower.includes('escudo') || queryLower.includes('patrimonio')) {
-      navigate('/cultura');
-    } else if (queryLower.includes('deport') || queryLower.includes('ccdr') || queryLower.includes('cancha') || queryLower.includes('estadio')) {
-      navigate('/deportes');
-    } else if (queryLower.includes('report') || queryLower.includes('aver') || queryLower.includes('hueco') || queryLower.includes('luz')) {
+    } else if (queryLower.includes('voto') || queryLower.includes('presupuesto') || queryLower.includes('participa')) {
+      navigate('/participacion');
+    } else if (queryLower.includes('report') || queryLower.includes('hueco') || queryLower.includes('averia') || queryLower.includes('calle') || queryLower.includes('luminaria')) {
       navigate('/reportar-incidencia');
-    } else if (queryLower.includes('emergen') || queryLower.includes('sos') || queryLower.includes('albergue') || queryLower.includes('911')) {
-      navigate('/seguridad-emergencias');
-    } else {
+    } else if (queryLower.includes('deport') || queryLower.includes('ccdr') || queryLower.includes('cancha')) {
+      navigate('/deportes');
+    } else if (queryLower.includes('comercio') || queryLower.includes('feria') || queryLower.includes('agricultor') || queryLower.includes('pyme')) {
+      navigate('/comercio');
+    } else if (queryLower.includes('mapa') || queryLower.includes('gis') || queryLower.includes('relieve') || queryLower.includes('cartograf')) {
       navigate('/mapa-gis');
+    } else if (queryLower.includes('emergen') || queryLower.includes('sos') || queryLower.includes('911') || queryLower.includes('albergue')) {
+      navigate('/seguridad-emergencias');
+    } else if (queryLower.includes('cultur') || queryLower.includes('himno') || queryLower.includes('patrimonio')) {
+      navigate('/cultura');
+    } else if (queryLower.includes('educa') || queryLower.includes('ctp') || queryLower.includes('colegio')) {
+      navigate('/educacion');
+    } else if (queryLower.includes('turism') || queryLower.includes('ruta') || queryLower.includes('7600')) {
+      navigate('/turismo');
+    } else {
+      // Buscar si coincide con alguno de los 84 cantones
+      const cantonMatch = CANTONES_OFICIALES.find((c) => c.nombre.toLowerCase().includes(queryLower));
+      if (cantonMatch) {
+        try {
+          localStorage.setItem('cr_canton_activo', cantonMatch.nombre);
+          window.dispatchEvent(new CustomEvent('cantonChanged', { detail: cantonMatch }));
+        } catch {
+          // ignore
+        }
+        navigate('/gobernanza');
+      } else {
+        navigate('/dashboard');
+      }
     }
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#00040D', color: '#FFFFFF', display: 'flex', flexDirection: 'column' }}>
-      {/* Cabecera Fija Minimalista */}
+    <div
+      style={{
+        minHeight: '100vh',
+        backgroundColor: '#00040D',
+        color: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        fontFamily: 'var(--font-body, system-ui, sans-serif)'
+      }}
+    >
+      {/* Header Municipal Soberano Fijo */}
       <Navbar />
 
       <main style={{ flex: 1 }}>
         {/* ==========================================================================
-            1. HERO SECTION INMERSIVA
-            Fotografía de alta resolución de Costa Rica con overlay oscuro de Obsidiana
+            1. HERO CÍVICO FORMAL Y MODERNO
+            Fondo: Cordillera Soberana de Costa Rica tratada con degradado de Obsidiana
+            Emblema Solemne · Titular de Estado · Barra de Búsqueda Cívica Flotante
             ========================================================================== */}
         <section
           style={{
             position: 'relative',
-            minHeight: '90vh',
+            minHeight: '88vh',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
-            padding: '7rem 2rem 5rem',
+            padding: '7.5rem 2rem 5rem',
             overflow: 'hidden'
           }}
         >
-          {/* Fondo Fotorrealista Soberano de Costa Rica (Volcán Arenal y Selva Tropical) */}
+          {/* Fondo Fotorrealista de la Cordillera Costarricense con Gradiente Soberano */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              background: "linear-gradient(180deg, rgba(0, 4, 13, 0.75) 0%, rgba(0, 4, 13, 0.60) 50%, rgba(0, 4, 13, 0.95) 100%), url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat",
-              transform: 'scale(1.02)',
-              filter: 'brightness(0.95)'
+              backgroundImage: `linear-gradient(180deg, rgba(0, 4, 13, 0.80) 0%, rgba(0, 4, 13, 0.65) 50%, #00040D 100%), url('/costa-rica-hero.jpg')`,
+              backgroundPosition: 'center 35%',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              filter: 'brightness(0.92)'
             }}
           />
 
-          {/* Viñeta Suave en los Bordes para Enfoque Central */}
+          {/* Viñeta Radial Cívica para Concentrar Foco en el Centro */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'radial-gradient(ellipse at center, rgba(0, 4, 13, 0.15) 0%, rgba(0, 4, 13, 0.75) 100%)',
+              background: 'radial-gradient(ellipse at center, rgba(0, 20, 137, 0.12) 0%, rgba(0, 4, 13, 0.85) 100%)',
               pointerEvents: 'none'
             }}
           />
 
-          {/* Gradiente Inferior de Transición Suave */}
+          {/* Gradiente Inferior de Fusión Suave con el Resto de la Página */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
               right: 0,
-              height: '180px',
+              height: '140px',
               background: 'linear-gradient(to top, #00040D 0%, transparent 100%)',
               pointerEvents: 'none'
             }}
           />
 
-          {/* Contenido Editorial del Hero */}
+          {/* Bloque Central de Alto Impacto */}
           <div
             style={{
               position: 'relative',
               zIndex: 2,
-              maxWidth: '920px',
+              maxWidth: '980px',
               margin: '0 auto',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center'
             }}
           >
-            {/* Kicker Editorial */}
-            <span
+            {/* Emblema Heráldico y Kicker Institucional */}
+            <div
               style={{
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                color: '#79a6ff',
-                marginBottom: '1.25rem',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.6rem'
+                gap: '0.65rem',
+                backgroundColor: 'rgba(0, 20, 137, 0.45)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(121, 166, 255, 0.35)',
+                padding: '0.4rem 1.15rem',
+                borderRadius: '9999px',
+                marginBottom: '1.5rem',
+                boxShadow: '0 4px 20px rgba(0, 20, 137, 0.4)'
               }}
             >
-              <span style={{ width: '20px', height: '1px', backgroundColor: '#79a6ff' }} />
-              República de Costa Rica
-              <span style={{ width: '20px', height: '1px', backgroundColor: '#79a6ff' }} />
-            </span>
+              {/* Pabellón mini patrio */}
+              <span
+                style={{
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  backgroundColor: '#DA291C',
+                  border: '2px solid #FFFFFF',
+                  boxShadow: '0 0 8px #DA291C'
+                }}
+              />
+              <span
+                style={{
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: '#FFFFFF'
+                }}
+              >
+                REPÚBLICA DE COSTA RICA · SEDE ELECTRÓNICA NACIONAL
+              </span>
+            </div>
 
-            {/* Gran Titular Editorial */}
+            {/* Titular Solemne de Estado */}
             <h1
               style={{
-                fontSize: 'clamp(2.75rem, 6.5vw, 5.5rem)',
+                fontSize: 'clamp(2.5rem, 5.5vw, 4.85rem)',
                 fontWeight: 900,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.05,
-                margin: '0 0 1rem',
+                letterSpacing: '-0.02em',
+                lineHeight: 1.08,
+                margin: '0 0 1.25rem',
                 color: '#FFFFFF',
-                textShadow: '0 4px 30px rgba(0, 4, 13, 0.7)'
+                fontFamily: 'var(--font-headline, "Plus Jakarta Sans", serif)',
+                textShadow: '0 4px 35px rgba(0, 4, 13, 0.85)'
               }}
             >
-              {t('tituloHero') || 'COSTA RICA UNIDOS'}
+              GOBIERNO LOCAL Y SERVICIOS CIUDADANOS
             </h1>
 
-            {/* Subtítulo con Respiro */}
+            {/* Subtítulo con Autoridad */}
             <p
               style={{
-                fontSize: 'clamp(1.15rem, 2.2vw, 1.6rem)',
-                fontWeight: 400,
-                letterSpacing: '0.02em',
+                fontSize: 'clamp(1.15rem, 2.2vw, 1.55rem)',
+                fontWeight: 500,
+                letterSpacing: '0.01em',
                 color: '#E2E8F0',
                 margin: '0 0 1.25rem',
-                maxWidth: '680px'
+                maxWidth: '820px',
+                lineHeight: 1.35,
+                textShadow: '0 2px 15px rgba(0, 4, 13, 0.8)'
               }}
             >
-              {t('subtituloHero') || 'Plataforma Territorial Soberana'}
+              Ventanilla Soberana de Fiscalización, Trámites y Gestión Comunal para los 84 Cantones de Costa Rica
             </p>
 
+            {/* Párrafo Descriptivo de Respaldo */}
             <p
               style={{
-                fontSize: '0.95rem',
+                fontSize: '0.96rem',
                 color: '#94A3B8',
                 lineHeight: 1.6,
-                maxWidth: '620px',
+                maxWidth: '680px',
                 margin: '0 0 2.5rem'
               }}
             >
-              {t('descHero') || 'Conectando las 7 provincias, 84 cantones y comunidades de nuestra nación en un espacio cívico digital transparente, inclusivo y accesible para todos.'}
+              Consulte actas oficiales del Concejo Municipal, valide cédulas con Hacienda, tramite patentes y reporte incidencias viales en tiempo real con trazabilidad bajo el Código Municipal y la Ley N° 8968.
             </p>
 
-            {/* Barra de Búsqueda Flotante de Vidrio Esmerilado (Search Capsule) */}
-            <div style={{ position: 'relative', width: '100%', maxWidth: '640px' }}>
+            {/* Barra de Búsqueda Cívica (Cápsula Glass Flotante) */}
+            <div style={{ position: 'relative', width: '100%', maxWidth: '720px' }}>
               <form
                 onSubmit={handleSearchSubmit}
-                className="search-capsule-form"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 15, 45, 0.78)',
+                  backdropFilter: 'blur(28px)',
+                  WebkitBackdropFilter: 'blur(28px)',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  borderRadius: '9999px',
+                  padding: '0.5rem 0.6rem 0.5rem 1.4rem',
+                  boxShadow: '0 20px 60px rgba(0, 4, 13, 0.8), 0 0 30px rgba(0, 20, 137, 0.35)',
+                  transition: 'all 0.3s ease'
+                }}
               >
-                <Search size={18} color="#79a6ff" style={{ flexShrink: 0, marginRight: '0.75rem' }} />
+                <Search size={20} color="#79a6ff" style={{ flexShrink: 0, marginRight: '0.75rem' }} />
                 <input
                   type="text"
                   value={searchQuery}
@@ -202,231 +331,192 @@ export default function Inicio() {
                     setShowSuggestions(true);
                   }}
                   onFocus={() => setShowSuggestions(true)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSearchSubmit(e);
-                    }
+                  placeholder="Buscar trámite municipal, acta de concejo, cantón o reporte vial..."
+                  aria-label="Buscar trámite municipal, acta de concejo, cantón o reporte vial"
+                  style={{
+                    flex: 1,
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#FFFFFF',
+                    fontSize: '0.98rem',
+                    outline: 'none',
+                    fontFamily: 'inherit'
                   }}
-                  placeholder={t('buscarPlaceholder') || 'Buscar cantón, hospital, CTP o albergue...'}
-                  aria-label={t('buscarPlaceholder') || 'Buscar cantón, hospital, CTP o albergue en Costa Rica'}
-                  className="search-capsule-input"
                 />
                 <button
                   type="submit"
-                  aria-label="Ejecutar búsqueda"
+                  aria-label="Consultar trámite o servicio"
                   style={{
                     backgroundColor: '#002B7F',
-                    border: '1px solid rgba(121, 166, 255, 0.4)',
+                    backgroundImage: 'linear-gradient(135deg, #002B7F 0%, #001489 100%)',
+                    border: '1px solid rgba(121, 166, 255, 0.5)',
                     color: '#FFFFFF',
                     borderRadius: '9999px',
-                    padding: '0.6rem 1.25rem',
-                    fontSize: '0.85rem',
-                    fontWeight: 700,
+                    padding: '0.68rem 1.6rem',
+                    fontSize: '0.88rem',
+                    fontWeight: 800,
                     letterSpacing: '0.04em',
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.4rem',
+                    gap: '0.5rem',
                     transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 14px rgba(0, 43, 127, 0.5)'
+                    boxShadow: '0 4px 16px rgba(0, 20, 137, 0.6)',
+                    flexShrink: 0
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = '#0036a1';
                     e.currentTarget.style.borderColor = '#79a6ff';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = '#002B7F';
-                    e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.4)';
+                    e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.5)';
+                    e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  <span>{t('botonExplorar') || 'Explorar →'}</span>
+                  <span>Consultar</span>
+                  <ArrowRight size={16} />
                 </button>
               </form>
 
-              {/* Menú de Sugerencias Flotante en Vidrio */}
+              {/* Menú de Sugerencias Flotante en Vidrio Esmerilado */}
               {showSuggestions && searchQuery.trim() && (
                 <div
                   style={{
                     position: 'absolute',
-                    top: 'calc(100% + 10px)',
+                    top: 'calc(100% + 12px)',
                     left: 0,
                     right: 0,
-                    backgroundColor: 'rgba(0, 8, 25, 0.94)',
-                    backdropFilter: 'blur(30px)',
-                    WebkitBackdropFilter: 'blur(30px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '1.25rem',
-                    padding: '0.75rem',
-                    boxShadow: '0 20px 50px rgba(0, 4, 13, 0.85)',
+                    backgroundColor: 'rgba(0, 10, 28, 0.96)',
+                    backdropFilter: 'blur(32px)',
+                    WebkitBackdropFilter: 'blur(32px)',
+                    border: '1px solid rgba(255, 255, 255, 0.16)',
+                    borderRadius: '20px',
+                    padding: '1rem',
+                    boxShadow: '0 25px 60px rgba(0, 4, 13, 0.92), 0 0 35px rgba(0, 20, 137, 0.3)',
                     zIndex: 50,
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    maxHeight: '380px',
+                    overflowY: 'auto'
                   }}
                 >
-                  {sugerencias
-                    .filter((item) => item.label.toLowerCase().includes(searchQuery.toLowerCase()))
-                    .map((item, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => {
-                          setShowSuggestions(false);
-                          navigate(item.path);
-                        }}
-                        style={{
-                          width: '100%',
-                          textAlign: 'left',
-                          background: 'transparent',
-                          border: 'none',
-                          padding: '0.65rem 1rem',
-                          borderRadius: '10px',
-                          color: '#E2E8F0',
-                          fontSize: '0.88rem',
-                          fontWeight: 500,
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          transition: 'all 0.15s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                          e.currentTarget.style.color = '#FFFFFF';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                          e.currentTarget.style.color = '#E2E8F0';
-                        }}
-                      >
-                        <span>{item.label}</span>
-                        <ArrowUpRight size={14} color="#79a6ff" />
-                      </button>
-                    ))}
+                  {sugerenciasOficiales.map((grupo, gIdx) => {
+                    const matches = grupo.items.filter((item) =>
+                      item.label.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                    if (matches.length === 0) return null;
+
+                    return (
+                      <div key={gIdx} style={{ marginBottom: '0.75rem' }}>
+                        <span
+                          style={{
+                            fontSize: '0.68rem',
+                            fontWeight: 800,
+                            letterSpacing: '0.14em',
+                            textTransform: 'uppercase',
+                            color: '#79a6ff',
+                            display: 'block',
+                            padding: '0.25rem 0.75rem'
+                          }}
+                        >
+                          {grupo.categoria}
+                        </span>
+                        {matches.map((item, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => {
+                              setShowSuggestions(false);
+                              navigate(item.path);
+                            }}
+                            style={{
+                              width: '100%',
+                              textAlign: 'left',
+                              background: 'transparent',
+                              border: 'none',
+                              padding: '0.65rem 0.85rem',
+                              borderRadius: '10px',
+                              color: '#E2E8F0',
+                              fontSize: '0.88rem',
+                              fontWeight: 500,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              transition: 'all 0.15s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.35)';
+                              e.currentTarget.style.color = '#FFFFFF';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = 'transparent';
+                              e.currentTarget.style.color = '#E2E8F0';
+                            }}
+                          >
+                            <span>{item.label}</span>
+                            <ChevronRight size={14} color="#79a6ff" />
+                          </button>
+                        ))}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
-          </div>
-        </section>
 
-        {/* ==========================================================================
-            2. SECCIÓN DE MÉTRICAS CÍVICAS (MINIMALISMO PURO CON LÍNEAS FINAS DE 1PX)
-            Grilla de 3 columnas con líneas divisorias delgadas estilo editorial
-            ========================================================================== */}
-        <section
-          style={{
-            maxWidth: '1280px',
-            margin: '0 auto',
-            padding: '5rem 2rem',
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
-          }}
-        >
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '3rem'
-            }}
-          >
-            {/* Columna 1: 07 Provincias */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <span
-                style={{
-                  fontSize: 'clamp(3.5rem, 5vw, 4.8rem)',
-                  fontWeight: 300,
-                  lineHeight: 1,
-                  letterSpacing: '-0.04em',
-                  color: '#FFFFFF',
-                  fontFamily: 'var(--font-main)'
-                }}
-              >
-                {t('provinciasNum') || '07'}
-              </span>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#F1F5F9' }}>
-                {t('provinciasTexto') || 'Provincias Soberanas'}
-              </h2>
-              <p style={{ fontSize: '0.9rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
-                San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas y Limón, unificadas con identidad histórica y proyección cívica.
-              </p>
-            </div>
-
-            {/* Columna 2: 84 Cantones */}
+            {/* Indicador del Cantón Actualmente Activo en el Hero */}
             <div
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem',
-                borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
-                paddingLeft: '2.5rem'
+                marginTop: '1.75rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                color: '#94A3B8',
+                fontSize: '0.82rem'
               }}
             >
-              <span
+              <Building2 size={15} color="#38BDF8" />
+              <span>Gobierno Local activo en consulta:</span>
+              <span style={{ color: '#FFFFFF', fontWeight: 800 }}>Municipalidad de {activeCantonName}</span>
+              <span style={{ color: '#475569' }}>•</span>
+              <Link
+                to="/gobernanza"
                 style={{
-                  fontSize: 'clamp(3.5rem, 5vw, 4.8rem)',
-                  fontWeight: 300,
-                  lineHeight: 1,
-                  letterSpacing: '-0.04em',
-                  color: '#FFFFFF',
-                  fontFamily: 'var(--font-main)'
+                  color: '#79a6ff',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.2rem'
                 }}
               >
-                {t('cantonesNum') || '84'}
-              </span>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#F1F5F9' }}>
-                {t('cantonesTexto') || 'Cantones y Gobiernos Locales'}
-              </h2>
-              <p style={{ fontSize: '0.9rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
-                Gestión municipal descentralizada, fiscalización comunitaria y servicios locales de proximidad directa con el ciudadano.
-              </p>
-            </div>
-
-            {/* Columna 3: 492 Distritos */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem',
-                borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
-                paddingLeft: '2.5rem'
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 'clamp(3.5rem, 5vw, 4.8rem)',
-                  fontWeight: 300,
-                  lineHeight: 1,
-                  letterSpacing: '-0.04em',
-                  color: '#FFFFFF',
-                  fontFamily: 'var(--font-main)'
-                }}
-              >
-                {t('distritosNum') || '492'}
-              </span>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#F1F5F9' }}>
-                {t('distritosTexto') || 'Distritos Conectados'}
-              </h2>
-              <p style={{ fontSize: '0.9rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
-                Cobertura territorial integral de costa a costa y frontera a frontera, sin dejar a ninguna comunidad atrás.
-              </p>
+                <span>Ver Concejo</span>
+                <ChevronRight size={13} />
+              </Link>
             </div>
           </div>
         </section>
 
         {/* ==========================================================================
-            3. SECCIÓN DE EXPERIENCIA TERRITORIAL (TARJETAS GLASS FLOTANTES)
-            3 tarjetas amplias con esquinas redondeadas, fondo translúcido y fotografía editorial
+            2. LOS 4 PILARES MUNICIPALES (SECCIÓN EDITORIAL DE SERVICIOS PÚBLICOS)
+            Tarjetas de vidrio esmerilado de gran respiro · Números 01, 02, 03, 04
+            Ventanilla Única · Concejo y Actas · Obras y Reportes · Desarrollo y CCDR
             ========================================================================== */}
         <section
           style={{
-            maxWidth: '1280px',
+            maxWidth: '1360px',
             margin: '0 auto',
-            padding: '6rem 2rem'
+            padding: '5rem 2rem 6rem'
           }}
         >
-          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 4rem' }}>
+          {/* Encabezado Editorial Solemne */}
+          <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 4rem' }}>
             <span
               style={{
                 fontSize: '0.78rem',
-                fontWeight: 700,
+                fontWeight: 800,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
                 color: '#79a6ff',
@@ -434,322 +524,696 @@ export default function Inicio() {
                 marginBottom: '0.75rem'
               }}
             >
-              Servicios Esenciales de la República
+              ADMINISTRACIÓN PÚBLICA CANTONAL · DTA & CÓDIGO MUNICIPAL
             </span>
             <h2
               style={{
-                fontSize: 'clamp(2rem, 3.5vw, 2.75rem)',
-                fontWeight: 800,
+                fontSize: 'clamp(2rem, 3.8vw, 3rem)',
+                fontWeight: 900,
                 letterSpacing: '-0.02em',
                 margin: '0 0 1rem',
-                color: '#FFFFFF'
+                color: '#FFFFFF',
+                fontFamily: 'var(--font-headline, sans-serif)'
               }}
             >
-              Experiencia Territorial Integral
+              Los 4 Ejes Rectores de la Gestión Municipal
             </h2>
-            <p style={{ fontSize: '1rem', color: '#94A3B8', lineHeight: 1.6 }}>
-              Herramientas de última generación diseñadas para la exploración espacial, la resolución comunitaria y la protección nacional.
+            <p style={{ fontSize: '1.02rem', color: '#94A3B8', lineHeight: 1.65 }}>
+              Servicios cívicos soberanos organizados para garantizar la transparencia institucional, la resolución comunal de averías y el desarrollo participativo en cada uno de los 84 cantones.
             </p>
           </div>
 
+          {/* Grilla de los 4 Pilares Municipales */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
               gap: '2rem'
             }}
           >
-            {/* Tarjeta 1: Cartografía 3D Soberana */}
+            {/* EJE 01: Ventanilla Única & Trámites */}
             <div
               className="glass-card"
               style={{
+                backgroundColor: 'rgba(0, 15, 45, 0.65)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '24px',
+                padding: '2.5rem 2rem',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                transition: 'all 0.35s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.5)';
+                e.currentTarget.style.backgroundColor = 'rgba(0, 20, 60, 0.85)';
+                e.currentTarget.style.boxShadow = '0 20px 50px rgba(0, 20, 137, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.backgroundColor = 'rgba(0, 15, 45, 0.65)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              <div style={{ height: '220px', width: '100%', position: 'relative', overflow: 'hidden' }}>
-                <img
-                  src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80"
-                  alt="Relieve tridimensional de Costa Rica"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: 'transform 0.5s ease'
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(0, 8, 25, 0.95) 0%, transparent 60%)'
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '1.25rem',
-                    left: '1.25rem',
-                    backgroundColor: 'rgba(0, 43, 127, 0.75)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(121, 166, 255, 0.3)',
-                    color: '#FFFFFF',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: '9999px',
-                    fontSize: '0.72rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.35rem'
-                  }}
-                >
-                  <Map size={12} color="#79a6ff" />
-                  <span>Cartografía 3D</span>
-                </div>
-              </div>
-
-              <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
-                <div>
-                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: '0.75rem', color: '#FFFFFF' }}>
-                    Cartografía 3D Soberana
-                  </h3>
-                  <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.75rem' }}>
-                    Explora el relieve nacional, cuencas hidrográficas y puntos cívicos de salud y educación en un visor cartográfico tridimensional inmersivo con límites soberanos estrictos.
-                  </p>
+              <div>
+                {/* Cabecera de Tarjeta: Número Arquitectónico e Icono */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.75rem' }}>
+                  <span
+                    style={{
+                      fontSize: '3rem',
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      letterSpacing: '-0.04em',
+                      color: 'rgba(121, 166, 255, 0.4)',
+                      fontFamily: 'var(--font-headline, sans-serif)'
+                    }}
+                  >
+                    01
+                  </span>
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '14px',
+                      backgroundColor: 'rgba(0, 20, 137, 0.35)',
+                      border: '1px solid rgba(121, 166, 255, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <FileText size={22} color="#79a6ff" />
+                  </div>
                 </div>
 
-                <Link
-                  to="/mapa-gis"
-                  style={{
-                    textDecoration: 'none',
-                    color: '#79a6ff',
-                    fontSize: '0.88rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.04em',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.45rem',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#FFFFFF';
-                    e.currentTarget.style.transform = 'translateX(4px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#79a6ff';
-                    e.currentTarget.style.transform = 'translateX(0)';
-                  }}
-                >
-                  <span>Explorar Mapa 3D</span>
-                  <ArrowRight size={15} />
-                </Link>
+                {/* Badges de Verificación */}
+                <div style={{ display: 'flex', gap: '0.45rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(0, 20, 137, 0.35)',
+                      color: '#79a6ff',
+                      border: '1px solid rgba(121, 166, 255, 0.25)',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    Hacienda ATV
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      color: '#CBD5E1',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    Patentes & Tributos
+                  </span>
+                </div>
+
+                {/* Título y Descripción Formal */}
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
+                  Ventanilla Única & Trámites
+                </h3>
+                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
+                  Validación de cédula física y jurídica sincronizada con el Ministerio de Hacienda (ATV). Consulta y pago seguro de patentes comerciales, tasas de recolección y certificaciones tributarias.
+                </p>
               </div>
+
+              {/* Enlace Directo al Módulo */}
+              <Link
+                to="/dashboard"
+                style={{
+                  textDecoration: 'none',
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(0, 20, 137, 0.35)',
+                  border: '1px solid rgba(121, 166, 255, 0.35)',
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '12px',
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#002B7F';
+                  e.currentTarget.style.borderColor = '#79a6ff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.35)';
+                  e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.35)';
+                }}
+              >
+                <span>Acceder a Ventanilla</span>
+                <ArrowRight size={16} color="#79a6ff" />
+              </Link>
             </div>
 
-            {/* Tarjeta 2: Reportes Ciudadanos */}
+            {/* EJE 02: Gobernanza & Concejo Municipal */}
             <div
               className="glass-card"
               style={{
+                backgroundColor: 'rgba(0, 15, 45, 0.65)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '24px',
+                padding: '2.5rem 2rem',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                transition: 'all 0.35s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.5)';
+                e.currentTarget.style.backgroundColor = 'rgba(0, 20, 60, 0.85)';
+                e.currentTarget.style.boxShadow = '0 20px 50px rgba(56, 189, 248, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.backgroundColor = 'rgba(0, 15, 45, 0.65)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              <div style={{ height: '220px', width: '100%', position: 'relative', overflow: 'hidden' }}>
-                <img
-                  src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80"
-                  alt="Infraestructura vial y comunitaria"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: 'transform 0.5s ease'
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(0, 8, 25, 0.95) 0%, transparent 60%)'
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '1.25rem',
-                    left: '1.25rem',
-                    backgroundColor: 'rgba(218, 41, 28, 0.75)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 107, 107, 0.4)',
-                    color: '#FFFFFF',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: '9999px',
-                    fontSize: '0.72rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.35rem'
-                  }}
-                >
-                  <ClipboardEdit size={12} color="#FFFFFF" />
-                  <span>Participación</span>
-                </div>
-              </div>
-
-              <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
-                <div>
-                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: '0.75rem', color: '#FFFFFF' }}>
-                    Reportes Ciudadanos
-                  </h3>
-                  <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.75rem' }}>
-                    Mejora la infraestructura de tu comunidad mediante reportes georreferenciados de averías viales, luminarias y fugas con trazabilidad pública paso a paso bajo la Ley 8968.
-                  </p>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.75rem' }}>
+                  <span
+                    style={{
+                      fontSize: '3rem',
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      letterSpacing: '-0.04em',
+                      color: 'rgba(56, 189, 248, 0.4)',
+                      fontFamily: 'var(--font-headline, sans-serif)'
+                    }}
+                  >
+                    02
+                  </span>
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '14px',
+                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                      border: '1px solid rgba(56, 189, 248, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Vote size={22} color="#38BDF8" />
+                  </div>
                 </div>
 
-                <Link
-                  to="/reportar-incidencia"
-                  style={{
-                    textDecoration: 'none',
-                    color: '#FF6B6B',
-                    fontSize: '0.88rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.04em',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.45rem',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#FFFFFF';
-                    e.currentTarget.style.transform = 'translateX(4px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#FF6B6B';
-                    e.currentTarget.style.transform = 'translateX(0)';
-                  }}
-                >
-                  <span>Registrar Reporte</span>
-                  <ArrowRight size={15} />
-                </Link>
+                <div style={{ display: 'flex', gap: '0.45rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                      color: '#38BDF8',
+                      border: '1px solid rgba(56, 189, 248, 0.3)',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    Actas Oficiales PDF
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      color: '#CBD5E1',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    Regidores & Alcaldía
+                  </span>
+                </div>
+
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
+                  Gobernanza & Concejo Municipal
+                </h3>
+                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
+                  Fiscalización activa de la Alcaldía, regidores y síndicos. Visor de actas de sesiones ordinarias y extraordinarias en formato PDF, acuerdos vinculantes y presupuestos participativos.
+                </p>
               </div>
+
+              <Link
+                to="/gobernanza"
+                style={{
+                  textDecoration: 'none',
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                  border: '1px solid rgba(56, 189, 248, 0.35)',
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '12px',
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.3)';
+                  e.currentTarget.style.borderColor = '#38BDF8';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.15)';
+                  e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.35)';
+                }}
+              >
+                <span>Consultar Actas y Concejo</span>
+                <ArrowRight size={16} color="#38BDF8" />
+              </Link>
             </div>
 
-            {/* Tarjeta 3: Red de Resiliencia */}
+            {/* EJE 03: Obras Públicas & Fiscalización Comunal */}
             <div
               className="glass-card"
               style={{
+                backgroundColor: 'rgba(0, 15, 45, 0.65)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '24px',
+                padding: '2.5rem 2rem',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                transition: 'all 0.35s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(218, 41, 28, 0.5)';
+                e.currentTarget.style.backgroundColor = 'rgba(40, 10, 15, 0.85)';
+                e.currentTarget.style.boxShadow = '0 20px 50px rgba(218, 41, 28, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.backgroundColor = 'rgba(0, 15, 45, 0.65)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              <div style={{ height: '220px', width: '100%', position: 'relative', overflow: 'hidden' }}>
-                <img
-                  src="https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=800&q=80"
-                  alt="Centro de atención y seguridad"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: 'transform 0.5s ease'
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(0, 8, 25, 0.95) 0%, transparent 60%)'
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '1.25rem',
-                    left: '1.25rem',
-                    backgroundColor: 'rgba(0, 122, 61, 0.75)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(74, 222, 128, 0.4)',
-                    color: '#FFFFFF',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: '9999px',
-                    fontSize: '0.72rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.35rem'
-                  }}
-                >
-                  <ShieldCheck size={12} color="#4ADE80" />
-                  <span>Seguridad 911</span>
-                </div>
-              </div>
-
-              <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
-                <div>
-                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: '0.75rem', color: '#FFFFFF' }}>
-                    Red de Resiliencia
-                  </h3>
-                  <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.75rem' }}>
-                    Seguridad nacional ante crisis climáticas, monitoreo de alertas de la Comisión Nacional de Emergencias (CNE) y catálogo de refugios con disponibilidad completa sin conexión.
-                  </p>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.75rem' }}>
+                  <span
+                    style={{
+                      fontSize: '3rem',
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      letterSpacing: '-0.04em',
+                      color: 'rgba(218, 41, 28, 0.4)',
+                      fontFamily: 'var(--font-headline, sans-serif)'
+                    }}
+                  >
+                    03
+                  </span>
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '14px',
+                      backgroundColor: 'rgba(218, 41, 28, 0.18)',
+                      border: '1px solid rgba(218, 41, 28, 0.4)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <ClipboardEdit size={22} color="#FF6B6B" />
+                  </div>
                 </div>
 
-                <Link
-                  to="/seguridad-emergencias"
-                  style={{
-                    textDecoration: 'none',
-                    color: '#4ADE80',
-                    fontSize: '0.88rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.04em',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.45rem',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#FFFFFF';
-                    e.currentTarget.style.transform = 'translateX(4px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#4ADE80';
-                    e.currentTarget.style.transform = 'translateX(0)';
-                  }}
-                >
-                  <span>Ver Centro de Seguridad</span>
-                  <ArrowRight size={15} />
-                </Link>
+                <div style={{ display: 'flex', gap: '0.45rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(218, 41, 28, 0.18)',
+                      color: '#FF6B6B',
+                      border: '1px solid rgba(218, 41, 28, 0.35)',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    Huecos & Vías
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      color: '#CBD5E1',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    Evidencia WebP
+                  </span>
+                </div>
+
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
+                  Obras Públicas & Fiscalización
+                </h3>
+                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
+                  Reporte georreferenciado de bacheo vial, fallas de alumbrado público y fugas de agua. Adjunte evidencia fotográfica WebP y fiscalice el avance y plazos de solución con la Municipalidad.
+                </p>
               </div>
+
+              <Link
+                to="/reportar-incidencia"
+                style={{
+                  textDecoration: 'none',
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(218, 41, 28, 0.2)',
+                  border: '1px solid rgba(218, 41, 28, 0.45)',
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '12px',
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(218, 41, 28, 0.35)';
+                  e.currentTarget.style.borderColor = '#DA291C';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(218, 41, 28, 0.2)';
+                  e.currentTarget.style.borderColor = 'rgba(218, 41, 28, 0.45)';
+                }}
+              >
+                <span>Reportar Avería Vial</span>
+                <ArrowRight size={16} color="#FF6B6B" />
+              </Link>
+            </div>
+
+            {/* EJE 04: Desarrollo Cantonal & CCDR */}
+            <div
+              className="glass-card"
+              style={{
+                backgroundColor: 'rgba(0, 15, 45, 0.65)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '24px',
+                padding: '2.5rem 2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                transition: 'all 0.35s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.5)';
+                e.currentTarget.style.backgroundColor = 'rgba(10, 35, 25, 0.85)';
+                e.currentTarget.style.boxShadow = '0 20px 50px rgba(52, 211, 153, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.backgroundColor = 'rgba(0, 15, 45, 0.65)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.75rem' }}>
+                  <span
+                    style={{
+                      fontSize: '3rem',
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      letterSpacing: '-0.04em',
+                      color: 'rgba(52, 211, 153, 0.4)',
+                      fontFamily: 'var(--font-headline, sans-serif)'
+                    }}
+                  >
+                    04
+                  </span>
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '14px',
+                      backgroundColor: 'rgba(52, 211, 153, 0.15)',
+                      border: '1px solid rgba(52, 211, 153, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Trophy size={22} color="#34D399" />
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.45rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(52, 211, 153, 0.15)',
+                      color: '#34D399',
+                      border: '1px solid rgba(52, 211, 153, 0.3)',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    CCDR Deportes
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      color: '#CBD5E1',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    Ferias & PYMES
+                  </span>
+                </div>
+
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
+                  Desarrollo Cantonal & CCDR
+                </h3>
+                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
+                  Comités Cantonales de Deportes y Recreación (CCDR), rutas de las Ferias del Agricultor comunitarias, escuelas deportivas infantiles y directorio comercial de PYMES cantonales certificadas.
+                </p>
+              </div>
+
+              <Link
+                to="/deportes"
+                style={{
+                  textDecoration: 'none',
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(52, 211, 153, 0.15)',
+                  border: '1px solid rgba(52, 211, 153, 0.35)',
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '12px',
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(52, 211, 153, 0.28)';
+                  e.currentTarget.style.borderColor = '#34D399';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(52, 211, 153, 0.15)';
+                  e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.35)';
+                }}
+              >
+                <span>Explorar CCDR y Ferias</span>
+                <ArrowRight size={16} color="#34D399" />
+              </Link>
             </div>
           </div>
         </section>
 
         {/* ==========================================================================
-            4. SECCIÓN DE MÓDULOS DE GESTIÓN CANTONAL Y CIUDADANÍA (ALANIE)
-            Acceso directo e interactivo a todos los módulos funcionales
+            3. SECCIÓN DE TRANSPARENCIA Y CIFRAS OFICIALES
+            Panel sobrio con divisores de 1px · 7 Provincias · 84 Gobiernos · 492 Distritos · Ley 8968
             ========================================================================== */}
         <section
           style={{
-            maxWidth: '1280px',
-            margin: '0 auto',
-            padding: '2rem 2rem 6rem'
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            backgroundColor: 'rgba(0, 4, 13, 0.85)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            padding: '4.5rem 2rem'
           }}
         >
-          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 3.5rem' }}>
+          <div
+            style={{
+              maxWidth: '1360px',
+              margin: '0 auto',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: '2.5rem'
+            }}
+          >
+            {/* Métrica 1: 7 Provincias */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              <span
+                style={{
+                  fontSize: 'clamp(3.5rem, 4.5vw, 4.5rem)',
+                  fontWeight: 300,
+                  lineHeight: 1,
+                  letterSpacing: '-0.04em',
+                  color: '#FFFFFF',
+                  fontFamily: 'var(--font-headline, sans-serif)'
+                }}
+              >
+                07
+              </span>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
+                Provincias Soberanas
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+                San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas y Limón unificadas en un único estándar digital.
+              </p>
+            </div>
+
+            {/* Métrica 2: 84 Gobiernos Locales */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.6rem',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+                paddingLeft: '2rem'
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 'clamp(3.5rem, 4.5vw, 4.5rem)',
+                  fontWeight: 300,
+                  lineHeight: 1,
+                  letterSpacing: '-0.04em',
+                  color: '#38BDF8',
+                  fontFamily: 'var(--font-headline, sans-serif)'
+                }}
+              >
+                84
+              </span>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
+                Gobiernos Locales Autónomos
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+                Municipalidades cantonales con autonomía constitucional, Concejos deliberantes y competencias tributarias propias.
+              </p>
+            </div>
+
+            {/* Métrica 3: 492 Distritos */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.6rem',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+                paddingLeft: '2rem'
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 'clamp(3.5rem, 4.5vw, 4.5rem)',
+                  fontWeight: 300,
+                  lineHeight: 1,
+                  letterSpacing: '-0.04em',
+                  color: '#FFFFFF',
+                  fontFamily: 'var(--font-headline, sans-serif)'
+                }}
+              >
+                492
+              </span>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
+                Distritos Fiscalizados
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+                Descentralización comunal de costa a costa y frontera a frontera, cubriendo zonas rurales y metropolitana.
+              </p>
+            </div>
+
+            {/* Métrica 4: Transparencia Ley 8968 & 7600 */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.6rem',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+                paddingLeft: '2rem'
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 'clamp(3.5rem, 4.5vw, 4.5rem)',
+                  fontWeight: 300,
+                  lineHeight: 1,
+                  letterSpacing: '-0.04em',
+                  color: '#34D399',
+                  fontFamily: 'var(--font-headline, sans-serif)'
+                }}
+              >
+                100%
+              </span>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
+                Transparencia Ley N° 8968
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+                Protección estricta de datos personales de los ciudadanos y accesibilidad universal conforme a la Ley N° 7600.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ==========================================================================
+            4. SERVICIOS TERRITORIALES COMPLEMENTARIOS DEL SISTEMA NACIONAL
+            Visor Cartográfico 3D · Centro de Emergencias 911 · Educación, Cultura y Turismo
+            ========================================================================== */}
+        <section
+          style={{
+            maxWidth: '1360px',
+            margin: '0 auto',
+            padding: '6rem 2rem'
+          }}
+        >
+          <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 3.5rem' }}>
             <span
               style={{
                 fontSize: '0.78rem',
-                fontWeight: 700,
+                fontWeight: 800,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
                 color: '#38BDF8',
@@ -757,21 +1221,22 @@ export default function Inicio() {
                 marginBottom: '0.75rem'
               }}
             >
-              Servicios Cantonales y Participación
+              INFRAESTRUCTURA Y SERVICIOS INTEGRADOS
             </span>
             <h2
               style={{
-                fontSize: 'clamp(2rem, 3.5vw, 2.75rem)',
-                fontWeight: 800,
+                fontSize: 'clamp(1.9rem, 3.2vw, 2.6rem)',
+                fontWeight: 900,
                 letterSpacing: '-0.02em',
                 margin: '0 0 1rem',
-                color: '#FFFFFF'
+                color: '#FFFFFF',
+                fontFamily: 'var(--font-headline, sans-serif)'
               }}
             >
-              Módulos Ciudadanos Activos
+              Módulos Complementarios de Soberanía Cívica
             </h2>
-            <p style={{ fontSize: '1rem', color: '#94A3B8', lineHeight: 1.6 }}>
-              Herramientas de gobernanza transparente, patrimonio, educación técnica, comercio local, turismo accesible y votación ciudadana blindada.
+            <p style={{ fontSize: '0.98rem', color: '#94A3B8', lineHeight: 1.6 }}>
+              Herramientas geoespaciales, educativas y de auxilio inmediato sincronizadas en la plataforma.
             </p>
           </div>
 
@@ -784,76 +1249,58 @@ export default function Inicio() {
           >
             {[
               {
-                id: 'M02',
-                titulo: 'Gobernanza y Actas',
-                desc: 'Organigrama municipal, sesiones del Concejo y visor PDF oficial.',
-                icono: Building2,
+                id: 'M01',
+                titulo: 'Visor Cartográfico 3D GIS',
+                desc: 'Análisis topográfico, cuencas hidrográficas y puntos de interés cívicos.',
+                icono: Compass,
                 color: '#60A5FA',
-                ruta: '/gobernanza',
-                badge: 'Transparencia'
+                ruta: '/mapa-gis',
+                badge: 'Relieve Soberano'
+              },
+              {
+                id: 'M02',
+                titulo: 'Seguridad Nacional 911 & CNE',
+                desc: 'Alertas en tiempo real, catálogo de albergues y centros de auxilio.',
+                icono: ShieldCheck,
+                color: '#EF4444',
+                ruta: '/seguridad-emergencias',
+                badge: 'Emergencias'
               },
               {
                 id: 'M03',
-                titulo: 'Cultura e Identidad',
-                desc: 'Línea de tiempo histórica, heráldica y reproductor de himnos cantonales.',
-                icono: Music,
-                color: '#F472B6',
-                ruta: '/cultura',
-                badge: 'Patrimonio'
-              },
-              {
-                id: 'M04',
-                titulo: 'Deportes y CCDR',
-                desc: 'Escuelas deportivas, instalaciones con semáforo y orgullo cantonal.',
-                icono: Trophy,
-                color: '#34D399',
-                ruta: '/deportes',
-                badge: 'Comunidad'
-              },
-              {
-                id: 'M06',
-                titulo: 'Educación y CTPs',
-                desc: 'Directorio escolar con POIs y especialidades técnicas CTP.',
+                titulo: 'Educación Técnica (CTP)',
+                desc: 'Directorio nacional de colegios técnicos, POIs y carreras técnicas.',
                 icono: GraduationCap,
                 color: '#A78BFA',
                 ruta: '/educacion',
                 badge: 'Juventud'
               },
               {
-                id: 'M08',
-                titulo: 'Comercio y Ferias',
-                desc: 'PyMEs verificadas con Hacienda y croquis de feria del agricultor.',
-                icono: Store,
-                color: '#FBBF24',
-                ruta: '/comercio',
-                badge: 'Economía'
+                id: 'M04',
+                titulo: 'Patrimonio & Cultura',
+                desc: 'Línea de tiempo histórica, heráldica y reproductor de himnos cantonales.',
+                icono: Music,
+                color: '#F472B6',
+                ruta: '/cultura',
+                badge: 'Identidad'
               },
               {
-                id: 'M09',
-                titulo: 'Turismo Cantonal',
-                desc: 'Destinos certificados Ley 7600, rutas 4x4 y exportador GeoJSON.',
-                icono: Compass,
+                id: 'M05',
+                titulo: 'Turismo Accesible Ley 7600',
+                desc: 'Rutas cantonales certificadas, destinos inclusivos y exportador GeoJSON.',
+                icono: MapPin,
                 color: '#38BDF8',
                 ruta: '/turismo',
-                badge: 'Aventura'
+                badge: 'Inclusión'
               },
               {
-                id: 'M11',
-                titulo: 'Participación Ciudadana',
-                desc: 'Presupuesto participativo con votación blindada (1 voto por cédula legal).',
-                icono: Vote,
-                color: '#10B981',
-                ruta: '/participacion',
-                badge: 'Antifraude'
-              },
-              {
-                id: 'M12',
-                titulo: 'Itinerario Pura Vida (IA)',
-                desc: 'Planificador generativo multivariable con análisis topográfico 3D.',
+                id: 'M06',
+                titulo: 'Planificador IA Itinerario Pura Vida',
+                desc: 'Motor predictivo de rutas cantonales con análisis de orografía y clima.',
                 icono: Sparkles,
                 color: '#F59E0B',
                 ruta: '/itinerario-ia',
-                badge: 'Motor IA'
+                badge: 'Inteligencia Cívica'
               }
             ].map((mod) => (
               <Link
@@ -862,42 +1309,39 @@ export default function Inicio() {
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <div
-                  className="civic-glass-card"
                   style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.09)',
+                    borderRadius: '18px',
                     padding: '1.75rem',
-                    borderRadius: '16px',
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    transition: 'all 0.3s ease',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    transition: 'all 0.25s ease'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = mod.color;
-                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.25)';
+                    e.currentTarget.style.transform = 'translateY(-3px)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.09)';
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
                   <div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '1rem'
-                      }}
-                    >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
                       <div
                         style={{
                           width: '42px',
                           height: '42px',
-                          borderRadius: '10px',
-                          backgroundColor: `${mod.color}15`,
+                          borderRadius: '12px',
+                          backgroundColor: `${mod.color}18`,
                           border: `1px solid ${mod.color}40`,
                           display: 'flex',
                           alignItems: 'center',
@@ -908,9 +1352,9 @@ export default function Inicio() {
                       </div>
                       <span
                         style={{
-                          fontSize: '0.7rem',
-                          fontWeight: 700,
-                          padding: '0.2rem 0.6rem',
+                          fontSize: '0.68rem',
+                          fontWeight: 800,
+                          padding: '0.25rem 0.6rem',
                           borderRadius: '9999px',
                           backgroundColor: `${mod.color}15`,
                           color: mod.color,
@@ -922,31 +1366,17 @@ export default function Inicio() {
                       </span>
                     </div>
 
-                    <h3
-                      style={{
-                        fontSize: '1.15rem',
-                        fontWeight: 700,
-                        color: '#FFFFFF',
-                        marginBottom: '0.4rem'
-                      }}
-                    >
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '0 0 0.5rem', color: '#FFFFFF' }}>
                       {mod.titulo}
                     </h3>
-                    <p
-                      style={{
-                        fontSize: '0.85rem',
-                        color: '#94A3B8',
-                        lineHeight: 1.5,
-                        margin: 0
-                      }}
-                    >
+                    <p style={{ fontSize: '0.86rem', color: '#94A3B8', lineHeight: 1.55, margin: 0 }}>
                       {mod.desc}
                     </p>
                   </div>
 
                   <div
                     style={{
-                      marginTop: '1.25rem',
+                      marginTop: '1.5rem',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.35rem',
@@ -955,8 +1385,8 @@ export default function Inicio() {
                       color: mod.color
                     }}
                   >
-                    <span>Explorar módulo</span>
-                    <ArrowUpRight size={14} />
+                    <span>Ingresar al servicio</span>
+                    <ChevronRight size={14} />
                   </div>
                 </div>
               </Link>
@@ -966,21 +1396,21 @@ export default function Inicio() {
       </main>
 
       {/* ==========================================================================
-          4. PIE DE PÁGINA (FOOTER) MINIMALISTA Y ESPACIOSO
-          Padding generoso, líneas sutiles y enlaces cívicos institucionales
+          5. PIE DE PÁGINA (FOOTER) INSTITUCIONAL SOBERANO
+          Obsidiana (#00040D) · Líneas sutiles de 1px · Respaldo normativo y cívico
           ========================================================================== */}
       <footer
         style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
           backgroundColor: '#00040D',
-          padding: '5rem 2rem 4rem',
+          padding: '4.5rem 2rem 3.5rem',
           color: '#64748B',
           fontSize: '0.85rem'
         }}
       >
         <div
           style={{
-            maxWidth: '1280px',
+            maxWidth: '1360px',
             margin: '0 auto',
             display: 'flex',
             flexDirection: 'column',
@@ -996,52 +1426,116 @@ export default function Inicio() {
               gap: '2.5rem'
             }}
           >
-            {/* Identidad Institucional */}
-            <div style={{ maxWidth: '380px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#DA291C' }} />
-                <span style={{ fontSize: '1rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#FFFFFF' }}>
+            {/* Bloque Identidad Oficial */}
+            <div style={{ maxWidth: '420px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.85rem' }}>
+                <span
+                  style={{
+                    width: '9px',
+                    height: '9px',
+                    borderRadius: '50%',
+                    backgroundColor: '#DA291C',
+                    boxShadow: '0 0 8px #DA291C'
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: '1.05rem',
+                    fontWeight: 900,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#FFFFFF'
+                  }}
+                >
                   Costa Rica Unidos
                 </span>
               </div>
-              <p style={{ color: '#94A3B8', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
-                Plataforma Territorial Soberana de la República de Costa Rica. Preservando la transparencia cívica, la accesibilidad universal y la cohesión comunitaria.
+              <p style={{ color: '#94A3B8', fontSize: '0.88rem', lineHeight: 1.65, margin: '0 0 1.25rem' }}>
+                Sede electrónica oficial de los Gobiernos Locales de la República de Costa Rica. Plataforma de soberanía tecnológica diseñada para la fiscalización ciudadana, trámites municipales y cohesión territorial cantonal.
               </p>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '6px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    color: '#CBD5E1',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}
+                >
+                  Código Municipal Ley N° 7794
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '6px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    color: '#CBD5E1',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}
+                >
+                  Ley N° 8968 Protección de Datos
+                </span>
+              </div>
             </div>
 
-            {/* Enlaces de Navegación Rápida */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem' }}>
+            {/* Columnas de Navegación Institucional */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3.5rem' }}>
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#CBD5E1', display: 'block', marginBottom: '1rem' }}>
-                  Navegación Cívica
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    color: '#CBD5E1',
+                    display: 'block',
+                    marginBottom: '1rem'
+                  }}
+                >
+                  Servicios Cantonales
                 </span>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                  <li><Link to="/" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Portal Nacional</Link></li>
-                  <li><Link to="/mapa-gis" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Visor Cartográfico 3D</Link></li>
-                  <li><Link to="/reportar-incidencia" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Reportes Ciudadanos</Link></li>
-                  <li><Link to="/seguridad-emergencias" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Seguridad y Emergencias</Link></li>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                  <li><Link to="/dashboard" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Ventanilla Única & Cédula</Link></li>
+                  <li><Link to="/gobernanza" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Concejo Municipal & Actas</Link></li>
+                  <li><Link to="/reportar-incidencia" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Reporte de Averías Viales</Link></li>
+                  <li><Link to="/participacion" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Presupuestos Participativos</Link></li>
+                  <li><Link to="/deportes" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Comités Cantonales CCDR</Link></li>
                 </ul>
               </div>
 
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#CBD5E1', display: 'block', marginBottom: '1rem' }}>
-                  Institución
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    color: '#CBD5E1',
+                    display: 'block',
+                    marginBottom: '1rem'
+                  }}
+                >
+                  Nación & Marco Legal
                 </span>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                  <li><Link to="/dashboard" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Panel Cívico</Link></li>
-                  <li><Link to="/login" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Acceso Autenticado</Link></li>
-                  <li><a href="#ley-7600" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Accesibilidad Ley 7600</a></li>
-                  <li><a href="#privacidad" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Protección de Datos Ley 8968</a></li>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                  <li><Link to="/mapa-gis" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Visor Cartográfico 3D</Link></li>
+                  <li><Link to="/seguridad-emergencias" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Red Nacional 911 / CNE</Link></li>
+                  <li><Link to="/login" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Acceso Funcionario / Firma Digital</Link></li>
+                  <li><a href="#ley-7600" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Accesibilidad Universal Ley N° 7600</a></li>
+                  <li><a href="#ley-8968" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Privacidad Ciudadana Ley N° 8968</a></li>
                 </ul>
               </div>
             </div>
           </div>
 
-          {/* Línea Divisoria y Derechos */}
+          {/* Divisor Inferior y Sellos de Estado */}
           <div
             style={{
               paddingTop: '2rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -1050,8 +1544,14 @@ export default function Inicio() {
               fontSize: '0.8rem'
             }}
           >
-            <span>&copy; 2026 República de Costa Rica. Todos los derechos reservados.</span>
-            <span>7 Provincias &bull; 84 Cantones &bull; 492 Distritos</span>
+            <span>&copy; 2026 República de Costa Rica. Sistema Nacional de Gobiernos Locales.</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <span style={{ color: '#CBD5E1', fontWeight: 700 }}>7 Provincias</span>
+              <span style={{ color: '#475569' }}>•</span>
+              <span style={{ color: '#38BDF8', fontWeight: 700 }}>84 Cantones</span>
+              <span style={{ color: '#475569' }}>•</span>
+              <span style={{ color: '#CBD5E1', fontWeight: 700 }}>492 Distritos</span>
+            </div>
           </div>
         </div>
       </footer>

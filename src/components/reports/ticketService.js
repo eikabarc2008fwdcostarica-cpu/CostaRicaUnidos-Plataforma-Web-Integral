@@ -83,50 +83,47 @@ function getNextCorrelativo() {
  * Formato: REP-[PROV]-[CAN]-[AÑO]-[CORRELATIVO]
  */
 export function generarIdTicket(provinciaId, nombreCanton) {
-  const provCode = ABREV_PROVINCIAS[provinciaId] || 'SJO';
-  const rawCanton = (nombreCanton || 'Central').trim();
-  const cantonCode = ABREV_CANTONES[rawCanton] || rawCanton.substring(0, 3).toUpperCase();
   const anio = '2026';
   const correlativo = getNextCorrelativo();
-
-  return `REP-${provCode}-${cantonCode}-${anio}-${correlativo}`;
+  return `EXP-MUNI-${anio}-${correlativo}`;
 }
 
 /**
- * Mapeo de estados del flujo de trazabilidad
+ * Mapeo de estados del flujo de trazabilidad oficial
+ * Radicado ➔ Inspección de Campo ➔ En Ejecución Presupuestaria ➔ Subsanado
  */
 export const ESTADOS_TICKET = {
   recibido: {
     id: 'recibido',
     step: 1,
-    label: 'Recibido',
+    label: 'Radicado',
     color: '#3B82F6', // Azul Cívico
     badgeBg: 'rgba(59, 130, 246, 0.18)',
-    descripcion: 'Reporte ingresado al sistema con georreferenciación y evidencia verificada.'
+    descripcion: 'Reporte radicado oficialmente con número de expediente y georreferenciación verificada.'
   },
   en_inspeccion: {
     id: 'en_inspeccion',
     step: 2,
-    label: 'En Inspección',
+    label: 'Inspección de Campo',
     color: '#F59E0B', // Ámbar Alerta
     badgeBg: 'rgba(245, 158, 11, 0.18)',
-    descripcion: 'Unidad técnica municipal o del MOPT asignada para verificación física de la avería.'
+    descripcion: 'Unidad técnica municipal o del MOPT asignada para inspección física y peritaje del daño.'
   },
   en_tramite: {
     id: 'en_tramite',
     step: 3,
-    label: 'En Trámite',
+    label: 'En Ejecución Presupuestaria',
     color: '#8B5CF6', // Violeta Soberano
     badgeBg: 'rgba(139, 92, 246, 0.18)',
-    descripcion: 'Orden de trabajo girada a cuadrilla operativa con partida presupuestaria aprobada.'
+    descripcion: 'Orden de trabajo girada a cuadrilla operativa con recursos asignados (Ley 8114 / SICOP).'
   },
   solucionado: {
     id: 'solucionado',
     step: 4,
-    label: 'Solucionado',
+    label: 'Subsanado',
     color: '#00D166', // Verde Éxito
     badgeBg: 'rgba(0, 209, 102, 0.18)',
-    descripcion: 'Obra concluida satisfactoriamente y fiscalizada con sello de transparencia cívica.'
+    descripcion: 'Obra concluida satisfactoriamente y fiscalizada con acta de cierre comunal.'
   }
 };
 
