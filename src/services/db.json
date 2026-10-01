@@ -1,0 +1,59 @@
+{
+  "usuarios": [
+    {
+      "id": "USR-NAC-001",
+      "cedula": "1-0000-0001",
+      "nombre": "Superintendencia Nacional de Gobierno Digital",
+      "correo": "admin.nacional@gob.cr",
+      "password": "Admin123*",
+      "rol": "Super Administrador Nacional",
+      "nivelAcceso": 5,
+      "provincia": "Nacional",
+      "canton": "Todas las Municipalidades",
+      "fechaRegistro": "2026-01-01T00:00:00Z",
+      "verificadoHacienda": true
+    },
+    {
+      "id": "USR-PROV-001",
+      "cedula": "1-0234-0567",
+      "nombre": "Coordinación Provincial de San José",
+      "correo": "gobierno.sanjose@gob.cr",
+      "password": "AdminProv2026*",
+      "rol": "Administrador Provincial",
+      "nivelAcceso": 4,
+      "provincia": "San José",
+      "canton": "Provincial",
+      "fechaRegistro": "2026-02-15T08:30:00Z",
+      "verificadoHacienda": true
+    },
+    {
+      "id": "USR-MUNI-001",
+      "cedula": "1-1155-0892",
+      "nombre": "Secretaría del Concejo Municipal de San José",
+      "correo": "editor.concejo@msj.go.cr",
+      "password": "EditorMuni2026*",
+      "rol": "Editor Municipal",
+      "nivelAcceso": 3,
+      "provincia": "San José",
+      "canton": "San José",
+      "fechaRegistro": "2026-03-01T10:00:00Z",
+      "verificadoHacienda": true
+    },
+    {
+      "id": "USR-CIUD-001",
+      "cedula": "1-1823-0456",
+      "nombre": "Eiker Manuel Abarca Murillo",
+      "correo": "eiker.abarca@gmail.com",
+      "password": "Ciudadano2026*",
+      "rol": "Ciudadano/Turista",
+      "nivelAcceso": 2,
+      "provincia": "San José",
+      "canton": "San José",
+      "distrito": "Carmen",
+      "fechaRegistro": "2026-05-10T14:20:00Z",
+      "verificadoHacienda": true
+    }
+  ],
+  "sesionesActivas": [],
+  "bitacoraAccesos": []
+}

@@ -10,7 +10,11 @@ import { Lock } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import LoginForm from '../components/auth/LoginForm';
 
-export default function LoginPage() {
+interface LoginPageProps {
+  initialMode?: 'LOGIN' | 'REGISTER';
+}
+
+export default function LoginPage({ initialMode = 'LOGIN' }: LoginPageProps) {
   return (
     <div
       style={{
@@ -35,7 +39,7 @@ export default function LoginPage() {
           padding: '2.5rem 1rem'
         }}
       >
-        <LoginForm />
+        <LoginForm initialMode={initialMode} />
 
         {/* Garantías Legales y Técnicas */}
         <div

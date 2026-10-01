@@ -8,7 +8,31 @@ import { useAuth } from '../context/AuthContext';
  * Devuelve <Outlet /> si está autenticado, o redirige a /login si no lo está.
  */
 export default function PrivateRoutes() {
-  const { isAuthenticated } = useAuth();
+  const { estaAutenticado, isAuthenticated, cargando } = useAuth();
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  if (cargando) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          backgroundColor: '#00040D',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#79a6ff'
+        }}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>🇨🇷</div>
+          <div style={{ fontSize: '0.85rem', letterSpacing: '0.05em', color: '#94A3B8' }}>
+            Verificando credenciales soberanas...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const authed = estaAutenticado ?? isAuthenticated ?? false;
+
+  return authed ? <Outlet /> : <Navigate to="/login" replace />;
 }
