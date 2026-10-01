@@ -18,12 +18,30 @@ import {
 import {
   useAuth,
   MUNICIPALITIES_DIRECTORY,
-  AUTHORIZED_SUPER_ADMIN_CEDULAS,
-  MASTER_ADMIN_KEY
+  AUTHORIZED_SUPER_ADMIN_CEDULAS
 } from '../../context/AuthContext';
 import { validateCitizenIdentity } from '../../services/haciendaService';
 import { getDb, resetDbToSeed, normalizeOfficialRole } from '../../services/dbService';
 import { PROVINCIAS_DATA, CANTONES_OFICIALES } from '../../data/costaRicaTerritorialData';
+import { getProvincias, getCantones, getDistritos } from '../../services/ubicacionesService';
+import {
+  ChevronDown,
+  Loader2,
+  MapPin,
+  LogIn,
+  UserPlus,
+  Search,
+  CheckCircle2,
+  AlertCircle,
+  AlertTriangle,
+  User,
+  FileText,
+  Landmark,
+  ShieldCheck,
+  Globe,
+  Zap,
+  Lock
+} from 'lucide-react';
 import CivicButton from '../common/CivicButton';
 import CivicCard from '../common/CivicCard';
 import CivicBadge from '../common/CivicBadge';
@@ -61,7 +79,6 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
   // Parámetros específicos de rol para Login
   const [selectedMunicipalityId, setSelectedMunicipalityId] = useState<string>(MUNICIPALITIES_DIRECTORY[0].id);
   const [municipalSecurityCode, setMunicipalSecurityCode] = useState<string>('');
-  const [masterPassword, setMasterPassword] = useState<string>('');
 
   // Formulario de Registro Ciudadano
   const [regCedula, setRegCedula] = useState<string>('');
@@ -71,9 +88,22 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
   const [regEmail, setRegEmail] = useState<string>('');
   const [regPassword, setRegPassword] = useState<string>('');
   const [regConfirmPassword, setRegConfirmPassword] = useState<string>('');
-  const [regProvincia, setRegProvincia] = useState<string>('San José');
-  const [regCanton, setRegCanton] = useState<string>('San José');
-  const [regDistrito, setRegDistrito] = useState<string>('Carmen');
+  // Estados para Cascada Territorial Dinámica mediante API (Provincias, Cantones, Distritos)
+  const [provinciasList, setProvinciasList] = useState<{ id: number; nombre: string }[]>([]);
+  const [cantonesList, setCantonesList] = useState<{ id: number; nombre: string; codigoDta?: string }[]>([]);
+  const [distritosList, setDistritosList] = useState<{ id: number; nombre: string }[]>([]);
+
+  const [selectedProvinciaId, setSelectedProvinciaId] = useState<string>('');
+  const [selectedCantonId, setSelectedCantonId] = useState<string>('');
+  const [selectedDistritoId, setSelectedDistritoId] = useState<string>('');
+
+  const [regProvincia, setRegProvincia] = useState<string>('');
+  const [regCanton, setRegCanton] = useState<string>('');
+  const [regDistrito, setRegDistrito] = useState<string>('');
+
+  const [loadingProvincias, setLoadingProvincias] = useState<boolean>(false);
+  const [loadingCantones, setLoadingCantones] = useState<boolean>(false);
+  const [loadingDistritos, setLoadingDistritos] = useState<boolean>(false);
   const [regRole, setRegRole] = useState<OfficialRoleName>('Ciudadano/Turista');
 
   // Estados de Validación con Hacienda
@@ -120,15 +150,110 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
     setSuccessMessage(null);
   }, [selectedRole, authMode]);
 
-  // Actualizar cantones disponibles cuando cambia la provincia seleccionada en registro
-  const provinciaObj = PROVINCIAS_DATA.find((p) => p.nombre.toLowerCase() === regProvincia.toLowerCase()) || PROVINCIAS_DATA[0];
-  const cantonesDisponibles = CANTONES_OFICIALES.filter((c) => c.provinciaId === provinciaObj.id);
-
+  // 1. Cargar Provincias al inicio desde la API (o caché/fallback del servicio)
   useEffect(() => {
-    if (cantonesDisponibles.length > 0 && !cantonesDisponibles.some((c) => c.nombre.toLowerCase() === regCanton.toLowerCase())) {
-      setRegCanton(cantonesDisponibles[0].nombre);
+    let cancel = false;
+    async function loadProvincias() {
+      setLoadingProvincias(true);
+      try {
+        const res = await getProvincias();
+        if (!cancel && res.data) {
+          setProvinciasList(res.data);
+        }
+      } catch (err) {
+        console.error('[TerritorialAPI] Error al cargar provincias:', err);
+      } finally {
+        if (!cancel) setLoadingProvincias(false);
+      }
     }
-  }, [regProvincia]);
+    loadProvincias();
+    return () => {
+      cancel = true;
+    };
+  }, []);
+
+  // 2. Cambio en Provincia: limpia cantón y distrito, habilita cantón y consulta /provincia/:id/cantones.json
+  const handleProvinciaChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const provIdStr = e.target.value;
+    setSelectedProvinciaId(provIdStr);
+
+    // Limpia selecciones anteriores en cascada
+    setSelectedCantonId('');
+    setRegCanton('');
+    setSelectedDistritoId('');
+    setRegDistrito('');
+    setCantonesList([]);
+    setDistritosList([]);
+
+    if (!provIdStr) {
+      setRegProvincia('');
+      return;
+    }
+
+    const provId = parseInt(provIdStr, 10);
+    const foundProv = provinciasList.find((p) => p.id === provId);
+    setRegProvincia(foundProv ? foundProv.nombre : '');
+
+    setLoadingCantones(true);
+    try {
+      const res = await getCantones(provId);
+      setCantonesList(res.data || []);
+    } catch (err) {
+      console.error(`[TerritorialAPI] Error al cargar cantones provincia ${provId}:`, err);
+      setCantonesList([]);
+    } finally {
+      setLoadingCantones(false);
+    }
+  };
+
+  // 3. Cambio en Cantón: limpia distrito, habilita distrito y consulta /provincia/:id/canton/:id/distritos.json
+  const handleCantonChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const cantonIdStr = e.target.value;
+    setSelectedCantonId(cantonIdStr);
+
+    // Limpia distrito anterior en cascada
+    setSelectedDistritoId('');
+    setRegDistrito('');
+    setDistritosList([]);
+
+    if (!cantonIdStr) {
+      setRegCanton('');
+      return;
+    }
+
+    const cantonId = parseInt(cantonIdStr, 10);
+    const foundCanton = cantonesList.find((c) => c.id === cantonId);
+    setRegCanton(foundCanton ? foundCanton.nombre : '');
+
+    if (!selectedProvinciaId) return;
+
+    setLoadingDistritos(true);
+    try {
+      const provId = parseInt(selectedProvinciaId, 10);
+      const res = await getDistritos(provId, cantonId);
+      setDistritosList(res.data || []);
+    } catch (err) {
+      console.error(`[TerritorialAPI] Error al cargar distritos P:${selectedProvinciaId} C:${cantonId}:`, err);
+      setDistritosList([]);
+    } finally {
+      setLoadingDistritos(false);
+    }
+  };
+
+  // 4. Cambio en Distrito
+  const handleDistritoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const distritoIdStr = e.target.value;
+    setSelectedDistritoId(distritoIdStr);
+
+    if (!distritoIdStr) {
+      setRegDistrito('');
+      return;
+    }
+
+    const distritoId = parseInt(distritoIdStr, 10);
+    const foundDistrito = distritosList.find((d) => d.id === distritoId);
+    setRegDistrito(foundDistrito ? foundDistrito.nombre : '');
+  };
 
   // Manejar validación contra API de Hacienda
   const handleValidateCedula = async (cedulaInput: string) => {
@@ -150,16 +275,16 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
         setRegSegundoApellido(res.segundoApellido);
         setHaciendaVerified(true);
         setIdentityStatus('VERIFICADO_HACIENDA');
-        setHaciendaMessage('✓ Identidad oficial verificada y certificada ante el Ministerio de Hacienda');
+        setHaciendaMessage('Identidad oficial verificada y certificada ante el Ministerio de Hacienda.');
       } else {
         setHaciendaVerified(false);
         setIdentityStatus('PENDIENTE_VERIFICACION');
-        setHaciendaMessage('⚠️ Cédula no registrada en consulta directa de Hacienda. Ingrese sus datos en contingencia.');
+        setHaciendaMessage('Cédula no registrada en consulta directa de Hacienda. Ingrese sus datos en contingencia.');
       }
     } catch {
       setHaciendaVerified(false);
       setIdentityStatus('PENDIENTE_VERIFICACION');
-      setHaciendaMessage('⚠️ Red con Hacienda inaccesible. Modo de contingencia habilitado.');
+      setHaciendaMessage('Red con Hacienda inaccesible. Modo de contingencia habilitado.');
     } finally {
       setIsValidatingHacienda(false);
     }
@@ -206,8 +331,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
       role: selectedRole,
       citizenMode,
       municipalityId: selectedMunicipalityId,
-      municipalCode: municipalSecurityCode,
-      masterPassword
+      municipalCode: municipalSecurityCode
     });
 
     if (result.success) {
@@ -258,6 +382,21 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
       return;
     }
 
+    if (!regProvincia || !regProvincia.trim()) {
+      setFormError('Por favor seleccione una provincia de residencia.');
+      return;
+    }
+
+    if (!regCanton || !regCanton.trim()) {
+      setFormError('Por favor seleccione un cantón de residencia.');
+      return;
+    }
+
+    if (!regDistrito || !regDistrito.trim()) {
+      setFormError('Por favor seleccione un distrito de residencia.');
+      return;
+    }
+
     const regData: RegisterUserData = {
       cedula: cleanCedula,
       nombre: regNombre.trim(),
@@ -277,11 +416,29 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
     if (result.success) {
       refreshDbStats();
       setSuccessMessage(result.message || '¡Cuenta cívica creada exitosamente! Redirigiendo...');
+      setRegCedula('');
+      setRegNombre('');
+      setRegPrimerApellido('');
+      setRegSegundoApellido('');
+      setRegEmail('');
+      setRegPassword('');
+      setRegConfirmPassword('');
+      setSelectedProvinciaId('');
+      setSelectedCantonId('');
+      setSelectedDistritoId('');
+      setRegProvincia('');
+      setRegCanton('');
+      setRegDistrito('');
+      setHaciendaVerified(false);
+      setHaciendaMessage('');
       setTimeout(() => {
         navigate('/dashboard');
       }, 1200);
-    } else if (result.message) {
-      setFormError(result.message);
+    } else {
+      const err = (result as { message?: string; mensaje?: string }).message ||
+        (result as { message?: string; mensaje?: string }).mensaje ||
+        'Error al procesar el registro.';
+      setFormError(err);
     }
   };
 
@@ -292,8 +449,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
     pass: string,
     mode: CitizenMode = 'CIUDADANO',
     muniId = 'muni-sanjose',
-    muniCode = 'MSJ-2026-SEC',
-    masterKey = MASTER_ADMIN_KEY
+    muniCode = 'MSJ-2026-SEC'
   ) => {
     setAuthMode('LOGIN');
     setSelectedRole(role);
@@ -302,17 +458,15 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
     setCitizenMode(mode);
     setSelectedMunicipalityId(muniId);
     setMunicipalSecurityCode(muniCode);
-    setMasterPassword(masterKey);
     setFormError(null);
     setSuccessMessage(null);
     clearError();
   };
 
-  // Restaurar la base de datos simulada a los datos semilla iniciales de db.json
   const handleResetDb = () => {
     resetDbToSeed();
     refreshDbStats();
-    setSuccessMessage('Base de datos institucional restablecida a los valores iniciales.');
+    setSuccessMessage('Configuración inicial de prueba restablecida correctamente.');
     setTimeout(() => setSuccessMessage(null), 3500);
   };
 
@@ -349,7 +503,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
 
         <p style={{ color: 'rgba(255, 255, 255, 0.72)', fontSize: '0.88rem', margin: 0 }}>
           {authMode === 'LOGIN'
-            ? 'Control de Acceso Basado en Roles (RBAC) con persistencia institucional'
+            ? 'Control de Acceso Basado en Roles (RBAC) para los Servicios Cívicos de la República'
             : 'Apertura de expediente cívico con validación directa del Ministerio de Hacienda'}
         </p>
       </div>
@@ -390,10 +544,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '6px'
+            gap: '8px'
           }}
         >
-          <span>🔐</span>
+          <LogIn className="w-4 h-4" />
           <span>Iniciar Sesión</span>
         </button>
 
@@ -420,10 +574,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '6px'
+            gap: '8px'
           }}
         >
-          <span>📝</span>
+          <UserPlus className="w-4 h-4" />
           <span>Crear Cuenta</span>
         </button>
       </div>
@@ -444,7 +598,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
             gap: '8px'
           }}
         >
-          <span>✓</span>
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
           <span>{successMessage}</span>
         </div>
       )}
@@ -465,7 +619,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
             gap: '8px'
           }}
         >
-          <span>⛔</span>
+          <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
           <span>{formError || authError}</span>
         </div>
       )}
@@ -522,10 +676,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '3px'
+                  gap: '4px'
                 }}
               >
-                <span style={{ fontSize: '1rem' }}>🇨🇷</span>
+                <User className="w-4 h-4 text-sky-400" />
                 <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Ciudadano</span>
                 <span style={{ fontSize: '0.62rem', opacity: 0.75 }}>Nivel 2</span>
               </button>
@@ -550,10 +704,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '3px'
+                  gap: '4px'
                 }}
               >
-                <span style={{ fontSize: '1rem' }}>📝</span>
+                <FileText className="w-4 h-4 text-sky-400" />
                 <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Editor Muni</span>
                 <span style={{ fontSize: '0.62rem', opacity: 0.75 }}>Nivel 3</span>
               </button>
@@ -578,10 +732,20 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '3px'
+                  gap: '4px'
                 }}
               >
-                <span style={{ fontSize: '1rem' }}>🏛️</span>
+                <Landmark
+                  className={`w-4 h-4 transition-colors duration-200 ${
+                    selectedRole === 'Administrador Provincial'
+                      ? 'text-slate-950 font-bold'
+                      : 'text-amber-400'
+                  }`}
+                  style={{
+                    color: selectedRole === 'Administrador Provincial' ? '#0f172a' : undefined,
+                    marginBottom: '2px'
+                  }}
+                />
                 <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Admin Prov</span>
                 <span style={{ fontSize: '0.62rem', opacity: 0.85 }}>Nivel 4</span>
               </button>
@@ -606,10 +770,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '3px'
+                  gap: '4px'
                 }}
               >
-                <span style={{ fontSize: '1rem' }}>🛡️</span>
+                <ShieldCheck className="w-4 h-4 text-red-400" />
                 <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Super Admin</span>
                 <span style={{ fontSize: '0.62rem', opacity: 0.75 }}>Nivel 5</span>
               </button>
@@ -645,37 +809,54 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
               }`
             }}
           >
-            <span>
-              {selectedRole === 'Ciudadano/Turista' &&
-                '👤 Persona Física: Votaciones cívicas, trámites, mapas GIS e incidencias.'}
-              {selectedRole === 'Editor Municipal' &&
-                '📝 Secretaría del Concejo: Edición de actas, convocatorias y proyectos cantonales.'}
-              {selectedRole === 'Administrador Provincial' &&
-                '🏛️ Coordinación Cantonal: Publicaciones de gobierno local y moderación cantonal.'}
-              {selectedRole === 'Super Administrador Nacional' &&
-                '🛡️ Superintendencia Nacional: Control maestro de los 84 cantones y auditoría.'}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {selectedRole === 'Ciudadano/Turista' && (
+                <>
+                  <User className="w-4 h-4 text-sky-400 shrink-0" />
+                  <span>Persona Física: Votaciones cívicas, trámites, mapas GIS e incidencias.</span>
+                </>
+              )}
+              {selectedRole === 'Editor Municipal' && (
+                <>
+                  <FileText className="w-4 h-4 text-sky-400 shrink-0" />
+                  <span>Secretaría del Concejo: Edición de actas, convocatorias y proyectos cantonales.</span>
+                </>
+              )}
+              {selectedRole === 'Administrador Provincial' && (
+                <>
+                  <Landmark className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Coordinación Cantonal: Publicaciones de gobierno local y moderación cantonal.</span>
+                </>
+              )}
+              {selectedRole === 'Super Administrador Nacional' && (
+                <>
+                  <ShieldCheck className="w-4 h-4 text-red-400 shrink-0" />
+                  <span>Superintendencia Nacional: Control maestro de los 84 cantones y auditoría.</span>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Formulario de Login */}
           <form onSubmit={handleLoginSubmit}>
             {/* Campo 1: Cédula o Correo */}
             <div style={{ marginBottom: '1.15rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                <label
-                  htmlFor="login-ident-input"
-                  style={{ fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)' }}
-                >
-                  Cédula Costarricense o Correo Institucional
-                </label>
-                <span style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.5)', fontFamily: 'monospace' }}>
-                  Ej: 1-0000-0001 ó admin@gob.cr
-                </span>
-              </div>
+              <label
+                htmlFor="login-ident-input"
+                style={{
+                  display: 'block',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  color: 'rgba(255, 255, 255, 0.95)',
+                  marginBottom: '0.35rem'
+                }}
+              >
+                Cédula Costarricense o Correo Institucional
+              </label>
               <input
                 id="login-ident-input"
                 type="text"
-                placeholder="1-0000-0001 ó usuario@gob.cr"
+                placeholder="Cédula o correo electrónico"
                 value={loginIdentifier}
                 onChange={(e) => setLoginIdentifier(e.target.value)}
                 style={{
@@ -766,10 +947,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '5px'
+                      gap: '6px'
                     }}
                   >
-                    <span>🇨🇷</span>
+                    <User className="w-3.5 h-3.5 text-sky-300" />
                     <span>Ciudadano Residente</span>
                   </button>
                   <button
@@ -787,10 +968,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '5px'
+                      gap: '6px'
                     }}
                   >
-                    <span>🌍</span>
+                    <Globe className="w-3.5 h-3.5 text-emerald-300" />
                     <span>Turista / Visitante</span>
                   </button>
                 </div>
@@ -885,42 +1066,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
               </div>
             )}
 
-            {/* C. Super Admin Nacional: Master Key */}
-            {selectedRole === 'Super Administrador Nacional' && (
-              <div
-                style={{
-                  padding: '0.9rem',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(206, 17, 38, 0.15)',
-                  border: '1px solid rgba(206, 17, 38, 0.45)',
-                  marginBottom: '1.25rem'
-                }}
-              >
-                <span style={{ fontSize: '0.74rem', color: '#FF8A8A', fontWeight: 700, display: 'block', marginBottom: '0.35rem' }}>
-                  🛡️ CONTROL MAESTRO NACIONAL (SRS v2.1)
-                </span>
-                <p style={{ margin: '0 0 0.6rem', fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.7)' }}>
-                  Acceso exclusivo para las identidades acreditadas (1-0000-0001, 118880999, 207770888).
-                </p>
-                <input
-                  type="password"
-                  placeholder="Clave Maestra Institucional"
-                  value={masterPassword}
-                  onChange={(e) => setMasterPassword(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    borderRadius: '6px',
-                    backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                    border: '1px solid rgba(206, 17, 38, 0.5)',
-                    color: '#FFFFFF',
-                    fontSize: '0.85rem',
-                    fontFamily: 'monospace',
-                    outline: 'none'
-                  }}
-                />
-              </div>
-            )}
+
 
             {/* Botón Principal de Envío */}
             <CivicButton
@@ -940,12 +1086,13 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
           </form>
 
           {/* ===================================================================== */}
-          {/* BOTONES DE PRUEBA RÁPIDA: LAS 4 CUENTAS SEMILLA DE db.json           */}
+          {/* BOTONES DE PRUEBA RÁPIDA: PERFILES OFICIALES PRECONFIGURADOS          */}
           {/* ===================================================================== */}
           <div style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-              <span style={{ fontSize: '0.76rem', color: 'rgba(255, 255, 255, 0.75)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Cuentas Institucionales de Acceso Rápido:
+              <span style={{ fontSize: '0.76rem', color: 'rgba(255, 255, 255, 0.75)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>Perfiles Oficiales de Acceso Rápido:</span>
               </span>
               <button
                 type="button"
@@ -993,7 +1140,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 800 }}>🛡️ Super Admin Nacional</div>
+                    <div style={{ fontWeight: 800, display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <ShieldCheck className="w-3.5 h-3.5 text-red-400" />
+                      <span>Super Admin Nacional</span>
+                    </div>
                     <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>admin.nacional@gob.cr</div>
                     <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: Admin123* (Nivel 5)</div>
                   </div>
@@ -1008,7 +1158,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       background: '#CE1126',
                       border: 'none',
                       color: '#FFF',
-                      padding: '3px 6px',
+                      padding: '3px 8px',
                       borderRadius: '4px',
                       fontWeight: 700,
                       fontSize: '0.68rem',
@@ -1017,7 +1167,9 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       alignSelf: 'flex-start'
                     }}
                   >
-                    Ingresar Directo ⚡
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      Acceder <Zap className="w-3 h-3" />
+                    </span>
                   </button>
                 </div>
 
@@ -1049,7 +1201,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 800 }}>🏛️ Admin Provincial</div>
+                    <div style={{ fontWeight: 800, display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <Landmark className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Admin Provincial</span>
+                    </div>
                     <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>gobierno.sanjose@gob.cr</div>
                     <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: AdminProv2026* (Nivel 4)</div>
                   </div>
@@ -1064,7 +1219,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       background: '#FFC700',
                       border: 'none',
                       color: '#181818',
-                      padding: '3px 6px',
+                      padding: '3px 8px',
                       borderRadius: '4px',
                       fontWeight: 800,
                       fontSize: '0.68rem',
@@ -1073,7 +1228,9 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       alignSelf: 'flex-start'
                     }}
                   >
-                    Ingresar Directo ⚡
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      Acceder <Zap className="w-3 h-3" />
+                    </span>
                   </button>
                 </div>
 
@@ -1105,7 +1262,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 800 }}>📝 Editor Municipal</div>
+                    <div style={{ fontWeight: 800, display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <FileText className="w-3.5 h-3.5 text-sky-400" />
+                      <span>Editor Municipal</span>
+                    </div>
                     <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>editor.concejo@msj.go.cr</div>
                     <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: EditorMuni2026* (Nivel 3)</div>
                   </div>
@@ -1120,7 +1280,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       background: '#0284C7',
                       border: 'none',
                       color: '#FFF',
-                      padding: '3px 6px',
+                      padding: '3px 8px',
                       borderRadius: '4px',
                       fontWeight: 700,
                       fontSize: '0.68rem',
@@ -1129,7 +1289,9 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       alignSelf: 'flex-start'
                     }}
                   >
-                    Ingresar Directo ⚡
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      Acceder <Zap className="w-3 h-3" />
+                    </span>
                   </button>
                 </div>
 
@@ -1159,7 +1321,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 800 }}>🇨🇷 Ciudadano Residente</div>
+                    <div style={{ fontWeight: 800, display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <User className="w-3.5 h-3.5 text-sky-400" />
+                      <span>Ciudadano Residente</span>
+                    </div>
                     <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>eiker.abarca@gmail.com</div>
                     <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: Ciudadano2026* (Nivel 2)</div>
                   </div>
@@ -1174,7 +1339,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       background: '#002B7F',
                       border: '1px solid rgba(121, 166, 255, 0.4)',
                       color: '#FFF',
-                      padding: '3px 6px',
+                      padding: '3px 8px',
                       borderRadius: '4px',
                       fontWeight: 700,
                       fontSize: '0.68rem',
@@ -1183,7 +1348,9 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                       alignSelf: 'flex-start'
                     }}
                   >
-                    Ingresar Directo ⚡
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      Acceder <Zap className="w-3 h-3" />
+                    </span>
                   </button>
                 </div>
               </div>
@@ -1252,7 +1419,14 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                 isLoading={isValidatingHacienda}
                 style={{ minWidth: '120px', height: '42px', fontSize: '0.78rem' }}
               >
-                {isValidatingHacienda ? 'Consultando...' : '🔍 Validar'}
+                {isValidatingHacienda ? (
+                  'Consultando...'
+                ) : (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <Search className="w-3.5 h-3.5" />
+                    <span>Validar</span>
+                  </span>
+                )}
               </CivicButton>
             </div>
 
@@ -1264,9 +1438,14 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   color: haciendaVerified ? '#00D084' : '#FFC700',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '5px'
+                  gap: '6px'
                 }}
               >
+                {haciendaVerified ? (
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                ) : (
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                )}
                 <span>{haciendaMessage}</span>
               </div>
             )}
@@ -1280,8 +1459,9 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   Nombre(s)
                 </label>
                 {haciendaVerified && (
-                  <span style={{ fontSize: '0.72rem', color: '#00D084', fontWeight: 600 }}>
-                    🔒 Verificado por Hacienda
+                  <span style={{ fontSize: '0.72rem', color: '#00D084', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Verificado por Hacienda</span>
                   </span>
                 )}
               </div>
@@ -1428,94 +1608,235 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
             </div>
           </div>
 
-          {/* PASO 5: Ubicación Territorial Cantonal */}
+          {/* PASO 5: Jurisdicción Territorial en Cascada Dinámica */}
           <div
             style={{
-              padding: '0.85rem',
-              borderRadius: '8px',
-              backgroundColor: 'rgba(0, 20, 137, 0.2)',
-              border: '1px solid rgba(0, 43, 127, 0.4)',
-              marginBottom: '1.25rem'
+              padding: '1.1rem',
+              borderRadius: '10px',
+              backgroundColor: 'rgba(14, 20, 36, 0.85)',
+              border: '1px solid #1e293b',
+              marginBottom: '1.25rem',
+              boxShadow: '0 4px 20px rgba(0, 4, 13, 0.5)'
             }}
           >
-            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#FFFFFF', display: 'block', marginBottom: '0.5rem' }}>
-              3. Jurisdicción Territorial DTA:
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <MapPin className="w-3.5 h-3.5 text-sky-400" />
+                3. Jurisdicción Territorial:
+              </span>
+              <span style={{ fontSize: '0.66rem', color: '#64748B', fontFamily: 'monospace', letterSpacing: '0.04em' }}>
+                DIVISIÓN TERRITORIAL DINÁMICA
+              </span>
+            </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '0.5rem' }}>
+            {/* Fila 1: Provincia y Cantón en Cascada */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '0.75rem' }}>
+              {/* Selector de Provincia */}
               <div>
-                <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '0.2rem' }}>
-                  Provincia
+                <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                  <span>Provincia</span>
+                  {loadingProvincias && <span style={{ color: '#38bdf8', fontSize: '0.65rem' }}>Cargando...</span>}
                 </label>
-                <select
-                  value={regProvincia}
-                  onChange={(e) => setRegProvincia(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.6rem 0.8rem',
-                    borderRadius: '6px',
-                    backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#FFFFFF',
-                    fontSize: '0.82rem',
-                    outline: 'none'
-                  }}
-                >
-                  {PROVINCIAS_DATA.map((p) => (
-                    <option key={p.id} value={p.nombre} style={{ background: '#00040D', color: '#FFF' }}>
-                      {p.nombre}
+                <div style={{ position: 'relative' }}>
+                  <select
+                    value={selectedProvinciaId}
+                    onChange={handleProvinciaChange}
+                    disabled={loadingProvincias}
+                    style={{
+                      width: '100%',
+                      padding: '0.62rem 2.2rem 0.62rem 0.85rem',
+                      borderRadius: '8px',
+                      backgroundColor: '#0e1424',
+                      border: '1px solid #1e293b',
+                      color: selectedProvinciaId ? '#FFFFFF' : '#94A3B8',
+                      fontSize: '0.82rem',
+                      outline: 'none',
+                      cursor: loadingProvincias ? 'wait' : 'pointer',
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      transition: 'border-color 0.2s, box-shadow 0.2s'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = '#38bdf8';
+                      e.currentTarget.style.boxShadow = '0 0 0 2px rgba(56, 189, 248, 0.2)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = '#1e293b';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    <option value="" style={{ backgroundColor: '#0e1424', color: '#64748B' }}>
+                      {loadingProvincias ? 'Cargando provincias...' : 'Seleccione Provincia'}
                     </option>
-                  ))}
-                </select>
+                    {provinciasList.map((p) => (
+                      <option key={p.id} value={p.id} style={{ backgroundColor: '#0e1424', color: '#FFFFFF' }}>
+                        {p.nombre}
+                      </option>
+                    ))}
+                  </select>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      pointerEvents: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: '#94A3B8'
+                    }}
+                  >
+                    {loadingProvincias ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
+                    ) : (
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    )}
+                  </div>
+                </div>
               </div>
 
+              {/* Selector de Cantón (Habilitado solo tras elegir Provincia) */}
               <div>
-                <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '0.2rem' }}>
-                  Cantón
+                <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                  <span>Cantón</span>
+                  {loadingCantones && <span style={{ color: '#38bdf8', fontSize: '0.65rem' }}>Consultando API...</span>}
                 </label>
-                <select
-                  value={regCanton}
-                  onChange={(e) => setRegCanton(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.6rem 0.8rem',
-                    borderRadius: '6px',
-                    backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#FFFFFF',
-                    fontSize: '0.82rem',
-                    outline: 'none'
-                  }}
-                >
-                  {cantonesDisponibles.map((c) => (
-                    <option key={c.codigoDta} value={c.nombre} style={{ background: '#00040D', color: '#FFF' }}>
-                      {c.nombre} (DTA {c.codigoDta})
+                <div style={{ position: 'relative' }}>
+                  <select
+                    value={selectedCantonId}
+                    onChange={handleCantonChange}
+                    disabled={!selectedProvinciaId || loadingCantones}
+                    style={{
+                      width: '100%',
+                      padding: '0.62rem 2.2rem 0.62rem 0.85rem',
+                      borderRadius: '8px',
+                      backgroundColor: (!selectedProvinciaId || loadingCantones) ? 'rgba(10, 15, 26, 0.6)' : '#0e1424',
+                      border: (!selectedProvinciaId || loadingCantones) ? '1px solid rgba(30, 41, 59, 0.6)' : '1px solid #1e293b',
+                      color: selectedCantonId ? '#FFFFFF' : '#94A3B8',
+                      fontSize: '0.82rem',
+                      outline: 'none',
+                      cursor: (!selectedProvinciaId || loadingCantones) ? 'not-allowed' : 'pointer',
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      transition: 'border-color 0.2s, box-shadow 0.2s'
+                    }}
+                    onFocus={(e) => {
+                      if (selectedProvinciaId && !loadingCantones) {
+                        e.currentTarget.style.borderColor = '#38bdf8';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px rgba(56, 189, 248, 0.2)';
+                      }
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = (!selectedProvinciaId || loadingCantones) ? 'rgba(30, 41, 59, 0.6)' : '#1e293b';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    <option value="" style={{ backgroundColor: '#0e1424', color: '#64748B' }}>
+                      {loadingCantones
+                        ? 'Cargando cantones...'
+                        : !selectedProvinciaId
+                        ? 'Primero elija provincia'
+                        : 'Seleccione Cantón'}
                     </option>
-                  ))}
-                </select>
+                    {cantonesList.map((c) => (
+                      <option key={c.id} value={c.id} style={{ backgroundColor: '#0e1424', color: '#FFFFFF' }}>
+                        {c.nombre}
+                      </option>
+                    ))}
+                  </select>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      pointerEvents: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: (!selectedProvinciaId || loadingCantones) ? '#475569' : '#94A3B8'
+                    }}
+                  >
+                    {loadingCantones ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
+                    ) : (
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
+            {/* Fila 2: Selector de Distrito (Habilitado solo tras elegir Cantón) */}
             <div>
-              <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '0.2rem' }}>
-                Distrito o Barrio
+              <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span>Distrito</span>
+                {loadingDistritos && <span style={{ color: '#38bdf8', fontSize: '0.65rem' }}>Consultando API...</span>}
               </label>
-              <input
-                type="text"
-                placeholder="Ej: Carmen, Zapote, Pavas..."
-                value={regDistrito}
-                onChange={(e) => setRegDistrito(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.55rem 0.8rem',
-                  borderRadius: '6px',
-                  backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  fontSize: '0.82rem',
-                  outline: 'none'
-                }}
-              />
+              <div style={{ position: 'relative' }}>
+                <select
+                  value={selectedDistritoId}
+                  onChange={handleDistritoChange}
+                  disabled={!selectedCantonId || loadingDistritos}
+                  style={{
+                    width: '100%',
+                    padding: '0.62rem 2.2rem 0.62rem 0.85rem',
+                    borderRadius: '8px',
+                    backgroundColor: (!selectedCantonId || loadingDistritos) ? 'rgba(10, 15, 26, 0.6)' : '#0e1424',
+                    border: (!selectedCantonId || loadingDistritos) ? '1px solid rgba(30, 41, 59, 0.6)' : '1px solid #1e293b',
+                    color: selectedDistritoId ? '#FFFFFF' : '#94A3B8',
+                    fontSize: '0.82rem',
+                    outline: 'none',
+                    cursor: (!selectedCantonId || loadingDistritos) ? 'not-allowed' : 'pointer',
+                    appearance: 'none',
+                    WebkitAppearance: 'none',
+                    MozAppearance: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s'
+                  }}
+                  onFocus={(e) => {
+                    if (selectedCantonId && !loadingDistritos) {
+                      e.currentTarget.style.borderColor = '#38bdf8';
+                      e.currentTarget.style.boxShadow = '0 0 0 2px rgba(56, 189, 248, 0.2)';
+                    }
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = (!selectedCantonId || loadingDistritos) ? 'rgba(30, 41, 59, 0.6)' : '#1e293b';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <option value="" style={{ backgroundColor: '#0e1424', color: '#64748B' }}>
+                    {loadingDistritos
+                      ? 'Cargando distritos...'
+                      : !selectedCantonId
+                      ? 'Primero elija cantón'
+                      : 'Seleccione Distrito'}
+                  </option>
+                  {distritosList.map((d) => (
+                    <option key={d.id} value={d.id} style={{ backgroundColor: '#0e1424', color: '#FFFFFF' }}>
+                      {d.nombre}
+                    </option>
+                  ))}
+                </select>
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    pointerEvents: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: (!selectedCantonId || loadingDistritos) ? '#475569' : '#94A3B8'
+                  }}
+                >
+                  {loadingDistritos ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
+                  ) : (
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1536,7 +1857,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1.1rem' }}>🇨🇷</span>
+                <User className="w-4 h-4 text-sky-400" />
                 <span style={{ color: '#FFFFFF', fontWeight: 700, fontSize: '0.85rem' }}>
                   Ciudadano / Turista
                 </span>
@@ -1557,18 +1878,34 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
           </div>
 
           {/* Botón de Enviar Registro */}
-          <CivicButton
+          <button
             type="submit"
-            variant="accent"
-            isLoading={isLoading}
-            style={{ width: '100%', height: '48px', fontSize: '0.95rem', fontWeight: 700 }}
+            disabled={isLoading}
+            className="w-full h-12 py-3 px-6 rounded-xl font-bold text-white text-base tracking-wide bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] border-2 border-emerald-400 shadow-[0_4px_20px_rgba(16,185,129,0.45)] hover:shadow-[0_6px_25px_rgba(16,185,129,0.6)] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-[#00040D]"
+            style={{
+              background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+              border: '2px solid #34D399',
+              boxShadow: '0 4px 20px rgba(16, 185, 129, 0.45)',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              opacity: isLoading ? 0.75 : 1
+            }}
           >
-            Crear Expediente y Registrar en Plataforma
-          </CivicButton>
+            {isLoading ? (
+              <span className="inline-flex items-center gap-2 font-bold text-white">
+                <Loader2 className="w-5 h-5 animate-spin text-white" />
+                <span>Registrando...</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-2 font-bold text-white">
+                <UserPlus className="w-5 h-5 text-white" />
+                <span>Registrarme</span>
+              </span>
+            )}
+          </button>
         </form>
       )}
 
-      {/* Pie de Auditoría y Estado de la Base de Datos Simulada */}
+      {/* Pie de Auditoría y Estado del Sistema */}
       <div
         style={{
           marginTop: '1.5rem',
@@ -1588,27 +1925,16 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
               height: '7px',
               borderRadius: '50%',
               backgroundColor: '#00D084',
+              boxShadow: '0 0 8px rgba(0, 208, 132, 0.7)',
               display: 'inline-block'
             }}
           />
-          <span>Padrón digital sincronizado: <strong>{dbStats.totalUsuarios} usuarios</strong></span>
+          <span style={{ fontWeight: 500 }}>Sistema en línea</span>
         </div>
 
-        <button
-          type="button"
-          onClick={handleResetDb}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: 'rgba(255, 255, 255, 0.45)',
-            fontSize: '0.7rem',
-            cursor: 'pointer',
-            textDecoration: 'underline'
-          }}
-          title="Restablece las cuentas semilla institucionales originales"
-        >
-          Restaurar Semilla Original
-        </button>
+        <span style={{ color: 'rgba(255, 255, 255, 0.45)', fontSize: '0.7rem' }}>
+          Sede Digital Verificada
+        </span>
       </div>
     </CivicCard>
   );

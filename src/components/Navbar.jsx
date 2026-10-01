@@ -8,7 +8,9 @@ import {
   ChevronDown,
   ShieldAlert,
   User,
+  UserPlus,
   LogOut,
+  LogIn,
   Menu
 } from 'lucide-react';
 import Logo from './common/Logo';
@@ -23,13 +25,13 @@ import { useLanguage } from '../context/LanguageContext';
  * Cumple con estándares de diseño institucional cívico:
  * 1. Mega Menú en Desktop (>= 1024px) con 4 categorías y paneles translúcidos.
  * 2. Cajón Lateral Deslizante (Civic Drawer): navegación en móvil y Centro de Utilidades en Desktop.
- * 3. Cero emojis — Exclusivamente iconos vectoriales de lucide-react (strokeWidth={1.75}).
+ * 3. Acciones de sesión y registro directo en el menú principal.
+ * 4. Cero emojis — Exclusivamente iconos vectoriales de lucide-react (strokeWidth={1.75}).
  */
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
-  const { solicitarConfirmacion } = useCivicModal();
   const { t } = useLanguage();
 
   const confirmarSalida = () => {
@@ -104,13 +106,20 @@ export default function Navbar() {
     setIsDrawerOpen(true);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <>
       <header
-        className="sticky top-0 left-0 right-0 z-40 bg-[#00040D]/90 dark:bg-[#00040D]/90 backdrop-blur-2xl border-b border-white/10 transition-colors"
+        className="sticky top-0 left-0 right-0 z-50 bg-[#070D1B] border-b border-slate-800 transition-colors"
         onMouseLeave={handleMouseLeaveNav}
         style={{
-          boxShadow: '0 10px 30px rgba(0, 4, 13, 0.75)'
+          backgroundColor: '#070D1B',
+          opacity: 1,
+          boxShadow: '0 10px 30px rgba(0, 4, 13, 0.95)'
         }}
       >
         {/* ======================================================================
@@ -156,16 +165,16 @@ export default function Navbar() {
         {/* ======================================================================
             2. BARRA PRINCIPAL DEL NAVBAR (68px)
             ====================================================================== */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[68px] flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-3 xl:px-6 h-[68px] flex items-center justify-between gap-1.5 xl:gap-3">
           {/* LADO IZQUIERDO: LOGOTIPO OFICIAL */}
-          <div className="flex items-center gap-4 flex-shrink-0">
-            <Logo showText={true} size="38px" />
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <Logo showText={true} size="36px" />
           </div>
 
           {/* CENTRO: 4 CATEGORÍAS CÍVICAS HORIZONTALES (DESKTOP >= 1024px) */}
           <nav
             aria-label="Navegación Cívica Principal"
-            className="hidden lg:flex items-center gap-1.5"
+            className="hidden lg:flex items-center gap-0.5 xl:gap-1.5"
           >
             {CATEGORIAS_CIVICAS.map((cat) => {
               const IconoCat = cat.icon;
@@ -179,21 +188,21 @@ export default function Navbar() {
                   onClick={() => handleToggleCategoria(cat.id)}
                   aria-expanded={isActivo}
                   aria-haspopup="true"
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-sky-500 ${
+                  className={`px-2 xl:px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold transition-all duration-200 flex items-center gap-1 xl:gap-1.5 focus:outline-none focus:ring-2 focus:ring-sky-500 ${
                     isActivo
                       ? 'bg-red-500/15 text-white border border-red-500/40 shadow-lg shadow-red-500/10'
                       : 'text-slate-300 hover:text-white hover:bg-white/[0.05] border border-transparent'
                   }`}
                 >
                   <IconoCat
-                    className={`w-4 h-4 transition-colors ${
+                    className={`w-3.5 h-3.5 xl:w-4 xl:h-4 transition-colors ${
                       isActivo ? 'text-red-500' : 'text-slate-400'
                     }`}
                     strokeWidth={1.75}
                   />
                   <span>{cat.label}</span>
                   <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                    className={`w-3 h-3 xl:w-3.5 xl:h-3.5 transition-transform duration-200 ${
                       isActivo ? 'rotate-180 text-red-500' : 'text-slate-500'
                     }`}
                     strokeWidth={1.75}
@@ -203,13 +212,13 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* LADO DERECHO: SOS 911 + BOTÓN PANEL CÍVICO (DESKTOP) / MENÚ (MÓVIL) */}
-          <div className="flex items-center gap-2.5 flex-shrink-0">
+          {/* LADO DERECHO: SOS 911 + ACCIONES (REGISTRARSE / CERRAR SESIÓN) + PANEL CÍVICO (DESKTOP) / MENÚ (MÓVIL) */}
+          <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 xl:gap-2.5 flex-shrink-0">
             {/* Botón SOS 911 en Rojo Sobrio */}
             <Link
               to="/seguridad-emergencias"
               aria-label="Centro de Seguridad y Auxilio de Emergencias 911"
-              className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 hover:border-red-500 text-red-400 hover:text-white text-xs font-bold tracking-wider uppercase transition-all duration-200 flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="px-2 py-1 sm:px-2.5 sm:py-1.5 xl:px-3 xl:py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 hover:border-red-500 text-red-400 hover:text-white text-[11px] xl:text-xs font-bold tracking-wider uppercase transition-all duration-200 flex items-center gap-1 xl:gap-1.5 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               <ShieldAlert className="w-3.5 h-3.5 text-red-500" strokeWidth={1.75} />
               <span className="hidden sm:inline">SOS 911</span>
@@ -221,27 +230,48 @@ export default function Navbar() {
               type="button"
               onClick={() => handleOpenDrawer('utilidades')}
               aria-label="Abrir centro de utilidades y panel cívico"
-              className="hidden lg:inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.05] hover:bg-sky-500/20 border border-white/15 hover:border-sky-500/50 text-slate-200 hover:text-white text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="hidden lg:inline-flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-white/[0.05] hover:bg-sky-500/20 border border-white/15 hover:border-sky-500/50 text-slate-200 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
             >
-              <User className="w-4 h-4 text-sky-400" strokeWidth={1.75} />
+              <User className="w-3.5 h-3.5 xl:w-4 xl:h-4 text-sky-400" strokeWidth={1.75} />
               <span>Panel Cívico</span>
               {isAuthenticated && user && (
                 <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
               )}
             </button>
 
-            {/* BOTÓN CERRAR SESIÓN CON CONFIRMACIÓN (DESKTOP) */}
-            {isAuthenticated && (
+            {/* BOTÓN REGISTRARSE EN LA BARRA DEL MENÚ PRINCIPAL */}
+            <Link
+              to="/registro"
+              aria-label="Registrarse en la plataforma cívica institucional"
+              title="Registrarse"
+              className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 hover:border-sky-400 text-sky-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
+            >
+              <UserPlus className="w-3.5 h-3.5 text-sky-400" strokeWidth={1.75} />
+              <span className="hidden sm:inline lg:hidden xl:inline">Registrarse</span>
+            </Link>
+
+            {/* BOTÓN CERRAR SESIÓN (CUANDO HAY SESIÓN ACTIVA) / INICIAR SESIÓN (SI ESTÁ LOGUEADO COMO ANÓNIMO) */}
+            {isAuthenticated && user ? (
               <button
                 type="button"
-                onClick={confirmarSalida}
-                aria-label="Cerrar sesión institucional con confirmación"
-                className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
-                title="Cerrar sesión institucional"
+                onClick={handleLogout}
+                aria-label="Cerrar sesión activa"
+                title="Cerrar Sesión"
+                className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 hover:border-red-400 text-red-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"
               >
-                <LogOut className="w-3.5 h-3.5" strokeWidth={1.75} />
-                <span>Cerrar Sesión</span>
+                <LogOut className="w-3.5 h-3.5 text-red-400" strokeWidth={1.75} />
+                <span className="hidden sm:inline lg:hidden xl:inline">Cerrar Sesión</span>
               </button>
+            ) : (
+              <Link
+                to="/login"
+                aria-label="Iniciar sesión en la plataforma cívica"
+                title="Iniciar Sesión"
+                className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 hover:border-white/35 text-slate-200 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              >
+                <LogIn className="w-3.5 h-3.5 text-slate-300" strokeWidth={1.75} />
+                <span className="hidden sm:inline lg:hidden xl:inline">Iniciar Sesión</span>
+              </Link>
             )}
 
             {/* EN MÓVILES (< 1024px): BOTÓN HAMBURGUESA QUE ABRE EL CIVIC DRAWER */}
@@ -249,9 +279,9 @@ export default function Navbar() {
               type="button"
               onClick={() => handleOpenDrawer('navegacion')}
               aria-label="Abrir menú de navegación y panel cívico"
-              className="lg:hidden w-10 h-10 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500"
             >
-              <Menu className="w-6 h-6 text-slate-200" strokeWidth={1.75} />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-slate-200" strokeWidth={1.75} />
             </button>
           </div>
         </div>

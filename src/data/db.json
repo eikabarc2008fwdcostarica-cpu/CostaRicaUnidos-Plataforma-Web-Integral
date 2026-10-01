@@ -52,6 +52,34 @@
       "distrito": "Carmen",
       "fechaRegistro": "2026-05-10T14:20:00Z",
       "verificadoHacienda": true
+    },
+    {
+      "id": "USR-CIUD-8909",
+      "cedula": "1-1999-0777",
+      "nombre": "GUADALUPE RUIZ CHINCHILLA VALENTINA DE",
+      "correo": "mariana.solis@costarica.cr",
+      "password": "Ciudadano2026*",
+      "rol": "Ciudadano/Turista",
+      "nivelAcceso": 2,
+      "provincia": "San José",
+      "canton": "San José",
+      "distrito": "Carmen",
+      "fechaRegistro": "2026-10-01T16:17:28.909Z",
+      "verificadoHacienda": true
+    },
+    {
+      "id": "USR-CIUD-9238",
+      "cedula": "605090727",
+      "nombre": "EIKER MANUEL ABARCA MURILLO",
+      "correo": "aquiangquiros2025fwd@gmail.com",
+      "password": "1234",
+      "rol": "Ciudadano/Turista",
+      "nivelAcceso": 2,
+      "provincia": "Guanacaste",
+      "canton": "La Cruz",
+      "distrito": "Santa Cecilia",
+      "fechaRegistro": "2026-10-01T16:41:19.238Z",
+      "verificadoHacienda": true
     }
   ],
   "solicitudesComercio": [
@@ -390,6 +418,24 @@
     ]
   },
   "sesionesActivas": [],
-  "bitacoraAccesos": [],
-  "moderacionContenido": []
+  "bitacoraAccesos": [
+    {
+      "id": "LOG-8909",
+      "usuarioId": "USR-CIUD-8909",
+      "usuarioNombre": "GUADALUPE RUIZ CHINCHILLA VALENTINA DE",
+      "rol": "Ciudadano/Turista",
+      "accion": "REGISTRO_USUARIO",
+      "detalles": "Registro exitoso para GUADALUPE RUIZ CHINCHILLA VALENTINA DE en cantón San José.",
+      "timestamp": "2026-10-01T16:17:28.909Z"
+    },
+    {
+      "id": "LOG-9238",
+      "usuarioId": "USR-CIUD-9238",
+      "usuarioNombre": "EIKER MANUEL ABARCA MURILLO",
+      "rol": "Ciudadano/Turista",
+      "accion": "REGISTRO_USUARIO",
+      "detalles": "Registro exitoso para EIKER MANUEL ABARCA MURILLO en cantón La Cruz.",
+      "timestamp": "2026-10-01T16:41:19.238Z"
+    }
+  ]
 }

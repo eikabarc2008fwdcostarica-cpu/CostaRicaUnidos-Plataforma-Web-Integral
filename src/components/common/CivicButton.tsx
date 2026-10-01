@@ -6,7 +6,10 @@ export type CivicButtonVariant =
   | 'outline'
   | 'ghost'
   | 'danger'
-  | 'provincial';
+  | 'provincial'
+  | 'accent'
+  | 'success'
+  | 'warning';
 
 export type CivicButtonSize = 'sm' | 'md' | 'lg';
 
@@ -111,6 +114,24 @@ export const CivicButton = forwardRef<HTMLButtonElement, CivicButtonProps>(
         color: 'var(--color-provincial-text, #FFFFFF)',
         border: '1px solid var(--color-provincial-border, rgba(255, 255, 255, 0.3))',
         boxShadow: 'var(--glow-provincial, 0 4px 16px rgba(0, 43, 127, 0.4))'
+      },
+      accent: {
+        background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+        color: '#FFFFFF',
+        border: '1px solid #10B981',
+        boxShadow: '0 4px 18px rgba(16, 185, 129, 0.45)'
+      },
+      success: {
+        background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+        color: '#FFFFFF',
+        border: '1px solid #10B981',
+        boxShadow: '0 4px 18px rgba(16, 185, 129, 0.45)'
+      },
+      warning: {
+        background: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)',
+        color: '#FFFFFF',
+        border: '1px solid #F59E0B',
+        boxShadow: '0 4px 18px rgba(245, 158, 11, 0.45)'
       }
     };
 
