@@ -437,5 +437,514 @@
       "detalles": "Registro exitoso para EIKER MANUEL ABARCA MURILLO en cantón La Cruz.",
       "timestamp": "2026-10-01T16:41:19.238Z"
     }
+  ],
+  "foro_posts": [
+    {
+      "id": "post-1790887391252-258",
+      "titulo": "Alumbrado solar y cámaras de seguridad en Parque Central de Alajuela",
+      "contenido": "Propuesta formal ante la Municipalidad de Alajuela para instalar luminarias LED autosustentables con paneles solares y enlazar cámaras de monitoreo con la Policía Municipal.",
+      "provinciaId": "alajuela",
+      "provinciaNombre": "Alajuela",
+      "categoria": "Seguridad Ciudadana",
+      "autorNombre": "Eiker Manuel Abarca Murillo",
+      "autorCedula": "1-1823-0456",
+      "fecha": "2026-10-01T20:43:11.246Z",
+      "likes": 1,
+      "dislikes": 0,
+      "reacciones": {
+        "apoyo": 1,
+        "urgente": 0,
+        "idea": 0
+      },
+      "usuariosVotaron": {
+        "1-1823-0456": "like"
+      },
+      "comentarios": []
+    },
+    {
+      "id": "post-1790887379891-674",
+      "titulo": "Alumbrado solar y cámaras de seguridad en Parque Central de Alajuela",
+      "contenido": "Propuesta formal ante la Municipalidad de Alajuela para instalar luminarias LED autosustentables con paneles solares y enlazar cámaras de monitoreo con la Policía Municipal.",
+      "provinciaId": "alajuela",
+      "provinciaNombre": "Alajuela",
+      "categoria": "Seguridad Ciudadana",
+      "autorNombre": "Eiker Manuel Abarca Murillo",
+      "autorCedula": "1-1823-0456",
+      "fecha": "2026-10-01T20:42:59.881Z",
+      "likes": 0,
+      "dislikes": 0,
+      "reacciones": {
+        "apoyo": 0,
+        "urgente": 0,
+        "idea": 0
+      },
+      "usuariosVotaron": {},
+      "comentarios": []
+    },
+    {
+      "id": "post-1",
+      "titulo": "Propuesta de ciclovía cantonal en Cartago Centro",
+      "contenido": "Presentamos esta iniciativa ante el Concejo Municipal para conectar la Basílica de Los Ángeles con el Instituto Tecnológico de Costa Rica (TEC) mediante una ciclovía segregada y segura con luminarias solares y sensores de aforo.",
+      "provinciaId": "cartago",
+      "provinciaNombre": "Cartago",
+      "categoria": "Infraestructura & Movilidad",
+      "autorNombre": "Alanie Castillo Ruiz",
+      "autorCedula": "605040857",
+      "fecha": "2026-10-01T14:15:00Z",
+      "likes": 12,
+      "dislikes": 1,
+      "reacciones": {
+        "apoyo": 9,
+        "urgente": 3,
+        "idea": 5
+      },
+      "usuariosVotaron": {
+        "605040857": "like"
+      },
+      "comentarios": [
+        {
+          "id": "com-1",
+          "autorNombre": "Eiker Abarca Murillo",
+          "autorCedula": "118230456",
+          "contenido": "Excelente iniciativa, urge mejorar la conectividad vial entre el centro histórico y el campus universitario.",
+          "fecha": "2026-10-01T14:20:00Z"
+        },
+        {
+          "id": "com-2",
+          "autorNombre": "Marta Calderón Jiménez",
+          "autorCedula": "302450891",
+          "contenido": "Apoyo total. Debería incluir parqueos seguros para bicicletas en la Plaza Mayor y paradas de tren.",
+          "fecha": "2026-10-01T14:35:00Z"
+        },
+        {
+          "id": "com-1790887333287-115",
+          "autorNombre": "Eiker Manuel Abarca Murillo",
+          "autorCedula": "1-1823-0456",
+          "contenido": "Totalmente de acuerdo, además propongo que se integre con la estación de tren de Cartago para intermodalidad.",
+          "fecha": "2026-10-01T20:42:13.287Z"
+        }
+      ]
+    },
+    {
+      "id": "post-2",
+      "titulo": "Modernización del Sistema de Voto Electrónico y Cabildos Abiertos Digitales en los 84 Cantones",
+      "contenido": "Propuesta nacional para unificar las plataformas de consulta ciudadana y presupuestos participativos en una sola interfaz soberana de código abierto, accesible desde cualquier dispositivo y respaldada con identidad cívica.",
+      "provinciaId": "nacional",
+      "provinciaNombre": "Nacional (Todo el País)",
+      "categoria": "Gobernanza & Tecnología",
+      "autorNombre": "Superintendencia Nacional de Gobierno Digital",
+      "autorCedula": "1-0000-0001",
+      "fecha": "2026-10-01T12:00:00Z",
+      "likes": 45,
+      "dislikes": 2,
+      "reacciones": {
+        "apoyo": 34,
+        "urgente": 15,
+        "idea": 29
+      },
+      "usuariosVotaron": {
+        "1-0000-0001": "like"
+      },
+      "comentarios": [
+        {
+          "id": "com-3",
+          "autorNombre": "Ing. Carlos Brenes Vega",
+          "autorCedula": "109870654",
+          "contenido": "Fundamental que mantenga compatibilidad con los sistemas de autenticación ciudadana y del TSE.",
+          "fecha": "2026-10-01T12:45:00Z"
+        }
+      ]
+    },
+    {
+      "id": "post-3",
+      "titulo": "Plan de Regeneración Urbana y Seguridad Nocturna en el Casco Central de San José",
+      "contenido": "Proponemos instalar corredores seguros iluminados entre La Sabana, Avenida Central y el Museo Nacional, junto con cámaras de vigilancia integradas al sistema cantonal y presencia policial 24/7.",
+      "provinciaId": "san-jose",
+      "provinciaNombre": "San José",
+      "categoria": "Seguridad Ciudadana",
+      "autorNombre": "Eiker Manuel Abarca Murillo",
+      "autorCedula": "1-1823-0456",
+      "fecha": "2026-10-01T11:30:00Z",
+      "likes": 28,
+      "dislikes": 3,
+      "reacciones": {
+        "apoyo": 22,
+        "urgente": 19,
+        "idea": 14
+      },
+      "usuariosVotaron": {
+        "1-1823-0456": "like"
+      },
+      "comentarios": [
+        {
+          "id": "com-4",
+          "autorNombre": "Valeria Mora Solís",
+          "autorCedula": "117650432",
+          "contenido": "Es una urgencia para quienes trabajamos en el centro hasta altas horas de la noche. Urgen más luminarias LED.",
+          "fecha": "2026-10-01T12:10:00Z"
+        }
+      ]
+    },
+    {
+      "id": "post-4",
+      "titulo": "Ampliación de rutas alternas y mantenimiento preventivo ante alertas del Volcán Poás",
+      "contenido": "Solicitud formal a la Municipalidad de Alajuela y al MOPT para asfaltar los tramos de evacuación en Sabanilla y Poasito, protegiendo a agricultores y vecinos ante eventuales caídas de ceniza.",
+      "provinciaId": "alajuela",
+      "provinciaNombre": "Alajuela",
+      "categoria": "Prevención de Emergencias",
+      "autorNombre": "Comité Vecinal Alajuela Norte",
+      "autorCedula": "204560789",
+      "fecha": "2026-10-01T10:15:00Z",
+      "likes": 31,
+      "dislikes": 0,
+      "reacciones": {
+        "apoyo": 25,
+        "urgente": 27,
+        "idea": 8
+      },
+      "usuariosVotaron": {},
+      "comentarios": [
+        {
+          "id": "com-5",
+          "autorNombre": "José Luis Alfaro Soto",
+          "autorCedula": "203440112",
+          "contenido": "Las rutas de Poasito son estrechas; en temporada de lluvias se vuelven intransitables. Muy oportuno.",
+          "fecha": "2026-10-01T11:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "post-5",
+      "titulo": "Protección estricta de mantos acuíferos y zonas de recarga hídrica en Barva y San Rafael",
+      "contenido": "Mesa de trabajo comunal para delimitar un anillo de amortiguamiento ecológico que frene el avance urbanístico no planificado sobre las fuentes que abastecen de agua potable a más de 400.000 heredianos.",
+      "provinciaId": "heredia",
+      "provinciaNombre": "Heredia",
+      "categoria": "Medio Ambiente & Recursos Hídricos",
+      "autorNombre": "Red Hídrica de las Flores",
+      "autorCedula": "401980321",
+      "fecha": "2026-10-01T09:40:00Z",
+      "likes": 39,
+      "dislikes": 1,
+      "reacciones": {
+        "apoyo": 30,
+        "urgente": 14,
+        "idea": 18
+      },
+      "usuariosVotaron": {},
+      "comentarios": [
+        {
+          "id": "com-6",
+          "autorNombre": "Mariana Gómez Fonseca",
+          "autorCedula": "402110543",
+          "contenido": "El agua potable de Heredia es un tesoro público que debemos blindar legal y territorialmente ya.",
+          "fecha": "2026-10-01T10:20:00Z"
+        }
+      ]
+    },
+    {
+      "id": "post-6",
+      "titulo": "Fondo Cantonal para reactivación de ASADAS y pozos solares en época seca",
+      "contenido": "Planteamiento para canalizar un porcentaje del canon municipal hacia la compra e instalación de bombas solares para acueductos comunitarios en Santa Cruz, Nicoya, Bagaces y La Cruz.",
+      "provinciaId": "guanacaste",
+      "provinciaNombre": "Guanacaste",
+      "categoria": "Desarrollo Rural & Sostenibilidad",
+      "autorNombre": "Federación Pampera de ASADAS",
+      "autorCedula": "501870234",
+      "fecha": "2026-10-01T08:50:00Z",
+      "likes": 36,
+      "dislikes": 0,
+      "reacciones": {
+        "apoyo": 29,
+        "urgente": 21,
+        "idea": 24
+      },
+      "usuariosVotaron": {},
+      "comentarios": [
+        {
+          "id": "com-7",
+          "autorNombre": "Esteban Gutiérrez Pizarro",
+          "autorCedula": "502390876",
+          "contenido": "La factura eléctrica de las ASADAS es muy pesada; los paneles solares aliviarán los costos operativos de inmediato.",
+          "fecha": "2026-10-01T09:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "post-7",
+      "titulo": "Reactivación integral del Paseo de los Turistas y feria gastronómica del mar",
+      "contenido": "Iniciativa para ordenar los módulos de venta de Churchill, reactivar el parque marino y crear un muelle artesanal con punto de venta directa de mariscos frescos para familias pescadoras porteñas.",
+      "provinciaId": "puntarenas",
+      "provinciaNombre": "Puntarenas",
+      "categoria": "Comercio & Turismo Costero",
+      "autorNombre": "Cámara de Comercio Puntarenense",
+      "autorCedula": "602340567",
+      "fecha": "2026-09-30T17:20:00Z",
+      "likes": 24,
+      "dislikes": 2,
+      "reacciones": {
+        "apoyo": 18,
+        "urgente": 9,
+        "idea": 20
+      },
+      "usuariosVotaron": {},
+      "comentarios": [
+        {
+          "id": "com-8",
+          "autorNombre": "Lorena Chaves Medina",
+          "autorCedula": "603210987",
+          "contenido": "Apoyemos a las familias porteñas. El Paseo de los Turistas merece recuperar su esplendor histórico y turístico.",
+          "fecha": "2026-09-30T18:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "post-8",
+      "titulo": "Defensa costera y obras de mitigación contra erosión marina en Cahuita y Puerto Viejo",
+      "contenido": "Solicitud de declaratoria de emergencia cantonal para instalar arrecifes artificiales y rompeolas sumergidos que frenen la pérdida de playas y caminos costeros en el litoral caribeño.",
+      "provinciaId": "limon",
+      "provinciaNombre": "Limón",
+      "categoria": "Infraestructura & Protección Ambiental",
+      "autorNombre": "Asociación Caribe Sur Resiliente",
+      "autorCedula": "701450678",
+      "fecha": "2026-09-30T15:10:00Z",
+      "likes": 41,
+      "dislikes": 1,
+      "reacciones": {
+        "apoyo": 35,
+        "urgente": 32,
+        "idea": 17
+      },
+      "usuariosVotaron": {},
+      "comentarios": [
+        {
+          "id": "com-9",
+          "autorNombre": "Winston Campbell Clarke",
+          "autorCedula": "702110432",
+          "contenido": "El mar ya ha devorado varios metros de costa en Playa Negra. Urge acción interinstitucional inmediata.",
+          "fecha": "2026-09-30T16:05:00Z"
+        }
+      ]
+    }
+  ],
+  "noticias": [
+    {
+      "id": "noticia-1790888811209-203",
+      "titulo": "Construcción del Parque Lineal Tecnológico en San José",
+      "resumen": "Proyecto de regeneración urbana de 2.4 km con ciclovía y luminarias solares.",
+      "contenido": "La Municipalidad de San José informa que inician las obras del Parque Lineal Tecnológico. El proyecto contará con estaciones de recarga para dispositivos móviles, fibra óptica municipal gratuita y amplias zonas verdes para el disfrute de las familias josefinas.",
+      "categoria": "Obras Públicas",
+      "provincia": "San José",
+      "canton": "San José",
+      "autorNombre": "Secretaría del Concejo Municipal de San José",
+      "autorRol": "Editor Municipal",
+      "autorCedula": "1-1155-0892",
+      "fechaPublicacion": "2026-10-01T21:06:51.211Z",
+      "imagenUrl": "",
+      "reacciones": {
+        "apoyo": 0,
+        "interesante": 0,
+        "alerta": 0
+      },
+      "comentarios": []
+    },
+    {
+      "id": "noticia-101",
+      "titulo": "Inicio de obras de recarpeteo en el distrito central",
+      "resumen": "Intervención vial programada del 5 al 12 de octubre.",
+      "contenido": "La Municipalidad informa a los vecinos del cantón que a partir del lunes 5 de octubre se realizarán trabajos de fresado y colocación de mezcla asfáltica en caliente en la avenida central y calles aledañas. Se solicita a los conductores tomar rutas alternas debidamente señalizadas y colaborar con los banderilleros.",
+      "categoria": "Obras Públicas",
+      "provincia": "San José",
+      "canton": "Escazú",
+      "autorNombre": "Gestión Vial Municipal",
+      "autorRol": "Editor Municipal",
+      "autorCedula": "118230456",
+      "fechaPublicacion": "2026-10-01T14:30:00Z",
+      "imagenUrl": "",
+      "reacciones": {
+        "apoyo": 16,
+        "interesante": 8,
+        "alerta": 2
+      },
+      "comentarios": [
+        {
+          "id": "c-1",
+          "autorNombre": "Alanie Castillo Ruiz",
+          "autorCedula": "605040857",
+          "contenido": "¿Habrá rutas alternas habilitadas para el transporte público?",
+          "fecha": "2026-10-01T14:45:00Z"
+        },
+        {
+          "id": "c-2",
+          "autorNombre": "Carlos Mora Vindas",
+          "autorCedula": "108760345",
+          "contenido": "Excelente iniciativa; el pavimento frente a la escuela central estaba muy deteriorado.",
+          "fecha": "2026-10-01T15:10:00Z"
+        }
+      ]
+    },
+    {
+      "id": "noticia-102",
+      "titulo": "Digitalización total de trámites de patentes comerciales y uso de suelo",
+      "resumen": "A partir de este mes el 100% de los trámites se gestionan en línea con firma digital o cédula oficial.",
+      "contenido": "El Concejo Municipal y la Alcaldía de San José anuncian la puesta en marcha de la Ventanilla Digital Soberana, eliminando las filas físicas y reduciendo los tiempos de respuesta de 15 días a 48 horas hábiles para emprendedores y PyMES.",
+      "categoria": "Gobernanza & Trámites",
+      "provincia": "San José",
+      "canton": "San José",
+      "autorNombre": "Secretaría del Concejo Municipal de San José",
+      "autorRol": "Editor Municipal",
+      "autorCedula": "1-1155-0892",
+      "fechaPublicacion": "2026-10-01T12:00:00Z",
+      "imagenUrl": "",
+      "reacciones": {
+        "apoyo": 34,
+        "interesante": 22,
+        "alerta": 1
+      },
+      "comentarios": [
+        {
+          "id": "c-3",
+          "autorNombre": "Mariana Solís Quesada",
+          "autorCedula": "119990777",
+          "contenido": "Un gran avance hacia la simplificación de trámites para los comerciantes.",
+          "fecha": "2026-10-01T12:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "noticia-103",
+      "titulo": "Convocatoria a Cabildo Abierto para el Presupuesto Participativo 2027",
+      "resumen": "Vecinos de los 8 distritos cartagineses podrán priorizar obras comunales.",
+      "contenido": "La Municipalidad de Cartago invita a las Asociaciones de Desarrollo Integral (ADI) y comités comunales a presentar sus propuestas para el Banco de Obras 2027. La votación se llevará a cabo a través de la plataforma Costa Rica Unidos.",
+      "categoria": "Participación Ciudadana",
+      "provincia": "Cartago",
+      "canton": "Cartago",
+      "autorNombre": "Unidad de Participación Ciudadana",
+      "autorRol": "Editor Municipal",
+      "autorCedula": "302340567",
+      "fechaPublicacion": "2026-10-01T10:15:00Z",
+      "imagenUrl": "",
+      "reacciones": {
+        "apoyo": 42,
+        "interesante": 19,
+        "alerta": 0
+      },
+      "comentarios": [
+        {
+          "id": "c-4",
+          "autorNombre": "Roberto Brenes Coto",
+          "autorCedula": "304550112",
+          "contenido": "¿Las propuestas deben enviarse antes del 15 de noviembre?",
+          "fecha": "2026-10-01T11:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "noticia-104",
+      "titulo": "Activación del Protocolo Cantonal de Alerta Verde por monitoreo del Volcán Poás",
+      "resumen": "Comité Municipal de Emergencias de Alajuela emite recomendaciones preventivas.",
+      "contenido": "Ante los recientes informes del OVSICORI sobre emanación de gases y ceniza en el Parque Nacional Volcán Poás, el Comité Municipal de Emergencias mantiene coordinación constante con los distritos norteños. Se recuerda a la población utilizar mascarillas si hay presencia de olor a azufre y proteger fuentes de agua.",
+      "categoria": "Seguridad & Emergencias",
+      "provincia": "Alajuela",
+      "canton": "Alajuela",
+      "autorNombre": "Comité Municipal de Emergencias Alajuela",
+      "autorRol": "Editor Municipal",
+      "autorCedula": "204560789",
+      "fechaPublicacion": "2026-09-30T16:00:00Z",
+      "imagenUrl": "",
+      "reacciones": {
+        "apoyo": 28,
+        "interesante": 14,
+        "alerta": 39
+      },
+      "comentarios": [
+        {
+          "id": "c-5",
+          "autorNombre": "Sofía Arguedas Castro",
+          "autorCedula": "207880991",
+          "contenido": "En Sabanilla amaneció una capa muy leve de ceniza. Gracias por el reporte oportuno.",
+          "fecha": "2026-09-30T16:40:00Z"
+        }
+      ]
+    },
+    {
+      "id": "noticia-105",
+      "titulo": "Feria del Empleo Técnico y Vocacional en el Centro Cultural Omar Dengo",
+      "resumen": "Más de 40 empresas del cantón ofrecerán 600 puestos en tecnología, turismo y servicios.",
+      "contenido": "La Municipalidad de Heredia en conjunto con la Red Cantonal de CTPs organiza la Feria Vocacional 2026. Se contará con talleres gratuitos de preparación de currículum y asesoría de emprendimiento local.",
+      "categoria": "Desarrollo Local & Empleo",
+      "provincia": "Heredia",
+      "canton": "Heredia",
+      "autorNombre": "Oficina de Intermediación de Empleo Municipal",
+      "autorRol": "Editor Municipal",
+      "autorCedula": "401980321",
+      "fechaPublicacion": "2026-09-30T11:20:00Z",
+      "imagenUrl": "",
+      "reacciones": {
+        "apoyo": 51,
+        "interesante": 38,
+        "alerta": 0
+      },
+      "comentarios": []
+    },
+    {
+      "id": "noticia-106",
+      "titulo": "Inversión histórica en electrificación solar para 14 acueductos comunales de Santa Cruz",
+      "resumen": "Convenio entre la Municipalidad de Santa Cruz y ASADAS de la costa y bajura.",
+      "contenido": "Con una inversión de ₡180 millones se instalarán sistemas fotovoltaicos en pozos y estaciones de bombeo de agua potable, asegurando el suministro ininterrumpido durante la temporada seca y reduciendo el costo del recibo eléctrico comunal.",
+      "categoria": "Medio Ambiente & Sostenibilidad",
+      "provincia": "Guanacaste",
+      "canton": "Santa Cruz",
+      "autorNombre": "Dirección Ambiental Municipal Santa Cruz",
+      "autorRol": "Editor Municipal",
+      "autorCedula": "501870234",
+      "fechaPublicacion": "2026-09-29T14:00:00Z",
+      "imagenUrl": "",
+      "reacciones": {
+        "apoyo": 47,
+        "interesante": 29,
+        "alerta": 1
+      },
+      "comentarios": []
+    },
+    {
+      "id": "noticia-107",
+      "titulo": "Remodelación de quioscos gastronómicos y luminarias LED en el Paseo de los Turistas",
+      "resumen": "Intervención de 1.8 kilómetros de litoral para dinamizar la economía porteña.",
+      "contenido": "El Concejo Municipal de Puntarenas aprobó el plan maestro de revitalización urbana y turística. La obra incluye nuevo mobiliario urbano accesible según Ley 7600, ciclovía frente al mar y módulos modernos para los patentados de alimentos y artesanías.",
+      "categoria": "Comercio & Turismo",
+      "provincia": "Puntarenas",
+      "canton": "Puntarenas",
+      "autorNombre": "Departamento de Obras Portuarias y Urbanas",
+      "autorRol": "Editor Municipal",
+      "autorCedula": "602340567",
+      "fechaPublicacion": "2026-09-28T17:30:00Z",
+      "imagenUrl": "",
+      "reacciones": {
+        "apoyo": 38,
+        "interesante": 24,
+        "alerta": 3
+      },
+      "comentarios": []
+    },
+    {
+      "id": "noticia-108",
+      "titulo": "Reforzamiento de obras de contención y limpieza de cauces fluviales en Limón Centro",
+      "resumen": "Medidas de mitigación preventivas ante la temporada de ondas tropicales en el Caribe.",
+      "contenido": "Maquinaria municipal y del MOPT concluyó las labores de dragado y colocación de gaviones en el Río Limoncito. Se hace un llamado a la comunidad para evitar el depósito de escombros y basura no convencional en los afluentes.",
+      "categoria": "Obras Públicas",
+      "provincia": "Limón",
+      "canton": "Limón",
+      "autorNombre": "Unidad de Mantenimiento Cantonal Limón",
+      "autorRol": "Editor Municipal",
+      "autorCedula": "701450678",
+      "fechaPublicacion": "2026-09-27T15:45:00Z",
+      "imagenUrl": "",
+      "reacciones": {
+        "apoyo": 33,
+        "interesante": 12,
+        "alerta": 7
+      },
+      "comentarios": []
+    }
   ]
 }

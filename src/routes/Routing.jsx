@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import PrivateRoutes, { RoleRoute, AdminRoutes } from './PrivateRoutes';
+import PrivateRoutes, { RoleRoute, ProtectedRoute, AdminRoutes } from './PrivateRoutes';
 import Inicio from '../pages/Inicio';
 import LoginPage from '../pages/LoginPage';
 import Dashboard from '../pages/Dashboard';
@@ -20,6 +20,8 @@ import FeriaPage from '../pages/FeriaPage';
 import TurismoPage from '../pages/TurismoPage';
 import ParticipacionPage from '../pages/ParticipacionPage';
 import ItinerarioIAPage from '../pages/ItinerarioIAPage';
+import ForoPage from '../pages/ForoPage';
+import NoticiasPage from '../pages/NoticiasPage';
 
 /**
  * Enrutador principal de la aplicación Costa Rica Unidos
@@ -58,17 +60,23 @@ export default function Routing() {
         <Route path="/feria" element={<FeriaPage />} />
         <Route path="/turismo" element={<TurismoPage />} />
         <Route path="/participacion" element={<ParticipacionPage />} />
+        <Route path="/participacion/foro" element={<ForoPage />} />
+        <Route path="/foro" element={<ForoPage />} />
+        <Route path="/foro-tico" element={<ForoPage />} />
         <Route path="/itinerario-ia" element={<ItinerarioIAPage />} />
+        <Route path="/noticias" element={<NoticiasPage />} />
+        <Route path="/comunicados" element={<NoticiasPage />} />
+        <Route path="/noticias-municipales" element={<NoticiasPage />} />
 
-        {/* Rutas Privadas Ciudadanas Protegidas (Nivel >= 2) */}
-        <Route element={<RoleRoute minLevel={2} />}>
+        {/* Rutas Privadas Ciudadanas y Trámites (Cualquier Ciudadano Autenticado con Cédula/Contraseña) */}
+        <Route element={<RoleRoute minLevel={1} />}>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/participacion/votar" element={<ParticipacionPage />} />
           <Route path="/gobernanza/audiencia" element={<ParticipacionPage />} />
         </Route>
 
-        {/* Rutas Privadas de Administración y Consola de Mando (Nivel >= 3) */}
+        {/* Rutas Privadas de Administración Institucional y Mando (Funcionarios Nivel >= 3) */}
         <Route element={<RoleRoute minLevel={3} />}>
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/gobernanza/municipalidad-dashboard" element={<GobernanzaPage />} />
         </Route>

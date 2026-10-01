@@ -8,7 +8,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   OfficialRoleName,
   CitizenMode,
@@ -54,6 +54,29 @@ interface LoginFormProps {
 
 export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Detectar ruta de retorno previo si el usuario fue redirigido
+  const fromState = (location.state as any)?.from;
+  const targetDestination =
+    typeof fromState === 'string'
+      ? fromState
+      : fromState?.pathname
+      ? fromState.pathname + (fromState.search || '')
+      : null;
+
+  const resolveTarget = (fallbackPath: string) => {
+    if (
+      targetDestination &&
+      !targetDestination.includes('/login') &&
+      !targetDestination.includes('/403') &&
+      !targetDestination.includes('/acceso-denegado')
+    ) {
+      return targetDestination;
+    }
+    return fallbackPath;
+  };
+
   const { login, registro, register, seleccionarCuentaDemo, cargando, isLoading, error: authError, clearError } = useAuth();
 
   // Modo activo: Iniciar Sesión o Registrarse
@@ -336,11 +359,11 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
 
     if (result.success) {
       refreshDbStats();
-      // Redirección adaptativa según rol oficial
+      // Redirección adaptativa según rol oficial respetando la ruta previa
       if (selectedRole === 'Administrador Provincial' || selectedRole === 'Editor Municipal') {
-        navigate('/gobernanza');
+        navigate(resolveTarget('/gobernanza'), { replace: true });
       } else {
-        navigate('/dashboard');
+        navigate(resolveTarget('/dashboard'), { replace: true });
       }
     } else if (result.message) {
       setFormError(result.message);
@@ -432,7 +455,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
       setHaciendaVerified(false);
       setHaciendaMessage('');
       setTimeout(() => {
-        navigate('/dashboard');
+        navigate(resolveTarget('/dashboard'), { replace: true });
       }, 1200);
     } else {
       const err = (result as { message?: string; mensaje?: string }).message ||
@@ -1152,7 +1175,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     onClick={(e) => {
                       e.stopPropagation();
                       seleccionarCuentaDemo('USR-NAC-001');
-                      navigate('/dashboard');
+                      navigate(resolveTarget('/admin'), { replace: true });
                     }}
                     style={{
                       background: '#CE1126',
@@ -1213,7 +1236,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     onClick={(e) => {
                       e.stopPropagation();
                       seleccionarCuentaDemo('USR-PROV-001');
-                      navigate('/gobernanza');
+                      navigate(resolveTarget('/gobernanza'), { replace: true });
                     }}
                     style={{
                       background: '#FFC700',
@@ -1274,7 +1297,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     onClick={(e) => {
                       e.stopPropagation();
                       seleccionarCuentaDemo('USR-MUNI-001');
-                      navigate('/gobernanza');
+                      navigate(resolveTarget('/gobernanza'), { replace: true });
                     }}
                     style={{
                       background: '#0284C7',
@@ -1333,7 +1356,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     onClick={(e) => {
                       e.stopPropagation();
                       seleccionarCuentaDemo('USR-CIUD-001');
-                      navigate('/dashboard');
+                      navigate(resolveTarget('/dashboard'), { replace: true });
                     }}
                     style={{
                       background: '#002B7F',

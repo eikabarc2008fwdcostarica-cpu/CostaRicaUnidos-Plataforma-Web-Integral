@@ -18,9 +18,11 @@ import {
   CheckCircle2,
   ExternalLink,
   ChevronRight,
-  ShieldAlert
+  ShieldAlert,
+  Newspaper
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import ProvinciasSection from '../components/provincias/ProvinciasSection';
 import { useLanguage } from '../context/LanguageContext';
 import { CANTONES_OFICIALES } from '../data/costaRicaTerritorialData';
 
@@ -1254,6 +1256,15 @@ export default function Inicio() {
           >
             {[
               {
+                id: 'modulo-noticias',
+                titulo: 'Noticias & Comunicados Municipales',
+                desc: 'Boletines oficiales de los 84 cantones, hilo de comentarios ciudadanos y verificación.',
+                icono: Newspaper,
+                color: '#34D399',
+                ruta: '/noticias',
+                badge: 'M01 Oficial'
+              },
+              {
                 id: 'modulo-gis',
                 titulo: 'Visor Cartográfico 3D GIS',
                 desc: 'Análisis topográfico, cuencas hidrográficas y puntos de interés cívicos.',
@@ -1399,6 +1410,12 @@ export default function Inicio() {
           </div>
         </section>
       </main>
+
+      {/* ==========================================================================
+          MÓDULO TERRITORIAL — LAS 7 PROVINCIAS DE COSTA RICA (PRE-FOOTER)
+          Scaffolding modular: Noticias, Foro, Mapa & GIS y Comercio Local
+          ========================================================================== */}
+      <ProvinciasSection />
 
       {/* ==========================================================================
           5. PIE DE PÁGINA (FOOTER) INSTITUCIONAL SOBERANO

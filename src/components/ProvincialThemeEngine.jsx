@@ -21,7 +21,7 @@ function hexToRgb(hex) {
 /**
  * Escudos vectoriales emblemáticos estilizados para cada una de las 7 provincias
  */
-function EscudoEmblematico({ id, size = 26 }) {
+export function EscudoEmblematico({ id, size = 26 }) {
   switch (id) {
     case 1: // San José - Saprissa #601438
       return (
@@ -161,11 +161,6 @@ export default function ProvincialThemeEngine({
             type="button"
             onClick={() => onSelectProvincia && onSelectProvincia(0)}
             className="btn-glass-secondary"
-            style={{
-              fontSize: '0.78rem',
-              padding: '0.35rem 0.75rem',
-              borderRadius: '8px'
-            }}
             aria-label="Restablecer tema al estándar Tricolor Nacional"
             style={{
               fontSize: '0.78rem',

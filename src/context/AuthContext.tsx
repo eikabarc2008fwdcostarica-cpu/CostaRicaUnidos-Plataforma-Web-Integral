@@ -198,8 +198,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { success: false, mensaje: msg, message: msg };
       }
 
-      const raw = localStorage.getItem('cr_db_usuarios') || JSON.stringify(dbSeed.usuarios || []);
-      const usuarios: Usuario[] = JSON.parse(raw);
+      let usuarios: Usuario[] = [];
+      try {
+        const raw = localStorage.getItem('cr_db_usuarios');
+        usuarios = raw ? JSON.parse(raw) : [];
+      } catch {
+        usuarios = [];
+      }
+
+      // Asegurar que siempre contenga los usuarios oficiales de db.json
+      for (const seed of dbSeed.usuarios || []) {
+        const sClean = (seed.cedula || '').replace(/[^0-9]/g, '');
+        if (!usuarios.some((u) => (u.cedula || '').replace(/[^0-9]/g, '') === sClean || u.id === seed.id)) {
+          usuarios.push(seed as Usuario);
+        }
+      }
 
       const identLower = identRaw.toLowerCase();
       const identDigits = identRaw.replace(/[^0-9]/g, '');
@@ -224,8 +237,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (usuarioEncontrado) {
         const { password: _, ...usuarioSinPass } = usuarioEncontrado;
-        setUsuarioActual(usuarioSinPass as Usuario);
-        localStorage.setItem('cr_sesion_activa', JSON.stringify(usuarioSinPass));
+        const usuarioConSesion = {
+          ...usuarioSinPass,
+          isAuthenticated: true,
+          estaAutenticado: true
+        };
+        setUsuarioActual(usuarioConSesion as Usuario);
+        localStorage.setItem('cr_sesion_activa', JSON.stringify(usuarioConSesion));
         setCargando(false);
 
         // Notificar cambio en sesiones
@@ -297,8 +315,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const { password: _, ...usuarioSinPass } = nuevoUsuario;
-      setUsuarioActual(usuarioSinPass as Usuario);
-      localStorage.setItem('cr_sesion_activa', JSON.stringify(usuarioSinPass));
+      const usuarioConSesion = {
+        ...usuarioSinPass,
+        isAuthenticated: true,
+        estaAutenticado: true
+      };
+      setUsuarioActual(usuarioConSesion as Usuario);
+      localStorage.setItem('cr_sesion_activa', JSON.stringify(usuarioConSesion));
       setCargando(false);
 
       window.dispatchEvent(new CustomEvent('cru_db_updated'));
@@ -330,8 +353,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const u = usuarios.find((x) => x.id === idUsuario);
       if (u) {
         const { password: _, ...usuarioSinPass } = u;
-        setUsuarioActual(usuarioSinPass as Usuario);
-        localStorage.setItem('cr_sesion_activa', JSON.stringify(usuarioSinPass));
+        const usuarioConSesion = {
+          ...usuarioSinPass,
+          isAuthenticated: true,
+          estaAutenticado: true
+        };
+        setUsuarioActual(usuarioConSesion as Usuario);
+        localStorage.setItem('cr_sesion_activa', JSON.stringify(usuarioConSesion));
         window.dispatchEvent(new CustomEvent('cru_db_updated'));
       }
     } catch {
