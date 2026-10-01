@@ -79,13 +79,13 @@ export default function PredictiveSearch({ onSelectResult }) {
       color: '#00D166'
     }));
 
-    // Entrada directa al Motor de IA NLP (RF-12.1)
+    // Entrada directa al Motor de IA NLP
     const aiNlpHit = {
       type: 'nlp-ia',
       id: 'ai-nlp-query',
       titulo: `Consultar en Visor 3D con IA: "${debouncedQuery}"`,
-      subtitulo: 'Activar capas automáticas y volar a la zona en el Visor GIS (RF-12.1)',
-      badge: 'IA NLP',
+      subtitulo: 'Activar capas automáticas y explorar la zona en el Visor Cartográfico 3D',
+      badge: 'IA Cívica',
       ruta: `/mapa-gis?q=${encodeURIComponent(debouncedQuery)}`,
       color: '#79a6ff'
     };

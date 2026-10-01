@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Copy, Check, MapPin, Building2, Construction, Lightbulb, Droplets, Trash2, AlertTriangle, ArrowRight, Circle } from 'lucide-react';
 import { getTickets, buscarTicketPorId, ESTADOS_TICKET } from './ticketService';
+import { useCivicModal } from '../../context/CivicModalContext';
 
 function getCategoryIcon(categoria, size = 18) {
   switch (categoria) {
@@ -21,6 +22,7 @@ export default function TicketTraceabilityBoard({
   initialTicketId = null,
   onGoToNewReport
 }) {
+  const { mostrarAlerta } = useCivicModal();
   const [searchTerm, setSearchTerm] = useState(initialTicketId || '');
   const [activeTicket, setActiveTicket] = useState(null);
   const [ticketsList, setTicketsList] = useState([]);
@@ -48,7 +50,11 @@ export default function TicketTraceabilityBoard({
     if (found) {
       setActiveTicket(found);
     } else {
-      alert(`No se encontró ningún reporte con el identificador: ${searchTerm}`);
+      mostrarAlerta({
+        titulo: 'Reporte No Encontrado',
+        mensaje: `No se encontró ningún reporte cívico registrado con el identificador: ${searchTerm}. Verifique el código ingresado e intente nuevamente.`,
+        icono: 'advertencia'
+      });
     }
   };
 

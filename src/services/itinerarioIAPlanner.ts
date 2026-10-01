@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * COSTA RICA UNIDOS — MÓDULO 12: RF-12.2 PLANIFICADOR GENERATIVO 'ITINERARIO PURA VIDA'
+ * COSTA RICA UNIDOS — PLANIFICADOR GENERATIVO 'ITINERARIO PURA VIDA'
  * Motor de Inteligencia Artificial Multivariable y Análisis Topográfico 3D
  * ============================================================================
  */

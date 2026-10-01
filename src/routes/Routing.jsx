@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import PrivateRoutes from './PrivateRoutes';
+import PrivateRoutes, { RoleRoute, AdminRoutes } from './PrivateRoutes';
 import Inicio from '../pages/Inicio';
 import LoginPage from '../pages/LoginPage';
 import Dashboard from '../pages/Dashboard';
@@ -60,11 +60,16 @@ export default function Routing() {
         <Route path="/participacion" element={<ParticipacionPage />} />
         <Route path="/itinerario-ia" element={<ItinerarioIAPage />} />
 
-        {/* Rutas Privadas Protegidas */}
-        <Route element={<PrivateRoutes />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+        {/* Rutas Privadas Ciudadanas Protegidas (Nivel >= 2) */}
+        <Route element={<RoleRoute minLevel={2} />}>
           <Route path="/participacion/votar" element={<ParticipacionPage />} />
           <Route path="/gobernanza/audiencia" element={<ParticipacionPage />} />
+        </Route>
+
+        {/* Rutas Privadas de Administración y Consola de Mando (Nivel >= 3) */}
+        <Route element={<RoleRoute minLevel={3} />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin" element={<Dashboard />} />
           <Route path="/gobernanza/municipalidad-dashboard" element={<GobernanzaPage />} />
         </Route>
 

@@ -59,8 +59,10 @@ import {
   ConvocatoriaJDN,
   DisciplinaOficial
 } from '../data/deportesData';
+import { useCivicModal } from '../context/CivicModalContext';
 
 export const DeportesPage: FC = () => {
+  const { mostrarAlerta } = useCivicModal();
   // Cantón activo sincronizado con el Navbar y Theming Engine
   const [cantonActivo, setCantonActivo] = useState<string>(() => {
     try {
@@ -145,7 +147,11 @@ export const DeportesPage: FC = () => {
   const handleConfirmarReserva = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formReserva.nombreCompleto || !formReserva.cedula) {
-      alert('Por favor complete los campos obligatorios.');
+      mostrarAlerta({
+        titulo: 'Campos Obligatorios Incompletos',
+        mensaje: 'Por favor complete su nombre completo y número de cédula para procesar la reserva del espacio deportivo.',
+        icono: 'advertencia'
+      });
       return;
     }
 
@@ -162,7 +168,11 @@ export const DeportesPage: FC = () => {
   const handleConfirmarJdn = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formJdn.nombreAtleta || !formJdn.cedulaAtleta || !formJdn.aceptaDeclaracion) {
-      alert('Por favor complete los campos y marque la declaración jurada.');
+      mostrarAlerta({
+        titulo: 'Declaración Incompleta',
+        mensaje: 'Por favor complete todos los datos requeridos del atleta y confirme la declaración jurada reglamentaria.',
+        icono: 'advertencia'
+      });
       return;
     }
 
@@ -789,7 +799,11 @@ export const DeportesPage: FC = () => {
                       size="sm"
                       fullWidth
                       onClick={() => {
-                        alert(`Iniciando postulación a la escuela de ${esc.disciplina}. Se solicitarán documentos en ventanilla digital.`);
+                        mostrarAlerta({
+                          titulo: 'Inscripción a Escuela Deportiva',
+                          mensaje: `Iniciando postulación a la escuela de ${esc.disciplina}. Se solicitarán los documentos y atestados en la ventanilla digital municipal.`,
+                          icono: 'info'
+                        });
                       }}
                     >
                       Inscribir Atleta (Gratuito CCDR)

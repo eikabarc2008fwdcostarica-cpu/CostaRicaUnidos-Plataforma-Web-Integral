@@ -23,7 +23,7 @@ interface FormularioItinerarioIAProps {
 }
 
 /**
- * FormularioItinerarioIA — Módulo 12 (RF-12.2): Motor Generativo
+ * FormularioItinerarioIA — Motor Generativo de Itinerarios
  * Controles de alta fidelidad:
  * - Slider estilizado para presupuesto (₡15,000 a ₡150,000)
  * - Selector segmentado de vehículo (Automóvil bajo / 4x4 / Transporte público)
@@ -81,7 +81,7 @@ export const FormularioItinerarioIA: React.FC<FormularioItinerarioIAProps> = ({
           </p>
         </div>
         <span className="text-xs font-mono px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
-          RF-12.2 Pura Vida
+          Itinerario Pura Vida
         </span>
       </div>
 

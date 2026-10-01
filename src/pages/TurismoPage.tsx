@@ -105,7 +105,7 @@ export default function TurismoPage() {
             <div className="max-w-2xl space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
                 <Compass size={14} className="animate-spin-slow" />
-                Módulo 09 • Turismo Cantonal y Aventura Sostenible
+                Turismo Cantonal y Aventura Sostenible
               </div>
               <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
                 Descubre Costa Rica con{' '}
@@ -128,7 +128,7 @@ export default function TurismoPage() {
               >
                 <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm">
                   <Sparkles size={16} />
-                  <span>Motor Generativo RF-12.2</span>
+                  <span>Motor Generativo de Itinerarios</span>
                 </div>
                 <h3 className="text-lg font-bold text-white mt-1">
                   Planificador 'Itinerario Pura Vida'

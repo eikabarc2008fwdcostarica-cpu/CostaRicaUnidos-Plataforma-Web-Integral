@@ -25,7 +25,7 @@ interface VisorItinerarioGeneradoProps {
 }
 
 /**
- * VisorItinerarioGenerado — Módulo 12 (RF-12.2): Motor Generativo
+ * VisorItinerarioGenerado — Motor Generativo de Itinerarios
  * Despliega el itinerario generado paso a paso:
  * - Día 1: Mañana (Atractivo accesible), Almuerzo (Soda tradicional PYME local), Tarde (Visita a Feria del Agricultor)
  * - Tiempos de traslado estimados con iconos de navegación

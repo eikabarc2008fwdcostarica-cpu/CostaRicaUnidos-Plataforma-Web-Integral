@@ -13,8 +13,8 @@ export interface UseDirectoryDataReturn<T> {
 /**
  * useDirectoryData — Hook Genérico de Fetching SWR para Directorios Cantonales (RNF-10)
  * 
- * Diseñado para la consulta de directorios de infraestructura educativa (M06),
- * comercios/PYMES (M08), instalaciones deportivas (M04) y atractivos turísticos (M09).
+ * Diseñado para la consulta de directorios de infraestructura educativa,
+ * comercios/PYMES, instalaciones deportivas y atractivos turísticos.
  * 
  * Ventajas:
  * - Evita parpadeos de UI mediante datos inmediatos de caché (Stale).
