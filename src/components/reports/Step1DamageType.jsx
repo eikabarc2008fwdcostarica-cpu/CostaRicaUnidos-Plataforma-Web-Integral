@@ -1,5 +1,5 @@
 import React from 'react';
-import { Construction, Lightbulb, Droplets, Trash2, Clock } from 'lucide-react';
+import { Construction, Lightbulb, Droplets, Trash2, Clock, Check } from 'lucide-react';
 
 export const TIPOLOGIAS_DANO = [
   {
@@ -123,7 +123,7 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                   fontWeight: 900,
                   boxShadow: '0 0 10px rgba(218, 41, 28, 0.8)'
                 }}>
-                  ✓
+                  <Check size={14} strokeWidth={2.5} />
                 </div>
               )}
 

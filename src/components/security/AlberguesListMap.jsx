@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, MapPin, Navigation, Map } from 'lucide-react';
+import { Home, MapPin, Navigation, Map, Circle, Check } from 'lucide-react';
 import { generarEnlaceWaze, generarEnlaceGoogleMaps } from '../gis/gisLayersData';
 
 export const ALBERGUES_CNE_DATA = [
@@ -236,9 +236,13 @@ export default function AlberguesListMap() {
                   <span className="telemetry-badge" style={{
                     backgroundColor: alb.estado === 'activo' ? 'rgba(0, 209, 102, 0.2)' : 'rgba(245, 158, 11, 0.2)',
                     color: alb.estado === 'activo' ? '#00D166' : '#F59E0B',
-                    borderColor: alb.estado === 'activo' ? '#00D166' : '#F59E0B'
+                    borderColor: alb.estado === 'activo' ? '#00D166' : '#F59E0B',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
                   }}>
-                    {alb.estado === 'activo' ? '● ALBERGUE ACTIVO' : '● EN PREPARACIÓN'}
+                    <Circle size={6} fill="currentColor" />
+                    <span>{alb.estado === 'activo' ? 'ALBERGUE ACTIVO' : 'EN PREPARACIÓN'}</span>
                   </span>
 
                   <span style={{ fontSize: '0.78rem', color: '#79a6ff', fontFamily: 'var(--font-telemetry)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
@@ -301,10 +305,14 @@ export default function AlberguesListMap() {
                           borderRadius: '6px',
                           backgroundColor: 'rgba(255, 255, 255, 0.05)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
-                          color: '#E2E8F0'
+                          color: '#E2E8F0',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
                         }}
                       >
-                        ✓ {sum}
+                        <Check size={11} strokeWidth={2.5} className="text-emerald-400" />
+                        <span>{sum}</span>
                       </span>
                     ))}
                   </div>

@@ -221,7 +221,17 @@ export default function ReportarIncidencia() {
     >
       <Navbar />
 
-      <main style={{ flex: 1, padding: '2.5rem 2rem 5rem', maxWidth: '1360px', margin: '0 auto', width: '100%' }}>
+      <main
+        className="civic-container"
+        style={{
+          flex: 1,
+          padding: 'clamp(1.5rem, 4vw, 2.5rem) clamp(0.75rem, 3vw, 2rem) 5rem',
+          maxWidth: '1360px',
+          margin: '0 auto',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}
+      >
         {/* ==========================================================================
             1. CABECERA INSTITUCIONAL FORMAL
             Ventanilla de Fiscalización Ciudadana y Averías Comunales - Ley N° 8968
@@ -233,7 +243,7 @@ export default function ReportarIncidencia() {
             WebkitBackdropFilter: 'blur(28px)',
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '24px',
-            padding: '2.5rem',
+            padding: 'clamp(1.25rem, 4vw, 2.5rem)',
             marginBottom: '2.5rem',
             boxShadow: '0 20px 60px rgba(0, 4, 13, 0.8), 0 0 35px rgba(0, 20, 137, 0.35)',
             position: 'relative',
@@ -534,15 +544,16 @@ export default function ReportarIncidencia() {
                   WebkitBackdropFilter: 'blur(28px)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   borderRadius: '24px',
-                  padding: '2.5rem',
+                  padding: 'clamp(1.25rem, 4vw, 2.5rem)',
                   boxShadow: '0 20px 60px rgba(0, 4, 13, 0.75)'
                 }}
               >
                 {/* Barra de Progreso del Stepper */}
                 <div
+                  className="civic-stepper-grid"
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))',
                     gap: '0.75rem',
                     marginBottom: '2.5rem'
                   }}
@@ -815,7 +826,7 @@ export default function ReportarIncidencia() {
 
         {/* ==========================================================================
             3. VISTA TABLERO: TRAZABILIDAD OFICIAL EN 4 ETAPAS
-            Radicado ➔ Inspección de Campo ➔ En Ejecución Presupuestaria ➔ Subsanado
+            Radicado -> Inspección de Campo -> En Ejecución Presupuestaria -> Subsanado
             ========================================================================== */}
         {activeTab === 'tablero' && (
           <div>

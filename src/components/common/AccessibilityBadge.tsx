@@ -1,6 +1,13 @@
 import React, { forwardRef, HTMLAttributes } from 'react';
+import { Accessibility, Car, Navigation, Footprints, Heart, SquareParking } from 'lucide-react';
 
-export type AccessibilityBadgeType = 'ley-7600' | 'acceso-4x4' | 'pet-friendly';
+export type AccessibilityBadgeType =
+  | 'ley-7600'
+  | 'automovil-bajo'
+  | 'acceso-4x4'
+  | 'senderismo'
+  | 'pet-friendly'
+  | 'parqueo-disponible';
 
 export type AccessibilityBadgeSize = 'sm' | 'md' | 'lg';
 
@@ -24,9 +31,12 @@ interface BadgeSpec {
  * AccessibilityBadge — Badges Estandarizados de Accesibilidad y Logística
  * 
  * Implementa identificadores universales normados para turismo y servicios cantonales:
- * - Ley 7600: Accesibilidad universal garantizada (rampas, señalética, baños adaptados).
- * - Acceso 4x4: Exigencia logística de tracción 4x4 en terreno montañoso o rural.
- * - Pet-friendly: Espacio apto para animales de compañía o asistencia.
+ * - Ley 7600: Accesibilidad universal garantizada (Icono Accessibility, borde verde esmeralda).
+ * - Automóvil Bajo: Apto para vehículos livianos/urbanos (Icono Car).
+ * - Acceso 4x4: Exigencia logística de tracción 4x4 (Icono Navigation).
+ * - Senderismo: Acceso peatonal natural (Icono Footprints).
+ * - Pet-Friendly: Espacio pet-friendly para animales de compañía/asistencia (Icono Heart).
+ * - Parqueo Disponible: Estacionamiento seguro disponible (Icono SquareParking).
  * - Radio normado: 9999px (--radius-pill)
  * - Cumplimiento estricto WCAG 2.1 AA.
  */
@@ -45,88 +55,56 @@ export const AccessibilityBadge = forwardRef<HTMLSpanElement, AccessibilityBadge
   ) => {
     const specs: Record<AccessibilityBadgeType, BadgeSpec> = {
       'ley-7600': {
-        label: 'Ley 7600 Accesible',
+        label: 'Accesibilidad Total Ley 7600',
         ariaDescription: 'Espacio certificado con accesibilidad universal según Ley N° 7600',
-        bg: 'rgba(14, 165, 233, 0.18)',
-        border: 'rgba(56, 189, 248, 0.45)',
-        text: '#E0F2FE',
-        icon: (iconSize) => (
-          <svg
-            width={iconSize}
-            height={iconSize}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            {/* Símbolo universal de accesibilidad en silla de ruedas */}
-            <circle cx="12" cy="4" r="2" />
-            <path d="M12 6v6l4 2" />
-            <path d="M9 13a5 5 0 1 0 5 5" />
-            <path d="M16 19l3 2" />
-          </svg>
-        )
+        bg: 'rgba(16, 185, 129, 0.15)',
+        border: '#10b981', // Borde verde esmeralda profesional normado
+        text: '#a7f3d0',
+        icon: (iconSize) => <Accessibility size={iconSize} className="text-emerald-400 shrink-0" />
+      },
+      'automovil-bajo': {
+        label: 'Automóvil Bajo',
+        ariaDescription: 'Destino con acceso apto para automóviles bajos y vehículos urbanos',
+        bg: 'rgba(14, 165, 233, 0.15)',
+        border: 'rgba(56, 189, 248, 0.5)',
+        text: '#bae6fd',
+        icon: (iconSize) => <Car size={iconSize} className="text-sky-400 shrink-0" />
       },
       'acceso-4x4': {
-        label: 'Requiere 4x4',
+        label: 'Tracción 4x4 Requerida',
         ariaDescription: 'Ruta o destino que requiere vehículo con tracción en las cuatro ruedas',
-        bg: 'rgba(245, 158, 11, 0.18)',
+        bg: 'rgba(245, 158, 11, 0.15)',
         border: 'rgba(251, 191, 36, 0.5)',
-        text: '#FEF3C7',
-        icon: (iconSize) => (
-          <svg
-            width={iconSize}
-            height={iconSize}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            {/* Ícono de todoterreno / montaña / 4x4 */}
-            <path d="M3 17h2m14 0h2" />
-            <circle cx="7" cy="17" r="3" />
-            <circle cx="17" cy="17" r="3" />
-            <path d="M5 14l3-6h8l3 6" />
-            <path d="M10 8V5h4v3" />
-          </svg>
-        )
+        text: '#fde68a',
+        icon: (iconSize) => <Navigation size={iconSize} className="text-amber-400 shrink-0" />
+      },
+      'senderismo': {
+        label: 'Senderismo',
+        ariaDescription: 'Acceso por sendero natural pedestre o caminata de montaña',
+        bg: 'rgba(20, 184, 166, 0.15)',
+        border: 'rgba(45, 212, 191, 0.5)',
+        text: '#99f6e4',
+        icon: (iconSize) => <Footprints size={iconSize} className="text-teal-400 shrink-0" />
       },
       'pet-friendly': {
         label: 'Pet-Friendly',
         ariaDescription: 'Lugar apto para mascotas y animales de asistencia',
-        bg: 'rgba(16, 185, 129, 0.18)',
-        border: 'rgba(52, 211, 153, 0.5)',
-        text: '#D1FAE5',
-        icon: (iconSize) => (
-          <svg
-            width={iconSize}
-            height={iconSize}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            {/* Huella de mascota */}
-            <path d="M11 19.5c-2 0-3.5-1.5-3.5-3.5 0-2.5 2.5-4 4.5-4s4.5 1.5 4.5 4c0 2-1.5 3.5-3.5 3.5h-2z" />
-            <circle cx="6" cy="11" r="2" />
-            <circle cx="10" cy="7" r="2" />
-            <circle cx="14" cy="7" r="2" />
-            <circle cx="18" cy="11" r="2" />
-          </svg>
-        )
+        bg: 'rgba(244, 63, 94, 0.15)',
+        border: 'rgba(251, 113, 133, 0.5)',
+        text: '#fecdd3',
+        icon: (iconSize) => <Heart size={iconSize} className="text-rose-400 shrink-0" />
+      },
+      'parqueo-disponible': {
+        label: 'Parqueo Disponible',
+        ariaDescription: 'Estacionamiento vehicular regulado y seguro disponible en el destino',
+        bg: 'rgba(99, 102, 241, 0.15)',
+        border: 'rgba(129, 140, 248, 0.5)',
+        text: '#c7d2fe',
+        icon: (iconSize) => <SquareParking size={iconSize} className="text-indigo-400 shrink-0" />
       }
     };
 
-    const currentSpec = specs[type];
+    const currentSpec = specs[type] || specs['ley-7600'];
     const displayLabel = customLabel || currentSpec.label;
 
     const sizeConfig: Record<
@@ -135,14 +113,14 @@ export const AccessibilityBadge = forwardRef<HTMLSpanElement, AccessibilityBadge
     > = {
       sm: {
         font: '0.7rem',
-        padding: '0.2rem 0.55rem',
-        iconSize: 14,
+        padding: '0.2rem 0.6rem',
+        iconSize: 13,
         gap: '0.35rem'
       },
       md: {
         font: '0.78rem',
         padding: '0.3rem 0.8rem',
-        iconSize: 16,
+        iconSize: 15,
         gap: '0.45rem'
       },
       lg: {
@@ -169,7 +147,7 @@ export const AccessibilityBadge = forwardRef<HTMLSpanElement, AccessibilityBadge
           gap: currentSize.gap,
           borderRadius: 'var(--radius-pill, 9999px)',
           background: currentSpec.bg,
-          border: `1px solid ${currentSpec.border}`,
+          border: `1.5px solid ${currentSpec.border}`,
           color: currentSpec.text,
           fontSize: currentSize.font,
           padding: currentSize.padding,

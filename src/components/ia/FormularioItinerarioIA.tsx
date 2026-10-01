@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
-import { Sparkles, DollarSign, Car, Accessibility, Store, Clock, Calendar, Check, Compass, Sliders } from 'lucide-react';
-import { SolicitudItinerarioIA } from '../../services/itinerarioIAPlanner';
+import {
+  Sparkles,
+  DollarSign,
+  Car,
+  Navigation,
+  Bus,
+  Accessibility,
+  Calendar,
+  MapPin,
+  Check,
+  Compass,
+  Sliders,
+  Store
+} from 'lucide-react';
+import { SolicitudItinerarioIA, TipoVehiculoItinerario } from '../../services/itinerarioIAPlanner';
 import { CivicCard } from '../common/CivicCard';
 import { CivicButton } from '../common/CivicButton';
 
@@ -11,29 +24,30 @@ interface FormularioItinerarioIAProps {
 
 /**
  * FormularioItinerarioIA — Módulo 12 (RF-12.2): Motor Generativo
- * Formulario multivariable con restricciones presupuestarias, tipo de tracción,
- * certificación Ley 7600 y fomento de ferias y PyMEs locales.
+ * Controles de alta fidelidad:
+ * - Slider estilizado para presupuesto (₡15,000 a ₡150,000)
+ * - Selector segmentado de vehículo (Automóvil bajo / 4x4 / Transporte público)
+ * - Switch de Accesibilidad Obligatoria Ley 7600
+ * - Selectores de cantón destino y duración (1 a 3 días)
  */
 export const FormularioItinerarioIA: React.FC<FormularioItinerarioIAProps> = ({
   onGenerar,
   estaGenerando = false
 }) => {
-  const [presupuesto, setPresupuesto] = useState<number>(35000);
-  const [tipoVehiculo, setTipoVehiculo] = useState<'4x2' | '4x4'>('4x2');
-  const [requiereLey7600, setRequiereLey7600] = useState<boolean>(false);
-  const [incluirFeria, setIncluirFeria] = useState<boolean>(true);
-  const [duracionDias, setDuracionDias] = useState<1 | 2>(1);
-  const [ritmoViaje, setRitmoViaje] = useState<'relajado' | 'equilibrado' | 'intenso'>('equilibrado');
-  const [intereses, setIntereses] = useState<('cultura' | 'naturaleza' | 'gastronomia' | 'aventura')[]>([
-    'cultura',
-    'gastronomia'
-  ]);
+  const [presupuesto, setPresupuesto] = useState<number>(45000);
+  const [tipoVehiculo, setTipoVehiculo] = useState<TipoVehiculoItinerario>('Automóvil bajo');
+  const [requiereLey7600, setRequiereLey7600] = useState<boolean>(true);
+  const [cantonDestino, setCantonDestino] = useState<string>('Quepos');
+  const [duracionDias, setDuracionDias] = useState<1 | 2 | 3>(1);
 
-  const toggleInteres = (item: 'cultura' | 'naturaleza' | 'gastronomia' | 'aventura') => {
-    setIntereses((prev) =>
-      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-    );
-  };
+  const cantonesOpciones = [
+    { id: 'Quepos', nombre: 'Quepos (Manuel Antonio)', provincia: 'Puntarenas' },
+    { id: 'Poás', nombre: 'Poás (Volcán Poás)', provincia: 'Alajuela' },
+    { id: 'Monteverde', nombre: 'Monteverde (Bosque Nuboso)', provincia: 'Puntarenas' },
+    { id: 'Talamanca', nombre: 'Talamanca (Cahuita Caribe)', provincia: 'Limón' },
+    { id: 'San Carlos', nombre: 'San Carlos (La Fortuna)', provincia: 'Alajuela' },
+    { id: 'San José', nombre: 'San José (Distrito Capital)', provincia: 'San José' }
+  ];
 
   const handlePresetPresupuesto = (monto: number) => {
     setPresupuesto(monto);
@@ -45,10 +59,8 @@ export const FormularioItinerarioIA: React.FC<FormularioItinerarioIAProps> = ({
       presupuestoColones: presupuesto,
       tipoVehiculo,
       requiereLey7600,
-      incluirFeria,
-      duracionDias,
-      ritmoViaje,
-      intereses
+      cantonDestino,
+      duracionDias
     });
   };
 
@@ -65,250 +77,221 @@ export const FormularioItinerarioIA: React.FC<FormularioItinerarioIAProps> = ({
             Parámetros del Motor Generativo de IA
           </h3>
           <p className="text-xs text-slate-300 mt-0.5">
-            Optimización algorítmica de rutas, paradas y viabilidad topográfica.
+            Personaliza el algoritmo con tu presupuesto, movilidad, cantón y días de viaje.
           </p>
         </div>
         <span className="text-xs font-mono px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
-          RF-12.2
+          RF-12.2 Pura Vida
         </span>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Variable 1: Presupuesto del Usuario */}
-        <div className="space-y-3">
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <DollarSign size={14} className="text-cyan-400" />
-              Presupuesto Disponible por Persona (₡ Colones):
-            </span>
-            <span className="text-sm font-mono text-cyan-300 font-bold">
-              ₡ {presupuesto.toLocaleString()}
-            </span>
-          </label>
+        {/* Variable 1: Slider Estilizado de Presupuesto en Colones (₡15,000 a ₡150,000) */}
+        <div className="space-y-3 p-4 rounded-2xl bg-white/[0.02] border border-white/10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <label
+              htmlFor="presupuesto-slider"
+              className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5"
+            >
+              <DollarSign size={16} className="text-cyan-400" />
+              <span>Presupuesto por Persona (₡ Colones):</span>
+            </label>
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl sm:text-2xl font-mono text-cyan-300 font-extrabold">
+                ₡ {presupuesto.toLocaleString('es-CR')}
+              </span>
+              <span className="text-[11px] text-slate-400 font-mono">CRC</span>
+            </div>
+          </div>
 
-          <input
-            type="range"
-            min={10000}
-            max={100000}
-            step={2500}
-            value={presupuesto}
-            onChange={(e) => setPresupuesto(Number(e.target.value))}
-            className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
-          />
+          {/* Slider Stylized Range */}
+          <div className="space-y-2">
+            <input
+              id="presupuesto-slider"
+              type="range"
+              min={15000}
+              max={150000}
+              step={5000}
+              value={presupuesto}
+              onChange={(e) => setPresupuesto(Number(e.target.value))}
+              aria-label="Presupuesto por persona en colones"
+              className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+            />
+            <div className="flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>Min: ₡ 15,000</span>
+              <span>Medio: ₡ 80,000</span>
+              <span>Max: ₡ 150,000</span>
+            </div>
+          </div>
 
           {/* Presets Rápidos */}
           <div className="flex flex-wrap gap-2 pt-1 text-xs">
-            <button
-              type="button"
-              onClick={() => handlePresetPresupuesto(15000)}
-              className={`px-3 py-1 rounded-full border transition-all ${
-                presupuesto === 15000
-                  ? 'bg-cyan-500 text-slate-950 font-bold border-cyan-400'
-                  : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
-              }`}
-            >
-              ₡ 15,000 (Económico)
-            </button>
-            <button
-              type="button"
-              onClick={() => handlePresetPresupuesto(35000)}
-              className={`px-3 py-1 rounded-full border transition-all ${
-                presupuesto === 35000
-                  ? 'bg-cyan-500 text-slate-950 font-bold border-cyan-400'
-                  : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
-              }`}
-            >
-              ₡ 35,000 (Equilibrado)
-            </button>
-            <button
-              type="button"
-              onClick={() => handlePresetPresupuesto(75000)}
-              className={`px-3 py-1 rounded-full border transition-all ${
-                presupuesto === 75000
-                  ? 'bg-cyan-500 text-slate-950 font-bold border-cyan-400'
-                  : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
-              }`}
-            >
-              ₡ 75,000 (Todo Incluido)
-            </button>
+            <span className="text-slate-400 text-xs self-center mr-1">Preajustes:</span>
+            {[15000, 35000, 75000, 150000].map((monto) => (
+              <button
+                key={monto}
+                type="button"
+                onClick={() => handlePresetPresupuesto(monto)}
+                className={`px-3 py-1 rounded-full border text-xs font-mono transition-all ${
+                  presupuesto === monto
+                    ? 'bg-cyan-500 text-slate-950 font-bold border-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.4)]'
+                    : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
+                }`}
+              >
+                ₡ {monto.toLocaleString('es-CR')}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Variables 2 & 3: Tipo de Tracción & Ley 7600 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Tracción Vehicular */}
-          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 space-y-2">
-            <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-              <Car size={15} className="text-cyan-400" />
-              Tipo de Tracción Vehicular:
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setTipoVehiculo('4x2')}
-                className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all ${
-                  tipoVehiculo === '4x2'
-                    ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400'
-                    : 'bg-slate-900 text-slate-400 border-white/10 hover:border-white/20'
-                }`}
-              >
-                Vehículo 4x2 (Urbano)
-              </button>
-              <button
-                type="button"
-                onClick={() => setTipoVehiculo('4x4')}
-                className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all ${
-                  tipoVehiculo === '4x4'
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-400'
-                    : 'bg-slate-900 text-slate-400 border-white/10 hover:border-white/20'
-                }`}
-              >
-                Tracción 4x4 (Montaña)
-              </button>
-            </div>
-            <p className="text-[11px] text-slate-400">
-              {tipoVehiculo === '4x2'
-                ? 'Rutas pavimentadas con pendientes moderadas.'
-                : 'Habilita accesos a lastre y miradores de alta montaña.'}
-            </p>
-          </div>
-
-          {/* Accesibilidad Ley 7600 */}
-          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 space-y-2">
-            <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-              <Accessibility size={15} className="text-sky-400" />
-              Accesibilidad Universal (Ley 7600):
-            </label>
-            <button
-              type="button"
-              onClick={() => {
-                const nuevo = !requiereLey7600;
-                setRequiereLey7600(nuevo);
-                if (nuevo) setTipoVehiculo('4x2'); // Ley 7600 prioriza rutas sin exigencia 4x4
-              }}
-              className={`w-full py-2 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-between ${
-                requiereLey7600
-                  ? 'bg-sky-500/20 text-sky-200 border-sky-400'
-                  : 'bg-slate-900 text-slate-400 border-white/10'
-              }`}
-            >
-              <span>Exigir 100% Accesible Ley 7600</span>
-              <span
-                className={`w-4 h-4 rounded flex items-center justify-center text-[10px] ${
-                  requiereLey7600 ? 'bg-sky-400 text-slate-950' : 'border border-white/20'
-                }`}
-              >
-                {requiereLey7600 && <Check size={12} />}
-              </span>
-            </button>
-            <p className="text-[11px] text-slate-400">
-              Garantiza pendientes peatonales ≤ 8%, rampas y baños adaptados.
-            </p>
-          </div>
-        </div>
-
-        {/* Variables 4 & 5: Inclusión de Ferias / Duración */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Incluir Feria del Agricultor & Comercios */}
-          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 space-y-2">
-            <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-              <Store size={15} className="text-emerald-400" />
-              Consumo Local & Ferias:
-            </label>
-            <button
-              type="button"
-              onClick={() => setIncluirFeria(!incluirFeria)}
-              className={`w-full py-2 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-between ${
-                incluirFeria
-                  ? 'bg-emerald-500/20 text-emerald-200 border-emerald-400'
-                  : 'bg-slate-900 text-slate-400 border-white/10'
-              }`}
-            >
-              <span>Incluir Parada en Feria del Agricultor</span>
-              <span
-                className={`w-4 h-4 rounded flex items-center justify-center text-[10px] ${
-                  incluirFeria ? 'bg-emerald-400 text-slate-950' : 'border border-white/20'
-                }`}
-              >
-                {incluirFeria && <Check size={12} />}
-              </span>
-            </button>
-            <p className="text-[11px] text-slate-400">
-              Prioriza PyMEs locales y gastronomía tradicional campesina.
-            </p>
-          </div>
-
-          {/* Duración */}
-          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 space-y-2">
-            <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-              <Calendar size={15} className="text-purple-400" />
-              Duración del Itinerario:
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setDuracionDias(1)}
-                className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all ${
-                  duracionDias === 1
-                    ? 'bg-purple-500/20 text-purple-300 border-purple-400'
-                    : 'bg-slate-900 text-slate-400 border-white/10'
-                }`}
-              >
-                1 Día Completo
-              </button>
-              <button
-                type="button"
-                onClick={() => setDuracionDias(2)}
-                className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all ${
-                  duracionDias === 2
-                    ? 'bg-purple-500/20 text-purple-300 border-purple-400'
-                    : 'bg-slate-900 text-slate-400 border-white/10'
-                }`}
-              >
-                2 Días (Fin de Semana)
-              </button>
-            </div>
-            <p className="text-[11px] text-slate-400">
-              Distribuye las paradas estratégicamente según el tiempo disponible.
-            </p>
-          </div>
-        </div>
-
-        {/* Áreas de Interés */}
+        {/* Variable 2: Selector Segmentado de Vehículo */}
         <div className="space-y-2">
           <label className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
-            <Compass size={14} className="text-cyan-400" />
-            Intereses Temáticos:
+            <Car size={15} className="text-cyan-400" />
+            <span>Tipo de Vehículo / Movilidad:</span>
           </label>
-          <div className="flex flex-wrap gap-2 text-xs">
-            {(
-              [
-                { id: 'cultura', label: '🏛️ Cultura e Historia' },
-                { id: 'naturaleza', label: '🌿 Naturaleza y Parques' },
-                { id: 'gastronomia', label: '☕ Gastronomía y Café' },
-                { id: 'aventura', label: '🚵 Aventura y Senderos' }
-              ] as const
-            ).map((item) => {
-              const seleccionado = intereses.includes(item.id);
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => toggleInteres(item.id)}
-                  className={`px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
-                    seleccionado
-                      ? 'bg-cyan-500 text-slate-950 border-cyan-400'
-                      : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <button
+              type="button"
+              onClick={() => setTipoVehiculo('Automóvil bajo')}
+              className={`p-3 rounded-xl text-xs font-bold border flex flex-col items-center justify-center gap-1.5 transition-all ${
+                tipoVehiculo === 'Automóvil bajo'
+                  ? 'bg-cyan-500/20 text-cyan-200 border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                  : 'bg-slate-900/90 text-slate-400 border-white/10 hover:border-white/20'
+              }`}
+            >
+              <Car size={20} className={tipoVehiculo === 'Automóvil bajo' ? 'text-cyan-300' : 'text-slate-400'} />
+              <span>Automóvil bajo</span>
+              <span className="text-[10px] font-normal text-slate-400 text-center">Vías pavimentadas urbanas</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTipoVehiculo('4x4')}
+              className={`p-3 rounded-xl text-xs font-bold border flex flex-col items-center justify-center gap-1.5 transition-all ${
+                tipoVehiculo === '4x4'
+                  ? 'bg-amber-500/20 text-amber-200 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.25)]'
+                  : 'bg-slate-900/90 text-slate-400 border-white/10 hover:border-white/20'
+              }`}
+            >
+              <Navigation size={20} className={tipoVehiculo === '4x4' ? 'text-amber-300' : 'text-slate-400'} />
+              <span>Tracción 4x4</span>
+              <span className="text-[10px] font-normal text-slate-400 text-center">Lastre y senderos montañosos</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTipoVehiculo('Transporte público')}
+              className={`p-3 rounded-xl text-xs font-bold border flex flex-col items-center justify-center gap-1.5 transition-all ${
+                tipoVehiculo === 'Transporte público'
+                  ? 'bg-emerald-500/20 text-emerald-200 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.25)]'
+                  : 'bg-slate-900/90 text-slate-400 border-white/10 hover:border-white/20'
+              }`}
+            >
+              <Bus size={20} className={tipoVehiculo === 'Transporte público' ? 'text-emerald-300' : 'text-slate-400'} />
+              <span>Transporte público</span>
+              <span className="text-[10px] font-normal text-slate-400 text-center">Buses cantonales con rampa</span>
+            </button>
           </div>
         </div>
 
-        {/* Botón de Generación */}
+        {/* Variables 3 & 4: Switch Ley 7600 y Cantón / Duración */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+          {/* Switch de Accesibilidad Obligatoria Ley 7600 */}
+          <div className="md:col-span-12 p-4 rounded-xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <label
+                htmlFor="switch-ley7600"
+                className="text-xs font-bold text-slate-200 flex items-center gap-2 cursor-pointer"
+                onClick={() => setRequiereLey7600(!requiereLey7600)}
+              >
+                <Accessibility size={18} className="text-emerald-400" />
+                <span className="text-white text-sm">Accesibilidad Obligatoria Ley 7600</span>
+              </label>
+              <p className="text-xs text-slate-400 max-w-xl">
+                Garantiza que el 100% de los destinos, sodas PYME y ferias dispongan de rampas certificadas,
+                pendientes peatonales menores al 8% y sanitarios adaptados.
+              </p>
+            </div>
+
+            {/* Switch UI Button */}
+            <button
+              id="switch-ley7600"
+              type="button"
+              role="switch"
+              aria-checked={requiereLey7600}
+              onClick={() => setRequiereLey7600(!requiereLey7600)}
+              className={`w-14 h-8 shrink-0 rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-400/50 ${
+                requiereLey7600 ? 'bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)]' : 'bg-slate-800'
+              }`}
+            >
+              <div
+                className={`w-6 h-6 rounded-full bg-white transition-transform duration-200 ease-in-out flex items-center justify-center ${
+                  requiereLey7600 ? 'translate-x-6' : 'translate-x-0'
+                }`}
+              >
+                {requiereLey7600 && <Check size={14} className="text-emerald-700 stroke-[3]" />}
+              </div>
+            </button>
+          </div>
+
+          {/* Selector de Cantón Destino */}
+          <div className="md:col-span-6 space-y-2">
+            <label
+              htmlFor="canton-destino"
+              className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5"
+            >
+              <MapPin size={15} className="text-cyan-400" />
+              <span>Cantón Destino:</span>
+            </label>
+            <select
+              id="canton-destino"
+              value={cantonDestino}
+              onChange={(e) => setCantonDestino(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-400 font-medium"
+            >
+              {cantonesOpciones.map((opcion) => (
+                <option key={opcion.id} value={opcion.id}>
+                  {opcion.nombre} — {opcion.provincia}
+                </option>
+              ))}
+            </select>
+            <p className="text-[11px] text-slate-400">
+              Se adaptarán las paradas a los atractivos y PyMEs del cantón seleccionado.
+            </p>
+          </div>
+
+          {/* Selector de Duración (1 a 3 Días) */}
+          <div className="md:col-span-6 space-y-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+              <Calendar size={15} className="text-purple-400" />
+              <span>Duración del Itinerario:</span>
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {([1, 2, 3] as const).map((dias) => (
+                <button
+                  key={dias}
+                  type="button"
+                  onClick={() => setDuracionDias(dias)}
+                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
+                    duracionDias === dias
+                      ? 'bg-purple-500/20 text-purple-200 border-purple-400 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
+                      : 'bg-slate-900 text-slate-400 border-white/10 hover:border-white/20'
+                  }`}
+                >
+                  {dias} {dias === 1 ? 'Día' : 'Días'}
+                </button>
+              ))}
+            </div>
+            <p className="text-[11px] text-slate-400">
+              {duracionDias === 1 && 'Día 1: Mañana (Atractivo), Almuerzo (Soda PYME), Tarde (Feria del Agricultor).'}
+              {duracionDias === 2 && '2 Días: Recorrido completo de fin de semana con paradas gastronómicas y culturales.'}
+              {duracionDias === 3 && '3 Días: Inmersión total con senderos de flora y fauna, trapiches y mirador del atardecer.'}
+            </p>
+          </div>
+        </div>
+
+        {/* Botón de Generación con IA */}
         <div className="pt-2">
           <CivicButton
             type="submit"

@@ -89,8 +89,8 @@ export function generarIdTicket(provinciaId, nombreCanton) {
 }
 
 /**
- * Mapeo de estados del flujo de trazabilidad oficial
- * Radicado ➔ Inspección de Campo ➔ En Ejecución Presupuestaria ➔ Subsanado
+ * Mapeo de estados del flujo de trazabilidad oficial:
+ * 1. Radicado -> 2. Inspección de Campo -> 3. En Ejecución Presupuestaria -> 4. Subsanado
  */
 export const ESTADOS_TICKET = {
   recibido: {

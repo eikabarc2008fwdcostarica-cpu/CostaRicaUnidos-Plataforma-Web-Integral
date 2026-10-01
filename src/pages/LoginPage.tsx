@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { Lock } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import LoginForm from '../components/auth/LoginForm';
 
@@ -20,9 +21,9 @@ export default function LoginPage({ initialMode = 'LOGIN' }: LoginPageProps) {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#00040D',
-        backgroundImage: 'radial-gradient(ellipse at 50% 20%, rgba(0, 43, 127, 0.25) 0%, rgba(0, 4, 13, 0.98) 75%)',
-        color: '#FFFFFF'
+        backgroundColor: 'var(--theme-bg, #00040D)',
+        backgroundImage: 'var(--theme-bg-gradient, radial-gradient(ellipse at 50% 20%, rgba(0, 43, 127, 0.25) 0%, rgba(0, 4, 13, 0.98) 75%))',
+        color: 'var(--theme-text-primary, #FFFFFF)'
       }}
     >
       <Navbar />
@@ -46,15 +47,16 @@ export default function LoginPage({ initialMode = 'LOGIN' }: LoginPageProps) {
             marginTop: '2rem',
             textAlign: 'center',
             fontSize: '0.78rem',
-            color: 'rgba(255, 255, 255, 0.55)',
+            color: 'var(--theme-text-muted, rgba(255, 255, 255, 0.55))',
             maxWidth: '520px',
             lineHeight: 1.5
           }}
         >
-          <span>
-            🔒 <strong>Autodeterminación Informativa:</strong> La consulta de identificación se rige por la <em>Ley N° 8968</em>. No se almacenan datos privados ni contraseñas en servidores externos sin consentimiento expreso.
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px', flexWrap: 'wrap' }}>
+            <Lock className="w-3.5 h-3.5 text-blue-400" />
+            <strong>Autodeterminación Informativa:</strong> La consulta de identificación se rige por la <em>Ley N° 8968</em>. No se almacenan datos privados ni contraseñas en servidores externos sin consentimiento expreso.
           </span>
-          <div style={{ marginTop: '0.4rem', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.4)' }}>
+          <div style={{ marginTop: '0.4rem', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.72rem', opacity: 0.75 }}>
             MINISTERIO DE HACIENDA • TSE • CONEXIÓN ENCRIPTADA TLS 1.3
           </div>
         </div>

@@ -17,7 +17,8 @@ import {
   Clock,
   Printer,
   Sparkles,
-  MapPin
+  MapPin,
+  X
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { CivicBadge } from '../components/common/CivicBadge';
@@ -569,11 +570,14 @@ export const GobernanzaPage: FC = () => {
                     color: '#FFFFFF',
                     width: '32px',
                     height: '32px',
-                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     cursor: 'pointer'
                   }}
+                  aria-label="Cerrar modal"
                 >
-                  ✕
+                  <X size={16} />
                 </button>
               </div>
 

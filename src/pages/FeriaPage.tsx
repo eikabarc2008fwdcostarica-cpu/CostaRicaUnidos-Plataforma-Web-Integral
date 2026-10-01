@@ -280,14 +280,17 @@ export const FeriaPage: FC = () => {
 
               {/* Tabla de Precios Comparativa CNP */}
               <div
+                className="civic-table-container custom-civic-scrollbar"
                 style={{
                   overflowX: 'auto',
                   borderRadius: '12px',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
-                  background: 'rgba(0, 4, 13, 0.75)'
+                  background: 'rgba(0, 4, 13, 0.75)',
+                  width: '100%',
+                  WebkitOverflowScrolling: 'touch'
                 }}
               >
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
+                <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
                   <thead>
                     <tr style={{ background: 'rgba(0, 43, 127, 0.35)', borderBottom: '1px solid rgba(255, 255, 255, 0.15)', color: '#94A3B8' }}>
                       <th style={{ padding: '0.75rem 1rem', fontWeight: 600 }}>Producto & Variedad</th>

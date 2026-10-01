@@ -1,10 +1,23 @@
 import React, { FC, useState } from 'react';
-import { Sparkles, MapPin, BookOpen, Heart, Eye } from 'lucide-react';
+import { Sparkles, MapPin, BookOpen, Heart, Eye, Utensils, Palette } from 'lucide-react';
 import { ElementoPatrimonio } from '../../data/culturaData';
 import { CivicCard } from '../common/CivicCard';
 import { CivicBadge } from '../common/CivicBadge';
 import { CivicModal } from '../common/CivicModal';
 import { CivicButton } from '../common/CivicButton';
+
+const renderPatrimonioIcon = (categoria?: string, iconoCat?: string) => {
+  if (iconoCat === 'celebracion' || categoria?.includes('Celebraciones')) {
+    return <Sparkles size={14} className="text-amber-400 mr-1 inline-block" />;
+  }
+  if (iconoCat === 'gastronomia' || categoria?.includes('Gastronomía')) {
+    return <Utensils size={14} className="text-emerald-400 mr-1 inline-block" />;
+  }
+  if (iconoCat === 'artesania' || categoria?.includes('Artesanías')) {
+    return <Palette size={14} className="text-purple-400 mr-1 inline-block" />;
+  }
+  return <BookOpen size={14} className="text-blue-400 mr-1 inline-block" />;
+};
 
 export interface PatrimonioLightboxProps {
   elementos: ElementoPatrimonio[];
@@ -118,8 +131,8 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
                     }}
                   >
                     <CivicBadge variant="default" size="sm">
-                      <span style={{ marginRight: '4px' }}>{item.iconoCategoria}</span>
-                      {item.categoria}
+                      {renderPatrimonioIcon(item.categoria, item.iconoCategoria)}
+                      <span>{item.categoria}</span>
                     </CivicBadge>
                   </div>
 
@@ -191,7 +204,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
         size="lg"
         title={
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span>{elementoActivo?.iconoCategoria}</span>
+            {renderPatrimonioIcon(elementoActivo?.categoria, elementoActivo?.iconoCategoria)}
             <span>{elementoActivo?.nombre}</span>
           </div>
         }

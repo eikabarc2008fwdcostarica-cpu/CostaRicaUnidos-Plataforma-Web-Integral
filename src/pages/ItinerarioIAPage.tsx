@@ -1,5 +1,20 @@
-import React, { useState } from 'react';
-import { Sparkles, BrainCircuit, Mountain, Map, Compass, ShieldCheck, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import {
+  Sparkles,
+  BrainCircuit,
+  Mountain,
+  Map,
+  Compass,
+  ShieldCheck,
+  ArrowRight,
+  Accessibility,
+  Car,
+  Sprout,
+  Loader2,
+  Navigation,
+  Store,
+  CheckCircle2
+} from 'lucide-react';
 import { SolicitudItinerarioIA, ItinerarioGeneradoResultado, generarItinerarioPuraVida } from '../services/itinerarioIAPlanner';
 import { FormularioItinerarioIA } from '../components/ia/FormularioItinerarioIA';
 import { VisorItinerarioGenerado } from '../components/ia/VisorItinerarioGenerado';
@@ -10,22 +25,41 @@ import Navbar from '../components/Navbar';
  * ItinerarioIAPage — Módulo 12 (RF-12.2): Planificador 'Itinerario Pura Vida'
  * 
  * Motor generativo de Inteligencia Artificial que ensambla itinerarios personalizados
- * contemplando topografía 3D, leyes de accesibilidad (Ley 7600), requerimientos 4x4,
+ * contemplando topografía 3D, leyes de accesibilidad (Ley 7600), requerimientos de tracción,
  * presupuesto en colones y fomento al comercio local y ferias del agricultor.
  */
 export default function ItinerarioIAPage() {
   const [itinerarioGenerado, setItinerarioGenerado] = useState<ItinerarioGeneradoResultado | null>(null);
   const [cargando, setCargando] = useState(false);
+  const [faseCarga, setFaseCarga] = useState(0);
+
+  const fasesTexto = [
+    'Consultando perfiles de elevación 3D y pendientes cantonales...',
+    'Certificando accesibilidad universal según Ley N° 7600...',
+    'Geolocalizando Sodas tradicionales PYME y Ferias del Agricultor...',
+    'Trazando rutas optimizadas y puntos de enlace con Waze y Google Maps...'
+  ];
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (cargando) {
+      setFaseCarga(0);
+      interval = setInterval(() => {
+        setFaseCarga((prev) => (prev < fasesTexto.length - 1 ? prev + 1 : prev));
+      }, 350);
+    }
+    return () => clearInterval(interval);
+  }, [cargando]);
 
   const handleGenerar = (solicitud: SolicitudItinerarioIA) => {
     setCargando(true);
-    // Simulación reactiva del cálculo algorítmico con relieve 3D
+    // Simulación del procesamiento algorítmico multivariable con animación cívica
     setTimeout(() => {
       const resultado = generarItinerarioPuraVida(solicitud);
       setItinerarioGenerado(resultado);
       setCargando(false);
-      window.scrollTo({ top: 350, behavior: 'smooth' });
-    }, 600);
+      window.scrollTo({ top: 380, behavior: 'smooth' });
+    }, 1500);
   };
 
   const handleReiniciar = () => {
@@ -78,8 +112,55 @@ export default function ItinerarioIAPage() {
           </div>
         </div>
 
+        {/* Animación de Carga Cívica */}
+        {cargando && (
+          <CivicCard
+            level={3}
+            className="p-8 sm:p-12 border-cyan-500/40 bg-slate-900/90 backdrop-blur-xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-300"
+            style={{ borderRadius: '24px' }}
+          >
+            <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full border-4 border-cyan-500/20 border-t-cyan-400 animate-spin" />
+              <div className="absolute inset-3 rounded-full border-4 border-emerald-500/20 border-b-emerald-400 animate-spin-reverse" />
+              <Sparkles size={32} className="text-cyan-300 animate-pulse" />
+            </div>
+
+            <div className="space-y-2 max-w-lg mx-auto">
+              <h3 className="text-xl font-bold text-white">
+                Ensamblando Itinerario Soberano 'Pura Vida'
+              </h3>
+              <p className="text-sm font-mono text-cyan-300 h-6 transition-all duration-300">
+                {fasesTexto[faseCarga]}
+              </p>
+            </div>
+
+            {/* Barra de Progreso Cívica */}
+            <div className="w-full max-w-md mx-auto bg-slate-950/80 rounded-full h-2.5 overflow-hidden border border-white/10">
+              <div
+                className="bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 h-full rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${((faseCarga + 1) / fasesTexto.length) * 100}%` }}
+              />
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-4 text-[11px] text-slate-400 font-mono pt-2">
+              <span className="flex items-center gap-1">
+                <CheckCircle2 size={13} className="text-emerald-400" />
+                Modelo Digital de Terreno 3D
+              </span>
+              <span className="flex items-center gap-1">
+                <CheckCircle2 size={13} className="text-emerald-400" />
+                Validación Padrón y PyMEs
+              </span>
+              <span className="flex items-center gap-1">
+                <CheckCircle2 size={13} className="text-emerald-400" />
+                Georutas Waze / Maps
+              </span>
+            </div>
+          </CivicCard>
+        )}
+
         {/* Formulario Generativo o Resultado del Itinerario */}
-        {!itinerarioGenerado ? (
+        {!cargando && !itinerarioGenerado && (
           <div className="space-y-6">
             <FormularioItinerarioIA
               onGenerar={handleGenerar}
@@ -89,28 +170,40 @@ export default function ItinerarioIAPage() {
             {/* Presets Informativos */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
               <CivicCard level={1} className="p-4 border-white/5 space-y-2">
-                <span className="font-bold text-cyan-300 block">♿ Ruta Accesible Ciudadana</span>
+                <span className="font-bold text-cyan-300 flex items-center gap-1.5">
+                  <Accessibility className="w-4 h-4 text-cyan-400" />
+                  <span>Ruta Accesible Ciudadana</span>
+                </span>
                 <p className="text-slate-400">
-                  Limita pendientes a un máximo de 8%. Prioriza aceras continuas, sodas típicas con rampa y museos nacionales.
+                  Limita pendientes a un máximo de 8%. Prioriza aceras continuas, sodas típicas con rampa y parques nacionales.
                 </p>
               </CivicCard>
 
               <CivicCard level={1} className="p-4 border-white/5 space-y-2">
-                <span className="font-bold text-amber-300 block">🚙 Travesía Cumbres 4x4</span>
+                <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                  <Car className="w-4 h-4 text-amber-400" />
+                  <span>Travesía Cumbres 4x4</span>
+                </span>
                 <p className="text-slate-400">
                   Desbloquea senderos de lastre, miradores montañosos y pasos de quebradas con pendientes superiores al 16%.
                 </p>
               </CivicCard>
 
               <CivicCard level={1} className="p-4 border-white/5 space-y-2">
-                <span className="font-bold text-emerald-300 block">🌱 Circuito Feria & PyMEs</span>
+                <span className="font-bold text-emerald-300 flex items-center gap-1.5">
+                  <Sprout className="w-4 h-4 text-emerald-400" />
+                  <span>Circuito Feria & PyMEs</span>
+                </span>
                 <p className="text-slate-400">
-                  Incentiva el consumo en puestos de agricultores locales y cafeterías registradas ante el Ministerio de Hacienda.
+                  Incentiva el consumo en puestos de agricultores locales y sodas registradas ante el Ministerio de Hacienda.
                 </p>
               </CivicCard>
             </div>
           </div>
-        ) : (
+        )}
+
+        {/* Visualizador del Itinerario Generado */}
+        {!cargando && itinerarioGenerado && (
           <VisorItinerarioGenerado
             itinerario={itinerarioGenerado}
             onReiniciar={handleReiniciar}
