@@ -82,6 +82,341 @@
       "verificadoHacienda": true
     }
   ],
+  "solicitudesComercio": [
+    {
+      "id": "SOL-COM-001",
+      "cedulaJuridica": "3-101-789456",
+      "cedula": "3-101-789456",
+      "nombreComercio": "Cafetería y Tostaduría Alma Tica",
+      "nombreNegocio": "Cafetería y Tostaduría Alma Tica",
+      "nombreSolicitante": "Mauricio Solano Brenes",
+      "actividadHacienda": "Servicios de cafetería y venta de café gourmet",
+      "actividadEconomicaHacienda": "Servicios de cafetería y venta de café gourmet",
+      "canton": "San José",
+      "distrito": "Carmen",
+      "provincia": "San José",
+      "sectorFeriaSolicitado": "Sector B - Cafés y Derivados",
+      "sectorFeria": "Sector B - Cafés y Derivados",
+      "fechaSolicitud": "2026-09-20T10:00:00Z",
+      "estado": "PENDIENTE",
+      "justificacion": "",
+      "notas": "Presenta certificación de buenas prácticas agrícolas del MAG al día.",
+      "verificadoHacienda": true
+    },
+    {
+      "id": "SOL-COM-002",
+      "cedulaJuridica": "3-102-456123",
+      "cedula": "3-102-456123",
+      "nombreComercio": "Hortalizas del Valle de Ujarrás",
+      "nombreNegocio": "Hortalizas del Valle de Ujarrás",
+      "nombreSolicitante": "Valeria Chaves Monge",
+      "actividadHacienda": "Producción agrícola y venta al por menor",
+      "actividadEconomicaHacienda": "Producción agrícola y venta al por menor",
+      "canton": "Cartago",
+      "distrito": "Ujarrás",
+      "provincia": "Cartago",
+      "sectorFeriaSolicitado": "Sector A - Hortalizas",
+      "sectorFeria": "Sector A - Hortalizas",
+      "fechaSolicitud": "2026-09-22T14:30:00Z",
+      "estado": "APROBADO",
+      "justificacion": "Patente cantonal y régimen simplificado al día.",
+      "notas": "Patente cantonal y régimen simplificado al día.",
+      "verificadoHacienda": true
+    }
+  ],
+  "incidenciasViales": [
+    {
+      "id": "EXP-MUNI-2026-0042",
+      "reportId": "EXP-MUNI-2026-0042",
+      "categoria": "INFRAESTRUCTURA_VIAL_HUECO",
+      "categoriaTitulo": "Hueco vial / bache en asfalto",
+      "descripcion": "Deterioro severo de capa asfáltica de 1.5m de diámetro frente a parada de bus.",
+      "titulo": "Deterioro severo de capa asfáltica de 1.5m de diámetro frente a parada de bus.",
+      "fotoUrl": "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80",
+      "imagenUrl": "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80",
+      "coordenadas": [
+        9.935,
+        -84.086
+      ],
+      "provincia": "San José",
+      "canton": "San José",
+      "distrito": "Carmen",
+      "direccionExacta": "Frente a parada de bus de Barrio El Carmen",
+      "estado": "EN_INSPECCION",
+      "fechaRadicado": "2026-09-25T08:15:00Z",
+      "fechaReporte": "2026-09-25T08:15:00Z",
+      "cuadrillaAsignada": "Cuadrilla 01 · Vías y Asfalto",
+      "prioridad": "ALTA",
+      "reportadoPor": "1-1823-0456",
+      "declaracionJurada": "Declaro bajo la fe de juramento la veracidad del daño vial observado en Barrio El Carmen frente a la parada de autobuses."
+    },
+    {
+      "id": "EXP-MUNI-2026-0038",
+      "reportId": "EXP-MUNI-2026-0038",
+      "categoria": "LUMINARIA_PUBLICA",
+      "categoriaTitulo": "Luminaria pública dañada o apagada",
+      "descripcion": "Falta de iluminación nocturna en acera peatonal, poste CNFL-8841.",
+      "titulo": "Luminaria pública dañada en acera peatonal",
+      "fotoUrl": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+      "imagenUrl": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+      "coordenadas": [
+        9.9385,
+        -84.1378
+      ],
+      "provincia": "San José",
+      "canton": "Escazú",
+      "distrito": "San Rafael",
+      "direccionExacta": "Avenida 2, Calle 134, frente al Parque Los Laureles",
+      "estado": "RESUELTO",
+      "fechaRadicado": "2026-09-23T18:40:00Z",
+      "fechaReporte": "2026-09-23T18:40:00Z",
+      "cuadrillaAsignada": "Cuadrilla 02 · Alumbrado y Red Eléctrica",
+      "prioridad": "MEDIA",
+      "reportadoPor": "1-0234-0567",
+      "declaracionJurada": "Declaro bajo la fe de juramento que la luminaria CNFL-8841 permanecía inoperativa afectando la seguridad vecinal."
+    },
+    {
+      "id": "EXP-MUNI-2026-0051",
+      "reportId": "EXP-MUNI-2026-0051",
+      "categoria": "FUGA_AGUA_ALCANTARILLA",
+      "categoriaTitulo": "Fuga de agua potable / alcantarilla",
+      "descripcion": "Fuga continua de agua potable sobre vía pública frente a mercado municipal.",
+      "titulo": "Fuga continua de agua potable",
+      "fotoUrl": "https://images.unsplash.com/photo-1584463699028-ebaa85116742?auto=format&fit=crop&w=800&q=80",
+      "imagenUrl": "https://images.unsplash.com/photo-1584463699028-ebaa85116742?auto=format&fit=crop&w=800&q=80",
+      "coordenadas": [
+        10.3235,
+        -84.4285
+      ],
+      "provincia": "Alajuela",
+      "canton": "San Carlos",
+      "distrito": "Quesada",
+      "direccionExacta": "Costado norte del Mercado Municipal de Ciudad Quesada",
+      "estado": "EN_INSPECCION",
+      "fechaRadicado": "2026-09-25T07:15:00Z",
+      "fechaReporte": "2026-09-25T07:15:00Z",
+      "cuadrillaAsignada": "Cuadrilla 03 · Fontanería y Red Pluvial",
+      "prioridad": "ALTA",
+      "reportadoPor": "1-1155-0892",
+      "declaracionJurada": "Declaro bajo la fe de juramento la fuga continua de agua potable sobre vía pública frente al Mercado Municipal."
+    }
+  ],
+  "alberguesCNE": [
+    {
+      "id": "ALB-001",
+      "nombre": "Polideportivo de Puntarenas (CNE)",
+      "provincia": "Puntarenas",
+      "canton": "Puntarenas",
+      "capacidadMaxima": 180,
+      "capacidadTotal": 180,
+      "ocupacionActual": 45,
+      "estado": "Habilitado",
+      "dotacionSanitaria": "10 duchas, 12 servicios sanitarios, cocina comunal",
+      "servicios": [
+        "10 duchas",
+        "12 servicios sanitarios",
+        "Cocina comunal",
+        "Agua potable"
+      ],
+      "responsableContacto": "Comité Municipal de Emergencias Puntarenas (2661-0000)"
+    },
+    {
+      "id": "ALB-002",
+      "nombre": "Gimnasio Municipal Santa Cruz",
+      "provincia": "Guanacaste",
+      "canton": "Santa Cruz",
+      "capacidadMaxima": 250,
+      "capacidadTotal": 250,
+      "ocupacionActual": 250,
+      "estado": "Lleno al 100%",
+      "dotacionSanitaria": "Batería sanitaria completa, planta eléctrica de emergencia",
+      "servicios": [
+        "Batería sanitaria completa",
+        "Planta eléctrica de emergencia",
+        "Área de enfermería"
+      ],
+      "responsableContacto": "CME Santa Cruz (2680-0123)"
+    },
+    {
+      "id": "ALB-003",
+      "nombre": "Salón Parroquial Turrialba",
+      "provincia": "Cartago",
+      "canton": "Turrialba",
+      "capacidadMaxima": 120,
+      "capacidadTotal": 120,
+      "ocupacionActual": 85,
+      "estado": "Ocupación Alta",
+      "dotacionSanitaria": "Agua potable constante, enfermería básica",
+      "servicios": [
+        "Agua potable constante",
+        "Enfermería básica",
+        "Comedor comunitario"
+      ],
+      "responsableContacto": "Comité Local de Emergencias Turrialba (2556-0222)"
+    }
+  ],
+  "proyectosPresupuesto": [
+    {
+      "id": "PROY-001",
+      "titulo": "Iluminación LED y Cámaras de Seguridad en Parque El Carmen",
+      "canton": "San José",
+      "distrito": "Carmen",
+      "categoria": "Seguridad y Movilidad",
+      "descripcion": "Instalación de 24 luminarias solares LED de alta eficiencia y sistema de domos de videovigilancia interconectados al Centro de Monitoreo Policial.",
+      "montoEstimado": 45000000,
+      "presupuestoEstimadoColones": 45000000,
+      "presupuestoFormateado": "₡ 45,000,000",
+      "votosAcumulados": 342,
+      "estado": "EN_VOTACION",
+      "estadoVotacion": "Votación Abierta",
+      "proponenteComunal": "Comité de Seguridad Vecinal El Carmen",
+      "beneficiariosEstimados": "12,000 vecinos",
+      "fechaCierre": "15 de Noviembre, 2026"
+    },
+    {
+      "id": "PROY-002",
+      "titulo": "Ciclovía y Aceras Peatonales Inclusivas (Ley 7600) en Pavas",
+      "canton": "San José",
+      "distrito": "Pavas",
+      "categoria": "Infraestructura & Aceras",
+      "descripcion": "Construcción y nivelación de 2.8 km de aceras universales continuas con baldosas podotáctiles y carril protegido de ciclovía urbana conectada a estaciones de tren.",
+      "montoEstimado": 78000000,
+      "presupuestoEstimadoColones": 78000000,
+      "presupuestoFormateado": "₡ 78,000,000",
+      "votosAcumulados": 519,
+      "estado": "EN_VOTACION",
+      "estadoVotacion": "Votación Abierta",
+      "proponenteComunal": "Asociación de Desarrollo Integral de Pavas",
+      "beneficiariosEstimados": "28,500 residentes",
+      "fechaCierre": "15 de Noviembre, 2026"
+    },
+    {
+      "id": "PROY-003",
+      "titulo": "Parque Recreativo y Sendero Ecológico en Hatillo 4",
+      "canton": "San José",
+      "distrito": "Hatillo",
+      "categoria": "Espacios Verdes y Parques",
+      "descripcion": "Recuperación de espacio público en zona comunal con juegos inclusivos, senderos de adoquín permeable, arbolado nativo y mobiliario urbano.",
+      "montoEstimado": 42000000,
+      "presupuestoEstimadoColones": 42000000,
+      "presupuestoFormateado": "₡ 42,000,000",
+      "votosAcumulados": 395,
+      "estado": "EN_VOTACION",
+      "estadoVotacion": "Votación Abierta",
+      "proponenteComunal": "Colectivo Hatillo Verde y Seguro",
+      "beneficiariosEstimados": "18,200 vecinos",
+      "fechaCierre": "15 de Noviembre, 2026"
+    },
+    {
+      "id": "PROY-004",
+      "titulo": "Centro Juvenil Comunitario de Robótica y Habilidades STEM",
+      "canton": "San José",
+      "distrito": "San Sebastián",
+      "categoria": "Cultura y Juventud",
+      "descripcion": "Acondicionamiento y equipamiento de laboratorio tecnológico con conectividad simétrica de alta velocidad, kits de robótica y capacitación técnica gratuita.",
+      "montoEstimado": 60000000,
+      "presupuestoEstimadoColones": 60000000,
+      "presupuestoFormateado": "₡ 60,000,000",
+      "votosAcumulados": 310,
+      "estado": "EN_VOTACION",
+      "estadoVotacion": "Votación Abierta",
+      "proponenteComunal": "Comité Cantonal de la Persona Joven (CCPJ)",
+      "beneficiariosEstimados": "4,200 jóvenes",
+      "fechaCierre": "15 de Noviembre, 2026"
+    }
+  ],
+  "votosEmitidos": [],
+  "bitacoraAuditoria": [
+    {
+      "id": "AUD-001",
+      "fecha": "2026-10-01T07:15:00Z",
+      "fechaHoraCst": "01/10/2026, 07:15:00 CST",
+      "adminId": "USR-NAC-001",
+      "adminCedula": "1-0000-0001",
+      "adminNombre": "Superintendencia Nacional de Gobierno Digital",
+      "adminRol": "Super Administrador Nacional",
+      "accion": "ACTUALIZAR_ALERTA_CNE",
+      "entidadAfectada": "ALERTA_NACIONAL",
+      "justificacion": "Activación de Alerta Amarilla por saturación de suelos.",
+      "justificante": "Activación de Alerta Amarilla por saturación de suelos.",
+      "ipOrigen": "192.168.1.10 (Red Presidencial)"
+    }
+  ],
+  "configuracionIA": {
+    "killSwitch": false,
+    "killSwitchActivo": false,
+    "sensibilidadModeracion": "ESTRICTA",
+    "coleccionesAutorizadas": [
+      "solicitudesComercio",
+      "incidenciasViales",
+      "alberguesCNE",
+      "proyectosPresupuesto"
+    ],
+    "modeloActivo": "Sovereign-Llama-CR-v2",
+    "temperatura": 0.3,
+    "ultimaModificacion": "2026-10-01T07:00:00-06:00",
+    "modificadoPor": "Superintendencia Nacional de Gobierno Digital (1-0000-0001)"
+  },
+  "alertasCNE": {
+    "alertaNacionalActiva": "AMARILLA",
+    "comunicadoOficial": "Precaución general en el Valle Central y Vertiente del Pacífico por ondas tropicales.",
+    "fechaActualizacion": "2026-10-01T07:00:00Z",
+    "fuenteOficial": "Comisión Nacional de Prevención de Riesgos y Atención de Emergencias (CNE)",
+    "albergues": [
+      {
+        "id": "ALB-001",
+        "nombre": "Polideportivo de Puntarenas (CNE)",
+        "provincia": "Puntarenas",
+        "canton": "Puntarenas",
+        "capacidadMaxima": 180,
+        "capacidadTotal": 180,
+        "ocupacionActual": 45,
+        "estado": "Habilitado",
+        "dotacionSanitaria": "10 duchas, 12 servicios sanitarios, cocina comunal",
+        "servicios": [
+          "10 duchas",
+          "12 servicios sanitarios",
+          "Cocina comunal",
+          "Agua potable"
+        ],
+        "responsableContacto": "Comité Municipal de Emergencias Puntarenas (2661-0000)"
+      },
+      {
+        "id": "ALB-002",
+        "nombre": "Gimnasio Municipal Santa Cruz",
+        "provincia": "Guanacaste",
+        "canton": "Santa Cruz",
+        "capacidadMaxima": 250,
+        "capacidadTotal": 250,
+        "ocupacionActual": 250,
+        "estado": "Lleno al 100%",
+        "dotacionSanitaria": "Batería sanitaria completa, planta eléctrica de emergencia",
+        "servicios": [
+          "Batería sanitaria completa",
+          "Planta eléctrica de emergencia",
+          "Área de enfermería"
+        ],
+        "responsableContacto": "CME Santa Cruz (2680-0123)"
+      },
+      {
+        "id": "ALB-003",
+        "nombre": "Salón Parroquial Turrialba",
+        "provincia": "Cartago",
+        "canton": "Turrialba",
+        "capacidadMaxima": 120,
+        "capacidadTotal": 120,
+        "ocupacionActual": 85,
+        "estado": "Ocupación Alta",
+        "dotacionSanitaria": "Agua potable constante, enfermería básica",
+        "servicios": [
+          "Agua potable constante",
+          "Enfermería básica",
+          "Comedor comunitario"
+        ],
+        "responsableContacto": "Comité Local de Emergencias Turrialba (2556-0222)"
+      }
+    ]
+  },
   "sesionesActivas": [],
   "bitacoraAccesos": [
     {

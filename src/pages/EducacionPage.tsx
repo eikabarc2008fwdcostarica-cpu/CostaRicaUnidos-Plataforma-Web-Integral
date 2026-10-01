@@ -89,7 +89,7 @@ export const EducacionPage: FC = () => {
         <div style={{ marginBottom: '2.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
             <CivicBadge variant="provincial" size="md">
-              MÓDULO 06 &bull; INFRAESTRUCTURA EDUCATIVA Y CTPS
+              INFRAESTRUCTURA EDUCATIVA &bull; COLEGIOS TÉCNICOS (CTP)
             </CivicBadge>
             <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
               Ministerio de Educación Pública (MEP) &bull; Formación Técnica Vocacional

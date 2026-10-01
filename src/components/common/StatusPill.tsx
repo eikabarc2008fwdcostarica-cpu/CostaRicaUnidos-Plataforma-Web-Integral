@@ -33,7 +33,7 @@ interface StatusVisualConfig {
 /**
  * StatusPill — Semáforo Dinámico Cantonal (Sovereign Civic Glass v2.1)
  * 
- * Utilizado ampliamente en el Ecosistema Deportivo CCDR (M04), instalaciones y ferias:
+ * Utilizado ampliamente en el Ecosistema Deportivo CCDR, instalaciones y ferias:
  * - Verde: Abierto al Público
  * - Amarillo: Mantenimiento Programado
  * - Azul: Reservado para Escuelas Formativas y Selecciones

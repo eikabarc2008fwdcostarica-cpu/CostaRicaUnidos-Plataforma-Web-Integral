@@ -37,7 +37,7 @@ function renderLayerIcon(layerId, color, size = 14) {
 }
 
 /**
- * Componente: Cajón Flotante de Resultados de IA y Feedback Semántico (RF-12.1)
+ * Componente: Cajón Flotante de Resultados de IA y Feedback Semántico
  * Muestra el resumen de la interpretación NLP, capas activadas, telemetría y lista de POIs.
  */
 export default function NlpResultsDrawer({
@@ -202,7 +202,7 @@ export default function NlpResultsDrawer({
           </div>
           <div>
             <div style={{ fontSize: '0.7rem', color: '#79a6ff', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-              Motor Semántico NLP (RF-12.1)
+              Motor Semántico e Inteligencia Territorial
             </div>
             <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#FFFFFF' }}>
               {entidadGeografica ? entidadGeografica.nombre : 'Costa Rica'}

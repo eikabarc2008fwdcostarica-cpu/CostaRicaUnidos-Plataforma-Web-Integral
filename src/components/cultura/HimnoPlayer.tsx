@@ -14,12 +14,14 @@ import { CivicCard } from '../common/CivicCard';
 import { CivicBadge } from '../common/CivicBadge';
 import { CivicButton } from '../common/CivicButton';
 import { CivicModal } from '../common/CivicModal';
+import { useCivicModal } from '../../context/CivicModalContext';
 
 export interface HimnoPlayerProps {
   himno: HimnoOficial;
 }
 
 export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
+  const { mostrarAlerta } = useCivicModal();
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -432,7 +434,11 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
               variant="provincial"
               size="sm"
               onClick={() => {
-                alert(`Descargando partitura oficial de "${himno.titulo}" certificada por el Gobierno Local.`);
+                mostrarAlerta({
+                  titulo: 'Descarga de Partitura Oficial',
+                  mensaje: `Descargando partitura oficial de "${himno.titulo}" certificada por el Gobierno Local y custodiada bajo la Ley N° 7210 de Archivo Nacional.`,
+                  icono: 'exito'
+                });
               }}
               leftIcon={<FileMusic size={16} />}
             >

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
+import { useCivicModal } from '../context/CivicModalContext';
 import {
   Search,
   Locate,
@@ -391,6 +392,7 @@ const CATEGORIAS_CONFIG = {
 };
 
 export default function MapaGIS() {
+  const { mostrarAlerta } = useCivicModal();
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersMapRef = useRef({});
@@ -424,22 +426,25 @@ export default function MapaGIS() {
         const mapOptions = {
           center: { lat: 9.7489, lng: -83.7534 }, // Centro geográfico de Costa Rica
           zoom: 8.5,
-          mapTypeId: 'hybrid', // Satélite real fotorrealista con toponimia
-          tilt: 45, // Inclinación 3D nativa WebGL
-          disableDefaultUI: true, // ELIMINA TODOS LOS CONTROLES BLANCOS POR DEFECTO
+          minZoom: 8,       // PROHIBIDO alejar el zoom más allá de Costa Rica
+          maxZoom: 17,
+          mapTypeId: 'hybrid',
+          tilt: 45,
+          disableDefaultUI: true,
           zoomControl: false,
           mapTypeControl: false,
           streetViewControl: false,
           rotateControl: false,
           fullscreenControl: false,
+          // RESTRICCIÓN DURA DE BORDES:
           restriction: {
             latLngBounds: {
-              north: 11.25,
-              south: 8.00,
-              west: -86.10,
-              east: -82.50
+              north: 11.22,  // Frontera norte Peñas Blancas / Río San Juan
+              south: 8.03,   // Frontera sur Punta Burica / Golfo Dulce
+              west: -85.95,  // Costa Pacífica / Guanacaste
+              east: -82.55   // Costa Caribe / Sixaola
             },
-            strictBounds: false
+            strictBounds: true // BLOQUEO DURO: Rebota la cámara si intentan arrastrar hacia Nicaragua o Panamá
           }
         };
 
@@ -590,7 +595,11 @@ export default function MapaGIS() {
   // Botón 3: GPS Mi Ubicación
   const handleGPS = () => {
     if (!navigator.geolocation || !mapInstanceRef.current) {
-      alert('La geolocalización no está disponible en su navegador.');
+      mostrarAlerta({
+        titulo: 'Geolocalización No Disponible',
+        mensaje: 'La geolocalización no está disponible en su navegador o dispositivo.',
+        icono: 'advertencia'
+      });
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -619,7 +628,13 @@ export default function MapaGIS() {
           });
         }
       },
-      () => alert('No se pudo obtener la geolocalización.')
+      () => {
+        mostrarAlerta({
+          titulo: 'Error de Ubicación',
+          mensaje: 'No se pudo obtener la posición GPS de su dispositivo. Verifique los permisos en su navegador.',
+          icono: 'error'
+        });
+      }
     );
   };
 
@@ -691,7 +706,7 @@ export default function MapaGIS() {
         {/* Cabecera Editorial Limpia */}
         <header style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
           <h1 style={{ fontSize: '2.2rem', fontWeight: '300', letterSpacing: '-0.02em', margin: 0 }}>
-            Territorio &amp; Cartografía Soberana 3D
+            Cartografía y Territorio 3D
           </h1>
           <p style={{ color: '#94A3B8', fontSize: '0.95rem', marginTop: '0.4rem' }}>
             Exploración geoespacial satelital interactiva con perspectiva tridimensional y 35+ infraestructuras cívicas

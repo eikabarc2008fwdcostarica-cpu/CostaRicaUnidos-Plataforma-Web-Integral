@@ -1,7 +1,7 @@
 /**
  * ============================================================================
- * COSTA RICA UNIDOS — CONSOLIDACIÓN DE DATASETS POI (PARA MÓDULO GIS M05 DE EIKER)
- * Puntos de Interés Unificados: Educación (M06), Comercio (M08), Turismo (M09) y Deportes (M04)
+ * COSTA RICA UNIDOS — CONSOLIDACIÓN DE DATASETS POI
+ * Puntos de Interés Unificados: Educación, Comercio, Turismo y Deportes
  * ============================================================================
  * 
  * Este módulo unifica las coordenadas geográficas y metadatos de los puntos de interés
@@ -44,7 +44,7 @@ export interface CantonalPOI {
   details: POIDetails;
 }
 
-// 1. POIs de Educación e Infraestructura CTP (Módulo 06)
+// 1. POIs de Educación e Infraestructura CTP
 export const POIS_EDUCACION: CantonalPOI[] = CENTROS_EDUCATIVOS_DATA.map((col) => ({
   id: col.id,
   name: col.nombre,
@@ -70,7 +70,7 @@ export const POIS_EDUCACION: CantonalPOI[] = CENTROS_EDUCATIVOS_DATA.map((col) =
   }
 }));
 
-// 2. POIs de Comercio, Emprendimientos y PyMEs (Módulo 08)
+// 2. POIs de Comercio, Emprendimientos y PyMEs
 export const POIS_COMERCIO: CantonalPOI[] = PYMES_CANTONALES_DATA.map((com) => ({
   id: com.id,
   name: com.nombreComercial,
@@ -96,7 +96,7 @@ export const POIS_COMERCIO: CantonalPOI[] = PYMES_CANTONALES_DATA.map((com) => (
   }
 }));
 
-// 3. POIs de Turismo y Aventura Sostenible (Módulo 09)
+// 3. POIs de Turismo y Aventura Sostenible
 export const POIS_TURISMO: CantonalPOI[] = DESTINOS_TURISTICOS_DATA.map((tur) => ({
   id: tur.id,
   name: tur.nombre,
@@ -121,7 +121,7 @@ export const POIS_TURISMO: CantonalPOI[] = DESTINOS_TURISTICOS_DATA.map((tur) =>
   }
 }));
 
-// 4. POIs de Deportes y Recreación CCDR (Módulo 04)
+// 4. POIs de Deportes y Recreación CCDR
 export const POIS_DEPORTES: CantonalPOI[] = INSTALACIONES_DEPORTIVAS_DATA.map((dep) => ({
   id: dep.id,
   name: dep.nombre,

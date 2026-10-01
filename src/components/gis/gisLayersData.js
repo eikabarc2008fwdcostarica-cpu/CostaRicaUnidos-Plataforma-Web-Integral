@@ -34,7 +34,7 @@ export const GIS_LAYERS_CONFIG = [
   },
   {
     id: 'albergues',
-    nombre: 'Albergues de Emergencia CNE (M10)',
+    nombre: 'Albergues de Emergencia (COE · CNE)',
     icono: 'albergues',
     color: '#EF4444', // Rojo Alerta CNE
     descripcion: 'Puntos habilitados por la Comisión Nacional de Emergencias para evacuación.'
@@ -548,7 +548,7 @@ export const GIS_POI_DATA = [
     descripcion: 'Instalaciones deportivas cantonales, pista recreativa y canchas para la comunidad sancarleña.'
   },
 
-  // --- CAPA ALBERGUES DE EMERGENCIA CNE (M10) ---
+  // --- CAPA ALBERGUES DE EMERGENCIA (COE · CNE) ---
   {
     id: 'alb-01',
     layer: 'albergues',

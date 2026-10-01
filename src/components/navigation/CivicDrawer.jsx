@@ -21,6 +21,8 @@ import {
 } from 'lucide-react';
 import Logo from '../common/Logo';
 import { CATEGORIAS_CIVICAS } from './MegaMenu';
+import { useAuth } from '../../context/AuthContext';
+import { useCivicModal } from '../../context/CivicModalContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAccessibility } from '../accessibility';
 import { IDIOMAS_SOPORTADOS } from '../accessibility/accessibilityData';
@@ -28,7 +30,25 @@ import { CANTONES_OFICIALES, PROVINCIAS_DATA } from '../../data/costaRicaTerrito
 
 export default function CivicDrawer({ isOpen, onClose, initialTab }) {
   const drawerRef = useRef(null);
-  const { idioma, cambiarIdioma, t, activeBandera, langCode } = useLanguage();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout, officialRoleName } = useAuth();
+  const { solicitarConfirmacion } = useCivicModal();
+  const { idioma, cambiarIdioma, t } = useLanguage();
+
+  const confirmarSalida = () => {
+    onClose();
+    solicitarConfirmacion({
+      titulo: 'Confirmación de Cierre de Sesión',
+      mensaje: '¿Está seguro de que desea cerrar su sesión institucional en Costa Rica Unidos? Deberá autenticar sus credenciales nuevamente para acceder al sistema.',
+      icono: 'advertencia',
+      textoBotonAceptar: 'Cerrar Sesión',
+      textoBotonCancelar: 'Permanecer Conectado',
+      onAceptar: () => {
+        logout();
+        navigate('/');
+      }
+    });
+  };
   const {
     textPhase,
     setTextPhase,
@@ -247,7 +267,107 @@ export default function CivicDrawer({ isOpen, onClose, initialTab }) {
                MODO CENTRO DE UTILIDADES CÍVICAS (DESKTOP & MÓVIL)
                ================================================================== */
             <div className="space-y-6">
-              {/* SELECTOR DEL GOBIERNO LOCAL ACTIVO (84 CANTONES) */}
+              {/* 1. FICHA DE USUARIO / SESIÓN ACTIVA */}
+              <div className="rounded-2xl p-4 bg-white/[0.03] border border-white/10">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-400">
+                    <User className="w-4 h-4" strokeWidth={1.75} />
+                    <span>Identidad & Cédula</span>
+                  </div>
+                  {isAuthenticated && (
+                    <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold">
+                      <FileCheck2 className="w-3 h-3" strokeWidth={1.75} />
+                      Hacienda OK
+                    </span>
+                  )}
+                </div>
+
+                {isAuthenticated && user ? (
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="text-white font-bold text-sm">
+                          {user.nombre}
+                        </h4>
+                        <p className="text-slate-400 text-xs mt-0.5">
+                          Cédula: <span className="text-slate-200 font-mono">{user.cedula}</span>
+                        </p>
+                      </div>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold">
+                        Nivel {user.nivelAcceso || 2}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-white/[0.02] p-2 rounded-lg border border-white/5">
+                      <Shield className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" strokeWidth={1.75} />
+                      <span className="truncate">
+                        Rol: <strong className="text-slate-200">{officialRoleName || user.rol || 'Ciudadano'}</strong>
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-1">
+                      <Link
+                        to={user.nivelAcceso >= 3 ? '/dashboard' : '/participacion'}
+                        onClick={onClose}
+                        className="flex-1 py-2 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                      >
+                        <Building2 className="w-3.5 h-3.5" strokeWidth={1.75} />
+                        <span>{user.nivelAcceso >= 3 ? 'Consola de Mando' : 'Mi Espacio Cívico'}</span>
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          logout();
+                          onClose();
+                          navigate('/');
+                        }}
+                        className="py-2 px-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                        title="Cerrar sesión institucional con confirmación"
+                      >
+                        <LogOut className="w-3.5 h-3.5" strokeWidth={1.75} />
+                        <span>Cerrar Sesión</span>
+                      </button>
+                    </div>
+
+                    <div className="pt-1">
+                      <Link
+                        to="/registro"
+                        onClick={onClose}
+                        className="w-full py-1.5 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-colors"
+                      >
+                        <UserPlus className="w-3.5 h-3.5 text-sky-400" strokeWidth={1.75} />
+                        <span>Registrarse / Nuevo Registro Cívico</span>
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      Accede con tu cédula oficial para consultar trámites, estado tributario y certificados validados ante Hacienda.
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Link
+                        to="/login"
+                        onClick={onClose}
+                        className="flex-1 py-2 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                      >
+                        <LogIn className="w-3.5 h-3.5" strokeWidth={1.75} />
+                        <span>Iniciar Sesión</span>
+                      </Link>
+                      <Link
+                        to="/registro"
+                        onClick={onClose}
+                        className="py-2 px-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-white font-semibold text-xs transition-colors"
+                      >
+                        Registrarse
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 2. SELECTOR DEL GOBIERNO LOCAL ACTIVO (84 CANTONES) */}
               <div className="rounded-2xl p-4 bg-white/[0.03] border border-white/10 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-400">

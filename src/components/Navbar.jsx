@@ -17,6 +17,7 @@ import Logo from './common/Logo';
 import MegaMenu, { CATEGORIAS_CIVICAS } from './navigation/MegaMenu';
 import CivicDrawer from './navigation/CivicDrawer';
 import { useAuth } from '../context/AuthContext';
+import { useCivicModal } from '../context/CivicModalContext';
 import { useLanguage } from '../context/LanguageContext';
 
 /**
@@ -32,6 +33,20 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   const { t } = useLanguage();
+
+  const confirmarSalida = () => {
+    solicitarConfirmacion({
+      titulo: 'Confirmación de Cierre de Sesión',
+      mensaje: '¿Está seguro de que desea cerrar su sesión institucional en Costa Rica Unidos? Deberá autenticar sus credenciales nuevamente para acceder al sistema.',
+      icono: 'advertencia',
+      textoBotonAceptar: 'Cerrar Sesión',
+      textoBotonCancelar: 'Permanecer Conectado',
+      onAceptar: () => {
+        logout();
+        navigate('/');
+      }
+    });
+  };
 
   // Estado del Mega Menú en Desktop
   const [categoriaActiva, setCategoriaActiva] = useState(null);

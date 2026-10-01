@@ -18,6 +18,7 @@ import {
 import { GIS_LAYERS_CONFIG, GIS_POI_DATA } from './gisLayersData';
 import { CENTRO_COSTA_RICA } from './darkMapStyles';
 import { procesarConsultaSemantica } from '../../services/geoSemanticNlpService';
+import { useCivicModal } from '../../context/CivicModalContext';
 
 /**
  * MapaCartografico3D — Visor Cartográfico Real de Costa Rica (Leaflet + CartoDB Dark Matter)
@@ -29,6 +30,7 @@ export default function MapaCartografico3D({
   initialQuery = '',
   height = '72vh'
 }) {
+  const { mostrarAlerta } = useCivicModal();
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersLayerGroupRef = useRef(null);
@@ -316,7 +318,11 @@ export default function MapaCartografico3D({
   // 4. Ubicación actual del usuario (GPS)
   const handleLocateMe = () => {
     if (!navigator.geolocation || !mapInstanceRef.current) {
-      alert('La geolocalización no está disponible en este dispositivo.');
+      mostrarAlerta({
+        titulo: 'Geolocalización No Disponible',
+        mensaje: 'La geolocalización satelital no se encuentra habilitada en este navegador o dispositivo.',
+        icono: 'advertencia'
+      });
       return;
     }
 
@@ -357,7 +363,11 @@ export default function MapaCartografico3D({
       },
       () => {
         setIsLocating(false);
-        alert('No se pudo obtener la ubicación GPS.');
+        mostrarAlerta({
+          titulo: 'Error de Posicionamiento',
+          mensaje: 'No fue posible obtener su ubicación satelital GPS. Verifique los permisos en su navegador.',
+          icono: 'error'
+        });
       },
       { timeout: 10000, enableHighAccuracy: true }
     );
