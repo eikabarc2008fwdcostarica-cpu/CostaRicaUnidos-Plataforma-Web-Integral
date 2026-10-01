@@ -176,9 +176,10 @@ html.light .civic-container {
 
 html {
   font-size: calc(16px * var(--text-scale, 1));
-  overflow-x: hidden;
-  max-width: 100%;
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* Reseteo general */
@@ -215,18 +216,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-image: var(--theme-bg-gradient);
   background-attachment: fixed;
-  overflow-x: hidden;
-  max-width: 100%;
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
   width: 100%;
+  box-sizing: border-box;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
   min-height: 100vh;
   width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
   position: relative;
+  box-sizing: border-box;
 }
 
 /* En Fase 4 (200%), botones y áreas táctiles crecen a un mínimo de 64px de alto según RNF-05.1 */
@@ -249,11 +252,252 @@ body {
   min-height: 54px !important;
 }
 
-/* Prevención de desbordamiento horizontal en pantallas móviles de 360px */
+/* ==========================================================================
+   SISTEMA DE CUADRÍCULAS RESPONSIVE Y MOBILE-FIRST (RNF-05.1 / 360px - 480px)
+   Todas las cuadrículas de 3 o 4 columnas colapsan fluidamente a 1 columna
+   ========================================================================== */
+.grid {
+  display: grid;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.grid-cols-3 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid-cols-4 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid-cols-12 {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-2\.5 { gap: 0.625rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-5 { gap: 1.25rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-8 { gap: 2rem; }
+
+@media (min-width: 640px) {
+  .sm\:grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sm\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sm\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (min-width: 768px) {
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .md\:grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .md\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .lg\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+}
+
+/* Colapso fluido estricto en pantallas menores a 768px */
+@media (max-width: 767px) {
+  .grid-cols-3,
+  .grid-cols-4,
+  .grid-cols-12,
+  .md\:grid-cols-2,
+  .md\:grid-cols-3,
+  .md\:grid-cols-4,
+  .lg\:grid-cols-2,
+  .lg\:grid-cols-3,
+  .lg\:grid-cols-4,
+  .lg\:grid-cols-12 {
+    grid-template-columns: 1fr !important;
+  }
+
+  [class*="col-span-"] {
+    grid-column: span 1 / span 1 !important;
+  }
+}
+
+/* ==========================================================================
+   TABLAS ADMINISTRATIVAS CON SCROLL SUAVE Y BARRA ESTILIZADA
+   (Actas del Concejo, Albergues CNE, Ferias del Agricultor)
+   ========================================================================== */
+.civic-table-container,
+.custom-civic-scrollbar {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(121, 166, 255, 0.45) rgba(0, 10, 30, 0.6);
+  max-width: 100%;
+}
+
+.custom-civic-scrollbar::-webkit-scrollbar,
+.civic-table-container::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.custom-civic-scrollbar::-webkit-scrollbar-track,
+.civic-table-container::-webkit-scrollbar-track {
+  background: rgba(0, 10, 30, 0.6);
+  border-radius: 9999px;
+}
+
+.custom-civic-scrollbar::-webkit-scrollbar-thumb,
+.civic-table-container::-webkit-scrollbar-thumb {
+  background: rgba(121, 166, 255, 0.4);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.custom-civic-scrollbar::-webkit-scrollbar-thumb:hover,
+.civic-table-container::-webkit-scrollbar-thumb:hover {
+  background: #79A6FF;
+  box-shadow: 0 0 10px rgba(121, 166, 255, 0.6);
+}
+
+html.light .custom-civic-scrollbar,
+html.light .civic-table-container {
+  scrollbar-color: rgba(0, 43, 127, 0.4) rgba(226, 232, 240, 0.9);
+}
+
+html.light .custom-civic-scrollbar::-webkit-scrollbar-track,
+html.light .civic-table-container::-webkit-scrollbar-track {
+  background: rgba(226, 232, 240, 0.9);
+}
+
+html.light .custom-civic-scrollbar::-webkit-scrollbar-thumb,
+html.light .civic-table-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 43, 127, 0.35);
+  border: 1px solid rgba(0, 43, 127, 0.15);
+}
+
+html.light .custom-civic-scrollbar::-webkit-scrollbar-thumb:hover,
+html.light .civic-table-container::-webkit-scrollbar-thumb:hover {
+  background: #001489;
+}
+
+/* ==========================================================================
+   BOTONERA 911 Y AUXILIO EN CELULARES (360px - 480px)
+   ========================================================================== */
+.botonera-911-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .botonera-911-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.9rem !important;
+  }
+
+  .boton-tactil-auxilio {
+    min-height: 54px !important;
+    padding: 0.65rem 0.95rem !important;
+  }
+}
+
+/* ==========================================================================
+   ADAPTACIONES MOBILE-FIRST DEL NAVBAR (360px a 480px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .topbar-subtext {
+    display: none !important;
+  }
+
+  .topbar-meta {
+    display: none !important;
+  }
+
+  .navbar-main-container {
+    padding-left: 0.65rem !important;
+    padding-right: 0.65rem !important;
+    gap: 0.5rem !important;
+  }
+
+  .navbar-critical-services {
+    gap: 0.35rem !important;
+  }
+
+  .navbar-btn-tactile {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+  }
+
+  .navbar-btn-tactile .nav-btn-text {
+    display: none !important;
+  }
+
+  .canton-selector-btn {
+    min-height: 44px !important;
+    padding: 0.35rem 0.65rem !important;
+    font-size: 0.76rem !important;
+  }
+
+  .canton-selector-label {
+    display: none !important;
+  }
+
+  .navbar-btn-menu {
+    min-height: 44px !important;
+    padding: 0.45rem 0.85rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .navbar-btn-sos {
+    min-height: 44px !important;
+    padding: 0.35rem 0.75rem !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .canton-selector-btn {
+    min-width: 44px !important;
+    width: 44px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+
+  .canton-selector-name,
+  .canton-selector-chevron {
+    display: none !important;
+  }
+
+  .logo-text-civic {
+    display: none !important;
+  }
+}
+
+/* Prevención global de desbordamiento horizontal en pantallas móviles de 360px */
 @media (max-width: 480px) {
   html, body {
-    overflow-x: hidden;
-    max-width: 100%;
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
     width: 100%;
   }
 
@@ -261,7 +505,7 @@ body {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
     overflow-x: hidden;
-    max-width: 100%;
+    max-width: 100vw;
     box-sizing: border-box;
   }
 

@@ -35,7 +35,7 @@ export default function Logo({ size = '40px', showText = true }) {
       />
       {showText && (
         <div
-          className="flex flex-col leading-tight"
+          className="logo-text-civic flex flex-col leading-tight"
           style={{
             display: 'flex',
             flexDirection: 'column',

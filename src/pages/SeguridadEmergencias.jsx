@@ -166,7 +166,17 @@ export default function SeguridadEmergencias() {
         </div>
       )}
 
-      <main style={{ flex: 1, padding: '2.5rem 2rem 5rem', maxWidth: '1360px', margin: '0 auto', width: '100%' }}>
+      <main
+        className="civic-container"
+        style={{
+          flex: 1,
+          padding: 'clamp(1.5rem, 4vw, 2.5rem) clamp(0.75rem, 3vw, 2rem) 5rem',
+          maxWidth: '1360px',
+          margin: '0 auto',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}
+      >
         {/* ==========================================================================
             1. CABECERA INSTITUCIONAL: CENTRO DE MANDO MUNICIPAL (COE / CNE)
             ========================================================================== */}
@@ -177,7 +187,7 @@ export default function SeguridadEmergencias() {
             WebkitBackdropFilter: 'blur(28px)',
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '24px',
-            padding: '2.5rem',
+            padding: 'clamp(1.25rem, 4vw, 2.5rem)',
             marginBottom: '3rem',
             boxShadow: '0 20px 60px rgba(0, 4, 13, 0.8), 0 0 35px rgba(0, 20, 137, 0.35)',
             position: 'relative',
@@ -319,9 +329,10 @@ export default function SeguridadEmergencias() {
           </div>
 
           <div
+            className="botonera-911-grid"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
               gap: '1.25rem'
             }}
           >
@@ -336,7 +347,7 @@ export default function SeguridadEmergencias() {
                     WebkitBackdropFilter: 'blur(24px)',
                     border: '1px solid rgba(255, 255, 255, 0.15)',
                     borderRadius: '18px',
-                    padding: '1.5rem',
+                    padding: 'clamp(1rem, 3vw, 1.5rem)',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -366,7 +377,8 @@ export default function SeguridadEmergencias() {
                             border: '1px solid rgba(255, 255, 255, 0.16)',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            flexShrink: 0
                           }}
                         >
                           <Icono size={20} color="#FFFFFF" />
@@ -387,22 +399,25 @@ export default function SeguridadEmergencias() {
                     </p>
                   </div>
 
-                  {/* Botón Táctil de Marcado de Gran Formato (Min 64px de alto para accesibilidad) */}
+                  {/* Botón Táctil de Marcado de Gran Formato (Min 54px de alto para celulares y accesibilidad) */}
                   <a
                     href={ent.telHref}
                     aria-label={`Llamar inmediatamente a ${ent.titulo} al número ${ent.numero}`}
+                    className="boton-tactil-auxilio"
                     style={{
                       textDecoration: 'none',
                       backgroundColor: 'rgba(0, 20, 137, 0.35)',
                       border: '1px solid rgba(121, 166, 255, 0.4)',
                       color: '#FFFFFF',
-                      minHeight: '64px',
-                      padding: '0.75rem 1.25rem',
+                      minHeight: '58px',
+                      padding: '0.75rem 1rem',
                       borderRadius: '14px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      transition: 'all 0.2s ease'
+                      gap: '0.75rem',
+                      transition: 'all 0.2s ease',
+                      boxSizing: 'border-box'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = '#002B7F';
@@ -566,6 +581,7 @@ export default function SeguridadEmergencias() {
 
           {/* Tabla Georreferenciada de Albergues */}
           <div
+            className="civic-table-container custom-civic-scrollbar"
             style={{
               overflowX: 'auto',
               borderRadius: '18px',
@@ -573,12 +589,15 @@ export default function SeguridadEmergencias() {
               backgroundColor: 'rgba(0, 15, 45, 0.65)',
               backdropFilter: 'blur(24px)',
               WebkitBackdropFilter: 'blur(24px)',
-              boxShadow: '0 12px 40px rgba(0, 4, 13, 0.7)'
+              boxShadow: '0 12px 40px rgba(0, 4, 13, 0.7)',
+              width: '100%',
+              WebkitOverflowScrolling: 'touch'
             }}
           >
             <table
               style={{
                 width: '100%',
+                minWidth: '760px',
                 borderCollapse: 'collapse',
                 textAlign: 'left',
                 fontSize: '0.88rem',
