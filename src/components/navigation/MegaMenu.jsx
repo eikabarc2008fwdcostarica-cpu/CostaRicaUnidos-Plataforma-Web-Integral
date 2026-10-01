@@ -157,9 +157,11 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
       onMouseLeave={alCerrar}
       role="region"
       aria-label={`Mega menú: ${categoria.label}`}
-      className="absolute top-full left-0 w-full z-40 bg-[#00040D]/95 dark:bg-[#00040D]/95 backdrop-blur-2xl border-b border-white/10 dark:border-white/10 shadow-2xl py-8 px-6 md:px-16 transition-all duration-300 animate-fadeIn"
+      className="absolute top-full left-0 w-full z-50 bg-[#0A0F1D] border-b border-slate-800 shadow-2xl py-8 px-6 md:px-16 transition-all duration-300 animate-fadeIn"
       style={{
-        boxShadow: '0 25px 50px -12px rgba(0, 4, 13, 0.85)'
+        backgroundColor: '#0A0F1D',
+        opacity: 1,
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 0, 0, 0.85)'
       }}
     >
       <div className="max-w-7xl mx-auto">
@@ -178,9 +180,10 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
                 key={m.titulo}
                 to={m.path}
                 onClick={alCerrar}
-                className="group p-5 rounded-2xl bg-white/[0.03] dark:bg-white/[0.03] border border-white/10 dark:border-white/10 hover:border-red-500/50 hover:bg-white/[0.06] transition-all duration-200 flex flex-col justify-between"
+                className="group p-5 rounded-2xl bg-[#0F172A] border border-slate-800 hover:border-red-500/50 hover:bg-[#1E293B] shadow-lg transition-all duration-200 flex flex-col justify-between"
                 style={{
-                  minHeight: '170px'
+                  minHeight: '170px',
+                  backgroundColor: '#0F172A'
                 }}
               >
                 <div>

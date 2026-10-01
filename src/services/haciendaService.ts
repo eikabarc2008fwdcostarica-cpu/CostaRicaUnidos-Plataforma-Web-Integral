@@ -286,8 +286,9 @@ export async function checkTaxStatus(cedulaInput: string): Promise<TaxStatusResu
 }
 
 /**
- * Desglosa el nombre completo proveniente del Registro Nacional / Hacienda
- * en formato oficial costarricense (APELLIDO1 APELLIDO2 NOMBRES)
+ * Desglosa el nombre completo proveniente de la API de Hacienda / Registro Nacional
+ * Formato oficial retornado por el API: [NOMBRE(S)] [PRIMER APELLIDO] [SEGUNDO APELLIDO]
+ * Ejemplo: "ALANIE MARISA CASTILLO RUIZ" -> Nombre(s): "ALANIE MARISA", Primer Apellido: "CASTILLO", Segundo Apellido: "RUIZ"
  */
 export function parseCostaRicanFullName(nombreCompleto: string): {
   nombre: string;
@@ -300,19 +301,24 @@ export function parseCostaRicanFullName(nombreCompleto: string): {
   }
 
   const tokens = limpio.split(' ');
+
   if (tokens.length >= 3) {
-    // Convención TSE / Hacienda de Costa Rica: PRIMER_APELLIDO SEGUNDO_APELLIDO NOMBRE...
-    const primerApellido = tokens[0];
-    const segundoApellido = tokens[1];
-    const nombre = tokens.slice(2).join(' ');
+    // Los dos últimos tokens corresponden a los dos apellidos costarricenses:
+    // [tokens.length - 2] = Primer Apellido
+    // [tokens.length - 1] = Segundo Apellido
+    // Todos los tokens anteriores = Nombre(s) de pila
+    const segundoApellido = tokens[tokens.length - 1];
+    const primerApellido = tokens[tokens.length - 2];
+    const nombre = tokens.slice(0, tokens.length - 2).join(' ');
     return { nombre, primerApellido, segundoApellido };
   }
 
   if (tokens.length === 2) {
+    // Caso con un solo apellido: [NOMBRE] [PRIMER APELLIDO]
     return {
-      primerApellido: tokens[0],
-      segundoApellido: '',
-      nombre: tokens[1]
+      nombre: tokens[0],
+      primerApellido: tokens[1],
+      segundoApellido: ''
     };
   }
 
@@ -327,47 +333,53 @@ export function parseCostaRicanFullName(nombreCompleto: string): {
  * Catálogo de identidades cívicas de demostración oficial para pruebas offline y soporte de contingencia
  */
 export const DEMO_CITIZEN_IDENTITIES: Record<string, { nombre: string; primerApellido: string; segundoApellido: string; nombreOficial: string }> = {
+  '605040857': {
+    nombre: 'ALANIE MARISA',
+    primerApellido: 'CASTILLO',
+    segundoApellido: 'RUIZ',
+    nombreOficial: 'ALANIE MARISA CASTILLO RUIZ'
+  },
   '118880999': {
     nombre: 'ALANIE',
     primerApellido: 'GÓMEZ',
     segundoApellido: 'BARRANTES',
-    nombreOficial: 'GÓMEZ BARRANTES ALANIE'
+    nombreOficial: 'ALANIE GÓMEZ BARRANTES'
   },
   '207770888': {
     nombre: 'EIKER',
     primerApellido: 'ABARCA',
     segundoApellido: 'CASTILLO',
-    nombreOficial: 'ABARCA CASTILLO EIKER'
+    nombreOficial: 'EIKER ABARCA CASTILLO'
   },
   '101110222': {
     nombre: 'CARLOS',
     primerApellido: 'MORA',
     segundoApellido: 'BRENES',
-    nombreOficial: 'MORA BRENES CARLOS'
+    nombreOficial: 'CARLOS MORA BRENES'
   },
   '202220333': {
     nombre: 'MARIANA',
     primerApellido: 'VARGAS',
     segundoApellido: 'ROJAS',
-    nombreOficial: 'VARGAS ROJAS MARIANA'
+    nombreOficial: 'MARIANA VARGAS ROJAS'
   },
   '303330444': {
     nombre: 'ROBERTO',
     primerApellido: 'JIMÉNEZ',
     segundoApellido: 'CHAVES',
-    nombreOficial: 'JIMÉNEZ CHAVES ROBERTO'
+    nombreOficial: 'ROBERTO JIMÉNEZ CHAVES'
   },
   '115550666': {
     nombre: 'SOFÍA',
     primerApellido: 'CASTRO',
     segundoApellido: 'SOLANO',
-    nombreOficial: 'CASTRO SOLANO SOFÍA'
+    nombreOficial: 'SOFÍA CASTRO SOLANO'
   },
   '123456789012': {
     nombre: 'JOHN DAVID',
     primerApellido: 'SMITH',
     segundoApellido: 'MILLER',
-    nombreOficial: 'SMITH MILLER JOHN DAVID'
+    nombreOficial: 'JOHN DAVID SMITH MILLER'
   }
 };
 
