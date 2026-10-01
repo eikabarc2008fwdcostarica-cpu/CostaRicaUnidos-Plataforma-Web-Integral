@@ -312,7 +312,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
   const handleResetDb = () => {
     resetDbToSeed();
     refreshDbStats();
-    setSuccessMessage('Base de datos simulada restablecida a los valores iniciales de db.json.');
+    setSuccessMessage('Base de datos institucional restablecida a los valores iniciales.');
     setTimeout(() => setSuccessMessage(null), 3500);
   };
 
@@ -349,7 +349,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
 
         <p style={{ color: 'rgba(255, 255, 255, 0.72)', fontSize: '0.88rem', margin: 0 }}>
           {authMode === 'LOGIN'
-            ? 'Control de Acceso Basado en Roles (RBAC) con persistencia en db.json'
+            ? 'Control de Acceso Basado en Roles (RBAC) con persistencia institucional'
             : 'Apertura de expediente cívico con validación directa del Ministerio de Hacienda'}
         </p>
       </div>
@@ -945,7 +945,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
           <div style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
               <span style={{ fontSize: '0.76rem', color: 'rgba(255, 255, 255, 0.75)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                ⚡ Cuentas Semilla Oficiales (db.json):
+                Cuentas Institucionales de Acceso Rápido:
               </span>
               <button
                 type="button"
@@ -1563,7 +1563,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
             isLoading={isLoading}
             style={{ width: '100%', height: '48px', fontSize: '0.95rem', fontWeight: 700 }}
           >
-            Crear Expediente y Registrar en db.json
+            Crear Expediente y Registrar en Plataforma
           </CivicButton>
         </form>
       )}
@@ -1591,7 +1591,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
               display: 'inline-block'
             }}
           />
-          <span>db.json sincronizado: <strong>{dbStats.totalUsuarios} usuarios</strong></span>
+          <span>Padrón digital sincronizado: <strong>{dbStats.totalUsuarios} usuarios</strong></span>
         </div>
 
         <button
@@ -1605,7 +1605,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
             cursor: 'pointer',
             textDecoration: 'underline'
           }}
-          title="Restablece db.json a las 4 cuentas semilla originales"
+          title="Restablece las cuentas semilla institucionales originales"
         >
           Restaurar Semilla Original
         </button>

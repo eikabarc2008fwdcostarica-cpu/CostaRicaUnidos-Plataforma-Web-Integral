@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Vote,
   Users,
@@ -12,7 +12,8 @@ import {
   TrendingUp,
   FileCheck
 } from 'lucide-react';
-import { PROYECTOS_VECINALES_DATA, ProyectoVecinal, SolicitudAudienciaConcejo } from '../data/participacionData';
+import { ProyectoVecinal, SolicitudAudienciaConcejo } from '../data/participacionData';
+import { dbClient } from '../services/dbClient';
 import { GraficoPresupuestoParticipativo } from '../components/participacion/GraficoPresupuestoParticipativo';
 import { ModalVotacionAntifraude } from '../components/participacion/ModalVotacionAntifraude';
 import { BuzonAudienciaModal } from '../components/participacion/BuzonAudienciaModal';
@@ -21,16 +22,40 @@ import { CivicButton } from '../components/common/CivicButton';
 import Navbar from '../components/Navbar';
 
 /**
+ * Normaliza los proyectos del catálogo maestro en dbClient para renderizado uniforme.
+ */
+function normalizarProyectos(): ProyectoVecinal[] {
+  const raw = dbClient.getCollection<any>('proyectosPresupuesto');
+  return raw.map((p) => {
+    const monto = p.presupuestoEstimadoColones || p.montoEstimado || 45000000;
+    return {
+      id: p.id,
+      titulo: p.titulo,
+      distrito: p.distrito || 'Cantonal',
+      categoria: p.categoria || 'Infraestructura & Aceras',
+      descripcion: p.descripcion || 'Iniciativa ciudadana para mejora del espacio comunal y calidad de vida.',
+      presupuestoEstimadoColones: monto,
+      presupuestoFormateado: p.presupuestoFormateado || `₡ ${monto.toLocaleString('es-CR')}`,
+      votosAcumulados: p.votosAcumulados || 0,
+      estadoVotacion: (p.estadoVotacion || (p.estado === 'EN_VOTACION' ? 'Votación Abierta' : 'Aprobado')) as any,
+      proponenteComunal: p.proponenteComunal || 'Asociación de Desarrollo Integral (ADI)',
+      beneficiariosEstimados: p.beneficiariosEstimados || '15,000 vecinos',
+      fechaCierre: p.fechaCierre || '15 de Noviembre, 2026'
+    };
+  });
+}
+
+/**
  * ParticipacionPage — Módulo 11: Participación Ciudadana y Presupuesto Participativo
  * 
  * Centraliza la soberanía vecinal con:
- * - Banco de proyectos de presupuesto participativo con barra reactiva porcentual.
+ * - Banco de proyectos de presupuesto participativo con barra reactiva porcentual cargado de dbClient.
  * - Sistema de votación con validación tributaria y de padrón (1 voto por cédula legal).
  * - Gráficos y métricas reactivas en tiempo real.
  * - Buzón formal de audiencias públicas ante el Concejo Municipal.
  */
 export default function ParticipacionPage() {
-  const [proyectos, setProyectos] = useState<ProyectoVecinal[]>(PROYECTOS_VECINALES_DATA);
+  const [proyectos, setProyectos] = useState<ProyectoVecinal[]>(normalizarProyectos);
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<ProyectoVecinal | null>(null);
   const [modalVotacionAbierto, setModalVotacionAbierto] = useState(false);
   const [modalAudienciaAbierto, setModalAudienciaAbierto] = useState(false);
@@ -39,17 +64,43 @@ export default function ParticipacionPage() {
     comprobante: string;
   } | null>(null);
 
-  // Manejo de voto exitoso con actualización reactiva en vivo y comprobante oficial
-  const handleVotoExitoso = (proyectoId: string, comprobante: string) => {
-    setProyectos((prev) =>
-      prev.map((proj) =>
-        proj.id === proyectoId
-          ? { ...proj, votosAcumulados: proj.votosAcumulados + 1 }
-          : proj
-      )
-    );
+  // Sincronización reactiva con dbClient
+  useEffect(() => {
+    setProyectos(normalizarProyectos());
 
+    const unsubscribe = dbClient.subscribe(() => {
+      setProyectos(normalizarProyectos());
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  // Manejo de voto exitoso con actualización reactiva en vivo, persistencia en dbClient y comprobante oficial
+  const handleVotoExitoso = (proyectoId: string, comprobante: string, cedula?: string) => {
     const proy = proyectos.find((p) => p.id === proyectoId);
+    const votosActuales = proy ? proy.votosAcumulados : 0;
+
+    // 1. Incrementar votosAcumulados del proyecto en dbClient
+    dbClient.update('proyectosPresupuesto', proyectoId, {
+      votosAcumulados: votosActuales + 1
+    });
+
+    // 2. Registrar el voto blindado en la colección votosEmitidos de dbClient
+    const anio = new Date().getFullYear();
+    const votoId = `VOT-${anio}-${Math.floor(1000 + Math.random() * 9000)}`;
+    dbClient.insert('votosEmitidos', {
+      id: votoId,
+      proyectoId,
+      usuarioCedula: cedula || '1-1823-0456',
+      fechaVoto: new Date().toISOString(),
+      hashFirma: comprobante
+    });
+
+    // 3. Recargar estado local desde dbClient
+    setProyectos(normalizarProyectos());
+
     setNotificacionVoto({
       mensaje: `¡Su voto soberano fue registrado con éxito para "${proy?.titulo || 'Iniciativa Comunal'}"!`,
       comprobante
@@ -78,7 +129,7 @@ export default function ParticipacionPage() {
             <div className="max-w-2xl space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
                 <Vote size={14} />
-                Módulo 11 • Participación Ciudadana y Presupuesto Participativo
+                Participación Ciudadana y Presupuesto Participativo
               </div>
               <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
                 Decide el Futuro de tu Cantón con{' '}

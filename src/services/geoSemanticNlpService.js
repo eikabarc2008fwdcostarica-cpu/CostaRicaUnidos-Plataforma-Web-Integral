@@ -1,5 +1,5 @@
 /**
- * COSTA RICA UNIDOS — Motor de IA Contextual & Búsqueda Semántica Geoespacial (Módulo 12 / RF-12.1)
+ * COSTA RICA UNIDOS — Motor de IA Contextual & Búsqueda Semántica Geoespacial
  * Rol: Eiker (AI Engineer & Geospatial NLP Specialist)
  *
  * Procesa lenguaje natural costarricense sin necesidad de activar filtros manuales.

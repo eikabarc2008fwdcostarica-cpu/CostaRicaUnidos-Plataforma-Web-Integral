@@ -27,6 +27,7 @@ import {
 import Logo from '../common/Logo';
 import { CATEGORIAS_CIVICAS } from './MegaMenu';
 import { useAuth } from '../../context/AuthContext';
+import { useCivicModal } from '../../context/CivicModalContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAccessibility } from '../accessibility';
 import { IDIOMAS_SOPORTADOS } from '../accessibility/accessibilityData';
@@ -36,7 +37,23 @@ export default function CivicDrawer({ isOpen, onClose, initialTab }) {
   const drawerRef = useRef(null);
   const navigate = useNavigate();
   const { user, isAuthenticated, logout, officialRoleName } = useAuth();
+  const { solicitarConfirmacion } = useCivicModal();
   const { idioma, cambiarIdioma, t } = useLanguage();
+
+  const confirmarSalida = () => {
+    onClose();
+    solicitarConfirmacion({
+      titulo: 'Confirmación de Cierre de Sesión',
+      mensaje: '¿Está seguro de que desea cerrar su sesión institucional en Costa Rica Unidos? Deberá autenticar sus credenciales nuevamente para acceder al sistema.',
+      icono: 'advertencia',
+      textoBotonAceptar: 'Cerrar Sesión',
+      textoBotonCancelar: 'Permanecer Conectado',
+      onAceptar: () => {
+        logout();
+        navigate('/');
+      }
+    });
+  };
   const {
     textPhase,
     setTextPhase,
@@ -293,23 +310,22 @@ export default function CivicDrawer({ isOpen, onClose, initialTab }) {
 
                     <div className="flex items-center gap-2 pt-1">
                       <Link
-                        to="/dashboard"
+                        to={user.nivelAcceso >= 3 ? '/dashboard' : '/participacion'}
                         onClick={onClose}
                         className="flex-1 py-2 px-3 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
                       >
                         <Building2 className="w-3.5 h-3.5" strokeWidth={1.75} />
-                        <span>Mi Ventanilla</span>
+                        <span>{user.nivelAcceso >= 3 ? 'Consola de Mando' : 'Mi Espacio Cívico'}</span>
                       </Link>
 
                       <button
                         type="button"
-                        onClick={() => {
-                          logout();
-                        }}
+                        onClick={confirmarSalida}
                         className="py-2 px-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                        title="Cerrar sesión institucional con confirmación"
                       >
                         <LogOut className="w-3.5 h-3.5" strokeWidth={1.75} />
-                        <span>Salir</span>
+                        <span>Cerrar Sesión</span>
                       </button>
                     </div>
                   </div>

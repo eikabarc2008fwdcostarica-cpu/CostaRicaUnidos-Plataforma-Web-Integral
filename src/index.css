@@ -152,6 +152,25 @@ html.light textarea {
   color: var(--theme-input-text) !important;
 }
 
+/* Soporte global de accesibilidad para menús desplegables <select> y <option> (WCAG 2.1 AA) */
+select {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #000814 !important;
+  color: #FFFFFF !important;
+}
+
+html.light select {
+  color-scheme: light;
+}
+
+html.light select option {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+}
+
 html.light input::placeholder,
 html.light textarea::placeholder {
   color: var(--theme-text-muted) !important;

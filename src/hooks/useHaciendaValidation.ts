@@ -32,8 +32,8 @@ export interface UseHaciendaValidationReturn {
  * 
  * Usos clave:
  * - Autocompletado inmediato del nombre legal oficial en Login y Registro ciudadano.
- * - Validación antifraude de 1 voto por cédula en Participación Ciudadana (M11).
- * - Certificación de "Comercio Verificado / Régimen Simplificado" en PYMES y Ferias (M08).
+ * - Validación antifraude de 1 voto por cédula en Participación Ciudadana.
+ * - Certificación de "Comercio Verificado / Régimen Simplificado" en PYMES y Ferias.
  * - Manejo robusto de estados de carga (Skeleton/Spinner), debounce y memoria caché.
  */
 export function useHaciendaValidation(

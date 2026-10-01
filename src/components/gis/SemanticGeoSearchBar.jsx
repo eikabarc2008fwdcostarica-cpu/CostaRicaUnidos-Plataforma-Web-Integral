@@ -5,9 +5,10 @@ import {
   obtenerSugerenciasPopulares,
   SpeechRecognitionService
 } from '../../services/geoSemanticNlpService';
+import { useCivicModal } from '../../context/CivicModalContext';
 
 /**
- * Componente: Barra de Búsqueda Semántica Inteligente en Lenguaje Natural (RF-12.1)
+ * Componente: Barra de Búsqueda Semántica Inteligente en Lenguaje Natural
  * Soporta entrada de texto, sugerencias rápidas costarricenses y dictado por voz (SpeechRecognition).
  */
 export default function SemanticGeoSearchBar({
@@ -16,6 +17,7 @@ export default function SemanticGeoSearchBar({
   placeholder = 'Consulte en lenguaje natural: ej. "Clínicas cerca de colegios técnicos en San Carlos"...',
   variant = 'map' // 'map' | 'hero'
 }) {
+  const { mostrarAlerta } = useCivicModal();
   const [query, setQuery] = useState(initialQuery);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -75,7 +77,11 @@ export default function SemanticGeoSearchBar({
 
   const handleToggleVoice = () => {
     if (!speechSupported) {
-      alert('El reconocimiento de voz por micrófono no es soportado por este navegador. Use la entrada de texto.');
+      mostrarAlerta({
+        titulo: 'Dictado No Compatible',
+        mensaje: 'El reconocimiento de voz por micrófono no es compatible con este navegador. Por favor utilice la entrada de texto.',
+        icono: 'advertencia'
+      });
       return;
     }
 
@@ -141,9 +147,9 @@ export default function SemanticGeoSearchBar({
           gap: '0.75rem'
         }}
       >
-        {/* Distintivo de Inteligencia Artificial (M12) */}
+        {/* Distintivo de Inteligencia Artificial Cívica */}
         <div
-          title="Motor de Lenguaje Natural Costa Rica Unidos AI (RF-12.1)"
+          title="Motor de Lenguaje Natural Costa Rica Unidos AI"
           style={{
             display: 'flex',
             alignItems: 'center',

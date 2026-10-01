@@ -9,7 +9,7 @@ interface PerfilElevacion3DProps {
 }
 
 /**
- * PerfilElevacion3D — Módulo 12 (RF-12.2): Motor de IA Topográfico
+ * PerfilElevacion3D — Motor de IA Topográfico
  * Visualizador interactivo del perfil altimétrico y gradientes de pendiente,
  * aprovechando el modelo digital de elevación 3D provisto por Eiker en la cartografía base.
  */

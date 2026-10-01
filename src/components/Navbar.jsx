@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Building2,
   Landmark,
@@ -8,12 +8,14 @@ import {
   ChevronDown,
   ShieldAlert,
   User,
+  LogOut,
   Menu
 } from 'lucide-react';
 import Logo from './common/Logo';
 import MegaMenu, { CATEGORIAS_CIVICAS } from './navigation/MegaMenu';
 import CivicDrawer from './navigation/CivicDrawer';
 import { useAuth } from '../context/AuthContext';
+import { useCivicModal } from '../context/CivicModalContext';
 import { useLanguage } from '../context/LanguageContext';
 
 /**
@@ -25,8 +27,24 @@ import { useLanguage } from '../context/LanguageContext';
  */
 export default function Navbar() {
   const location = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
+  const { solicitarConfirmacion } = useCivicModal();
   const { t } = useLanguage();
+
+  const confirmarSalida = () => {
+    solicitarConfirmacion({
+      titulo: 'Confirmación de Cierre de Sesión',
+      mensaje: '¿Está seguro de que desea cerrar su sesión institucional en Costa Rica Unidos? Deberá autenticar sus credenciales nuevamente para acceder al sistema.',
+      icono: 'advertencia',
+      textoBotonAceptar: 'Cerrar Sesión',
+      textoBotonCancelar: 'Permanecer Conectado',
+      onAceptar: () => {
+        logout();
+        navigate('/');
+      }
+    });
+  };
 
   // Estado del Mega Menú en Desktop
   const [categoriaActiva, setCategoriaActiva] = useState(null);
@@ -211,6 +229,20 @@ export default function Navbar() {
                 <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
               )}
             </button>
+
+            {/* BOTÓN CERRAR SESIÓN CON CONFIRMACIÓN (DESKTOP) */}
+            {isAuthenticated && (
+              <button
+                type="button"
+                onClick={confirmarSalida}
+                aria-label="Cerrar sesión institucional con confirmación"
+                className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+                title="Cerrar sesión institucional"
+              >
+                <LogOut className="w-3.5 h-3.5" strokeWidth={1.75} />
+                <span>Cerrar Sesión</span>
+              </button>
+            )}
 
             {/* EN MÓVILES (< 1024px): BOTÓN HAMBURGUESA QUE ABRE EL CIVIC DRAWER */}
             <button
