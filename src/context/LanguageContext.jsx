@@ -1,316 +1,150 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { LOCALES } from '../i18n/locales';
 
-export const DICCIONARIO = {
-  CR: {
-    portal: 'Portal Nacional',
-    territorio: 'Territorio 3D & Cartografía',
-    reportes: 'Reportes de Infraestructura',
-    seguridad: 'Seguridad y Emergencias 911',
-    gobernanza: 'Gobernanza y Transparencia',
-    cultura: 'Cultura y Patrimonio',
-    deportes: 'Deportes y Recreación',
-    educacion: 'Educación y Juventud',
-    comercio: 'Comercio y PyMEs',
-    turismo: 'Turismo y Naturaleza',
-    participacion: 'Participación Ciudadana',
-    modulosTitulo: 'Módulos del Sistema Nacional',
-    identidadTitulo: 'Identidad y Trámites',
-    tituloHero: 'COSTA RICA UNIDOS',
-    subtituloHero: 'Plataforma Territorial Soberana',
-    descHero: 'Conectando las 7 provincias, 84 cantones y comunidades de nuestra nación en un espacio cívico digital transparente, inclusivo y accesible para todos.',
-    buscarPlaceholder: 'Buscar cantón, hospital, CTP o albergue...',
-    botonExplorar: 'Explorar',
-    menuBoton: 'MENÚ',
-    cerrarBoton: 'CERRAR',
-    leerVozAlta: 'Leer en Voz Alta',
-    provinciasNum: '07',
-    provinciasTexto: 'Provincias Soberanas',
-    cantonesNum: '84',
-    cantonesTexto: 'Cantones y Gobiernos Locales',
-    distritosNum: '492',
-    distritosTexto: 'Distritos Conectados',
-    accesoCivico: 'Acceso Cívico',
-    registro: 'Registro',
-    idiomasTitulo: 'IDIOMAS OFICIALES (8 IDIOMAS)',
-    a11yTitulo: 'ACCESIBILIDAD UNIVERSAL (LEY 7600)',
-    guiaVoz: 'Guía Asistida por Voz',
-    detener: 'Detener',
-    repSoberania: 'República de Costa Rica • Soberanía e Inclusión Digital'
-  },
-  ES: {
-    portal: 'Portal Nacional',
-    territorio: 'Territorio 3D y Cartografía',
-    reportes: 'Reportes de Infraestructura',
-    seguridad: 'Seguridad y Emergencias 911',
-    gobernanza: 'Gobernanza y Transparencia',
-    cultura: 'Cultura y Patrimonio',
-    deportes: 'Deportes y Recreación',
-    educacion: 'Educación y Juventud',
-    comercio: 'Comercio y Pymes',
-    turismo: 'Turismo y Naturaleza',
-    participacion: 'Participación Ciudadana',
-    modulosTitulo: 'Módulos del Sistema Nacional',
-    identidadTitulo: 'Identidad y Trámites',
-    tituloHero: 'COSTA RICA UNIDOS',
-    subtituloHero: 'Plataforma Territorial Soberana',
-    descHero: 'Conectando las 7 provincias, 84 municipios y comunidades en un espacio cívico digital transparente e inclusivo.',
-    buscarPlaceholder: 'Buscar municipio, hospital o albergue...',
-    botonExplorar: 'Explorar',
-    menuBoton: 'MENÚ',
-    cerrarBoton: 'CERRAR',
-    leerVozAlta: 'Lectura en Voz Alta',
-    provinciasNum: '07',
-    provinciasTexto: 'Provincias Soberanas',
-    cantonesNum: '84',
-    cantonesTexto: 'Municipios y Gobiernos Locales',
-    distritosNum: '492',
-    distritosTexto: 'Distritos Conectados',
-    accesoCivico: 'Acceso Ciudadano',
-    registro: 'Registro',
-    idiomasTitulo: 'IDIOMAS OFICIALES (8 IDIOMAS)',
-    a11yTitulo: 'ACCESIBILIDAD UNIVERSAL',
-    guiaVoz: 'Guía Asistida por Voz',
-    detener: 'Detener',
-    repSoberania: 'República de Costa Rica • Soberanía e Inclusión Digital'
-  },
-  US: {
-    portal: 'National Portal',
-    territorio: '3D Territory & Maps',
-    reportes: 'Infrastructure Reports',
-    seguridad: 'Security & 911 Emergencies',
-    gobernanza: 'Governance & Transparency',
-    cultura: 'Culture & Heritage',
-    deportes: 'Sports & Recreation',
-    educacion: 'Education & Youth',
-    comercio: 'Commerce & SMEs',
-    turismo: 'Tourism & Nature',
-    participacion: 'Citizen Participation',
-    modulosTitulo: 'National System Modules',
-    identidadTitulo: 'Identity & Procedures',
-    tituloHero: 'COSTA RICA UNITED',
-    subtituloHero: 'Sovereign Territorial Platform',
-    descHero: 'Connecting all 7 provinces, 84 cantons and communities across our nation in a transparent, inclusive and accessible civic digital space.',
-    buscarPlaceholder: 'Search canton, hospital, school or shelter...',
-    botonExplorar: 'Explore',
-    menuBoton: 'MENU',
-    cerrarBoton: 'CLOSE',
-    leerVozAlta: 'Read Aloud',
-    provinciasNum: '07',
-    provinciasTexto: 'Sovereign Provinces',
-    cantonesNum: '84',
-    cantonesTexto: 'Cantons & Local Governments',
-    distritosNum: '492',
-    distritosTexto: 'Connected Districts',
-    accesoCivico: 'Civic Login',
-    registro: 'Register',
-    idiomasTitulo: 'OFFICIAL LANGUAGES (8 LANGUAGES)',
-    a11yTitulo: 'UNIVERSAL ACCESSIBILITY (LAW 7600)',
-    guiaVoz: 'Voice Assisted Tour',
-    detener: 'Stop',
-    repSoberania: 'Republic of Costa Rica • Digital Sovereignty & Inclusion'
-  },
-  CN: {
-    portal: '国家门户',
-    territorio: '3D领土与地图',
-    reportes: '基础设施报告',
-    seguridad: '安全与911紧急求助',
-    gobernanza: '治理与透明度',
-    cultura: '文化与遗产',
-    deportes: '体育与娱乐',
-    educacion: '教育与青年',
-    comercio: '商业与中小企业',
-    turismo: '旅游与自然生态',
-    participacion: '公众参与',
-    modulosTitulo: '国家系统模块',
-    identidadTitulo: '身份与政务',
-    tituloHero: '哥斯达黎加联合',
-    subtituloHero: '主权领土平台',
-    descHero: '连接我国7个省份、84个州及所有社区，打造透明、包容且人人可用的数字公民空间。',
-    buscarPlaceholder: '搜索省州、医院、学校或避难所...',
-    botonExplorar: '探索',
-    menuBoton: '菜单',
-    cerrarBoton: '关闭',
-    leerVozAlta: '朗读屏幕',
-    provinciasNum: '07',
-    provinciasTexto: '主权省份',
-    cantonesNum: '84',
-    cantonesTexto: '州与地方政府',
-    distritosNum: '492',
-    distritosTexto: '连接区',
-    accesoCivico: '公民登录',
-    registro: '注册',
-    idiomasTitulo: '官方语言 (8种语言)',
-    a11yTitulo: '无障碍通用设计',
-    guiaVoz: '语音向导',
-    detener: '停止',
-    repSoberania: '哥斯达黎加共和国 • 主权与数字包容'
-  },
-  BR: {
-    portal: 'Portal Nacional',
-    territorio: 'Território 3D e Cartografia',
-    reportes: 'Relatórios de Infraestrutura',
-    seguridad: 'Segurança e Emergências 911',
-    gobernanza: 'Governança e Transparência',
-    cultura: 'Cultura e Patrimônio',
-    deportes: 'Esportes e Lazer',
-    educacion: 'Educação e Juventude',
-    comercio: 'Comércio e PMEs',
-    turismo: 'Turismo e Natureza',
-    participacion: 'Participação Cidadã',
-    modulosTitulo: 'Módulos do Sistema Nacional',
-    identidadTitulo: 'Identidade e Trâmites',
-    tituloHero: 'COSTA RICA UNIDA',
-    subtituloHero: 'Plataforma Territorial Soberana',
-    descHero: 'Conectando as 7 províncias, 84 cantões e comunidades em um espaço digital transparente e acessível.',
-    buscarPlaceholder: 'Buscar cantão, hospital ou abrigo...',
-    botonExplorar: 'Explorar',
-    menuBoton: 'MENU',
-    cerrarBoton: 'FECHAR',
-    leerVozAlta: 'Ler em Voz Alta',
-    provinciasNum: '07',
-    provinciasTexto: 'Províncias Soberanas',
-    cantonesNum: '84',
-    cantonesTexto: 'Cantões e Governos Locais',
-    distritosNum: '492',
-    distritosTexto: 'Distritos Conectados',
-    accesoCivico: 'Acesso Cívico',
-    registro: 'Cadastro',
-    idiomasTitulo: 'IDIOMAS OFICIAIS (8 IDIOMAS)',
-    a11yTitulo: 'ACESSIBILIDADE UNIVERSAL',
-    guiaVoz: 'Guia por Voz',
-    detener: 'Parar',
-    repSoberania: 'República da Costa Rica • Soberania e Inclusão Digital'
-  },
-  FR: {
-    portal: 'Portail National',
-    territorio: 'Territoire 3D et Cartographie',
-    reportes: "Signalements d'Infrastructure",
-    seguridad: 'Sécurité et Urgences 911',
-    gobernanza: 'Gouvernance et Transparence',
-    cultura: 'Culture et Patrimoine',
-    deportes: 'Sports et Loisirs',
-    educacion: 'Éducation et Jeunesse',
-    comercio: 'Commerce et PME',
-    turismo: 'Tourisme et Nature',
-    participacion: 'Participation Citoyenne',
-    modulosTitulo: 'Modules du Système National',
-    identidadTitulo: 'Identité et Démarches',
-    tituloHero: 'COSTA RICA UNIS',
-    subtituloHero: 'Plateforme Territoriale Souveraine',
-    descHero: 'Connecter les 7 provinces, 84 cantons et communautés dans un espace civique transparent et accessible.',
-    buscarPlaceholder: 'Rechercher canton, hôpital ou abri...',
-    botonExplorar: 'Explorer',
-    menuBoton: 'MENU',
-    cerrarBoton: 'FERMER',
-    leerVozAlta: 'Lecture Vocale',
-    provinciasNum: '07',
-    provinciasTexto: 'Provinces Souveraines',
-    cantonesNum: '84',
-    cantonesTexto: 'Cantons et Mairies',
-    distritosNum: '492',
-    distritosTexto: 'Districts Connectés',
-    accesoCivico: 'Connexion',
-    registro: "S'inscrire",
-    idiomasTitulo: 'LANGUES OFFICIELLES (8 LANGUES)',
-    a11yTitulo: 'ACCESSIBILITÉ UNIVERSELLE',
-    guiaVoz: 'Visite Guidée Vocale',
-    detener: 'Arrêter',
-    repSoberania: 'République du Costa Rica • Souveraineté et Inclusion Numérique'
-  },
-  RU: {
-    portal: 'Национальный портал',
-    territorio: '3D-территория и карты',
-    reportes: 'Отчеты об инфраструктуре',
-    seguridad: 'Безопасность и служба 911',
-    gobernanza: 'Управление и прозрачность',
-    cultura: 'Культура и наследие',
-    deportes: 'Спорт и отдых',
-    educacion: 'Образование и молодежь',
-    comercio: 'Торговля и малый бизнес',
-    turismo: 'Туризм и природа',
-    participacion: 'Участие граждан',
-    modulosTitulo: 'Модули национальной системы',
-    identidadTitulo: 'Личность и процедуры',
-    tituloHero: 'КОСТА-РИКА ЕДИНАЯ',
-    subtituloHero: 'Суверенная территориальная платформа',
-    descHero: 'Объединение 7 провинций, 84 кантонов и сообществ в прозрачном и доступном цифровом пространстве.',
-    buscarPlaceholder: 'Поиск кантона, больницы или убежища...',
-    botonExplorar: 'Исследовать',
-    menuBoton: 'МЕНЮ',
-    cerrarBoton: 'ЗАКРЫТЬ',
-    leerVozAlta: 'Озвучить текст',
-    provinciasNum: '07',
-    provinciasTexto: 'Суверенных провинций',
-    cantonesNum: '84',
-    cantonesTexto: 'Кантонов и мэрий',
-    distritosNum: '492',
-    distritosTexto: 'Связанных дистриктов',
-    accesoCivico: 'Вход',
-    registro: 'Регистрация',
-    idiomasTitulo: 'ОФИЦИАЛЬНЫЕ ЯЗЫКИ (8 ЯЗЫКОВ)',
-    a11yTitulo: 'ДОСТУПНОСТЬ ДЛЯ ВСЕХ',
-    guiaVoz: 'Голосовой гид',
-    detener: 'Стоп',
-    repSoberania: 'Республика Коста-Рика • Суверенитет и цифровая доступность'
-  },
-  JP: {
-    portal: '全国ポータル',
-    territorio: '3D領土と地図',
-    reportes: 'インフラ報告',
-    seguridad: '安全と緊急通報911',
-    gobernanza: '統治と透明性',
-    cultura: '文化と遺産',
-    deportes: 'スポーツとレクリエーション',
-    educacion: '教育と青少年',
-    comercio: '商業と中小企業',
-    turismo: '観光と自然',
-    participacion: '市民参加',
-    modulosTitulo: '国家システムモジュール',
-    identidadTitulo: '身元と手続き',
-    tituloHero: 'コスタリカ・ウニドス',
-    subtituloHero: '主権領土プラットフォーム',
-    descHero: '透明で包括的かつ誰もが利用できる市民デジタル空間で、国内7州84カントンとコミュニティを結びます。',
-    buscarPlaceholder: 'カントン、病院、避難所を検索...',
-    botonExplorar: '探索',
-    menuBoton: 'メニュー',
-    cerrarBoton: '閉じる',
-    leerVozAlta: '音声読み上げ',
-    provinciasNum: '07',
-    provinciasTexto: '主権州',
-    cantonesNum: '84',
-    cantonesTexto: 'カントンと地方自治体',
-    distritosNum: '492',
-    distritosTexto: '接続地区',
-    accesoCivico: 'ログイン',
-    registro: '新規登録',
-    idiomasTitulo: '公式言語 (8言語)',
-    a11yTitulo: 'ユニバーサルアクセシビリティ',
-    guiaVoz: '音声ガイドツアー',
-    detener: '停止',
-    repSoberania: 'コスタリカ共和国 • 主権とデジタル包摂'
-  }
+export const DICCIONARIO = LOCALES;
+
+const BANDERAS_MAP = {
+  'es-CR': 'CR',
+  'es-ES': 'ES',
+  en: 'US',
+  zh: 'CN',
+  pt: 'BR',
+  fr: 'FR',
+  ru: 'RU',
+  ja: 'JP'
 };
+
+const CODE_MAP = {
+  CR: 'es-CR',
+  ES: 'es-ES',
+  US: 'en',
+  CN: 'zh',
+  BR: 'pt',
+  FR: 'fr',
+  RU: 'ru',
+  JP: 'ja'
+};
+
+export function normalizeToBandera(input) {
+  if (!input) return 'CR';
+  const clean = input.trim();
+  const upper = clean.toUpperCase();
+  if (CODE_MAP[upper]) return upper;
+
+  const lower = clean.toLowerCase();
+  if (lower === 'cr' || lower === 'es-cr' || lower === 'es' || lower === 'es-419') return 'CR';
+  if (lower === 'es-es') return 'ES';
+  if (lower === 'us' || lower === 'en' || lower === 'en-us' || lower === 'en-gb') return 'US';
+  if (lower === 'cn' || lower === 'zh' || lower === 'zh-cn' || lower === 'zh-tw') return 'CN';
+  if (lower === 'br' || lower === 'pt' || lower === 'pt-br' || lower === 'pt-pt') return 'BR';
+  if (lower === 'fr' || lower === 'fr-fr') return 'FR';
+  if (lower === 'ru' || lower === 'ru-ru') return 'RU';
+  if (lower === 'jp' || lower === 'ja' || lower === 'ja-jp') return 'JP';
+
+  return 'CR';
+}
+
+export function normalizeToCode(input) {
+  const bandera = normalizeToBandera(input);
+  return CODE_MAP[bandera] || 'es-CR';
+}
 
 const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
-  const [idioma, setIdioma] = useState(() => {
-    return localStorage.getItem('idioma_preferido') || 'CR';
+  const [bandera, setBandera] = useState(() => {
+    try {
+      const saved =
+        localStorage.getItem('app_language') ||
+        localStorage.getItem('idioma_preferido') ||
+        'CR';
+      return normalizeToBandera(saved);
+    } catch {
+      return 'CR';
+    }
   });
 
-  const cambiarIdioma = (nuevoIdioma) => {
-    if (DICCIONARIO[nuevoIdioma]) {
-      setIdioma(nuevoIdioma);
-      localStorage.setItem('idioma_preferido', nuevoIdioma);
-    }
-  };
+  const langCode = CODE_MAP[bandera] || 'es-CR';
 
-  const t = (clave) => {
-    return DICCIONARIO[idioma]?.[clave] || DICCIONARIO['CR']?.[clave] || clave;
-  };
+  const cambiarIdioma = useCallback((nuevoIdioma) => {
+    const b = normalizeToBandera(nuevoIdioma);
+    const c = CODE_MAP[b] || 'es-CR';
+    setBandera(b);
+    try {
+      localStorage.setItem('app_language', c);
+      localStorage.setItem('idioma_preferido', b);
+      document.documentElement.lang = c;
+      window.dispatchEvent(new CustomEvent('languageChanged', { detail: { code: c, bandera: b } }));
+    } catch (e) {
+      console.warn('[LanguageContext] No se pudo guardar idioma:', e);
+    }
+  }, []);
+
+  const setLanguage = cambiarIdioma;
+  const changeLanguage = cambiarIdioma;
+
+  // Sincronizar en montaje con document.documentElement y escuchar eventos
+  useEffect(() => {
+    try {
+      document.documentElement.lang = langCode;
+    } catch {
+      // Ignorar en SSR
+    }
+
+    const handleLanguageChanged = (e) => {
+      if (e.detail?.bandera) {
+        setBandera(e.detail.bandera);
+      } else if (e.detail?.code) {
+        setBandera(normalizeToBandera(e.detail.code));
+      }
+    };
+
+    const handleStorage = (e) => {
+      if ((e.key === 'app_language' || e.key === 'idioma_preferido') && e.newValue) {
+        setBandera(normalizeToBandera(e.newValue));
+      }
+    };
+
+    window.addEventListener('languageChanged', handleLanguageChanged);
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      window.removeEventListener('languageChanged', handleLanguageChanged);
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, [langCode]);
+
+  const t = useCallback(
+    (clave, fallback) => {
+      const dict = LOCALES[bandera] || LOCALES[langCode] || LOCALES['es-CR'];
+      if (dict && dict[clave] !== undefined) {
+        return dict[clave];
+      }
+      const fallbackDict = LOCALES['es-CR'];
+      if (fallbackDict && fallbackDict[clave] !== undefined) {
+        return fallbackDict[clave];
+      }
+      return fallback !== undefined ? fallback : clave;
+    },
+    [bandera, langCode]
+  );
 
   return (
-    <LanguageContext.Provider value={{ idioma, cambiarIdioma, t, DICCIONARIO }}>
+    <LanguageContext.Provider
+      value={{
+        idioma: bandera,
+        language: langCode,
+        langCode,
+        activeBandera: bandera,
+        activeLangCode: langCode,
+        cambiarIdioma,
+        setLanguage,
+        changeLanguage,
+        t,
+        DICCIONARIO: LOCALES,
+        LOCALES
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );
@@ -319,12 +153,18 @@ export function LanguageProvider({ children }) {
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (!context) {
-    // Retorno seguro en caso de renderizarse fuera del provider
     return {
       idioma: 'CR',
+      language: 'es-CR',
+      langCode: 'es-CR',
+      activeBandera: 'CR',
+      activeLangCode: 'es-CR',
       cambiarIdioma: () => {},
-      t: (clave) => DICCIONARIO['CR']?.[clave] || clave,
-      DICCIONARIO
+      setLanguage: () => {},
+      changeLanguage: () => {},
+      t: (clave, fallback) => LOCALES['es-CR']?.[clave] || fallback || clave,
+      DICCIONARIO: LOCALES,
+      LOCALES
     };
   }
   return context;

@@ -139,10 +139,10 @@ export default function Navbar() {
           {/* Leyenda institucional */}
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
-            <span className="text-slate-200 font-bold">REPÚBLICA DE COSTA RICA</span>
+            <span className="text-slate-200 font-bold">{t('republicaCostaRica', 'REPÚBLICA DE COSTA RICA')}</span>
             <span className="text-slate-600 hidden sm:inline">·</span>
             <span className="text-slate-400 hidden sm:inline">
-              SISTEMA NACIONAL DE GOBIERNOS LOCALES
+              {t('sistemaGobiernosLocales', 'SISTEMA NACIONAL DE GOBIERNOS LOCALES')}
             </span>
           </div>
 
@@ -151,14 +151,15 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => handleOpenDrawer('utilidades')}
-              className="hover:text-sky-300 transition-colors flex items-center gap-1 focus:outline-none"
+              data-tour="selector-canton"
+              className="hover:text-sky-300 transition-colors flex items-center gap-1 focus:outline-none ring-offset-2 focus:ring-1 focus:ring-sky-400 rounded-md px-1"
               title="Abrir selector de los 84 cantones"
             >
               <MapPin className="w-3 h-3 text-sky-400" strokeWidth={1.75} />
-              <span>Cantón: <strong className="text-white">{activeCanton}</strong></span>
+              <span>{t('cantonLabel', 'Cantón:')} <strong className="text-white">{activeCanton}</strong></span>
             </button>
             <span className="text-slate-600 hidden md:inline">•</span>
-            <span className="text-sky-400 font-bold hidden md:inline">84 CANTONES AUTÓNOMOS</span>
+            <span className="text-sky-400 font-bold hidden md:inline">{t('cantonesAutonomos', '84 CANTONES AUTÓNOMOS')}</span>
           </div>
         </div>
 
@@ -174,7 +175,8 @@ export default function Navbar() {
           {/* CENTRO: 4 CATEGORÍAS CÍVICAS HORIZONTALES (DESKTOP >= 1024px) */}
           <nav
             aria-label="Navegación Cívica Principal"
-            className="hidden lg:flex items-center gap-0.5 xl:gap-1.5"
+            data-tour="nav-institucional"
+            className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 p-1 rounded-2xl"
           >
             {CATEGORIAS_CIVICAS.map((cat) => {
               const IconoCat = cat.icon;
@@ -200,7 +202,15 @@ export default function Navbar() {
                     }`}
                     strokeWidth={1.75}
                   />
-                  <span>{cat.label}</span>
+                  <span>
+                    {cat.id === 'tramites'
+                      ? t('navTramites', cat.label)
+                      : cat.id === 'gobierno'
+                      ? t('navGobierno', cat.label)
+                      : cat.id === 'territorio'
+                      ? t('navTerritorio', cat.label)
+                      : t('navComunidad', cat.label)}
+                  </span>
                   <ChevronDown
                     className={`w-3 h-3 xl:w-3.5 xl:h-3.5 transition-transform duration-200 ${
                       isActivo ? 'rotate-180 text-red-500' : 'text-slate-500'
@@ -221,7 +231,7 @@ export default function Navbar() {
               className="px-2 py-1 sm:px-2.5 sm:py-1.5 xl:px-3 xl:py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 hover:border-red-500 text-red-400 hover:text-white text-[11px] xl:text-xs font-bold tracking-wider uppercase transition-all duration-200 flex items-center gap-1 xl:gap-1.5 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               <ShieldAlert className="w-3.5 h-3.5 text-red-500" strokeWidth={1.75} />
-              <span className="hidden sm:inline">SOS 911</span>
+              <span className="hidden sm:inline">{t('navSos', 'SOS 911')}</span>
               <span className="sm:hidden">911</span>
             </Link>
 
@@ -229,50 +239,54 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => handleOpenDrawer('utilidades')}
+              data-tour="panel-civico-btn"
               aria-label="Abrir centro de utilidades y panel cívico"
               className="hidden lg:inline-flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-white/[0.05] hover:bg-sky-500/20 border border-white/15 hover:border-sky-500/50 text-slate-200 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
             >
               <User className="w-3.5 h-3.5 xl:w-4 xl:h-4 text-sky-400" strokeWidth={1.75} />
-              <span>Panel Cívico</span>
+              <span>{t('navPanelCivico', 'Panel Cívico')}</span>
               {isAuthenticated && user && (
                 <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
               )}
             </button>
 
-            {/* BOTÓN REGISTRARSE EN LA BARRA DEL MENÚ PRINCIPAL */}
-            <Link
-              to="/registro"
-              aria-label="Registrarse en la plataforma cívica institucional"
-              title="Registrarse"
-              className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 hover:border-sky-400 text-sky-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
-            >
-              <UserPlus className="w-3.5 h-3.5 text-sky-400" strokeWidth={1.75} />
-              <span className="hidden sm:inline lg:hidden xl:inline">Registrarse</span>
-            </Link>
-
-            {/* BOTÓN CERRAR SESIÓN (CUANDO HAY SESIÓN ACTIVA) / INICIAR SESIÓN (SI ESTÁ LOGUEADO COMO ANÓNIMO) */}
-            {isAuthenticated && user ? (
-              <button
-                type="button"
-                onClick={handleLogout}
-                aria-label="Cerrar sesión activa"
-                title="Cerrar Sesión"
-                className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 hover:border-red-400 text-red-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"
-              >
-                <LogOut className="w-3.5 h-3.5 text-red-400" strokeWidth={1.75} />
-                <span className="hidden sm:inline lg:hidden xl:inline">Cerrar Sesión</span>
-              </button>
-            ) : (
+            {/* BLOQUE DE IDENTIFICACIÓN Y REGISTRO CIUDADANO (REGISTRARSE / INICIAR SESIÓN) */}
+            <div className="flex items-center gap-1 sm:gap-1.5" data-tour="registro-login-btn">
+              {/* BOTÓN REGISTRARSE EN LA BARRA DEL MENÚ PRINCIPAL */}
               <Link
-                to="/login"
-                aria-label="Iniciar sesión en la plataforma cívica"
-                title="Iniciar Sesión"
-                className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 hover:border-white/35 text-slate-200 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                to="/registro"
+                aria-label="Registrarse en la plataforma cívica institucional"
+                title="Registrarse"
+                className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 hover:border-sky-400 text-sky-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
               >
-                <LogIn className="w-3.5 h-3.5 text-slate-300" strokeWidth={1.75} />
-                <span className="hidden sm:inline lg:hidden xl:inline">Iniciar Sesión</span>
+                <UserPlus className="w-3.5 h-3.5 text-sky-400" strokeWidth={1.75} />
+                <span className="hidden sm:inline lg:hidden xl:inline">{t('navRegistrarse', 'Registrarse')}</span>
               </Link>
-            )}
+
+              {/* BOTÓN CERRAR SESIÓN (CUANDO HAY SESIÓN ACTIVA) / INICIAR SESIÓN (SI ESTÁ LOGUEADO COMO ANÓNIMO) */}
+              {isAuthenticated && user ? (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  aria-label="Cerrar sesión activa"
+                  title="Cerrar Sesión"
+                  className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 hover:border-red-400 text-red-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-red-400" strokeWidth={1.75} />
+                  <span className="hidden sm:inline lg:hidden xl:inline">{t('navCerrarSesion', 'Cerrar Sesión')}</span>
+                </button>
+              ) : (
+                <Link
+                  to="/login"
+                  aria-label="Iniciar sesión en la plataforma cívica"
+                  title="Iniciar Sesión"
+                  className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 hover:border-white/35 text-slate-200 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                >
+                  <LogIn className="w-3.5 h-3.5 text-slate-300" strokeWidth={1.75} />
+                  <span className="hidden sm:inline lg:hidden xl:inline">{t('navIniciarSesion', 'Iniciar Sesión')}</span>
+                </Link>
+              )}
+            </div>
 
             {/* EN MÓVILES (< 1024px): BOTÓN HAMBURGUESA QUE ABRE EL CIVIC DRAWER */}
             <button

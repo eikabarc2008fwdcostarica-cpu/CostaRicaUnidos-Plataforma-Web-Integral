@@ -53,45 +53,45 @@ export default function Inicio() {
     return () => window.removeEventListener('cantonChanged', handleCantonChange);
   }, []);
 
-  // Sugerencias de trámites, actas y servicios municipales oficiales
+  // Sugerencias de trámites, actas y servicios municipales oficiales dinamizadas
   const sugerenciasOficiales = [
     {
-      categoria: 'Trámites & Hacienda',
+      categoria: t('sugTramites', 'Trámites & Hacienda'),
       items: [
-        { label: 'Validación de Cédula y Situación Tributaria (ATV)', path: '/dashboard' },
-        { label: 'Consulta de Patentes Comerciales y Pago Municipal', path: '/dashboard' },
-        { label: 'Declaración de Bienes Inmuebles y Tasas', path: '/dashboard' }
+        { label: t('sugItem1', 'Validación de Cédula y Situación Tributaria (ATV)'), path: '/dashboard' },
+        { label: t('sugItem2', 'Consulta de Patentes Comerciales y Pago Municipal'), path: '/dashboard' },
+        { label: t('sugItem3', 'Declaración de Bienes Inmuebles y Tasas'), path: '/dashboard' }
       ]
     },
     {
-      categoria: 'Concejo & Actas',
+      categoria: t('sugGobierno', 'Concejo & Actas'),
       items: [
-        { label: 'Visor Oficial de Actas Municipales en PDF', path: '/gobernanza' },
-        { label: 'Directorio de Alcaldía, Regidores y Síndicos', path: '/gobernanza' },
-        { label: 'Presupuesto Participativo y Votación Ciudadana', path: '/participacion' }
+        { label: t('sugItem4', 'Visor Oficial de Actas Municipales en PDF'), path: '/gobernanza' },
+        { label: t('sugItem5', 'Directorio de Alcaldía, Regidores y Síndicos'), path: '/gobernanza' },
+        { label: t('sugItem6', 'Presupuesto Participativo y Votación Ciudadana'), path: '/participacion' }
       ]
     },
     {
-      categoria: 'Obras & Fiscalización',
+      categoria: t('sugInfra', 'Obras & Fiscalización'),
       items: [
-        { label: 'Reportar hueco vial o bacheo prioritario', path: '/reportar-incidencia' },
-        { label: 'Reporte de alumbrado público o luminaria dañada', path: '/reportar-incidencia' },
-        { label: 'Fiscalización comunal de contratos MOPT/SICOP', path: '/dashboard' }
+        { label: t('sugItem7', 'Reportar hueco vial o bacheo prioritario'), path: '/reportar-incidencia' },
+        { label: t('sugItem8', 'Reporte de alumbrado público o luminaria dañada'), path: '/reportar-incidencia' },
+        { label: t('sugItem9', 'Fiscalización comunal de contratos MOPT/SICOP'), path: '/dashboard' }
       ]
     },
     {
-      categoria: 'Desarrollo & CCDR',
+      categoria: t('sugCultura', 'Desarrollo & CCDR'),
       items: [
-        { label: 'Comité Cantonal de Deportes (CCDR) e Instalaciones', path: '/deportes' },
-        { label: 'Calendario y Rutas de la Feria del Agricultor', path: '/comercio' },
-        { label: 'Directorio de PYMES Locales Verificadas', path: '/comercio' }
+        { label: t('sugItem10', 'Comité Cantonal de Deportes (CCDR) e Instalaciones'), path: '/deportes' },
+        { label: t('comercio', 'Calendario y Rutas de la Feria del Agricultor'), path: '/comercio' },
+        { label: t('turismo', 'Directorio de PYMES Locales Verificadas'), path: '/comercio' }
       ]
     },
     {
-      categoria: 'Territorio & Seguridad',
+      categoria: t('navTerritorio', 'Territorio & Seguridad'),
       items: [
-        { label: 'Visor Cartográfico 3D y Relieve Nacional', path: '/mapa-gis' },
-        { label: 'Centro de Auxilio 911 y Albergues CNE', path: '/seguridad-emergencias' }
+        { label: t('territorio', 'Visor Cartográfico 3D y Relieve Nacional'), path: '/mapa-gis' },
+        { label: t('seguridad', 'Centro de Auxilio 911 y Albergues CNE'), path: '/seguridad-emergencias' }
       ]
     }
   ];
@@ -256,7 +256,7 @@ export default function Inicio() {
                   color: '#FFFFFF'
                 }}
               >
-                REPÚBLICA DE COSTA RICA · SEDE ELECTRÓNICA NACIONAL
+                {t('heroBadge', 'REPÚBLICA DE COSTA RICA · SEDE ELECTRÓNICA NACIONAL')}
               </span>
             </div>
 
@@ -273,7 +273,7 @@ export default function Inicio() {
                 textShadow: '0 4px 35px rgba(0, 4, 13, 0.85)'
               }}
             >
-              GOBIERNO LOCAL Y SERVICIOS CIUDADANOS
+              {t('heroTitle', 'GOBIERNO LOCAL Y SERVICIOS CIUDADANOS')}
             </h1>
 
             {/* Subtítulo con Autoridad */}
@@ -289,7 +289,7 @@ export default function Inicio() {
                 textShadow: '0 2px 15px rgba(0, 4, 13, 0.8)'
               }}
             >
-              Ventanilla Soberana de Fiscalización, Trámites y Gestión Comunal para los 84 Cantones de Costa Rica
+              {t('heroSubtitle', 'Ventanilla Soberana de Fiscalización, Trámites y Gestión Comunal para los 84 Cantones de Costa Rica')}
             </p>
 
             {/* Párrafo Descriptivo de Respaldo */}
@@ -302,11 +302,14 @@ export default function Inicio() {
                 margin: '0 0 2.5rem'
               }}
             >
-              Consulte actas oficiales del Concejo Municipal, valide cédulas con Hacienda, tramite patentes y reporte incidencias viales en tiempo real con trazabilidad bajo el Código Municipal y la Ley N° 8968.
+              {t('heroDesc', 'Consulte actas oficiales del Concejo Municipal, valide cédulas con Hacienda, tramite patentes y reporte incidencias viales en tiempo real con trazabilidad bajo el Código Municipal y la Ley N° 8968.')}
             </p>
 
             {/* Barra de Búsqueda Cívica (Cápsula Glass Flotante) */}
-            <div style={{ position: 'relative', width: '100%', maxWidth: '720px' }}>
+            <div
+              data-tour="buscador-civico"
+              style={{ position: 'relative', width: '100%', maxWidth: '720px' }}
+            >
               <form
                 onSubmit={handleSearchSubmit}
                 style={{
@@ -331,8 +334,8 @@ export default function Inicio() {
                     setShowSuggestions(true);
                   }}
                   onFocus={() => setShowSuggestions(true)}
-                  placeholder="Buscar trámite municipal, acta de concejo, cantón o reporte vial..."
-                  aria-label="Buscar trámite municipal, acta de concejo, cantón o reporte vial"
+                  placeholder={t('buscarPlaceholder', 'Buscar trámite municipal, acta de concejo, cantón o reporte vial...')}
+                  aria-label={t('buscarPlaceholder', 'Buscar trámite municipal, acta de concejo, cantón o reporte vial')}
                   style={{
                     flex: 1,
                     background: 'transparent',
@@ -345,7 +348,7 @@ export default function Inicio() {
                 />
                 <button
                   type="submit"
-                  aria-label="Consultar trámite o servicio"
+                  aria-label={t('botonBuscar', 'Consultar')}
                   style={{
                     backgroundColor: '#002B7F',
                     backgroundImage: 'linear-gradient(135deg, #002B7F 0%, #001489 100%)',
@@ -375,7 +378,7 @@ export default function Inicio() {
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  <span>Consultar</span>
+                  <span>{t('botonBuscar', 'Consultar')}</span>
                   <ArrowRight size={16} />
                 </button>
               </form>
@@ -478,8 +481,8 @@ export default function Inicio() {
               }}
             >
               <Building2 size={15} color="#38BDF8" />
-              <span>Gobierno Local activo en consulta:</span>
-              <span style={{ color: '#FFFFFF', fontWeight: 800 }}>Municipalidad de {activeCantonName}</span>
+              <span>{t('gobiernoActivo', 'Gobierno Local activo en consulta:')}</span>
+              <span style={{ color: '#FFFFFF', fontWeight: 800 }}>{t('municipalidadDe', 'Municipalidad de')} {activeCantonName}</span>
               <span style={{ color: '#475569' }}>•</span>
               <Link
                 to="/gobernanza"
@@ -492,7 +495,7 @@ export default function Inicio() {
                   gap: '0.2rem'
                 }}
               >
-                <span>Ver Concejo</span>
+                <span>{t('verConcejo', 'Ver Concejo')}</span>
                 <ChevronRight size={13} />
               </Link>
             </div>
@@ -505,6 +508,8 @@ export default function Inicio() {
             Ventanilla Única · Concejo y Actas · Obras y Reportes · Desarrollo y CCDR
             ========================================================================== */}
         <section
+          data-tour="ejes-municipales"
+          id="ejes-municipales-section"
           style={{
             maxWidth: '1360px',
             margin: '0 auto',
@@ -524,7 +529,7 @@ export default function Inicio() {
                 marginBottom: '0.75rem'
               }}
             >
-              ADMINISTRACIÓN PÚBLICA CANTONAL · DTA & CÓDIGO MUNICIPAL
+              {t('ejesRectoresTag', 'ADMINISTRACIÓN PÚBLICA CANTONAL · CÓDIGO MUNICIPAL')}
             </span>
             <h2
               style={{
@@ -536,10 +541,10 @@ export default function Inicio() {
                 fontFamily: 'var(--font-headline, sans-serif)'
               }}
             >
-              Los 4 Ejes Rectores de la Gestión Municipal
+              {t('ejesRectoresTitle', 'Los 4 Ejes Rectores de la Gestión Municipal')}
             </h2>
             <p style={{ fontSize: '1.02rem', color: '#94A3B8', lineHeight: 1.65 }}>
-              Servicios cívicos soberanos organizados para garantizar la transparencia institucional, la resolución comunal de averías y el desarrollo participativo en cada uno de los 84 cantones.
+              {t('ejesRectoresDesc', 'Servicios cívicos soberanos organizados para garantizar la transparencia institucional, la resolución comunal de averías y el desarrollo participativo en cada uno de los 84 cantones.')}
             </p>
           </div>
 
@@ -643,10 +648,10 @@ export default function Inicio() {
 
                 {/* Título y Descripción Formal */}
                 <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
-                  Ventanilla Única & Trámites
+                  {t('eje1Titulo', 'Ventanilla Única & Trámites')}
                 </h3>
                 <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
-                  Validación de cédula física y jurídica sincronizada con el Ministerio de Hacienda (ATV). Consulta y pago seguro de patentes comerciales, tasas de recolección y certificaciones tributarias.
+                  {t('eje1Desc', 'Validación de cédula física y jurídica sincronizada con el Ministerio de Hacienda (ATV). Consulta y pago seguro de patentes comerciales, tasas de recolección y certificaciones tributarias.')}
                 </p>
               </div>
 
@@ -676,7 +681,7 @@ export default function Inicio() {
                   e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.35)';
                 }}
               >
-                <span>Acceder a Ventanilla</span>
+                <span>{t('abrirModulo', 'Acceder a Ventanilla')}</span>
                 <ArrowRight size={16} color="#79a6ff" />
               </Link>
             </div>
@@ -770,10 +775,10 @@ export default function Inicio() {
                 </div>
 
                 <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
-                  Gobernanza & Concejo Municipal
+                  {t('eje2Titulo', 'Gobernanza & Concejo Municipal')}
                 </h3>
                 <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
-                  Fiscalización activa de la Alcaldía, regidores y síndicos. Visor de actas de sesiones ordinarias y extraordinarias en formato PDF, acuerdos vinculantes y presupuestos participativos.
+                  {t('eje2Desc', 'Fiscalización activa de la Alcaldía, regidores y síndicos. Visor de actas de sesiones ordinarias y extraordinarias en formato PDF, acuerdos vinculantes y presupuestos participativos.')}
                 </p>
               </div>
 
@@ -802,7 +807,7 @@ export default function Inicio() {
                   e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.35)';
                 }}
               >
-                <span>Consultar Actas y Concejo</span>
+                <span>{t('abrirModulo', 'Consultar Actas y Concejo')}</span>
                 <ArrowRight size={16} color="#38BDF8" />
               </Link>
             </div>
@@ -896,10 +901,10 @@ export default function Inicio() {
                 </div>
 
                 <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
-                  Obras Públicas & Fiscalización
+                  {t('eje3Titulo', 'Obras Públicas & Fiscalización')}
                 </h3>
                 <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
-                  Reporte georreferenciado de bacheo vial, fallas de alumbrado público y fugas de agua. Adjunte evidencia fotográfica WebP y fiscalice el avance y plazos de solución con la Municipalidad.
+                  {t('eje3Desc', 'Reporte georreferenciado de bacheo vial, fallas de alumbrado público y fugas de agua. Adjunte evidencia fotográfica WebP y fiscalice el avance y plazos de solución con la Municipalidad.')}
                 </p>
               </div>
 
@@ -928,7 +933,7 @@ export default function Inicio() {
                   e.currentTarget.style.borderColor = 'rgba(218, 41, 28, 0.45)';
                 }}
               >
-                <span>Reportar Avería Vial</span>
+                <span>{t('abrirModulo', 'Reportar Avería Vial')}</span>
                 <ArrowRight size={16} color="#FF6B6B" />
               </Link>
             </div>
@@ -1022,10 +1027,10 @@ export default function Inicio() {
                 </div>
 
                 <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
-                  Desarrollo Cantonal & CCDR
+                  {t('eje4Titulo', 'Desarrollo Cantonal & CCDR')}
                 </h3>
                 <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
-                  Comités Cantonales de Deportes y Recreación (CCDR), rutas de las Ferias del Agricultor comunitarias, escuelas deportivas infantiles y directorio comercial de PYMES cantonales certificadas.
+                  {t('eje4Desc', 'Comités Cantonales de Deportes y Recreación (CCDR), rutas de las Ferias del Agricultor comunitarias, escuelas deportivas infantiles y directorio comercial de PYMES cantonales certificadas.')}
                 </p>
               </div>
 
@@ -1054,7 +1059,7 @@ export default function Inicio() {
                   e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.35)';
                 }}
               >
-                <span>Explorar CCDR y Ferias</span>
+                <span>{t('abrirModulo', 'Explorar CCDR y Ferias')}</span>
                 <ArrowRight size={16} color="#34D399" />
               </Link>
             </div>
@@ -1099,7 +1104,7 @@ export default function Inicio() {
                 07
               </span>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
-                Provincias Soberanas
+                {t('provinciasTexto', 'Provincias Soberanas')}
               </h3>
               <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
                 San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas y Limón unificadas en un único estándar digital.
@@ -1129,7 +1134,7 @@ export default function Inicio() {
                 84
               </span>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
-                Gobiernos Locales Autónomos
+                {t('cantonesTexto', 'Gobiernos Locales Autónomos')}
               </h3>
               <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
                 Municipalidades cantonales con autonomía constitucional, Concejos deliberantes y competencias tributarias propias.
@@ -1159,7 +1164,7 @@ export default function Inicio() {
                 492
               </span>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
-                Distritos Fiscalizados
+                {t('distritosTexto', 'Distritos Fiscalizados')}
               </h3>
               <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
                 Descentralización comunal de costa a costa y frontera a frontera, cubriendo zonas rurales y metropolitana.

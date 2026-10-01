@@ -6,7 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 import {
   AccessibilityProvider,
   VoiceReaderFloatingButton,
-  VoiceGuidedOnboardingModal
+  SpotlightGuidedTour
 } from './components/accessibility';
 
 import { CivicModalProvider } from './context/CivicModalContext';
