@@ -8,7 +8,6 @@ import {
   VoiceReaderFloatingButton,
   SpotlightGuidedTour
 } from './components/accessibility';
-
 import { CivicModalProvider } from './context/CivicModalContext';
 
 export default function App() {
@@ -21,8 +20,8 @@ export default function App() {
               <Routing />
               {/* Botón flotante accesible de lectura asistida (TTS) con Web Speech API en 8 idiomas */}
               <VoiceReaderFloatingButton />
-              {/* Modal de Onboarding Interactivo Animado Asistido por Voz */}
-              <VoiceGuidedOnboardingModal />
+              {/* Recorrido Interactivo Guiado en Vivo con Spotlight y Narración Fluida en 8 Idiomas */}
+              <SpotlightGuidedTour />
             </CivicModalProvider>
           </AuthProvider>
         </AccessibilityProvider>
