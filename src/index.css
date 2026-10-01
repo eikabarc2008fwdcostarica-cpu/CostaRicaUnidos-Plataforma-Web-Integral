@@ -967,3 +967,64 @@ body {
   }
 }
 
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slideLeft {
+  animation: slideLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Soporte de Tema Claro Institucional (WCAG 2.1 AA) */
+html.light body {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(0, 43, 127, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(206, 17, 38, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(248, 250, 252, 0.96) 0%, rgba(241, 245, 249, 1) 100%) !important;
+}
+
+html.light header {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  border-bottom-color: rgba(226, 232, 240, 0.9) !important;
+}
+
+html.light header .text-white {
+  color: #0F172A !important;
+}
+
+html.light header .text-slate-200 {
+  color: #1E293B !important;
+}
+
+html.light header .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.light header .text-slate-400 {
+  color: #64748B !important;
+}
+
+html.light header button:hover {
+  color: #0F172A !important;
+}
+

@@ -31,6 +31,8 @@ export default function Routing() {
         {/* Rutas Públicas de Infraestructura Central */}
         <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/registro" element={<LoginPage initialMode="REGISTER" />} />
+        <Route path="/registrarse" element={<LoginPage initialMode="REGISTER" />} />
         <Route path="/mapa-gis" element={<MapaGIS />} />
         <Route path="/territorio-3d" element={<MapaGIS />} />
         <Route path="/visor-3d" element={<MapaGIS />} />
@@ -48,6 +50,7 @@ export default function Routing() {
         <Route path="/educacion" element={<EducacionPage />} />
         <Route path="/comercio" element={<ComercioPage />} />
         <Route path="/feria-agricultor" element={<FeriaPage />} />
+        <Route path="/feria" element={<FeriaPage />} />
         <Route path="/turismo" element={<TurismoPage />} />
         <Route path="/participacion" element={<ParticipacionPage />} />
         <Route path="/itinerario-ia" element={<ItinerarioIAPage />} />

@@ -1,69 +1,140 @@
 /**
  * ============================================================================
- * COSTA RICA UNIDOS — FORMULARIO DE AUTENTICACIÓN CÍVICA (3 ROLES)
- * Sistema de Login con validación Hacienda, bloqueo de campos y Sovereign Glass
+ * COSTA RICA UNIDOS — SISTEMA DE ACCESO Y REGISTRO CÍVICO (SRS v2.1)
+ * 4 Roles Oficiales: Ciudadano/Turista, Editor Municipal, Admin Provincial, Super Admin
+ * Sincronización reactiva con db.json y localStorage (cru_mock_db_v2)
+ * Validación en tiempo real con API del Ministerio de Hacienda (Ley N° 8968)
  * ============================================================================
  */
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserRole, CitizenMode, IdentityStatus } from '../../types/auth';
-import { useAuth, MUNICIPALITIES_DIRECTORY, AUTHORIZED_SUPER_ADMIN_CEDULAS, MASTER_ADMIN_KEY } from '../../context/AuthContext';
+import {
+  OfficialRoleName,
+  CitizenMode,
+  IdentityStatus,
+  RegisterUserData
+} from '../../types/auth';
+import {
+  useAuth,
+  MUNICIPALITIES_DIRECTORY,
+  AUTHORIZED_SUPER_ADMIN_CEDULAS,
+  MASTER_ADMIN_KEY
+} from '../../context/AuthContext';
 import { validateCitizenIdentity } from '../../services/haciendaService';
+import { getDb, resetDbToSeed, normalizeOfficialRole } from '../../services/dbService';
+import { PROVINCIAS_DATA, CANTONES_OFICIALES } from '../../data/costaRicaTerritorialData';
 import CivicButton from '../common/CivicButton';
 import CivicCard from '../common/CivicCard';
 import CivicBadge from '../common/CivicBadge';
 
-export default function LoginForm() {
-  const navigate = useNavigate();
-  const { login, isLoading, error: authError, clearError } = useAuth();
+type AuthMode = 'LOGIN' | 'REGISTER';
 
-  // Rol activo seleccionado en el formulario
-  const [selectedRole, setSelectedRole] = useState<UserRole>('CIUDADANO_TURISTA');
+interface LoginFormProps {
+  initialMode?: AuthMode;
+}
+
+export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
+  const navigate = useNavigate();
+  const { login, registro, register, seleccionarCuentaDemo, cargando, isLoading, error: authError, clearError } = useAuth();
+
+  // Modo activo: Iniciar Sesión o Registrarse
+  const [authMode, setAuthMode] = useState<AuthMode>(initialMode);
+
+  useEffect(() => {
+    if (initialMode) {
+      setAuthMode(initialMode);
+    }
+  }, [initialMode]);
+
+  // Rol activo seleccionado para el inicio de sesión
+  const [selectedRole, setSelectedRole] = useState<OfficialRoleName>('Ciudadano/Turista');
 
   // Modalidad para el rol Ciudadano/Turista
   const [citizenMode, setCitizenMode] = useState<CitizenMode>('CIUDADANO');
 
-  // Paso 1: Cédula e Identidad
-  const [cedula, setCedula] = useState<string>('');
+  // Credenciales de Login
+  const [loginIdentifier, setLoginIdentifier] = useState<string>(''); // Cédula o Correo
+  const [loginPassword, setLoginPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  // Parámetros específicos de rol para Login
+  const [selectedMunicipalityId, setSelectedMunicipalityId] = useState<string>(MUNICIPALITIES_DIRECTORY[0].id);
+  const [municipalSecurityCode, setMunicipalSecurityCode] = useState<string>('');
+  const [masterPassword, setMasterPassword] = useState<string>('');
+
+  // Formulario de Registro Ciudadano
+  const [regCedula, setRegCedula] = useState<string>('');
+  const [regNombre, setRegNombre] = useState<string>('');
+  const [regPrimerApellido, setRegPrimerApellido] = useState<string>('');
+  const [regSegundoApellido, setRegSegundoApellido] = useState<string>('');
+  const [regEmail, setRegEmail] = useState<string>('');
+  const [regPassword, setRegPassword] = useState<string>('');
+  const [regConfirmPassword, setRegConfirmPassword] = useState<string>('');
+  const [regProvincia, setRegProvincia] = useState<string>('San José');
+  const [regCanton, setRegCanton] = useState<string>('San José');
+  const [regDistrito, setRegDistrito] = useState<string>('Carmen');
+  const [regRole, setRegRole] = useState<OfficialRoleName>('Ciudadano/Turista');
+
+  // Estados de Validación con Hacienda
   const [isValidatingHacienda, setIsValidatingHacienda] = useState<boolean>(false);
   const [haciendaVerified, setHaciendaVerified] = useState<boolean>(false);
   const [identityStatus, setIdentityStatus] = useState<IdentityStatus | null>(null);
   const [haciendaMessage, setHaciendaMessage] = useState<string>('');
 
-  // Nombres (bloqueados si provienen de Hacienda)
-  const [nombre, setNombre] = useState<string>('');
-  const [primerApellido, setPrimerApellido] = useState<string>('');
-  const [segundoApellido, setSegundoApellido] = useState<string>('');
-
-  // Paso 2: Credenciales de Contacto y Seguridad
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-
-  // Paso 4: Específico de Rol
-  // Administrador Provincial
-  const [selectedMunicipalityId, setSelectedMunicipalityId] = useState<string>(MUNICIPALITIES_DIRECTORY[0].id);
-  const [municipalCode, setMunicipalCode] = useState<string>('');
-
-  // Super Administrador Nacional
-  const [masterPassword, setMasterPassword] = useState<string>('');
-
-  // Estados de validación visual del formulario
+  // Mensajes de error y éxito
   const [formError, setFormError] = useState<string | null>(null);
-  const [showDemoCredentials, setShowDemoCredentials] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showDemoCredentials, setShowDemoCredentials] = useState<boolean>(true);
 
-  // Limpiar errores cuando cambia de rol
+  // Estadísticas reactivas de la base de datos simulada
+  const [dbStats, setDbStats] = useState<{ totalUsuarios: number; sesionesActivas: number }>({
+    totalUsuarios: 4,
+    sesionesActivas: 0
+  });
+
+  // Actualizar telemetría de db.json
+  const refreshDbStats = () => {
+    try {
+      const db = getDb();
+      setDbStats({
+        totalUsuarios: db.usuarios.length,
+        sesionesActivas: db.sesionesActivas.length
+      });
+    } catch {
+      // Ignorar
+    }
+  };
+
+  useEffect(() => {
+    refreshDbStats();
+    const handleDbUpdate = () => refreshDbStats();
+    window.addEventListener('cru_db_updated', handleDbUpdate);
+    return () => window.removeEventListener('cru_db_updated', handleDbUpdate);
+  }, []);
+
+  // Limpiar errores cuando cambia de rol o de modo
   useEffect(() => {
     clearError();
     setFormError(null);
-  }, [selectedRole]);
+    setSuccessMessage(null);
+  }, [selectedRole, authMode]);
+
+  // Actualizar cantones disponibles cuando cambia la provincia seleccionada en registro
+  const provinciaObj = PROVINCIAS_DATA.find((p) => p.nombre.toLowerCase() === regProvincia.toLowerCase()) || PROVINCIAS_DATA[0];
+  const cantonesDisponibles = CANTONES_OFICIALES.filter((c) => c.provinciaId === provinciaObj.id);
+
+  useEffect(() => {
+    if (cantonesDisponibles.length > 0 && !cantonesDisponibles.some((c) => c.nombre.toLowerCase() === regCanton.toLowerCase())) {
+      setRegCanton(cantonesDisponibles[0].nombre);
+    }
+  }, [regProvincia]);
 
   // Manejar validación contra API de Hacienda
-  const handleValidateCedula = async () => {
-    const clean = cedula.replace(/[^0-9]/g, '').trim();
+  const handleValidateCedula = async (cedulaInput: string) => {
+    const clean = cedulaInput.replace(/[^0-9]/g, '').trim();
     if (!clean || clean.length < 9) {
-      setFormError('Ingrese una cédula física (9-10 dígitos) o DIMEX (11-12 dígitos) para consultar Hacienda.');
+      setFormError('Ingrese una cédula costarricense (9-10 dígitos) o DIMEX (11-12 dígitos) para consultar Hacienda.');
       return;
     }
 
@@ -74,103 +145,76 @@ export default function LoginForm() {
       const res = await validateCitizenIdentity(clean);
 
       if (res.success && !res.isFallback) {
-        // Validación exitosa con Hacienda -> Rellenar y Bloquear campos
-        setNombre(res.nombre);
-        setPrimerApellido(res.primerApellido);
-        setSegundoApellido(res.segundoApellido);
+        setRegNombre(res.nombre);
+        setRegPrimerApellido(res.primerApellido);
+        setRegSegundoApellido(res.segundoApellido);
         setHaciendaVerified(true);
         setIdentityStatus('VERIFICADO_HACIENDA');
         setHaciendaMessage('✓ Identidad oficial verificada y certificada ante el Ministerio de Hacienda');
       } else {
-        // Fallback contingente -> Permitir edición manual pero marcar como pendiente
         setHaciendaVerified(false);
         setIdentityStatus('PENDIENTE_VERIFICACION');
-        setHaciendaMessage('⚠️ Identificación no encontrada en Hacienda. Ingrese sus datos en modo contingencia.');
+        setHaciendaMessage('⚠️ Cédula no registrada en consulta directa de Hacienda. Ingrese sus datos en contingencia.');
       }
-    } catch (_err) {
+    } catch {
       setHaciendaVerified(false);
       setIdentityStatus('PENDIENTE_VERIFICACION');
-      setHaciendaMessage('⚠️ Error de red con Hacienda. Ingrese sus datos en modo contingencia.');
+      setHaciendaMessage('⚠️ Red con Hacienda inaccesible. Modo de contingencia habilitado.');
     } finally {
       setIsValidatingHacienda(false);
     }
   };
 
-  const handleCedulaBlur = () => {
-    const clean = cedula.replace(/[^0-9]/g, '').trim();
-    if (clean.length >= 9 && !haciendaVerified) {
-      handleValidateCedula();
-    }
-  };
-
-  // Enviar formulario de login
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Enviar formulario de Login
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
+    setSuccessMessage(null);
     clearError();
 
-    const cleanCedula = cedula.replace(/[^0-9]/g, '').trim();
-
-    if (!cleanCedula || cleanCedula.length < 9) {
-      setFormError('La cédula debe tener al menos 9 dígitos numéricos.');
+    const cleanIdent = loginIdentifier.trim();
+    if (!cleanIdent) {
+      setFormError('Por favor ingrese su cédula oficial costarricense o correo electrónico.');
       return;
     }
 
-    if (!nombre.trim()) {
-      setFormError('El nombre es obligatorio. Valide su cédula con Hacienda o ingréselo manualmente.');
+    if (!loginPassword) {
+      setFormError('Por favor ingrese su contraseña de acceso.');
       return;
     }
 
-    if (!email.trim() || !email.includes('@')) {
-      setFormError('Por favor, ingrese un correo electrónico válido.');
+    // Reglas adicionales por rol
+    if (selectedRole === 'Administrador Provincial' && !municipalSecurityCode.trim()) {
+      setFormError('Debe ingresar el código institucional o clave de seguridad municipal.');
       return;
     }
 
-    if (!password || password.length < 4) {
-      setFormError('La contraseña debe tener al menos 4 caracteres.');
-      return;
-    }
-
-    // Validaciones de rol
-    if (selectedRole === 'ADMIN_PROVINCIAL') {
-      if (!municipalCode.trim()) {
-        setFormError('Debe ingresar el Código / Contraseña Privada Institucional de la Municipalidad.');
+    if (selectedRole === 'Super Administrador Nacional') {
+      const digitsOnly = cleanIdent.replace(/[^0-9]/g, '');
+      const isAuthorizedCedula = AUTHORIZED_SUPER_ADMIN_CEDULAS.includes(cleanIdent) || AUTHORIZED_SUPER_ADMIN_CEDULAS.includes(digitsOnly) || cleanIdent.includes('admin.nacional');
+      if (!isAuthorizedCedula) {
+        setFormError('Acceso denegado: Esta cuenta no pertenece a los 2 Super Administradores Nacionales autorizados.');
         return;
       }
     }
 
-    if (selectedRole === 'SUPER_ADMIN_NACIONAL') {
-      if (!AUTHORIZED_SUPER_ADMIN_CEDULAS.includes(cleanCedula)) {
-        setFormError('Acceso denegado: Esta cédula no pertenece a las 2 personas autorizadas para control nacional.');
-        return;
-      }
-      if (!masterPassword.trim()) {
-        setFormError('Debe ingresar la Clave Maestra Institucional.');
-        return;
-      }
-    }
-
-    // Ejecutar login
+    // Ejecutar login contra AuthContext y dbService
     const result = await login({
-      cedula: cleanCedula,
-      nombre,
-      primerApellido,
-      segundoApellido,
-      email,
-      password,
+      cedula: cleanIdent,
+      email: cleanIdent.includes('@') ? cleanIdent : undefined,
+      password: loginPassword,
       role: selectedRole,
       citizenMode,
       municipalityId: selectedMunicipalityId,
-      municipalCode,
+      municipalCode: municipalSecurityCode,
       masterPassword
     });
 
     if (result.success) {
-      // Redirección condicional según rol
-      if (selectedRole === 'ADMIN_PROVINCIAL') {
+      refreshDbStats();
+      // Redirección adaptativa según rol oficial
+      if (selectedRole === 'Administrador Provincial' || selectedRole === 'Editor Municipal') {
         navigate('/gobernanza');
-      } else if (selectedRole === 'SUPER_ADMIN_NACIONAL') {
-        navigate('/dashboard');
       } else {
         navigate('/dashboard');
       }
@@ -179,38 +223,97 @@ export default function LoginForm() {
     }
   };
 
-  // Helper para rellenar credenciales demo instantáneas
-  const loadDemoProfile = (
-    demoRole: UserRole,
-    demoCedula: string,
-    demoMode: CitizenMode = 'CIUDADANO',
-    demoMuniId = 'muni-sanjose',
-    demoMuniCode = 'MSJ-2026-SEC',
-    demoMasterKey = MASTER_ADMIN_KEY
-  ) => {
-    setSelectedRole(demoRole);
-    setCitizenMode(demoMode);
-    setCedula(demoCedula);
-    setEmail(`${demoCedula}@costaricaunidos.cr`);
-    setPassword('PuraVida2026*');
-    setSelectedMunicipalityId(demoMuniId);
-    setMunicipalCode(demoMuniCode);
-    setMasterPassword(demoMasterKey);
+  // Enviar formulario de Registro
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setFormError(null);
+    setSuccessMessage(null);
     clearError();
 
-    // Trigger de validación con Hacienda para el demo
-    setTimeout(async () => {
-      const res = await validateCitizenIdentity(demoCedula);
-      if (res.success) {
-        setNombre(res.nombre);
-        setPrimerApellido(res.primerApellido);
-        setSegundoApellido(res.segundoApellido);
-        setHaciendaVerified(true);
-        setIdentityStatus('VERIFICADO_HACIENDA');
-        setHaciendaMessage('✓ Identidad oficial verificada ante el Ministerio de Hacienda');
-      }
-    }, 50);
+    const cleanCedula = regCedula.trim();
+    const digitsOnly = cleanCedula.replace(/[^0-9]/g, '');
+
+    if (!digitsOnly || digitsOnly.length < 9) {
+      setFormError('La cédula debe contener al menos 9 dígitos válidos.');
+      return;
+    }
+
+    if (!regNombre.trim()) {
+      setFormError('El nombre completo es requerido. Valide su cédula con Hacienda o ingréselo manualmente.');
+      return;
+    }
+
+    if (!regEmail.trim() || !regEmail.includes('@')) {
+      setFormError('Por favor ingrese un correo electrónico válido.');
+      return;
+    }
+
+    if (!regPassword || regPassword.length < 4) {
+      setFormError('La contraseña debe contener al menos 4 caracteres.');
+      return;
+    }
+
+    if (regPassword !== regConfirmPassword) {
+      setFormError('Las contraseñas ingresadas no coinciden. Verifique ambas casillas.');
+      return;
+    }
+
+    const regData: RegisterUserData = {
+      cedula: cleanCedula,
+      nombre: regNombre.trim(),
+      primerApellido: regPrimerApellido.trim(),
+      segundoApellido: regSegundoApellido.trim(),
+      correo: regEmail.toLowerCase().trim(),
+      password: regPassword,
+      rol: regRole,
+      provincia: regProvincia,
+      canton: regCanton,
+      distrito: regDistrito,
+      verificadoHacienda: haciendaVerified
+    };
+
+    const result = await register(regData);
+
+    if (result.success) {
+      refreshDbStats();
+      setSuccessMessage(result.message || '¡Cuenta cívica creada exitosamente! Redirigiendo...');
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1200);
+    } else if (result.message) {
+      setFormError(result.message);
+    }
+  };
+
+  // Carga instantánea de una de las 4 Cuentas Semilla Oficiales del SRS v2.1
+  const loadSeedAccount = (
+    role: OfficialRoleName,
+    identifier: string,
+    pass: string,
+    mode: CitizenMode = 'CIUDADANO',
+    muniId = 'muni-sanjose',
+    muniCode = 'MSJ-2026-SEC',
+    masterKey = MASTER_ADMIN_KEY
+  ) => {
+    setAuthMode('LOGIN');
+    setSelectedRole(role);
+    setLoginIdentifier(identifier);
+    setLoginPassword(pass);
+    setCitizenMode(mode);
+    setSelectedMunicipalityId(muniId);
+    setMunicipalSecurityCode(muniCode);
+    setMasterPassword(masterKey);
+    setFormError(null);
+    setSuccessMessage(null);
+    clearError();
+  };
+
+  // Restaurar la base de datos simulada a los datos semilla iniciales de db.json
+  const handleResetDb = () => {
+    resetDbToSeed();
+    refreshDbStats();
+    setSuccessMessage('Base de datos simulada restablecida a los valores iniciales de db.json.');
+    setTimeout(() => setSuccessMessage(null), 3500);
   };
 
   return (
@@ -219,16 +322,16 @@ export default function LoginForm() {
       provincialGlow={true}
       style={{
         width: '100%',
-        maxWidth: '540px',
-        padding: '2.5rem 2rem',
+        maxWidth: '560px',
+        padding: '2.2rem 2rem',
         borderRadius: '16px',
-        boxShadow: '0 24px 60px rgba(0, 4, 13, 0.85), 0 0 30px rgba(0, 43, 127, 0.35)',
+        boxShadow: '0 24px 60px rgba(0, 4, 13, 0.9), 0 0 35px rgba(0, 43, 127, 0.35)',
         border: '1px solid rgba(255, 255, 255, 0.16)'
       }}
     >
-      {/* Encabezado */}
-      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <CivicBadge variant="accent" style={{ marginBottom: '0.8rem' }}>
+      {/* Encabezado Institucional */}
+      <div style={{ textAlign: 'center', marginBottom: '1.6rem' }}>
+        <CivicBadge variant="accent" style={{ marginBottom: '0.6rem' }}>
           SOBERANÍA E IDENTIDAD DIGITAL COSTA RICA
         </CivicBadge>
 
@@ -237,143 +340,116 @@ export default function LoginForm() {
             fontFamily: 'var(--font-heading, "Mistical Spring", serif)',
             fontSize: '2rem',
             color: '#FFFFFF',
-            margin: '0.3rem 0 0.5rem',
+            margin: '0.2rem 0 0.4rem',
             letterSpacing: '0.5px'
           }}
         >
-          Acceso Soberano
+          {authMode === 'LOGIN' ? 'Acceso Soberano' : 'Registro Cívico Cantonal'}
         </h1>
 
-        <p style={{ color: 'rgba(255, 255, 255, 0.72)', fontSize: '0.9rem', margin: 0 }}>
-          Autenticación oficial respaldada por la API del Ministerio de Hacienda
+        <p style={{ color: 'rgba(255, 255, 255, 0.72)', fontSize: '0.88rem', margin: 0 }}>
+          {authMode === 'LOGIN'
+            ? 'Control de Acceso Basado en Roles (RBAC) con persistencia en db.json'
+            : 'Apertura de expediente cívico con validación directa del Ministerio de Hacienda'}
         </p>
       </div>
 
-      {/* Selector de los 3 Roles Exclusivos */}
+      {/* Selector de Modo: Iniciar Sesión vs Registro */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr',
+          gridTemplateColumns: '1fr 1fr',
           gap: '6px',
-          background: 'rgba(0, 4, 13, 0.85)',
-          padding: '6px',
-          borderRadius: '12px',
+          background: 'rgba(0, 4, 13, 0.9)',
+          padding: '4px',
+          borderRadius: '10px',
           border: '1px solid rgba(255, 255, 255, 0.12)',
-          marginBottom: '1.8rem'
+          marginBottom: '1.5rem'
         }}
       >
         <button
           type="button"
-          onClick={() => setSelectedRole('CIUDADANO_TURISTA')}
+          onClick={() => {
+            setAuthMode('LOGIN');
+            setFormError(null);
+            setSuccessMessage(null);
+          }}
           style={{
-            padding: '10px 4px',
-            borderRadius: '8px',
+            padding: '9px 12px',
+            borderRadius: '7px',
             border: 'none',
             background:
-              selectedRole === 'CIUDADANO_TURISTA'
+              authMode === 'LOGIN'
                 ? 'linear-gradient(135deg, #002B7F 0%, #0A3282 100%)'
                 : 'transparent',
-            color: selectedRole === 'CIUDADANO_TURISTA' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
-            fontWeight: 600,
-            fontSize: '0.82rem',
+            color: authMode === 'LOGIN' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
+            fontWeight: 700,
+            fontSize: '0.85rem',
             cursor: 'pointer',
             transition: 'all 0.2s ease',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
-            gap: '4px'
+            justifyContent: 'center',
+            gap: '6px'
           }}
         >
-          <span style={{ fontSize: '1.1rem' }}>🇨🇷</span>
-          <span>Ciudadano / Turista</span>
+          <span>🔐</span>
+          <span>Iniciar Sesión</span>
         </button>
 
         <button
           type="button"
-          onClick={() => setSelectedRole('ADMIN_PROVINCIAL')}
+          onClick={() => {
+            setAuthMode('REGISTER');
+            setFormError(null);
+            setSuccessMessage(null);
+          }}
           style={{
-            padding: '10px 4px',
-            borderRadius: '8px',
+            padding: '9px 12px',
+            borderRadius: '7px',
             border: 'none',
             background:
-              selectedRole === 'ADMIN_PROVINCIAL'
-                ? 'linear-gradient(135deg, #FFC700 0%, #D61B23 100%)'
+              authMode === 'REGISTER'
+                ? 'linear-gradient(135deg, #007A3D 0%, #005A2B 100%)'
                 : 'transparent',
-            color: selectedRole === 'ADMIN_PROVINCIAL' ? '#181818' : 'rgba(255, 255, 255, 0.65)',
+            color: authMode === 'REGISTER' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
             fontWeight: 700,
-            fontSize: '0.82rem',
+            fontSize: '0.85rem',
             cursor: 'pointer',
             transition: 'all 0.2s ease',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
-            gap: '4px'
+            justifyContent: 'center',
+            gap: '6px'
           }}
         >
-          <span style={{ fontSize: '1.1rem' }}>🏛️</span>
-          <span>Admin Provincial</span>
+          <span>📝</span>
+          <span>Crear Cuenta</span>
         </button>
+      </div>
 
-        <button
-          type="button"
-          onClick={() => setSelectedRole('SUPER_ADMIN_NACIONAL')}
+      {/* Banner de Notificación de Éxito */}
+      {successMessage && (
+        <div
           style={{
-            padding: '10px 4px',
+            backgroundColor: 'rgba(0, 208, 132, 0.2)',
+            border: '1px solid #00D084',
             borderRadius: '8px',
-            border: 'none',
-            background:
-              selectedRole === 'SUPER_ADMIN_NACIONAL'
-                ? 'linear-gradient(135deg, #CE1126 0%, #850A18 100%)'
-                : 'transparent',
-            color: '#FFFFFF',
-            fontWeight: 700,
-            fontSize: '0.82rem',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
+            padding: '0.75rem 1rem',
+            color: '#B4FED9',
+            fontSize: '0.85rem',
+            marginBottom: '1.2rem',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
-            gap: '4px'
+            gap: '8px'
           }}
         >
-          <span style={{ fontSize: '1.1rem' }}>🛡️</span>
-          <span>Super Admin</span>
-        </button>
-      </div>
+          <span>✓</span>
+          <span>{successMessage}</span>
+        </div>
+      )}
 
-      {/* Banner de Rol Activo */}
-      <div
-        style={{
-          padding: '0.75rem 1rem',
-          borderRadius: '8px',
-          marginBottom: '1.5rem',
-          fontSize: '0.82rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          backgroundColor:
-            selectedRole === 'CIUDADANO_TURISTA'
-              ? 'rgba(0, 43, 127, 0.25)'
-              : selectedRole === 'ADMIN_PROVINCIAL'
-              ? 'rgba(255, 199, 0, 0.15)'
-              : 'rgba(206, 17, 38, 0.2)',
-          borderLeft: `4px solid ${
-            selectedRole === 'CIUDADANO_TURISTA'
-              ? '#002B7F'
-              : selectedRole === 'ADMIN_PROVINCIAL'
-              ? '#FFC700'
-              : '#CE1126'
-          }`
-        }}
-      >
-        <span>
-          {selectedRole === 'CIUDADANO_TURISTA' && '👤 Perfil Ciudadano de Persona Física: Votaciones, trámites, mapas y consultas cívicas.'}
-          {selectedRole === 'ADMIN_PROVINCIAL' && '🏛️ Gobierno Local: Publicaciones institucionales, moderación cantonal y gestión municipal.'}
-          {selectedRole === 'SUPER_ADMIN_NACIONAL' && '🛡️ Control Total Nacional: Gestión exclusiva para las 2 identidades acreditadas de la plataforma.'}
-        </span>
-      </div>
-
-      {/* Mensajes de Error */}
+      {/* Banner de Mensajes de Error */}
       {(formError || authError) && (
         <div
           style={{
@@ -394,590 +470,1145 @@ export default function LoginForm() {
         </div>
       )}
 
-      {/* Formulario */}
-      <form onSubmit={handleSubmit}>
-        {/* PASO 1: Cédula de Identidad con Validación de Hacienda */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-            <label
-              htmlFor="cedula-input"
-              style={{
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                color: 'rgba(255, 255, 255, 0.95)'
-              }}
-            >
-              1. Cédula de Identidad / DIMEX
-            </label>
-            <span style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.55)', fontFamily: 'JetBrains Mono, monospace' }}>
-              9 a 12 dígitos
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <input
-              id="cedula-input"
-              type="text"
-              placeholder="Ej: 1-1888-0999 ó 118880999"
-              value={cedula}
-              onChange={(e) => {
-                setCedula(e.target.value);
-                setHaciendaVerified(false);
-                setIdentityStatus(null);
-              }}
-              onBlur={handleCedulaBlur}
-              disabled={isValidatingHacienda}
-              style={{
-                flex: 1,
-                padding: '0.8rem 1rem',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(0, 4, 13, 0.75)',
-                border: haciendaVerified
-                  ? '1px solid #00D084'
-                  : identityStatus === 'PENDIENTE_VERIFICACION'
-                  ? '1px solid #FFC700'
-                  : '1px solid rgba(255, 255, 255, 0.22)',
-                color: '#FFFFFF',
-                fontSize: '0.95rem',
-                fontFamily: 'JetBrains Mono, monospace',
-                outline: 'none',
-                transition: 'all 0.2s'
-              }}
-            />
-
-            <CivicButton
-              type="button"
-              variant="secondary"
-              onClick={handleValidateCedula}
-              disabled={isValidatingHacienda || !cedula.trim()}
-              isLoading={isValidatingHacienda}
-              style={{ minWidth: '130px', height: '46px', fontSize: '0.82rem' }}
-            >
-              {isValidatingHacienda ? 'Consultando...' : '🔍 Validar Cédula'}
-            </CivicButton>
-          </div>
-
-          {/* Estado de Verificación con Hacienda */}
-          {haciendaMessage && (
-            <div
-              style={{
-                marginTop: '0.5rem',
-                fontSize: '0.78rem',
-                color: haciendaVerified ? '#00D084' : '#FFC700',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <span>{haciendaMessage}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Campos de Nombre Autocompletados y Bloqueados (UX Candado) */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '1.25rem' }}>
-          <div style={{ gridColumn: 'span 2' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-              <label style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.85)' }}>
-                Nombre(s)
-              </label>
-              {haciendaVerified && (
-                <span style={{ fontSize: '0.75rem', color: '#00D084', fontWeight: 600 }}>
-                  🔒 Protegido por Hacienda
-                </span>
-              )}
-            </div>
-            <input
-              type="text"
-              placeholder="Nombre oficial"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              readOnly={haciendaVerified}
-              style={{
-                width: '100%',
-                padding: '0.75rem 1rem',
-                borderRadius: '8px',
-                backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
-                border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#FFFFFF',
-                fontSize: '0.9rem',
-                outline: 'none',
-                cursor: haciendaVerified ? 'not-allowed' : 'text'
-              }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
-              Primer Apellido
-            </label>
-            <input
-              type="text"
-              placeholder="Primer Apellido"
-              value={primerApellido}
-              onChange={(e) => setPrimerApellido(e.target.value)}
-              readOnly={haciendaVerified}
-              style={{
-                width: '100%',
-                padding: '0.75rem 1rem',
-                borderRadius: '8px',
-                backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
-                border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#FFFFFF',
-                fontSize: '0.9rem',
-                outline: 'none',
-                cursor: haciendaVerified ? 'not-allowed' : 'text'
-              }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
-              Segundo Apellido
-            </label>
-            <input
-              type="text"
-              placeholder="Segundo Apellido"
-              value={segundoApellido}
-              onChange={(e) => setSegundoApellido(e.target.value)}
-              readOnly={haciendaVerified}
-              style={{
-                width: '100%',
-                padding: '0.75rem 1rem',
-                borderRadius: '8px',
-                backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
-                border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#FFFFFF',
-                fontSize: '0.9rem',
-                outline: 'none',
-                cursor: haciendaVerified ? 'not-allowed' : 'text'
-              }}
-            />
-          </div>
-        </div>
-
-        {/* PASO 2: Correo Electrónico */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <label
-            htmlFor="email-input"
-            style={{
-              display: 'block',
-              fontSize: '0.85rem',
-              fontWeight: 600,
-              color: 'rgba(255, 255, 255, 0.95)',
-              marginBottom: '0.4rem'
-            }}
-          >
-            2. Correo Electrónico
-          </label>
-          <input
-            id="email-input"
-            type="email"
-            placeholder="usuario@costaricaunidos.cr"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.8rem 1rem',
-              borderRadius: '8px',
-              backgroundColor: 'rgba(0, 4, 13, 0.75)',
-              border: '1px solid rgba(255, 255, 255, 0.22)',
-              color: '#FFFFFF',
-              fontSize: '0.95rem',
-              outline: 'none'
-            }}
-          />
-        </div>
-
-        {/* PASO 3: Contraseña */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-            <label
-              htmlFor="password-input"
-              style={{
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                color: 'rgba(255, 255, 255, 0.95)'
-              }}
-            >
-              3. Contraseña
-            </label>
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'rgba(255, 255, 255, 0.65)',
-                fontSize: '0.78rem',
-                cursor: 'pointer'
-              }}
-            >
-              {showPassword ? 'Ocultar' : 'Mostrar'}
-            </button>
-          </div>
-          <input
-            id="password-input"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="••••••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.8rem 1rem',
-              borderRadius: '8px',
-              backgroundColor: 'rgba(0, 4, 13, 0.75)',
-              border: '1px solid rgba(255, 255, 255, 0.22)',
-              color: '#FFFFFF',
-              fontSize: '0.95rem',
-              outline: 'none'
-            }}
-          />
-        </div>
-
-        {/* PASO 4: CAMPOS ESPECÍFICOS SEGÚN EL ROL */}
-
-        {/* ROL 1: CIUDADANO / TURISTA */}
-        {selectedRole === 'CIUDADANO_TURISTA' && (
-          <div
-            style={{
-              padding: '1.1rem',
-              borderRadius: '10px',
-              backgroundColor: 'rgba(0, 20, 137, 0.35)',
-              border: '1px solid rgba(0, 43, 127, 0.6)',
-              marginBottom: '1.5rem'
-            }}
-          >
+      {/* ========================================================================= */}
+      {/* 1. VISTA DE INICIO DE SESIÓN (LOGIN) — 4 ROLES DEL SRS v2.1              */}
+      {/* ========================================================================= */}
+      {authMode === 'LOGIN' && (
+        <>
+          {/* Selector de los 4 Roles Oficiales */}
+          <div style={{ marginBottom: '1.2rem' }}>
             <label
               style={{
                 display: 'block',
-                fontSize: '0.82rem',
+                fontSize: '0.8rem',
                 fontWeight: 700,
-                color: '#FFFFFF',
-                marginBottom: '0.6rem'
+                color: 'rgba(255, 255, 255, 0.85)',
+                marginBottom: '0.5rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
               }}
             >
-              4. Modalidad de Ingreso:
+              Seleccione el Nivel y Rol de Acceso (SRS v2.1):
             </label>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '5px',
+                background: 'rgba(0, 4, 13, 0.85)',
+                padding: '5px',
+                borderRadius: '10px',
+                border: '1px solid rgba(255, 255, 255, 0.12)'
+              }}
+            >
+              {/* Rol 1: Ciudadano / Turista (Nivel 2) */}
               <button
                 type="button"
-                onClick={() => setCitizenMode('CIUDADANO')}
+                onClick={() => setSelectedRole('Ciudadano/Turista')}
                 style={{
-                  padding: '8px 12px',
+                  padding: '8px 4px',
                   borderRadius: '6px',
                   border: 'none',
-                  backgroundColor: citizenMode === 'CIUDADANO' ? '#002B7F' : 'rgba(0, 4, 13, 0.6)',
-                  color: '#FFFFFF',
-                  fontWeight: citizenMode === 'CIUDADANO' ? 700 : 500,
-                  fontSize: '0.82rem',
+                  background:
+                    selectedRole === 'Ciudadano/Turista'
+                      ? 'linear-gradient(135deg, #002B7F 0%, #0A3282 100%)'
+                      : 'transparent',
+                  color: selectedRole === 'Ciudadano/Turista' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
+                  fontWeight: selectedRole === 'Ciudadano/Turista' ? 700 : 500,
+                  fontSize: '0.74rem',
                   cursor: 'pointer',
+                  transition: 'all 0.2s ease',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s'
+                  gap: '3px'
                 }}
               >
-                <span>🇨🇷</span>
-                <span>Ciudadano Residente</span>
+                <span style={{ fontSize: '1rem' }}>🇨🇷</span>
+                <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Ciudadano</span>
+                <span style={{ fontSize: '0.62rem', opacity: 0.75 }}>Nivel 2</span>
               </button>
 
+              {/* Rol 2: Editor Municipal (Nivel 3) */}
               <button
                 type="button"
-                onClick={() => setCitizenMode('TURISTA')}
+                onClick={() => setSelectedRole('Editor Municipal')}
                 style={{
-                  padding: '8px 12px',
+                  padding: '8px 4px',
                   borderRadius: '6px',
                   border: 'none',
-                  backgroundColor: citizenMode === 'TURISTA' ? '#007A3D' : 'rgba(0, 4, 13, 0.6)',
-                  color: '#FFFFFF',
-                  fontWeight: citizenMode === 'TURISTA' ? 700 : 500,
-                  fontSize: '0.82rem',
+                  background:
+                    selectedRole === 'Editor Municipal'
+                      ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)'
+                      : 'transparent',
+                  color: selectedRole === 'Editor Municipal' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
+                  fontWeight: selectedRole === 'Editor Municipal' ? 700 : 500,
+                  fontSize: '0.74rem',
                   cursor: 'pointer',
+                  transition: 'all 0.2s ease',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s'
+                  gap: '3px'
                 }}
               >
-                <span>🌍</span>
-                <span>Turista / Visitante</span>
+                <span style={{ fontSize: '1rem' }}>📝</span>
+                <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Editor Muni</span>
+                <span style={{ fontSize: '0.62rem', opacity: 0.75 }}>Nivel 3</span>
+              </button>
+
+              {/* Rol 3: Administrador Provincial (Nivel 4) */}
+              <button
+                type="button"
+                onClick={() => setSelectedRole('Administrador Provincial')}
+                style={{
+                  padding: '8px 4px',
+                  borderRadius: '6px',
+                  border: 'none',
+                  background:
+                    selectedRole === 'Administrador Provincial'
+                      ? 'linear-gradient(135deg, #FFC700 0%, #D97706 100%)'
+                      : 'transparent',
+                  color: selectedRole === 'Administrador Provincial' ? '#111827' : 'rgba(255, 255, 255, 0.65)',
+                  fontWeight: selectedRole === 'Administrador Provincial' ? 800 : 500,
+                  fontSize: '0.74rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '3px'
+                }}
+              >
+                <span style={{ fontSize: '1rem' }}>🏛️</span>
+                <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Admin Prov</span>
+                <span style={{ fontSize: '0.62rem', opacity: 0.85 }}>Nivel 4</span>
+              </button>
+
+              {/* Rol 4: Super Administrador Nacional (Nivel 5) */}
+              <button
+                type="button"
+                onClick={() => setSelectedRole('Super Administrador Nacional')}
+                style={{
+                  padding: '8px 4px',
+                  borderRadius: '6px',
+                  border: 'none',
+                  background:
+                    selectedRole === 'Super Administrador Nacional'
+                      ? 'linear-gradient(135deg, #CE1126 0%, #850A18 100%)'
+                      : 'transparent',
+                  color: '#FFFFFF',
+                  fontWeight: selectedRole === 'Super Administrador Nacional' ? 800 : 500,
+                  fontSize: '0.74rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '3px'
+                }}
+              >
+                <span style={{ fontSize: '1rem' }}>🛡️</span>
+                <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Super Admin</span>
+                <span style={{ fontSize: '0.62rem', opacity: 0.75 }}>Nivel 5</span>
               </button>
             </div>
-
-            <p style={{ margin: '0.5rem 0 0', fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.65)' }}>
-              {citizenMode === 'CIUDADANO'
-                ? 'Habilita participación vecinal, presupuestos participativos (M11) y trámites cantonales.'
-                : 'Habilita rutas de turismo cantonal accesible (M09), gastronomía e itinerarios IA (M12.2).'}
-            </p>
           </div>
-        )}
 
-        {/* ROL 2: ADMINISTRADOR PROVINCIAL */}
-        {selectedRole === 'ADMIN_PROVINCIAL' && (
+          {/* Banner de Descripción del Rol Seleccionado */}
           <div
             style={{
-              padding: '1.1rem',
-              borderRadius: '10px',
-              backgroundColor: 'rgba(255, 199, 0, 0.1)',
-              border: '1px solid rgba(255, 199, 0, 0.4)',
-              marginBottom: '1.5rem'
+              padding: '0.65rem 0.9rem',
+              borderRadius: '8px',
+              marginBottom: '1.25rem',
+              fontSize: '0.8rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              backgroundColor:
+                selectedRole === 'Ciudadano/Turista'
+                  ? 'rgba(0, 43, 127, 0.25)'
+                  : selectedRole === 'Editor Municipal'
+                  ? 'rgba(2, 132, 199, 0.25)'
+                  : selectedRole === 'Administrador Provincial'
+                  ? 'rgba(255, 199, 0, 0.15)'
+                  : 'rgba(206, 17, 38, 0.2)',
+              borderLeft: `4px solid ${
+                selectedRole === 'Ciudadano/Turista'
+                  ? '#002B7F'
+                  : selectedRole === 'Editor Municipal'
+                  ? '#0284C7'
+                  : selectedRole === 'Administrador Provincial'
+                  ? '#FFC700'
+                  : '#CE1126'
+              }`
             }}
           >
-            <div style={{ marginBottom: '1rem' }}>
-              <label
-                htmlFor="muni-select"
-                style={{
-                  display: 'block',
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  color: '#FFC700',
-                  marginBottom: '0.4rem'
-                }}
-              >
-                4.1. Municipalidad Asignada
-              </label>
-              <select
-                id="muni-select"
-                value={selectedMunicipalityId}
-                onChange={(e) => setSelectedMunicipalityId(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                  border: '1px solid rgba(255, 199, 0, 0.4)',
-                  color: '#FFFFFF',
-                  fontSize: '0.9rem',
-                  outline: 'none'
-                }}
-              >
-                {MUNICIPALITIES_DIRECTORY.map((muni) => (
-                  <option key={muni.id} value={muni.id} style={{ background: '#00040D', color: '#FFF' }}>
-                    {muni.nombre} ({muni.provincia})
-                  </option>
-                ))}
-              </select>
-            </div>
+            <span>
+              {selectedRole === 'Ciudadano/Turista' &&
+                '👤 Persona Física: Votaciones cívicas, trámites, mapas GIS e incidencias.'}
+              {selectedRole === 'Editor Municipal' &&
+                '📝 Secretaría del Concejo: Edición de actas, convocatorias y proyectos cantonales.'}
+              {selectedRole === 'Administrador Provincial' &&
+                '🏛️ Coordinación Cantonal: Publicaciones de gobierno local y moderación cantonal.'}
+              {selectedRole === 'Super Administrador Nacional' &&
+                '🛡️ Superintendencia Nacional: Control maestro de los 84 cantones y auditoría.'}
+            </span>
+          </div>
 
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+          {/* Formulario de Login */}
+          <form onSubmit={handleLoginSubmit}>
+            {/* Campo 1: Cédula o Correo */}
+            <div style={{ marginBottom: '1.15rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
                 <label
-                  htmlFor="municipal-code-input"
-                  style={{
-                    fontSize: '0.82rem',
-                    fontWeight: 700,
-                    color: '#FFC700'
-                  }}
+                  htmlFor="login-ident-input"
+                  style={{ fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)' }}
                 >
-                  4.2. Código / Contraseña Privada Municipal
+                  Cédula Costarricense o Correo Institucional
                 </label>
-                <span style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.6)', fontFamily: 'JetBrains Mono, monospace' }}>
-                  Ej: MSJ-2026-SEC
+                <span style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.5)', fontFamily: 'monospace' }}>
+                  Ej: 1-0000-0001 ó admin@gob.cr
                 </span>
               </div>
               <input
-                id="municipal-code-input"
-                type="password"
-                placeholder="Código Institucional de Seguridad"
-                value={municipalCode}
-                onChange={(e) => setMunicipalCode(e.target.value)}
+                id="login-ident-input"
+                type="text"
+                placeholder="1-0000-0001 ó usuario@gob.cr"
+                value={loginIdentifier}
+                onChange={(e) => setLoginIdentifier(e.target.value)}
                 style={{
                   width: '100%',
                   padding: '0.75rem 1rem',
                   borderRadius: '8px',
-                  backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                  border: '1px solid rgba(255, 199, 0, 0.4)',
+                  backgroundColor: 'rgba(0, 4, 13, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.22)',
                   color: '#FFFFFF',
-                  fontSize: '0.9rem',
-                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '0.92rem',
+                  fontFamily: 'inherit',
                   outline: 'none'
                 }}
               />
             </div>
 
-            <p style={{ margin: '0.6rem 0 0', fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.7)' }}>
-              ℹ️ Redirección obligatoria: Al autenticarse, será dirigido directamente al panel de gestión de su municipalidad.
-            </p>
-          </div>
-        )}
+            {/* Campo 2: Contraseña */}
+            <div style={{ marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                <label
+                  htmlFor="login-pass-input"
+                  style={{ fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)' }}
+                >
+                  Contraseña de Acceso
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'rgba(255, 255, 255, 0.65)',
+                    fontSize: '0.74rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {showPassword ? 'Ocultar' : 'Mostrar'}
+                </button>
+              </div>
+              <input
+                id="login-pass-input"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••••••"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(0, 4, 13, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.22)',
+                  color: '#FFFFFF',
+                  fontSize: '0.92rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
 
-        {/* ROL 3: SUPER ADMINISTRADOR NACIONAL */}
-        {selectedRole === 'SUPER_ADMIN_NACIONAL' && (
-          <div
-            style={{
-              padding: '1.1rem',
-              borderRadius: '10px',
-              backgroundColor: 'rgba(206, 17, 38, 0.15)',
-              border: '1px solid rgba(206, 17, 38, 0.5)',
-              marginBottom: '1.5rem'
-            }}
-          >
-            <div style={{ marginBottom: '0.8rem' }}>
-              <span style={{ fontSize: '0.76rem', color: '#FF8A8A', fontWeight: 700, display: 'block' }}>
-                ⚠️ ACREDITACIÓN RESTRINGIDA A 2 PERSONAS NACIONALES
+            {/* CAMPOS ESPECÍFICOS SEGÚN ROL SELECCIONADO */}
+
+            {/* A. Ciudadano: Modalidad */}
+            {selectedRole === 'Ciudadano/Turista' && (
+              <div
+                style={{
+                  padding: '0.9rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(0, 20, 137, 0.25)',
+                  border: '1px solid rgba(0, 43, 127, 0.5)',
+                  marginBottom: '1.25rem'
+                }}
+              >
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#FFF', marginBottom: '0.5rem' }}>
+                  Modalidad Cívica:
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setCitizenMode('CIUDADANO')}
+                    style={{
+                      padding: '7px 10px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      backgroundColor: citizenMode === 'CIUDADANO' ? '#002B7F' : 'rgba(0, 4, 13, 0.6)',
+                      color: '#FFFFFF',
+                      fontWeight: citizenMode === 'CIUDADANO' ? 700 : 500,
+                      fontSize: '0.78rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '5px'
+                    }}
+                  >
+                    <span>🇨🇷</span>
+                    <span>Ciudadano Residente</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCitizenMode('TURISTA')}
+                    style={{
+                      padding: '7px 10px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      backgroundColor: citizenMode === 'TURISTA' ? '#007A3D' : 'rgba(0, 4, 13, 0.6)',
+                      color: '#FFFFFF',
+                      fontWeight: citizenMode === 'TURISTA' ? 700 : 500,
+                      fontSize: '0.78rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '5px'
+                    }}
+                  >
+                    <span>🌍</span>
+                    <span>Turista / Visitante</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* B. Editor Municipal o Admin Provincial: Asignación Cantonal */}
+            {(selectedRole === 'Editor Municipal' || selectedRole === 'Administrador Provincial') && (
+              <div
+                style={{
+                  padding: '0.9rem',
+                  borderRadius: '8px',
+                  backgroundColor:
+                    selectedRole === 'Editor Municipal'
+                      ? 'rgba(2, 132, 199, 0.15)'
+                      : 'rgba(255, 199, 0, 0.12)',
+                  border:
+                    selectedRole === 'Editor Municipal'
+                      ? '1px solid rgba(2, 132, 199, 0.4)'
+                      : '1px solid rgba(255, 199, 0, 0.4)',
+                  marginBottom: '1.25rem'
+                }}
+              >
+                <div style={{ marginBottom: '0.75rem' }}>
+                  <label
+                    htmlFor="muni-login-select"
+                    style={{
+                      display: 'block',
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      color: selectedRole === 'Editor Municipal' ? '#38BDF8' : '#FFC700',
+                      marginBottom: '0.35rem'
+                    }}
+                  >
+                    Municipalidad Asignada:
+                  </label>
+                  <select
+                    id="muni-login-select"
+                    value={selectedMunicipalityId}
+                    onChange={(e) => setSelectedMunicipalityId(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.65rem 0.85rem',
+                      borderRadius: '6px',
+                      backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      color: '#FFFFFF',
+                      fontSize: '0.85rem',
+                      outline: 'none'
+                    }}
+                  >
+                    {MUNICIPALITIES_DIRECTORY.map((m) => (
+                      <option key={m.id} value={m.id} style={{ background: '#00040D', color: '#FFF' }}>
+                        {m.nombre} ({m.provincia})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="muni-sec-code"
+                    style={{
+                      display: 'block',
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      color: selectedRole === 'Editor Municipal' ? '#38BDF8' : '#FFC700',
+                      marginBottom: '0.35rem'
+                    }}
+                  >
+                    Código Institucional / Privado de Secretaría:
+                  </label>
+                  <input
+                    id="muni-sec-code"
+                    type="password"
+                    placeholder="Ej: MSJ-2026-SEC"
+                    value={municipalSecurityCode}
+                    onChange={(e) => setMunicipalSecurityCode(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.65rem 0.85rem',
+                      borderRadius: '6px',
+                      backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      color: '#FFFFFF',
+                      fontSize: '0.85rem',
+                      fontFamily: 'monospace',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* C. Super Admin Nacional: Master Key */}
+            {selectedRole === 'Super Administrador Nacional' && (
+              <div
+                style={{
+                  padding: '0.9rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(206, 17, 38, 0.15)',
+                  border: '1px solid rgba(206, 17, 38, 0.45)',
+                  marginBottom: '1.25rem'
+                }}
+              >
+                <span style={{ fontSize: '0.74rem', color: '#FF8A8A', fontWeight: 700, display: 'block', marginBottom: '0.35rem' }}>
+                  🛡️ CONTROL MAESTRO NACIONAL (SRS v2.1)
+                </span>
+                <p style={{ margin: '0 0 0.6rem', fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.7)' }}>
+                  Acceso exclusivo para las identidades acreditadas (1-0000-0001, 118880999, 207770888).
+                </p>
+                <input
+                  type="password"
+                  placeholder="Clave Maestra Institucional"
+                  value={masterPassword}
+                  onChange={(e) => setMasterPassword(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.65rem 0.85rem',
+                    borderRadius: '6px',
+                    backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                    border: '1px solid rgba(206, 17, 38, 0.5)',
+                    color: '#FFFFFF',
+                    fontSize: '0.85rem',
+                    fontFamily: 'monospace',
+                    outline: 'none'
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Botón Principal de Envío */}
+            <CivicButton
+              type="submit"
+              variant={
+                selectedRole === 'Super Administrador Nacional'
+                  ? 'danger'
+                  : selectedRole === 'Administrador Provincial'
+                  ? 'warning'
+                  : 'primary'
+              }
+              isLoading={isLoading}
+              style={{ width: '100%', height: '48px', fontSize: '0.95rem', fontWeight: 700 }}
+            >
+              Ingresar como {selectedRole}
+            </CivicButton>
+          </form>
+
+          {/* ===================================================================== */}
+          {/* BOTONES DE PRUEBA RÁPIDA: LAS 4 CUENTAS SEMILLA DE db.json           */}
+          {/* ===================================================================== */}
+          <div style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+              <span style={{ fontSize: '0.76rem', color: 'rgba(255, 255, 255, 0.75)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                ⚡ Cuentas Semilla Oficiales (db.json):
               </span>
-              <p style={{ margin: '0.2rem 0 0.6rem', fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.7)' }}>
-                Cédulas autorizadas: 118880999 (Alanie) ó 207770888 (Eiker).
-              </p>
+              <button
+                type="button"
+                onClick={() => setShowDemoCredentials(!showDemoCredentials)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#79a6ff',
+                  fontSize: '0.74rem',
+                  cursor: 'pointer'
+                }}
+              >
+                {showDemoCredentials ? 'Ocultar' : 'Mostrar'}
+              </button>
+            </div>
+
+            {showDemoCredentials && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                {/* 1. Super Admin Nacional */}
+                <div
+                  onClick={() =>
+                    loadSeedAccount(
+                      'Super Administrador Nacional',
+                      'admin.nacional@gob.cr',
+                      'Admin123*',
+                      'CIUDADANO',
+                      'muni-sanjose',
+                      'MSJ-2026-SEC',
+                      'CRU-MASTER-2026'
+                    )
+                  }
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(206, 17, 38, 0.2)',
+                    border: '1px solid rgba(206, 17, 38, 0.4)',
+                    color: '#FF8A8A',
+                    fontSize: '0.72rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '4px',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 800 }}>🛡️ Super Admin Nacional</div>
+                    <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>admin.nacional@gob.cr</div>
+                    <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: Admin123* (Nivel 5)</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      seleccionarCuentaDemo('USR-NAC-001');
+                      navigate('/dashboard');
+                    }}
+                    style={{
+                      background: '#CE1126',
+                      border: 'none',
+                      color: '#FFF',
+                      padding: '3px 6px',
+                      borderRadius: '4px',
+                      fontWeight: 700,
+                      fontSize: '0.68rem',
+                      cursor: 'pointer',
+                      marginTop: '4px',
+                      alignSelf: 'flex-start'
+                    }}
+                  >
+                    Ingresar Directo ⚡
+                  </button>
+                </div>
+
+                {/* 2. Admin Provincial */}
+                <div
+                  onClick={() =>
+                    loadSeedAccount(
+                      'Administrador Provincial',
+                      'gobierno.sanjose@gob.cr',
+                      'AdminProv2026*',
+                      'CIUDADANO',
+                      'muni-sanjose',
+                      'MSJ-2026-SEC'
+                    )
+                  }
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(255, 199, 0, 0.16)',
+                    border: '1px solid rgba(255, 199, 0, 0.4)',
+                    color: '#FFC700',
+                    fontSize: '0.72rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '4px',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 800 }}>🏛️ Admin Provincial</div>
+                    <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>gobierno.sanjose@gob.cr</div>
+                    <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: AdminProv2026* (Nivel 4)</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      seleccionarCuentaDemo('USR-PROV-001');
+                      navigate('/gobernanza');
+                    }}
+                    style={{
+                      background: '#FFC700',
+                      border: 'none',
+                      color: '#181818',
+                      padding: '3px 6px',
+                      borderRadius: '4px',
+                      fontWeight: 800,
+                      fontSize: '0.68rem',
+                      cursor: 'pointer',
+                      marginTop: '4px',
+                      alignSelf: 'flex-start'
+                    }}
+                  >
+                    Ingresar Directo ⚡
+                  </button>
+                </div>
+
+                {/* 3. Editor Municipal */}
+                <div
+                  onClick={() =>
+                    loadSeedAccount(
+                      'Editor Municipal',
+                      'editor.concejo@msj.go.cr',
+                      'EditorMuni2026*',
+                      'CIUDADANO',
+                      'muni-sanjose',
+                      'MSJ-2026-SEC'
+                    )
+                  }
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(2, 132, 199, 0.2)',
+                    border: '1px solid rgba(2, 132, 199, 0.4)',
+                    color: '#38BDF8',
+                    fontSize: '0.72rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '4px',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 800 }}>📝 Editor Municipal</div>
+                    <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>editor.concejo@msj.go.cr</div>
+                    <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: EditorMuni2026* (Nivel 3)</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      seleccionarCuentaDemo('USR-MUNI-001');
+                      navigate('/gobernanza');
+                    }}
+                    style={{
+                      background: '#0284C7',
+                      border: 'none',
+                      color: '#FFF',
+                      padding: '3px 6px',
+                      borderRadius: '4px',
+                      fontWeight: 700,
+                      fontSize: '0.68rem',
+                      cursor: 'pointer',
+                      marginTop: '4px',
+                      alignSelf: 'flex-start'
+                    }}
+                  >
+                    Ingresar Directo ⚡
+                  </button>
+                </div>
+
+                {/* 4. Ciudadano / Turista */}
+                <div
+                  onClick={() =>
+                    loadSeedAccount(
+                      'Ciudadano/Turista',
+                      'eiker.abarca@gmail.com',
+                      'Ciudadano2026*',
+                      'CIUDADANO'
+                    )
+                  }
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(0, 43, 127, 0.3)',
+                    border: '1px solid rgba(121, 166, 255, 0.35)',
+                    color: '#FFFFFF',
+                    fontSize: '0.72rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '4px',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 800 }}>🇨🇷 Ciudadano Residente</div>
+                    <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>eiker.abarca@gmail.com</div>
+                    <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: Ciudadano2026* (Nivel 2)</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      seleccionarCuentaDemo('USR-CIUD-001');
+                      navigate('/dashboard');
+                    }}
+                    style={{
+                      background: '#002B7F',
+                      border: '1px solid rgba(121, 166, 255, 0.4)',
+                      color: '#FFF',
+                      padding: '3px 6px',
+                      borderRadius: '4px',
+                      fontWeight: 700,
+                      fontSize: '0.68rem',
+                      cursor: 'pointer',
+                      marginTop: '4px',
+                      alignSelf: 'flex-start'
+                    }}
+                  >
+                    Ingresar Directo ⚡
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 2. VISTA DE REGISTRO CIUDADANO (SINCRONIZA EN db.json / localStorage)    */}
+      {/* ========================================================================= */}
+      {authMode === 'REGISTER' && (
+        <form onSubmit={handleRegisterSubmit}>
+          {/* PASO 1: Cédula con Consulta Hacienda */}
+          <div style={{ marginBottom: '1.15rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <label
+                htmlFor="reg-cedula-input"
+                style={{ fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)' }}
+              >
+                1. Cédula Costarricense o DIMEX Oficial
+              </label>
+              <span style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.55)', fontFamily: 'monospace' }}>
+                9 a 12 dígitos
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                id="reg-cedula-input"
+                type="text"
+                placeholder="1-1823-0456 ó 118230456"
+                value={regCedula}
+                onChange={(e) => {
+                  setRegCedula(e.target.value);
+                  setHaciendaVerified(false);
+                  setIdentityStatus(null);
+                }}
+                onBlur={() => {
+                  if (regCedula.replace(/[^0-9]/g, '').length >= 9 && !haciendaVerified) {
+                    handleValidateCedula(regCedula);
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem 0.9rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(0, 4, 13, 0.75)',
+                  border: haciendaVerified
+                    ? '1px solid #00D084'
+                    : identityStatus === 'PENDIENTE_VERIFICACION'
+                    ? '1px solid #FFC700'
+                    : '1px solid rgba(255, 255, 255, 0.22)',
+                  color: '#FFFFFF',
+                  fontSize: '0.92rem',
+                  fontFamily: 'monospace',
+                  outline: 'none'
+                }}
+              />
+
+              <CivicButton
+                type="button"
+                variant="secondary"
+                onClick={() => handleValidateCedula(regCedula)}
+                disabled={isValidatingHacienda || !regCedula.trim()}
+                isLoading={isValidatingHacienda}
+                style={{ minWidth: '120px', height: '42px', fontSize: '0.78rem' }}
+              >
+                {isValidatingHacienda ? 'Consultando...' : '🔍 Validar'}
+              </CivicButton>
+            </div>
+
+            {haciendaMessage && (
+              <div
+                style={{
+                  marginTop: '0.4rem',
+                  fontSize: '0.76rem',
+                  color: haciendaVerified ? '#00D084' : '#FFC700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px'
+                }}
+              >
+                <span>{haciendaMessage}</span>
+              </div>
+            )}
+          </div>
+
+          {/* PASO 2: Nombres y Apellidos */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '1.15rem' }}>
+            <div style={{ gridColumn: 'span 2' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
+                <label style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)' }}>
+                  Nombre(s)
+                </label>
+                {haciendaVerified && (
+                  <span style={{ fontSize: '0.72rem', color: '#00D084', fontWeight: 600 }}>
+                    🔒 Verificado por Hacienda
+                  </span>
+                )}
+              </div>
+              <input
+                type="text"
+                placeholder="Nombre oficial"
+                value={regNombre}
+                onChange={(e) => setRegNombre(e.target.value)}
+                readOnly={haciendaVerified}
+                style={{
+                  width: '100%',
+                  padding: '0.7rem 0.85rem',
+                  borderRadius: '6px',
+                  backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
+                  border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  fontSize: '0.88rem',
+                  outline: 'none',
+                  cursor: haciendaVerified ? 'not-allowed' : 'text'
+                }}
+              />
             </div>
 
             <div>
-              <label
-                htmlFor="master-password-input"
-                style={{
-                  display: 'block',
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  color: '#FF8A8A',
-                  marginBottom: '0.4rem'
-                }}
-              >
-                4. Clave Maestra Institucional
+              <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
+                Primer Apellido
               </label>
               <input
-                id="master-password-input"
-                type="password"
-                placeholder="Clave de Control Maestro Nacional"
-                value={masterPassword}
-                onChange={(e) => setMasterPassword(e.target.value)}
+                type="text"
+                placeholder="Primer Apellido"
+                value={regPrimerApellido}
+                onChange={(e) => setRegPrimerApellido(e.target.value)}
+                readOnly={haciendaVerified}
                 style={{
                   width: '100%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                  border: '1px solid rgba(206, 17, 38, 0.5)',
+                  padding: '0.7rem 0.85rem',
+                  borderRadius: '6px',
+                  backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
+                  border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
                   color: '#FFFFFF',
-                  fontSize: '0.9rem',
-                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '0.88rem',
+                  outline: 'none',
+                  cursor: haciendaVerified ? 'not-allowed' : 'text'
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
+                Segundo Apellido
+              </label>
+              <input
+                type="text"
+                placeholder="Segundo Apellido"
+                value={regSegundoApellido}
+                onChange={(e) => setRegSegundoApellido(e.target.value)}
+                readOnly={haciendaVerified}
+                style={{
+                  width: '100%',
+                  padding: '0.7rem 0.85rem',
+                  borderRadius: '6px',
+                  backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
+                  border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  fontSize: '0.88rem',
+                  outline: 'none',
+                  cursor: haciendaVerified ? 'not-allowed' : 'text'
+                }}
+              />
+            </div>
+          </div>
+
+          {/* PASO 3: Correo Electrónico */}
+          <div style={{ marginBottom: '1.15rem' }}>
+            <label
+              htmlFor="reg-email-input"
+              style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)', marginBottom: '0.35rem' }}
+            >
+              2. Correo Electrónico (Notificaciones Cívicas)
+            </label>
+            <input
+              id="reg-email-input"
+              type="email"
+              placeholder="correo@ejemplo.com"
+              value={regEmail}
+              onChange={(e) => setRegEmail(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.75rem 0.9rem',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(0, 4, 13, 0.75)',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
+                color: '#FFFFFF',
+                fontSize: '0.92rem',
+                outline: 'none'
+              }}
+            />
+          </div>
+
+          {/* PASO 4: Contraseña y Confirmación */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '1.15rem' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
+                Contraseña
+              </label>
+              <input
+                type="password"
+                placeholder="Mínimo 4 caracteres"
+                value={regPassword}
+                onChange={(e) => setRegPassword(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.7rem 0.85rem',
+                  borderRadius: '6px',
+                  backgroundColor: 'rgba(0, 4, 13, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  fontSize: '0.88rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
+                Confirmar Contraseña
+              </label>
+              <input
+                type="password"
+                placeholder="Repetir contraseña"
+                value={regConfirmPassword}
+                onChange={(e) => setRegConfirmPassword(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.7rem 0.85rem',
+                  borderRadius: '6px',
+                  backgroundColor: 'rgba(0, 4, 13, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  fontSize: '0.88rem',
                   outline: 'none'
                 }}
               />
             </div>
           </div>
-        )}
 
-        {/* Botón Principal de Envío */}
-        <CivicButton
-          type="submit"
-          variant={
-            selectedRole === 'ADMIN_PROVINCIAL'
-              ? 'warning'
-              : selectedRole === 'SUPER_ADMIN_NACIONAL'
-              ? 'danger'
-              : 'primary'
-          }
-          isLoading={isLoading}
-          style={{ width: '100%', height: '52px', fontSize: '1rem', fontWeight: 700 }}
-        >
-          {selectedRole === 'CIUDADANO_TURISTA' && `Ingresar como ${citizenMode === 'CIUDADANO' ? 'Ciudadano' : 'Turista'}`}
-          {selectedRole === 'ADMIN_PROVINCIAL' && 'Ingresar a Panel Municipal'}
-          {selectedRole === 'SUPER_ADMIN_NACIONAL' && 'Ingresar con Mando Nacional'}
-        </CivicButton>
-      </form>
-
-      {/* Credenciales de Prueba para Evaluadores */}
-      <div style={{ marginTop: '1.6rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '1rem' }}>
-        <button
-          type="button"
-          onClick={() => setShowDemoCredentials(!showDemoCredentials)}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'rgba(255, 255, 255, 0.65)',
-            fontSize: '0.78rem',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-            width: '100%'
-          }}
-        >
-          <span>{showDemoCredentials ? '▲ Ocultar Credenciales de Demostración' : '▼ Cargar Credenciales de Prueba Rápida'}</span>
-        </button>
-
-        {showDemoCredentials && (
+          {/* PASO 5: Ubicación Territorial Cantonal */}
           <div
             style={{
-              marginTop: '0.8rem',
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '6px'
+              padding: '0.85rem',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(0, 20, 137, 0.2)',
+              border: '1px solid rgba(0, 43, 127, 0.4)',
+              marginBottom: '1.25rem'
             }}
           >
-            <button
-              type="button"
-              onClick={() => loadDemoProfile('CIUDADANO_TURISTA', '118880999', 'CIUDADANO')}
-              style={{
-                padding: '6px 8px',
-                borderRadius: '6px',
-                backgroundColor: 'rgba(0, 43, 127, 0.3)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                color: '#FFF',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              🇨🇷 Ciudadano: 118880999
-            </button>
+            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#FFFFFF', display: 'block', marginBottom: '0.5rem' }}>
+              3. Jurisdicción Territorial DTA:
+            </span>
 
-            <button
-              type="button"
-              onClick={() => loadDemoProfile('CIUDADANO_TURISTA', '123456789012', 'TURISTA')}
-              style={{
-                padding: '6px 8px',
-                borderRadius: '6px',
-                backgroundColor: 'rgba(0, 122, 61, 0.3)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                color: '#FFF',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              🌍 Turista DIMEX: 123456789012
-            </button>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '0.5rem' }}>
+              <div>
+                <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '0.2rem' }}>
+                  Provincia
+                </label>
+                <select
+                  value={regProvincia}
+                  onChange={(e) => setRegProvincia(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.6rem 0.8rem',
+                    borderRadius: '6px',
+                    backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: '#FFFFFF',
+                    fontSize: '0.82rem',
+                    outline: 'none'
+                  }}
+                >
+                  {PROVINCIAS_DATA.map((p) => (
+                    <option key={p.id} value={p.nombre} style={{ background: '#00040D', color: '#FFF' }}>
+                      {p.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <button
-              type="button"
-              onClick={() => loadDemoProfile('ADMIN_PROVINCIAL', '101110222', 'CIUDADANO', 'muni-sanjose', 'MSJ-2026-SEC')}
-              style={{
-                padding: '6px 8px',
-                borderRadius: '6px',
-                backgroundColor: 'rgba(255, 199, 0, 0.2)',
-                border: '1px solid rgba(255, 199, 0, 0.4)',
-                color: '#FFC700',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              🏛️ Admin San José: 101110222
-            </button>
+              <div>
+                <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '0.2rem' }}>
+                  Cantón
+                </label>
+                <select
+                  value={regCanton}
+                  onChange={(e) => setRegCanton(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.6rem 0.8rem',
+                    borderRadius: '6px',
+                    backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: '#FFFFFF',
+                    fontSize: '0.82rem',
+                    outline: 'none'
+                  }}
+                >
+                  {cantonesDisponibles.map((c) => (
+                    <option key={c.codigoDta} value={c.nombre} style={{ background: '#00040D', color: '#FFF' }}>
+                      {c.nombre} (DTA {c.codigoDta})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => loadDemoProfile('SUPER_ADMIN_NACIONAL', '207770888', 'CIUDADANO', 'muni-sanjose', '', 'CRU-MASTER-2026')}
-              style={{
-                padding: '6px 8px',
-                borderRadius: '6px',
-                backgroundColor: 'rgba(206, 17, 38, 0.25)',
-                border: '1px solid rgba(206, 17, 38, 0.4)',
-                color: '#FF8A8A',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}
-            >
-              🛡️ Super Admin: 207770888
-            </button>
+            <div>
+              <label style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '0.2rem' }}>
+                Distrito o Barrio
+              </label>
+              <input
+                type="text"
+                placeholder="Ej: Carmen, Zapote, Pavas..."
+                value={regDistrito}
+                onChange={(e) => setRegDistrito(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.55rem 0.8rem',
+                  borderRadius: '6px',
+                  backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  fontSize: '0.82rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
           </div>
-        )}
+
+          {/* PASO 6: Rol del Usuario Creado */}
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label style={{ display: 'block', fontSize: '0.78rem', color: '#94A3B8', marginBottom: '0.35rem' }}>
+              Rol Asignado:
+            </label>
+            <div
+              style={{
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(0, 4, 13, 0.65)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.1rem' }}>🇨🇷</span>
+                <span style={{ color: '#FFFFFF', fontWeight: 700, fontSize: '0.85rem' }}>
+                  Ciudadano / Turista
+                </span>
+              </div>
+              <span
+                style={{
+                  fontSize: '0.72rem',
+                  backgroundColor: 'rgba(0, 43, 127, 0.4)',
+                  color: '#79a6ff',
+                  padding: '3px 8px',
+                  borderRadius: '999px',
+                  border: '1px solid rgba(121, 166, 255, 0.3)'
+                }}
+              >
+                Nivel 2 de Acceso
+              </span>
+            </div>
+          </div>
+
+          {/* Botón de Enviar Registro */}
+          <CivicButton
+            type="submit"
+            variant="accent"
+            isLoading={isLoading}
+            style={{ width: '100%', height: '48px', fontSize: '0.95rem', fontWeight: 700 }}
+          >
+            Crear Expediente y Registrar en db.json
+          </CivicButton>
+        </form>
+      )}
+
+      {/* Pie de Auditoría y Estado de la Base de Datos Simulada */}
+      <div
+        style={{
+          marginTop: '1.5rem',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          paddingTop: '0.85rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontSize: '0.72rem',
+          color: 'rgba(255, 255, 255, 0.6)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span
+            style={{
+              width: '7px',
+              height: '7px',
+              borderRadius: '50%',
+              backgroundColor: '#00D084',
+              display: 'inline-block'
+            }}
+          />
+          <span>db.json sincronizado: <strong>{dbStats.totalUsuarios} usuarios</strong></span>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleResetDb}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'rgba(255, 255, 255, 0.45)',
+            fontSize: '0.7rem',
+            cursor: 'pointer',
+            textDecoration: 'underline'
+          }}
+          title="Restablece db.json a las 4 cuentas semilla originales"
+        >
+          Restaurar Semilla Original
+        </button>
       </div>
     </CivicCard>
   );
