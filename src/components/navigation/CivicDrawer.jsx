@@ -7,6 +7,7 @@ import {
   ShieldAlert,
   LogOut,
   LogIn,
+  UserPlus,
   Search,
   Check,
   Sun,
@@ -192,9 +193,11 @@ export default function CivicDrawer({ isOpen, onClose, initialTab }) {
       {/* Contenedor del Cajón Lateral (420px max) */}
       <div
         ref={drawerRef}
-        className="fixed top-0 right-0 h-full w-full max-w-md bg-[#00040D]/95 dark:bg-[#00040D]/95 backdrop-blur-2xl border-l border-white/10 shadow-2xl flex flex-col justify-between z-50 transform transition-transform duration-300 ease-out animate-slideLeft"
+        className="fixed top-0 right-0 h-full w-full max-w-md bg-[#0A0F1D] border-l border-slate-800 shadow-2xl flex flex-col justify-between z-50 transform transition-transform duration-300 ease-out animate-slideLeft"
         style={{
-          boxShadow: '-10px 0 40px rgba(0, 4, 13, 0.85)'
+          backgroundColor: '#0A0F1D',
+          opacity: 1,
+          boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.95)'
         }}
       >
         {/* ======================================================================
@@ -305,12 +308,25 @@ export default function CivicDrawer({ isOpen, onClose, initialTab }) {
                         type="button"
                         onClick={() => {
                           logout();
+                          onClose();
+                          navigate('/');
                         }}
                         className="py-2 px-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
                       >
                         <LogOut className="w-3.5 h-3.5" strokeWidth={1.75} />
-                        <span>Salir</span>
+                        <span>Cerrar Sesión</span>
                       </button>
+                    </div>
+
+                    <div className="pt-1">
+                      <Link
+                        to="/registro"
+                        onClick={onClose}
+                        className="w-full py-1.5 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-colors"
+                      >
+                        <UserPlus className="w-3.5 h-3.5 text-sky-400" strokeWidth={1.75} />
+                        <span>Registrarse / Nuevo Registro Cívico</span>
+                      </Link>
                     </div>
                   </div>
                 ) : (

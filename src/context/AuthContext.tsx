@@ -5,9 +5,9 @@
  * y persistencia en localStorage ('cr_db_usuarios' y 'cr_sesion_activa')
  * ============================================================================
  */
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import dbSeed from '../data/db.json';
+import { registrarUsuarioApi, obtenerUsuariosApi } from '../services/userService';
 import {
   Usuario,
   CredencialesLogin,
@@ -126,7 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [cargando, setCargando] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Inicializar base de datos en localStorage si no existe o si faltan cuentas semilla
+  // Inicializar base de datos sincronizando con /api/usuarios y localStorage
   useEffect(() => {
     try {
       const raw = localStorage.getItem('cr_db_usuarios');
@@ -148,6 +148,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       localStorage.setItem('cr_db_usuarios', JSON.stringify(dbSeed.usuarios || []));
     }
+
+    // Cargar los usuarios actualizados desde el backend persistente (db.json)
+    obtenerUsuariosApi()
+      .then((usuariosApi) => {
+        if (Array.isArray(usuariosApi) && usuariosApi.length > 0) {
+          localStorage.setItem('cr_db_usuarios', JSON.stringify(usuariosApi));
+          try {
+            const mockRaw = localStorage.getItem('cru_mock_db_v2');
+            const mockDb = mockRaw ? JSON.parse(mockRaw) : { usuarios: [], sesionesActivas: [], bitacoraAccesos: [] };
+            mockDb.usuarios = usuariosApi;
+            localStorage.setItem('cru_mock_db_v2', JSON.stringify(mockDb));
+            window.dispatchEvent(new CustomEvent('cru_db_updated'));
+          } catch {
+            // Ignorar
+          }
+        }
+      })
+      .catch(() => {
+        // En caso de que no esté disponible, se mantiene la caché
+      });
   }, []);
 
   const clearError = () => setError(null);
@@ -231,52 +251,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      const raw = localStorage.getItem('cr_db_usuarios') || JSON.stringify(dbSeed.usuarios || []);
-      const usuarios: Usuario[] = JSON.parse(raw);
-
-      const cleanCedula = datos.cedula.trim();
-      const cleanEmail = datos.correo.toLowerCase().trim();
-      const digitsOnly = cleanCedula.replace(/[^0-9]/g, '');
-
-      const existe = usuarios.some((u) => {
-        const uDigits = (u.cedula || '').replace(/[^0-9]/g, '');
-        return (digitsOnly && uDigits === digitsOnly) || u.correo.toLowerCase().trim() === cleanEmail;
+      // 1. Petición HTTP real hacia /api/usuarios para persistencia permanente en db.json
+      const apiRes = await registrarUsuarioApi({
+        cedula: datos.cedula,
+        nombre: datos.nombre,
+        primerApellido: 'primerApellido' in datos ? datos.primerApellido : '',
+        segundoApellido: 'segundoApellido' in datos ? datos.segundoApellido : '',
+        correo: datos.correo,
+        password: datos.password,
+        rol: datos.rol,
+        provincia: datos.provincia,
+        canton: datos.canton,
+        distrito: datos.distrito,
+        verificadoHacienda: 'verificadoHacienda' in datos ? datos.verificadoHacienda : true
       });
 
-      if (existe) {
-        const msg = 'Ya existe un usuario registrado con esta cédula o correo electrónico.';
+      if (!apiRes.success || !apiRes.user) {
+        const msg = apiRes.message || 'No fue posible registrar el usuario.';
         setError(msg);
         setCargando(false);
         return { success: false, mensaje: msg, message: msg };
       }
 
-      const rolNombre = datos.rol || 'Ciudadano/Turista';
-      const nivelAcceso =
-        rolNombre === 'Super Administrador Nacional'
-          ? 5
-          : rolNombre === 'Administrador Provincial'
-          ? 4
-          : rolNombre === 'Editor Municipal'
-          ? 3
-          : 2;
+      const nuevoUsuario = apiRes.user as Usuario;
 
-      const nuevoUsuario: Usuario = {
-        id: `USR-${Date.now().toString().slice(-4)}`,
-        cedula: cleanCedula,
-        nombre: datos.nombre.trim(),
-        correo: cleanEmail,
-        password: datos.password,
-        rol: rolNombre,
-        nivelAcceso,
-        provincia: datos.provincia || 'San José',
-        canton: datos.canton || 'San José',
-        distrito: datos.distrito || 'Carmen',
-        fechaRegistro: new Date().toISOString(),
-        verificadoHacienda: true
-      };
+      // 2. Sincronizar listas en localStorage para coherencia inmediata
+      const raw = localStorage.getItem('cr_db_usuarios');
+      const usuarios: Usuario[] = raw ? JSON.parse(raw) : [];
+      if (!usuarios.some((u) => u.id === nuevoUsuario.id || u.cedula === nuevoUsuario.cedula)) {
+        usuarios.push(nuevoUsuario);
+        localStorage.setItem('cr_db_usuarios', JSON.stringify(usuarios));
+      }
 
-      const nuevaLista = [...usuarios, nuevoUsuario];
-      localStorage.setItem('cr_db_usuarios', JSON.stringify(nuevaLista));
+      try {
+        const mockRaw = localStorage.getItem('cru_mock_db_v2');
+        if (mockRaw) {
+          const mockDb = JSON.parse(mockRaw);
+          if (Array.isArray(mockDb.usuarios) && !mockDb.usuarios.some((u: Usuario) => u.id === nuevoUsuario.id)) {
+            mockDb.usuarios.push(nuevoUsuario);
+            localStorage.setItem('cru_mock_db_v2', JSON.stringify(mockDb));
+          }
+        }
+      } catch {
+        // Ignorar
+      }
 
       const { password: _, ...usuarioSinPass } = nuevoUsuario;
       setUsuarioActual(usuarioSinPass as Usuario);
@@ -285,7 +303,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       window.dispatchEvent(new CustomEvent('cru_db_updated'));
 
-      return { success: true };
+      return {
+        success: true,
+        mensaje: apiRes.message,
+        message: apiRes.message
+      };
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error durante el registro del usuario.';
       setError(msg);

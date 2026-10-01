@@ -81,11 +81,32 @@ function guardarEnCache(clave, datos) {
  */
 function formatearLista(objetoCrudo, idPadre = null) {
   if (!objetoCrudo || typeof objetoCrudo !== 'object') return [];
-  return Object.entries(objetoCrudo).map(([idStr, nombre]) => ({
-    id: parseInt(idStr, 10),
-    nombre: normalizarTexto(nombre),
-    padreId: idPadre
-  })).sort((a, b) => a.id - b.id);
+  return Object.entries(objetoCrudo).map(([idStr, nombre]) => {
+    const id = parseInt(idStr, 10);
+    let nombreLimpio = normalizarTexto(nombre);
+
+    // Si es un cantón con idPadre (provinciaId), buscar metadatos oficiales
+    let codigoDta = null;
+    if (idPadre !== null) {
+      const matchOficial = CANTONES_OFICIALES.find(
+        (c) => c.provinciaId === Number(idPadre) && c.id === id
+      );
+      if (matchOficial) {
+        codigoDta = matchOficial.codigoDta;
+        // Si la API pública devuelve "Central", usar el nombre oficial y específico del cantón
+        if (nombreLimpio.toLowerCase() === 'central') {
+          nombreLimpio = matchOficial.nombre;
+        }
+      }
+    }
+
+    return {
+      id,
+      nombre: nombreLimpio,
+      codigoDta,
+      padreId: idPadre
+    };
+  }).sort((a, b) => a.id - b.id);
 }
 
 /**
