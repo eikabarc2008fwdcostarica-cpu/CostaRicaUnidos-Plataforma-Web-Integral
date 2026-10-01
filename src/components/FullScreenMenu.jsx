@@ -184,10 +184,10 @@ export default function FullScreenMenu({ isOpen, onClose }) {
           maxWidth: '1360px',
           width: '100%',
           margin: 'auto',
-          padding: '2.5rem 0',
+          padding: '1.5rem 0',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-          gap: '4rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+          gap: 'clamp(1.5rem, 4vw, 3.5rem)',
           alignItems: 'start'
         }}
       >

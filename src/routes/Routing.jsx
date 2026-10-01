@@ -8,6 +8,7 @@ import MapaGIS from '../pages/MapaGIS';
 import ReportarIncidencia from '../pages/ReportarIncidencia';
 import SeguridadEmergencias from '../pages/SeguridadEmergencias';
 import NotFound from '../pages/NotFound';
+import Forbidden from '../pages/Forbidden';
 
 // Módulos Funcionales — Alanie
 import GobernanzaPage from '../pages/GobernanzaPage';
@@ -40,6 +41,10 @@ export default function Routing() {
         <Route path="/seguridad-emergencias" element={<SeguridadEmergencias />} />
         <Route path="/emergencias" element={<SeguridadEmergencias />} />
         <Route path="/sos" element={<SeguridadEmergencias />} />
+
+        {/* Pantallas de Error Institucionales */}
+        <Route path="/acceso-denegado" element={<Forbidden />} />
+        <Route path="/403" element={<Forbidden />} />
 
         {/* Rutas Públicas Asignadas a Alanie */}
         <Route path="/gobernanza" element={<GobernanzaPage />} />

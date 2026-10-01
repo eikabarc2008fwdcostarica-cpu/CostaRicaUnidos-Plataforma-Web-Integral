@@ -218,6 +218,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
         </div>
       ) : (
         <div
+          className="civic-table-container custom-civic-scrollbar"
           style={{
             overflowX: 'auto',
             borderRadius: '18px',
@@ -225,12 +226,15 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
             backgroundColor: 'rgba(0, 15, 45, 0.65)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
-            boxShadow: '0 12px 40px rgba(0, 4, 13, 0.7)'
+            boxShadow: '0 12px 40px rgba(0, 4, 13, 0.7)',
+            width: '100%',
+            WebkitOverflowScrolling: 'touch'
           }}
         >
           <table
             style={{
               width: '100%',
+              minWidth: '760px',
               borderCollapse: 'collapse',
               textAlign: 'left',
               fontSize: '0.88rem',

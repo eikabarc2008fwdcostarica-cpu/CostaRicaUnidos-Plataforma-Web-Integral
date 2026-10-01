@@ -140,8 +140,8 @@ export default function Navbar() {
               }}
             />
             <span style={{ color: '#E2E8F0', fontWeight: 700 }}>REPÚBLICA DE COSTA RICA</span>
-            <span style={{ color: '#475569' }}>·</span>
-            <span style={{ color: '#94A3B8' }}>SISTEMA NACIONAL DE GOBIERNOS LOCALES (DTA / CÓDIGO MUNICIPAL)</span>
+            <span className="topbar-subtext" style={{ color: '#475569' }}>·</span>
+            <span className="topbar-subtext" style={{ color: '#94A3B8' }}>SISTEMA NACIONAL DE GOBIERNOS LOCALES (DTA / CÓDIGO MUNICIPAL)</span>
           </div>
 
           {/* Badges de Transparencia y Accesibilidad (Visible en desktop) */}
@@ -168,6 +168,7 @@ export default function Navbar() {
             Obsidiana Soberana (#00040D) · Blur 24px · Borde 1px translúcido
             ========================================================================== */}
         <div
+          className="navbar-main-container"
           style={{
             height: '68px',
             backgroundColor: 'rgba(0, 4, 13, 0.82)',
@@ -177,7 +178,7 @@ export default function Navbar() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 2rem',
+            padding: '0 1.5rem',
             position: 'relative'
           }}
         >
@@ -189,15 +190,16 @@ export default function Navbar() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '1.25rem'
+              gap: '0.85rem'
             }}
           >
             {/* LADO IZQUIERDO: LOGO OFICIAL + SELECTOR DINÁMICO DE GOBIERNO LOCAL */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
               <Logo showText={true} />
 
               {/* Divisor vertical sutil */}
               <div
+                className="topbar-subtext"
                 style={{
                   height: '28px',
                   width: '1px',
@@ -210,13 +212,15 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setIsCantonModalOpen(!isCantonModalOpen)}
                 aria-label={`Seleccionar Gobierno Local. Actual: Municipalidad de ${activeCanton}`}
+                className="canton-selector-btn"
                 style={{
                   background: 'rgba(0, 20, 137, 0.28)',
                   backdropFilter: 'blur(16px)',
                   WebkitBackdropFilter: 'blur(16px)',
                   border: isCantonModalOpen ? '1px solid #79a6ff' : '1px solid rgba(121, 166, 255, 0.35)',
                   color: '#FFFFFF',
-                  padding: '0.45rem 0.95rem',
+                  padding: '0.45rem 0.85rem',
+                  minHeight: '44px',
                   borderRadius: '9999px',
                   fontSize: '0.82rem',
                   fontWeight: 700,
@@ -224,7 +228,7 @@ export default function Navbar() {
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.55rem',
+                  gap: '0.45rem',
                   transition: 'all 0.25s ease',
                   boxShadow: isCantonModalOpen ? '0 0 16px rgba(0, 20, 137, 0.6)' : 'none'
                 }}
@@ -242,11 +246,12 @@ export default function Navbar() {
                 }}
               >
                 <Building2 size={16} color="#79a6ff" />
-                <span style={{ color: '#94A3B8', fontWeight: 500, fontSize: '0.78rem' }}>Municipalidad:</span>
-                <span style={{ color: '#FFFFFF', fontWeight: 800 }}>{activeCanton}</span>
+                <span className="canton-selector-label" style={{ color: '#94A3B8', fontWeight: 500, fontSize: '0.78rem' }}>Municipalidad:</span>
+                <span className="canton-selector-name" style={{ color: '#FFFFFF', fontWeight: 800 }}>{activeCanton}</span>
                 <ChevronDown
                   size={14}
                   color="#79a6ff"
+                  className="canton-selector-chevron"
                   style={{
                     transform: isCantonModalOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                     transition: 'transform 0.2s ease'
@@ -255,25 +260,29 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* CENTRO: ACCESOS DIRECTOS A LOS 3 SERVICIOS CRÍTICOS */}
+            {/* CENTRO: ACCESOS DIRECTOS A LOS 3 SERVICIOS CRÍTICOS (Adaptable a 44px en móviles) */}
             <nav
               className="navbar-critical-services"
               aria-label="Servicios Municipales Críticos"
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.45rem'
               }}
             >
               {/* Servicio 1: Trámites & Cédula */}
               <Link
                 to="/dashboard"
+                className="navbar-btn-tactile"
+                title="Trámites & Cédula"
+                aria-label="Trámites & Cédula"
                 style={{
                   textDecoration: 'none',
                   color: location.pathname === '/dashboard' ? '#FFFFFF' : '#CBD5E1',
                   backgroundColor: location.pathname === '/dashboard' ? 'rgba(0, 20, 137, 0.35)' : 'rgba(255, 255, 255, 0.04)',
                   border: location.pathname === '/dashboard' ? '1px solid rgba(121, 166, 255, 0.5)' : '1px solid rgba(255, 255, 255, 0.08)',
-                  padding: '0.5rem 1rem',
+                  padding: '0.5rem 0.95rem',
+                  minHeight: '44px',
                   borderRadius: '10px',
                   fontSize: '0.84rem',
                   fontWeight: 600,
@@ -295,19 +304,23 @@ export default function Navbar() {
                   }
                 }}
               >
-                <FileText size={15} color="#79a6ff" />
-                <span>Trámites & Cédula</span>
+                <FileText size={16} color="#79a6ff" />
+                <span className="nav-btn-text">Trámites & Cédula</span>
               </Link>
 
               {/* Servicio 2: Concejo & Actas */}
               <Link
                 to="/gobernanza"
+                className="navbar-btn-tactile"
+                title="Concejo & Actas"
+                aria-label="Concejo & Actas"
                 style={{
                   textDecoration: 'none',
                   color: location.pathname === '/gobernanza' ? '#FFFFFF' : '#CBD5E1',
                   backgroundColor: location.pathname === '/gobernanza' ? 'rgba(0, 20, 137, 0.35)' : 'rgba(255, 255, 255, 0.04)',
                   border: location.pathname === '/gobernanza' ? '1px solid rgba(121, 166, 255, 0.5)' : '1px solid rgba(255, 255, 255, 0.08)',
-                  padding: '0.5rem 1rem',
+                  padding: '0.5rem 0.95rem',
+                  minHeight: '44px',
                   borderRadius: '10px',
                   fontSize: '0.84rem',
                   fontWeight: 600,
@@ -329,19 +342,23 @@ export default function Navbar() {
                   }
                 }}
               >
-                <Vote size={15} color="#38BDF8" />
-                <span>Concejo & Actas</span>
+                <Vote size={16} color="#38BDF8" />
+                <span className="nav-btn-text">Concejo & Actas</span>
               </Link>
 
               {/* Servicio 3: Reportar Avería */}
               <Link
                 to="/reportar-incidencia"
+                className="navbar-btn-tactile"
+                title="Reportar Avería"
+                aria-label="Reportar Avería"
                 style={{
                   textDecoration: 'none',
                   color: location.pathname === '/reportar-incidencia' ? '#FFFFFF' : '#CBD5E1',
                   backgroundColor: location.pathname === '/reportar-incidencia' ? 'rgba(218, 41, 28, 0.25)' : 'rgba(255, 255, 255, 0.04)',
                   border: location.pathname === '/reportar-incidencia' ? '1px solid rgba(255, 107, 107, 0.5)' : '1px solid rgba(255, 255, 255, 0.08)',
-                  padding: '0.5rem 1rem',
+                  padding: '0.5rem 0.95rem',
+                  minHeight: '44px',
                   borderRadius: '10px',
                   fontSize: '0.84rem',
                   fontWeight: 600,
@@ -363,25 +380,28 @@ export default function Navbar() {
                   }
                 }}
               >
-                <AlertTriangle size={15} color="#FF6B6B" />
-                <span>Reportar Avería</span>
+                <AlertTriangle size={16} color="#FF6B6B" />
+                <span className="nav-btn-text">Reportar Avería</span>
               </Link>
             </nav>
 
             {/* LADO DERECHO: CONMUTADOR TEMA + BOTÓN SOS 911 + BOTÓN MENÚ + */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
-              {/* Botón Conmutador de Modo Claro / Modo Oscuro */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flexShrink: 0 }}>
+              {/* Botón Conmutador de Modo Claro / Modo Oscuro (Área táctil de 44px) */}
               <button
                 type="button"
                 onClick={toggleTheme}
                 aria-label={theme === 'dark' ? 'Cambiar a Modo Claro (Sede Electrónica Oficial)' : 'Cambiar a Modo Oscuro (Sovereign Glass)'}
                 title={theme === 'dark' ? 'Cambiar a Modo Claro (Sede Electrónica Oficial)' : 'Cambiar a Modo Oscuro (Sovereign Glass)'}
+                className="navbar-btn-tactile"
                 style={{
                   background: theme === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 20, 137, 0.08)',
                   border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.22)' : '1px solid rgba(0, 20, 137, 0.25)',
                   color: theme === 'dark' ? '#FFFFFF' : '#0F172A',
-                  width: '38px',
-                  height: '38px',
+                  width: '44px',
+                  height: '44px',
+                  minWidth: '44px',
+                  minHeight: '44px',
                   borderRadius: '50%',
                   cursor: 'pointer',
                   display: 'inline-flex',
@@ -405,16 +425,18 @@ export default function Navbar() {
                 )}
               </button>
 
-              {/* Botón Rojo Sobrio SOS 911 */}
+              {/* Botón Rojo Sobrio SOS 911 (Min 44px para móviles) */}
               <Link
                 to="/seguridad-emergencias"
                 aria-label="Centro de Seguridad y Auxilio de Emergencias 911"
+                className="navbar-btn-sos"
                 style={{
                   textDecoration: 'none',
                   color: '#FF6B6B',
                   backgroundColor: 'rgba(218, 41, 28, 0.14)',
                   border: '1px solid rgba(218, 41, 28, 0.4)',
-                  padding: '0.45rem 1rem',
+                  padding: '0.45rem 0.85rem',
+                  minHeight: '44px',
                   borderRadius: '9999px',
                   fontSize: '0.78rem',
                   fontWeight: 700,
@@ -450,17 +472,19 @@ export default function Navbar() {
                 <span>SOS 911</span>
               </Link>
 
-              {/* Botón Soberano MENÚ + */}
+              {/* Botón Soberano MENÚ + (Garantizado siempre visible sin desbordar) */}
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(true)}
                 aria-expanded={isMenuOpen}
                 aria-label="Abrir menú de navegación a pantalla completa"
+                className="navbar-btn-menu"
                 style={{
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.22)',
                   color: '#FFFFFF',
-                  padding: '0.48rem 1.25rem',
+                  padding: '0.48rem 1.15rem',
+                  minHeight: '44px',
                   borderRadius: '9999px',
                   fontSize: '0.82rem',
                   fontWeight: 700,
@@ -469,7 +493,8 @@ export default function Navbar() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.45rem',
-                  transition: 'all 0.25s ease'
+                  transition: 'all 0.25s ease',
+                  flexShrink: 0
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.35)';
@@ -509,7 +534,7 @@ export default function Navbar() {
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'center',
-            padding: '5.5rem 1.5rem 2rem',
+            padding: 'clamp(3.5rem, 8vw, 5.5rem) clamp(0.75rem, 3vw, 1.5rem) 2rem',
             animation: 'fadeIn 0.2s ease-out'
           }}
           onClick={(e) => {
@@ -527,12 +552,13 @@ export default function Navbar() {
               border: '1px solid rgba(255, 255, 255, 0.16)',
               borderRadius: '24px',
               boxShadow: '0 30px 80px rgba(0, 4, 13, 0.95), 0 0 40px rgba(0, 20, 137, 0.35)',
-              padding: '2rem',
+              padding: 'clamp(1.25rem, 4vw, 2rem)',
               color: '#FFFFFF',
               maxHeight: '82vh',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1.25rem'
+              gap: '1.25rem',
+              boxSizing: 'border-box'
             }}
           >
             {/* Cabecera del Modal */}
