@@ -5,6 +5,7 @@ import { MapPin, Radio, Loader2, AlertTriangle, Crosshair, Zap, Navigation } fro
 import { PROVINCIAS_DATA, CANTONES_OFICIALES } from '../../data/costaRicaTerritorialData';
 import { getProvincias, getCantones, getDistritos } from '../../services/ubicacionesService';
 import { GEOFENCING_COSTA_RICA } from '../gis/darkMapStyles';
+import { useCivicModal } from '../../context/CivicModalContext';
 
 // Coordenadas aproximadas de cabeceras cantonales para Georreferenciación Inversa
 const COORDENADAS_CANTONES = [
@@ -52,6 +53,7 @@ export default function Step3Georeferencing({
   distritoId,
   onDistritoChange
 }) {
+  const { mostrarAlerta } = useCivicModal();
   const [provincias, setProvincias] = useState([]);
   const [cantones, setCantones] = useState([]);
   const [distritos, setDistritos] = useState([]);
@@ -228,7 +230,11 @@ export default function Step3Georeferencing({
   // 7. Botón GPS "Mi Ubicación Actual"
   const handleUsarGps = () => {
     if (!navigator.geolocation) {
-      alert('La geolocalización no es compatible con su dispositivo.');
+      mostrarAlerta({
+        titulo: 'GPS No Compatible',
+        mensaje: 'La geolocalización satelital no es compatible o no está habilitada en su dispositivo.',
+        icono: 'advertencia'
+      });
       return;
     }
 
@@ -246,7 +252,11 @@ export default function Step3Georeferencing({
           lng < GEOFENCING_COSTA_RICA.west ||
           lng > GEOFENCING_COSTA_RICA.east
         ) {
-          alert('Su señal GPS indica una ubicación fuera del territorio nacional de Costa Rica.');
+          mostrarAlerta({
+            titulo: 'Ubicación Fuera de Jurisdicción',
+            mensaje: 'Su señal GPS indica una ubicación fuera del territorio nacional de Costa Rica.',
+            icono: 'advertencia'
+          });
           return;
         }
 
@@ -263,7 +273,11 @@ export default function Step3Georeferencing({
       (err) => {
         setIsLocating(false);
         console.warn('[GPS]', err);
-        alert('No se pudo obtener la posición GPS: ' + err.message);
+        mostrarAlerta({
+          titulo: 'Fallo de Geolocalización',
+          mensaje: 'No se pudo obtener la posición satelital GPS: ' + err.message,
+          icono: 'error'
+        });
       },
       { enableHighAccuracy: true, timeout: 8000 }
     );

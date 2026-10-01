@@ -22,7 +22,7 @@ import { CivicCard } from '../components/common/CivicCard';
 import Navbar from '../components/Navbar';
 
 /**
- * ItinerarioIAPage — Módulo 12 (RF-12.2): Planificador 'Itinerario Pura Vida'
+ * ItinerarioIAPage — Planificador 'Itinerario Pura Vida'
  * 
  * Motor generativo de Inteligencia Artificial que ensambla itinerarios personalizados
  * contemplando topografía 3D, leyes de accesibilidad (Ley 7600), requerimientos de tracción,
@@ -79,7 +79,7 @@ export default function ItinerarioIAPage() {
           <div className="relative z-10 max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
               <Sparkles size={14} className="animate-spin-slow" />
-              Módulo 12 (RF-12.2) • Motor Generativo de IA y Topografía 3D
+              Motor Generativo de IA y Topografía 3D
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">

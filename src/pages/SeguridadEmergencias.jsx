@@ -534,25 +534,24 @@ export default function SeguridadEmergencias() {
                 onChange={(e) => setFiltroProvincia(e.target.value)}
                 aria-label="Filtrar albergues por provincia"
                 style={{
-                  backgroundColor: 'rgba(0, 8, 25, 0.9)',
+                  backgroundColor: '#000814',
                   color: '#FFFFFF',
-                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
                   borderRadius: '10px',
-                  padding: '0.6rem 0.95rem',
-                  fontSize: '0.84rem',
-                  cursor: 'pointer',
+                  padding: '0.45rem 0.8rem',
                   outline: 'none',
-                  fontWeight: 600
+                  fontSize: '0.85rem'
                 }}
+                className="focus:border-red-500 font-bold"
               >
-                <option value="todas">Todas las Provincias</option>
-                <option value="San José">San José</option>
-                <option value="Alajuela">Alajuela</option>
-                <option value="Cartago">Cartago</option>
-                <option value="Heredia">Heredia</option>
-                <option value="Guanacaste">Guanacaste</option>
-                <option value="Puntarenas">Puntarenas</option>
-                <option value="Limón">Limón</option>
+                <option value="todas" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Todas las Provincias</option>
+                <option value="San José" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>San José</option>
+                <option value="Alajuela" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Alajuela</option>
+                <option value="Cartago" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Cartago</option>
+                <option value="Heredia" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Heredia</option>
+                <option value="Guanacaste" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Guanacaste</option>
+                <option value="Puntarenas" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Puntarenas</option>
+                <option value="Limón" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Limón</option>
               </select>
 
               <select
@@ -560,21 +559,28 @@ export default function SeguridadEmergencias() {
                 onChange={(e) => setFiltroEstado(e.target.value)}
                 aria-label="Filtrar albergues por estado"
                 style={{
-                  backgroundColor: 'rgba(0, 8, 25, 0.9)',
+                  backgroundColor: '#000814',
                   color: '#FFFFFF',
-                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
                   borderRadius: '10px',
-                  padding: '0.6rem 0.95rem',
-                  fontSize: '0.84rem',
-                  cursor: 'pointer',
+                  padding: '0.45rem 0.8rem',
                   outline: 'none',
-                  fontWeight: 600
+                  fontSize: '0.85rem'
                 }}
+                className="focus:border-red-500 font-bold"
               >
-                <option value="todos">Todos los Estados</option>
-                <option value="activo">Operativo y Activo</option>
-                <option value="preparado">En Preparación</option>
-                <option value="en_reserva">En Reserva</option>
+                <option value="todos" style={{ backgroundColor: '#000814', color: '#FFFFFF', fontWeight: 'bold' }}>
+                  ● Todos los Estados
+                </option>
+                <option value="activo" style={{ backgroundColor: '#000814', color: '#10B981', fontWeight: 'bold' }}>
+                  ● Habilitado (Operativo y Activo)
+                </option>
+                <option value="preparado" style={{ backgroundColor: '#000814', color: '#F59E0B', fontWeight: 'bold' }}>
+                  ● Ocupación Alta / Preparación
+                </option>
+                <option value="en_reserva" style={{ backgroundColor: '#000814', color: '#3B82F6', fontWeight: 'bold' }}>
+                  ● En Reserva
+                </option>
               </select>
             </div>
           </div>

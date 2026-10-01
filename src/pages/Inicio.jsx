@@ -1249,7 +1249,7 @@ export default function Inicio() {
           >
             {[
               {
-                id: 'M01',
+                id: 'modulo-gis',
                 titulo: 'Visor Cartográfico 3D GIS',
                 desc: 'Análisis topográfico, cuencas hidrográficas y puntos de interés cívicos.',
                 icono: Compass,
@@ -1258,7 +1258,7 @@ export default function Inicio() {
                 badge: 'Relieve Soberano'
               },
               {
-                id: 'M02',
+                id: 'modulo-seguridad',
                 titulo: 'Seguridad Nacional 911 & CNE',
                 desc: 'Alertas en tiempo real, catálogo de albergues y centros de auxilio.',
                 icono: ShieldCheck,
@@ -1267,7 +1267,7 @@ export default function Inicio() {
                 badge: 'Emergencias'
               },
               {
-                id: 'M03',
+                id: 'modulo-educacion',
                 titulo: 'Educación Técnica (CTP)',
                 desc: 'Directorio nacional de colegios técnicos, POIs y carreras técnicas.',
                 icono: GraduationCap,
@@ -1276,7 +1276,7 @@ export default function Inicio() {
                 badge: 'Juventud'
               },
               {
-                id: 'M04',
+                id: 'modulo-cultura',
                 titulo: 'Patrimonio & Cultura',
                 desc: 'Línea de tiempo histórica, heráldica y reproductor de himnos cantonales.',
                 icono: Music,
@@ -1285,7 +1285,7 @@ export default function Inicio() {
                 badge: 'Identidad'
               },
               {
-                id: 'M05',
+                id: 'modulo-turismo',
                 titulo: 'Turismo Accesible Ley 7600',
                 desc: 'Rutas cantonales certificadas, destinos inclusivos y exportador GeoJSON.',
                 icono: MapPin,
@@ -1294,7 +1294,7 @@ export default function Inicio() {
                 badge: 'Inclusión'
               },
               {
-                id: 'M06',
+                id: 'modulo-ia',
                 titulo: 'Planificador IA Itinerario Pura Vida',
                 desc: 'Motor predictivo de rutas cantonales con análisis de orografía y clima.',
                 icono: Sparkles,

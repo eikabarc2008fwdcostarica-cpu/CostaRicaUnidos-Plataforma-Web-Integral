@@ -382,3 +382,7 @@ export function getSesionesActivas(): SesionActiva[] {
 export function resetDbToSeed(): void {
   saveDb(seedDbData as unknown as DbSchema);
 }
+
+// Re-exportar motor CRUD genérico, dbClient y especializado
+export * from './crudService';
+export { dbClient, default as defaultDbClient } from './dbClient';

@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { ProyectoVecinal, VOTOS_REGISTRADOS_CEDULAS } from '../../data/participacionData';
 import { validateCedula, sanitizeCedula } from '../../services/haciendaService';
+import { dbClient } from '../../services/dbClient';
 import { CivicModal } from '../common/CivicModal';
 import { CivicButton } from '../common/CivicButton';
 
@@ -22,7 +23,7 @@ interface ModalVotacionAntifraudeProps {
   isOpen: boolean;
   onClose: () => void;
   proyecto: ProyectoVecinal | null;
-  onVotoExitoso: (proyectoId: string, comprobante: string) => void;
+  onVotoExitoso: (proyectoId: string, comprobante: string, cedula?: string) => void;
 }
 
 /**
@@ -93,8 +94,14 @@ export const ModalVotacionAntifraude: React.FC<ModalVotacionAntifraudeProps> = (
     setErrorHacienda(null);
     setNombreLegalValidado(null);
 
-    // 1. Blindaje antifraude estricto: verificar si ya votó en este período
-    if (VOTOS_REGISTRADOS_CEDULAS.has(cedulaLimpia)) {
+    // 1. Blindaje antifraude estricto: verificar si ya votó en este período en dbClient o memoria
+    const votosPrevios = dbClient.getCollection<any>('votosEmitidos');
+    const yaVotoEnDb = votosPrevios.some((v: any) => {
+      const cedulaEnVoto = sanitizeCedula(v.usuarioCedula || '');
+      return cedulaEnVoto === cedulaLimpia || v.usuarioCedula === cedulaLimpia;
+    });
+
+    if (yaVotoEnDb || VOTOS_REGISTRADOS_CEDULAS.has(cedulaLimpia)) {
       setValidando(false);
       setErrorFraude(
         `ALERTA DE SEGURIDAD ELECTORAL: La cédula ${cedulaLimpia} ya ejerció el voto en este período de presupuesto participativo. La normativa prohíbe votos duplicados (Regla: 1 Voto por Cédula Legal Activa).`
@@ -167,8 +174,8 @@ export const ModalVotacionAntifraude: React.FC<ModalVotacionAntifraudeProps> = (
     setComprobanteEmitido(comprobante);
     setVotoCompletado(true);
 
-    // Actualización reactiva inmediata en el componente padre
-    onVotoExitoso(proyecto.id, comprobante);
+    // Actualización reactiva inmediata en el componente padre con persistencia en dbClient
+    onVotoExitoso(proyecto.id, comprobante, cedulaLimpiaValidada);
   };
 
   const handleCopiarComprobante = () => {

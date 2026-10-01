@@ -71,10 +71,29 @@ export interface BitacoraAcceso {
   ipSimulada: string;
 }
 
+import type {
+  SolicitudComercio,
+  ItemModeracion,
+  RegistroAuditoria,
+  ConfiguracionIA,
+  EstadoAlertaCNE,
+  TicketAveriaMunicipal
+} from './admin';
+
 export interface DbSchema {
   usuarios: DbUser[];
   sesionesActivas: SesionActiva[];
   bitacoraAccesos: BitacoraAcceso[];
+  solicitudesComercio?: SolicitudComercio[];
+  moderacionContenido?: ItemModeracion[];
+  bitacoraAuditoria?: RegistroAuditoria[];
+  configuracionIA?: ConfiguracionIA;
+  alertasCNE?: EstadoAlertaCNE;
+  ticketsAverias?: TicketAveriaMunicipal[];
+  incidenciasViales?: any[];
+  alberguesCNE?: any[];
+  proyectosPresupuesto?: any[];
+  votosEmitidos?: any[];
 }
 
 export interface UserProfile {
