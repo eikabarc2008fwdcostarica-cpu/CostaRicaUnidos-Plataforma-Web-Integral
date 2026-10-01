@@ -66,6 +66,7 @@ self.addEventListener('fetch', (event) => {
     request.url.includes('/api/') ||
     request.url.includes('/usuarios') ||
     request.url.includes('/foro_posts') ||
+    request.url.includes('/noticias') ||
     request.url.includes('/@vite/') ||
     request.url.includes('/src/') ||
     request.url.includes('?t=') ||

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Newspaper,
@@ -11,72 +11,101 @@ import {
   AlertCircle,
   TrendingUp,
   Share2,
-  ExternalLink
+  ExternalLink,
+  MessageSquare,
+  ThumbsUp,
+  Lightbulb,
+  AlertTriangle,
+  Building2,
+  Plus
 } from 'lucide-react';
+import { obtenerNoticias, esEditorMunicipal } from '../../services/noticiasService';
+import { useAuth } from '../../context/AuthContext';
+import NoticiaDetalleModal from '../noticias/NoticiaDetalleModal';
+import NoticiaFormModal from '../noticias/NoticiaFormModal';
 
 /**
- * Componente Base (Scaffolding): Noticias Provinciales
- * Módulo 01 — Portal Informativo Provincial & Comunal
+ * Componente: Noticias Provinciales (M01)
+ * Conectado en tiempo real a db.json vía noticiasService.
+ * Soporta lectura completa, reacciones e hilos cívicos.
  */
 export default function ProvinciaNoticias({ provincia }) {
+  const { user } = useAuth();
+  const tienePermisoEditor = esEditorMunicipal(user);
+
   const [categoriaFiltro, setCategoriaFiltro] = useState('TODAS');
   const [busqueda, setBusqueda] = useState('');
+  const [noticiasReales, setNoticiasReales] = useState([]);
+  const [cargando, setCargando] = useState(true);
 
-  // Generación temática de noticias contextuales según la provincia seleccionada
+  // Modales
+  const [noticiaSeleccionada, setNoticiaSeleccionada] = useState(null);
+  const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
+  const [modalFormAbierto, setModalFormAbierto] = useState(false);
+
+  // Cargar noticias desde el backend db.json
+  const cargarNoticias = async () => {
+    setCargando(true);
+    try {
+      const data = await obtenerNoticias({ provincia: provincia.nombre });
+      setNoticiasReales(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.warn('[ProvinciaNoticias] Fallo al cargar noticias reales:', err);
+      setNoticiasReales([]);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarNoticias();
+  }, [provincia.nombre]);
+
+  // Si no hay noticias registradas en db.json para esta provincia, usamos una plantilla contextual
   const noticiasMock = [
     {
       id: `${provincia.codigo}-NOT-01`,
       titulo: `Concejos Cantonales de ${provincia.nombre} aprueban cartera de proyectos comunales 2026`,
       resumen: `Las municipalidades de la provincia de ${provincia.nombre} publicaron la asignación del presupuesto participativo para obras viales, iluminación LED y parques comunitarios.`,
-      categoria: 'GOBERNANZA',
-      categoriaLabel: 'Gobernanza Local',
-      fecha: '01 Octubre, 2026',
-      lectura: '3 min',
-      autor: `Secretaría Técnica • ${provincia.cabecera}`,
-      destacada: true,
-      colorTag: '#38BDF8'
-    },
-    {
-      id: `${provincia.codigo}-NOT-02`,
-      titulo: `Inspección de obras viales e infraestructura prioritaria en los ${provincia.cantonesCount} cantones`,
-      resumen: `Cuadrillas de mantenimiento cantonal y comités vecinales supervisan el avance de recarpeteo y mejoras en la red vial cantonal de ${provincia.nombre}.`,
-      categoria: 'OBRAS',
-      categoriaLabel: 'Obras Públicas',
-      fecha: '30 Septiembre, 2026',
-      lectura: '4 min',
-      autor: 'Unidad Técnica de Gestión Vial',
-      destacada: false,
-      colorTag: '#F59E0B'
-    },
-    {
-      id: `${provincia.codigo}-NOT-03`,
-      titulo: `Feria del Agricultor y Emprendimientos Locales de ${provincia.nombre} amplían horarios de atención`,
-      resumen: `Productores de ${provincia.cabecera} y zonas aledañas habilitan venta directa de cosechas y productos artesanales con pago digital y verificación cívica.`,
-      categoria: 'COMERCIO',
-      categoriaLabel: 'Economía & Ferias',
-      fecha: '28 Septiembre, 2026',
-      lectura: '2 min',
-      autor: 'Comité de Ferias Provinciales',
-      destacada: false,
-      colorTag: '#10B981'
+      contenido: `Las municipalidades de la provincia de ${provincia.nombre} han formalizado la aprobación unánime de los presupuestos cívicos de inversión para el ejercicio 2026. Esta resolución contempla intervenciones en infraestructura comunitaria, mejoramiento de accesos peatonales e instalación de sistemas modernos de monitoreo.`,
+      categoria: 'Gobernanza & Trámites',
+      provincia: provincia.nombre,
+      canton: provincia.cabecera || provincia.nombre,
+      autorNombre: `Secretaría Técnica • ${provincia.cabecera}`,
+      autorRol: 'Editor Municipal',
+      autorCedula: '118230456',
+      fechaPublicacion: '2026-10-01T10:00:00Z',
+      reacciones: { apoyo: 12, interesante: 7, alerta: 1 },
+      comentarios: []
     }
   ];
 
+  const listaNoticias = noticiasReales.length > 0 ? noticiasReales : noticiasMock;
+
   const categorias = [
     { id: 'TODAS', label: 'Todas' },
-    { id: 'GOBERNANZA', label: 'Gobernanza' },
-    { id: 'OBRAS', label: 'Obras Públicas' },
-    { id: 'COMERCIO', label: 'Economía & Ferias' }
+    { id: 'Obras Públicas', label: 'Obras Públicas' },
+    { id: 'Gobernanza & Trámites', label: 'Gobernanza' },
+    { id: 'Seguridad & Emergencias', label: 'Seguridad' },
+    { id: 'Comercio & Turismo', label: 'Economía & Turismo' }
   ];
 
-  const noticiasFiltradas = noticiasMock.filter((n) => {
-    const matchCat = categoriaFiltro === 'TODAS' || n.categoria === categoriaFiltro;
+  const noticiasFiltradas = listaNoticias.filter((n) => {
+    const matchCat =
+      categoriaFiltro === 'TODAS' ||
+      (n.categoria || '').toLowerCase().includes(categoriaFiltro.toLowerCase());
     const matchText =
       !busqueda ||
-      n.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      n.resumen.toLowerCase().includes(busqueda.toLowerCase());
+      (n.titulo || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+      (n.resumen || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+      (n.canton || '').toLowerCase().includes(busqueda.toLowerCase());
     return matchCat && matchText;
   });
+
+  const handleAbrirDetalle = (noticia) => {
+    setNoticiaSeleccionada(noticia);
+    setModalDetalleAbierto(true);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
@@ -136,7 +165,7 @@ export default function ProvinciaNoticias({ provincia }) {
                 }}
               >
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                En Vivo
+                db.json Conectado
               </span>
             </div>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: '2px 0 0 0' }}>
@@ -145,35 +174,59 @@ export default function ProvinciaNoticias({ provincia }) {
           </div>
         </div>
 
-        {/* Buscador de noticias */}
-        <div style={{ position: 'relative', width: '100%', maxWidth: '280px' }}>
-          <Search
-            size={15}
-            style={{
-              position: 'absolute',
-              left: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: '#94A3B8'
-            }}
-          />
-          <input
-            type="text"
-            placeholder={`Buscar en ${provincia.nombre}...`}
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            style={{
-              width: '100%',
-              backgroundColor: 'rgba(0, 10, 28, 0.65)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '8px',
-              padding: '0.5rem 0.85rem 0.5rem 2.2rem',
-              color: '#FFFFFF',
-              fontSize: '0.82rem',
-              outline: 'none',
-              boxSizing: 'border-box'
-            }}
-          />
+        {/* Acciones y Buscador */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          {tienePermisoEditor && (
+            <button
+              onClick={() => setModalFormAbierto(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                backgroundColor: '#38BDF8',
+                color: '#00040D',
+                fontWeight: 700,
+                fontSize: '0.78rem',
+                padding: '0.5rem 0.9rem',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              <Plus size={15} />
+              <span>Publicar Anuncio</span>
+            </button>
+          )}
+
+          <div style={{ position: 'relative', width: '100%', maxWidth: '240px' }}>
+            <Search
+              size={14}
+              style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: '#94A3B8'
+              }}
+            />
+            <input
+              type="text"
+              placeholder={`Buscar en ${provincia.nombre}...`}
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              style={{
+                width: '100%',
+                backgroundColor: 'rgba(0, 10, 28, 0.65)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '8px',
+                padding: '0.45rem 0.85rem 0.45rem 2.2rem',
+                color: '#FFFFFF',
+                fontSize: '0.82rem',
+                outline: 'none',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -194,12 +247,14 @@ export default function ProvinciaNoticias({ provincia }) {
               fontWeight: 700,
               cursor: 'pointer',
               transition: 'all 0.15s ease',
-              border: categoriaFiltro === cat.id
-                ? `1px solid ${provincia.colorAcento || '#38BDF8'}`
-                : '1px solid rgba(255, 255, 255, 0.1)',
-              backgroundColor: categoriaFiltro === cat.id
-                ? 'rgba(255, 255, 255, 0.12)'
-                : 'rgba(255, 255, 255, 0.03)',
+              border:
+                categoriaFiltro === cat.id
+                  ? `1px solid ${provincia.colorAcento || '#38BDF8'}`
+                  : '1px solid rgba(255, 255, 255, 0.1)',
+              backgroundColor:
+                categoriaFiltro === cat.id
+                  ? 'rgba(255, 255, 255, 0.12)'
+                  : 'rgba(255, 255, 255, 0.03)',
               color: categoriaFiltro === cat.id ? '#FFFFFF' : '#94A3B8'
             }}
           >
@@ -216,128 +271,147 @@ export default function ProvinciaNoticias({ provincia }) {
           gap: '1.25rem'
         }}
       >
-        {noticiasFiltradas.map((noticia) => (
-          <article
-            key={noticia.id}
-            style={{
-              backgroundColor: 'rgba(0, 10, 28, 0.55)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: '14px',
-              padding: '1.35rem',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              gap: '1rem',
-              transition: 'transform 0.2s ease, border-color 0.2s ease',
-              position: 'relative'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
-          >
-            <div>
-              {/* Metadatos superiores */}
+        {noticiasFiltradas.map((noticia) => {
+          const reacciones = noticia.reacciones || { apoyo: 0, interesante: 0, alerta: 0 };
+          const comentariosCount = Array.isArray(noticia.comentarios) ? noticia.comentarios.length : 0;
+
+          return (
+            <article
+              key={noticia.id}
+              onClick={() => handleAbrirDetalle(noticia)}
+              style={{
+                backgroundColor: 'rgba(0, 10, 28, 0.55)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '14px',
+                padding: '1.35rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: '1rem',
+                transition: 'transform 0.2s ease, border-color 0.2s ease',
+                position: 'relative',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div>
+                {/* Metadatos superiores */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '0.5rem',
+                    marginBottom: '0.75rem',
+                    flexWrap: 'wrap'
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '0.68rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      color: '#38BDF8',
+                      backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                      padding: '2px 8px',
+                      borderRadius: '6px',
+                      border: '1px solid rgba(56, 189, 248, 0.3)'
+                    }}
+                  >
+                    {noticia.categoria || 'Comunicado'}
+                  </span>
+
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      fontSize: '0.7rem',
+                      color: '#94A3B8'
+                    }}
+                  >
+                    <Building2 size={12} />
+                    {noticia.canton || provincia.nombre}
+                  </span>
+                </div>
+
+                {/* Titular */}
+                <h4
+                  style={{
+                    fontSize: '0.98rem',
+                    fontWeight: 700,
+                    lineHeight: 1.4,
+                    color: '#FFFFFF',
+                    margin: '0 0 0.6rem 0'
+                  }}
+                >
+                  {noticia.titulo}
+                </h4>
+
+                {/* Resumen */}
+                <p
+                  style={{
+                    fontSize: '0.82rem',
+                    lineHeight: 1.55,
+                    color: '#94A3B8',
+                    margin: 0,
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }}
+                >
+                  {noticia.resumen || noticia.contenido}
+                </p>
+              </div>
+
+              {/* Pie de la tarjeta con Reacciones y Enlace */}
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  gap: '0.5rem',
-                  marginBottom: '0.75rem'
+                  paddingTop: '0.85rem',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                  fontSize: '0.72rem',
+                  color: '#64748B'
                 }}
               >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#34D399' }}>
+                    <ThumbsUp size={11} /> {reacciones.apoyo || 0}
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#94A3B8' }}>
+                    <MessageSquare size={11} /> {comentariosCount}
+                  </span>
+                </div>
+
                 <span
                   style={{
-                    fontSize: '0.68rem',
-                    fontWeight: 800,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    color: noticia.colorTag,
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    padding: '2px 8px',
-                    borderRadius: '6px',
-                    border: `1px solid ${noticia.colorTag}40`
-                  }}
-                >
-                  {noticia.categoriaLabel}
-                </span>
-
-                <div
-                  style={{
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.35rem',
-                    fontSize: '0.7rem',
-                    color: '#94A3B8'
+                    gap: '4px',
+                    color: '#38BDF8',
+                    fontWeight: 700
                   }}
                 >
-                  <Clock size={12} />
-                  <span>{noticia.lectura}</span>
-                </div>
+                  Leer comunicado <ArrowUpRight size={13} />
+                </span>
               </div>
-
-              {/* Titular */}
-              <h4
-                style={{
-                  fontSize: '0.98rem',
-                  fontWeight: 700,
-                  lineHeight: 1.4,
-                  color: '#FFFFFF',
-                  margin: '0 0 0.6rem 0'
-                }}
-              >
-                {noticia.titulo}
-              </h4>
-
-              {/* Resumen */}
-              <p
-                style={{
-                  fontSize: '0.82rem',
-                  lineHeight: 1.55,
-                  color: '#94A3B8',
-                  margin: 0
-                }}
-              >
-                {noticia.resumen}
-              </p>
-            </div>
-
-            {/* Pie de la tarjeta */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingTop: '0.85rem',
-                borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-                fontSize: '0.72rem',
-                color: '#64748B'
-              }}
-            >
-              <span>{noticia.fecha}</span>
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  color: '#38BDF8',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
-              >
-                Leer noticia <ArrowUpRight size={13} />
-              </span>
-            </div>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </div>
 
-      {/* Contenedor Esqueleto / Scaffolding Informativo de Expansión Futura */}
+      {/* Acceso directo al Portal Completo de Noticias */}
       <div
         style={{
           backgroundColor: 'rgba(255, 255, 255, 0.02)',
@@ -362,12 +436,12 @@ export default function ProvinciaNoticias({ provincia }) {
             }}
           />
           <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
-            Base técnica M01: Conexión preparada para feeds RSS de los <strong>{provincia.cantonesCount} cantones</strong> de {provincia.nombre} vía API territorial.
+            Portal Nacional M01: Cobertura oficial de los <strong>{provincia.cantonesCount} cantones</strong> de {provincia.nombre}.
           </span>
         </div>
 
         <Link
-          to="/participacion"
+          to="/noticias"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -375,18 +449,39 @@ export default function ProvinciaNoticias({ provincia }) {
             fontSize: '0.8rem',
             fontWeight: 700,
             color: '#FFFFFF',
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
+            backgroundColor: 'rgba(56, 189, 248, 0.15)',
+            border: '1px solid rgba(56, 189, 248, 0.3)',
             padding: '6px 14px',
             borderRadius: '8px',
             textDecoration: 'none',
             transition: 'background-color 0.15s ease'
           }}
         >
-          <span>Ir a Portal Cívico</span>
+          <span>Explorar Todo el Portal de Noticias</span>
           <ExternalLink size={13} />
         </Link>
       </div>
+
+      {/* Modales */}
+      <NoticiaDetalleModal
+        isOpen={modalDetalleAbierto}
+        onClose={() => setModalDetalleAbierto(false)}
+        noticia={noticiaSeleccionada}
+        onNoticiaActualizada={(actualizada) => {
+          setNoticiasReales((prev) => prev.map((n) => (n.id === actualizada.id ? actualizada : n)));
+          setNoticiaSeleccionada(actualizada);
+        }}
+      />
+
+      {tienePermisoEditor && (
+        <NoticiaFormModal
+          isOpen={modalFormAbierto}
+          onClose={() => setModalFormAbierto(false)}
+          onGuardado={() => {
+            cargarNoticias();
+          }}
+        />
+      )}
     </div>
   );
 }

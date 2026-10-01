@@ -21,6 +21,7 @@ import TurismoPage from '../pages/TurismoPage';
 import ParticipacionPage from '../pages/ParticipacionPage';
 import ItinerarioIAPage from '../pages/ItinerarioIAPage';
 import ForoPage from '../pages/ForoPage';
+import NoticiasPage from '../pages/NoticiasPage';
 
 /**
  * Enrutador principal de la aplicación Costa Rica Unidos
@@ -63,6 +64,9 @@ export default function Routing() {
         <Route path="/foro" element={<ForoPage />} />
         <Route path="/foro-tico" element={<ForoPage />} />
         <Route path="/itinerario-ia" element={<ItinerarioIAPage />} />
+        <Route path="/noticias" element={<NoticiasPage />} />
+        <Route path="/comunicados" element={<NoticiasPage />} />
+        <Route path="/noticias-municipales" element={<NoticiasPage />} />
 
         {/* Rutas Privadas Ciudadanas y Trámites (Cualquier Ciudadano Autenticado con Cédula/Contraseña) */}
         <Route element={<RoleRoute minLevel={1} />}>

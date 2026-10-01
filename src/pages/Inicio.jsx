@@ -18,7 +18,8 @@ import {
   CheckCircle2,
   ExternalLink,
   ChevronRight,
-  ShieldAlert
+  ShieldAlert,
+  Newspaper
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import ProvinciasSection from '../components/provincias/ProvinciasSection';
@@ -1254,6 +1255,15 @@ export default function Inicio() {
             }}
           >
             {[
+              {
+                id: 'modulo-noticias',
+                titulo: 'Noticias & Comunicados Municipales',
+                desc: 'Boletines oficiales de los 84 cantones, hilo de comentarios ciudadanos y verificación.',
+                icono: Newspaper,
+                color: '#34D399',
+                ruta: '/noticias',
+                badge: 'M01 Oficial'
+              },
               {
                 id: 'modulo-gis',
                 titulo: 'Visor Cartográfico 3D GIS',
