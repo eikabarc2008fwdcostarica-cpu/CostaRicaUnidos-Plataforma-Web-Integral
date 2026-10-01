@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Landmark, BarChart3, Leaf, Play, Pause } from 'lucide-react';
+import { Landmark, BarChart3, Leaf, Play, Pause, ArrowDown, ArrowRight, ArrowLeft } from 'lucide-react';
 
 const SLIDES = [
   {
@@ -266,7 +266,7 @@ export default function HeroCarousel({ onSelectSlideCta }) {
               aria-label={`${activeSlideData.ctaPrimary.text} - Ir a la sección`}
             >
               <span>{activeSlideData.ctaPrimary.text}</span>
-              <span aria-hidden="true">↓</span>
+              <ArrowDown size={14} aria-hidden="true" />
             </button>
 
             {activeSlideData.ctaSecondary.href ? (
@@ -277,10 +277,14 @@ export default function HeroCarousel({ onSelectSlideCta }) {
                   fontSize: '0.95rem',
                   padding: '0.85rem 1.5rem',
                   backgroundColor: 'rgba(0, 43, 127, 0.35)',
-                  borderColor: 'rgba(121, 166, 255, 0.3)'
+                  borderColor: 'rgba(121, 166, 255, 0.3)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
                 }}
               >
-                {activeSlideData.ctaSecondary.text} →
+                <span>{activeSlideData.ctaSecondary.text}</span>
+                <ArrowRight size={14} />
               </Link>
             ) : null}
           </div>
@@ -339,10 +343,14 @@ export default function HeroCarousel({ onSelectSlideCta }) {
             style={{
               padding: '0.45rem 0.85rem',
               borderRadius: '8px',
-              fontSize: '0.9rem'
+              fontSize: '0.9rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
             }}
           >
-            ← Ant.
+            <ArrowLeft size={13} />
+            <span>Ant.</span>
           </button>
           <button
             type="button"
@@ -352,10 +360,14 @@ export default function HeroCarousel({ onSelectSlideCta }) {
             style={{
               padding: '0.45rem 0.85rem',
               borderRadius: '8px',
-              fontSize: '0.9rem'
+              fontSize: '0.9rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
             }}
           >
-            Sig. →
+            <span>Sig.</span>
+            <ArrowRight size={13} />
           </button>
         </div>
 

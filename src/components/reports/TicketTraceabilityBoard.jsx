@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Copy, Check, MapPin, Building2, Construction, Lightbulb, Droplets, Trash2, AlertTriangle } from 'lucide-react';
+import { Search, Copy, Check, MapPin, Building2, Construction, Lightbulb, Droplets, Trash2, AlertTriangle, ArrowRight, Circle } from 'lucide-react';
 import { getTickets, buscarTicketPorId, ESTADOS_TICKET } from './ticketService';
 
 function getCategoryIcon(categoria, size = 18) {
@@ -223,7 +223,7 @@ export default function TicketTraceabilityBoard({
           </div>
 
           {/* BARRA DE PROGRESO VISUAL: 4 ESTADOS
-              1. Recibido ➔ 2. En Inspección ➔ 3. En Trámite ➔ 4. Solucionado */}
+              1. Recibido -> 2. En Inspección -> 3. En Trámite -> 4. Solucionado */}
           <div style={{ marginBottom: '2.5rem' }}>
             <div style={{
               display: 'flex',
@@ -298,7 +298,7 @@ export default function TicketTraceabilityBoard({
                         transition: 'all 0.3s ease'
                       }}
                     >
-                      {isPassed && !isCurrent ? '✓' : st.step}
+                      {isPassed && !isCurrent ? <Check size={16} strokeWidth={3} /> : st.step}
                     </div>
 
                     <div style={{ textAlign: 'center', marginTop: '0.6rem' }}>
@@ -312,9 +312,18 @@ export default function TicketTraceabilityBoard({
                       <div style={{
                         fontSize: '0.7rem',
                         color: isCurrent ? st.color : '#64748B',
-                        fontFamily: 'var(--font-telemetry)'
+                        fontFamily: 'var(--font-telemetry)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '4px'
                       }}>
-                        {isCurrent ? '● Fase Activa' : isPassed ? 'Completado' : 'Pendiente'}
+                        {isCurrent ? (
+                          <>
+                            <Circle size={6} fill="currentColor" />
+                            <span>Fase Activa</span>
+                          </>
+                        ) : isPassed ? 'Completado' : 'Pendiente'}
                       </div>
                     </div>
                   </div>
@@ -536,7 +545,9 @@ export default function TicketTraceabilityBoard({
                   borderTop: '1px solid rgba(255, 255, 255, 0.08)'
                 }}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><MapPin size={12} /> {ticket.canton}, {ticket.provincia}</span>
-                  <span style={{ color: '#79a6ff' }}>Ver Trazabilidad →</span>
+                  <span style={{ color: '#79a6ff', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    Ver Trazabilidad <ArrowRight size={13} />
+                  </span>
                 </div>
               </div>
             );

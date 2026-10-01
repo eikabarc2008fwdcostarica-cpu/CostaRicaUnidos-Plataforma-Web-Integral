@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Map, Landmark, Sparkles, ClipboardList } from 'lucide-react';
+import { Search, Map, Landmark, Sparkles, ClipboardList, X } from 'lucide-react';
 import { CANTONES_OFICIALES, PROVINCIAS_DATA, SERVICIOS_CIVICOS } from '../data/costaRicaTerritorialData';
 
 export default function PredictiveSearch({ onSelectResult }) {
@@ -239,15 +239,17 @@ export default function PredictiveSearch({ onSelectResult }) {
             }}
             aria-label="Borrar búsqueda"
             style={{
-              padding: '0.5rem 1rem',
+              padding: '0.5rem 0.8rem',
               backgroundColor: 'transparent',
               border: 'none',
               color: 'rgba(255, 255, 255, 0.6)',
-              fontSize: '1.1rem',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
-            ✕
+            <X size={16} />
           </button>
         )}
 

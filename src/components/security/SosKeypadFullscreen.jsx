@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Siren, Shield, Flame, HeartPulse, Scale, Maximize2, PhoneCall, Flashlight, Megaphone, MapPin, Check } from 'lucide-react';
+import { Siren, Shield, Flame, HeartPulse, Scale, Maximize2, PhoneCall, Flashlight, Megaphone, MapPin, Check, X } from 'lucide-react';
 
 export const SOS_NUMEROS = [
   {
@@ -292,7 +292,10 @@ export default function SosKeypadFullscreen() {
               style={{ padding: '0.65rem 1.4rem', fontSize: '1rem', fontWeight: 800 }}
               aria-label="Salir de la pantalla completa SOS"
             >
-              ✕ Cerrar Pantalla Completa
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <X size={16} />
+                <span>Cerrar Pantalla Completa</span>
+              </span>
             </button>
           </div>
 

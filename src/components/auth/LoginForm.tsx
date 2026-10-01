@@ -13,6 +13,21 @@ import { validateCitizenIdentity } from '../../services/haciendaService';
 import CivicButton from '../common/CivicButton';
 import CivicCard from '../common/CivicCard';
 import CivicBadge from '../common/CivicBadge';
+import {
+  Check,
+  AlertTriangle,
+  AlertCircle,
+  Building2,
+  Shield,
+  User,
+  Globe,
+  Lock,
+  XCircle,
+  Search,
+  ChevronDown,
+  ChevronUp,
+  Info
+} from 'lucide-react';
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -80,17 +95,17 @@ export default function LoginForm() {
         setSegundoApellido(res.segundoApellido);
         setHaciendaVerified(true);
         setIdentityStatus('VERIFICADO_HACIENDA');
-        setHaciendaMessage('✓ Identidad oficial verificada y certificada ante el Ministerio de Hacienda');
+        setHaciendaMessage('Identidad oficial verificada y certificada ante el Ministerio de Hacienda');
       } else {
         // Fallback contingente -> Permitir edición manual pero marcar como pendiente
         setHaciendaVerified(false);
         setIdentityStatus('PENDIENTE_VERIFICACION');
-        setHaciendaMessage('⚠️ Identificación no encontrada en Hacienda. Ingrese sus datos en modo contingencia.');
+        setHaciendaMessage('Identificación no encontrada en Hacienda. Ingrese sus datos en modo contingencia.');
       }
     } catch (_err) {
       setHaciendaVerified(false);
       setIdentityStatus('PENDIENTE_VERIFICACION');
-      setHaciendaMessage('⚠️ Error de red con Hacienda. Ingrese sus datos en modo contingencia.');
+      setHaciendaMessage('Error de red con Hacienda. Ingrese sus datos en modo contingencia.');
     } finally {
       setIsValidatingHacienda(false);
     }
@@ -208,7 +223,7 @@ export default function LoginForm() {
         setSegundoApellido(res.segundoApellido);
         setHaciendaVerified(true);
         setIdentityStatus('VERIFICADO_HACIENDA');
-        setHaciendaMessage('✓ Identidad oficial verificada ante el Ministerio de Hacienda');
+        setHaciendaMessage('Identidad oficial verificada ante el Ministerio de Hacienda');
       }
     }, 50);
   };
@@ -284,7 +299,7 @@ export default function LoginForm() {
             gap: '4px'
           }}
         >
-          <span style={{ fontSize: '1.1rem' }}>🇨🇷</span>
+          <User className="w-5 h-5" style={{ color: selectedRole === 'CIUDADANO_TURISTA' ? '#FFFFFF' : '#79a6ff' }} />
           <span>Ciudadano / Turista</span>
         </button>
 
@@ -310,7 +325,7 @@ export default function LoginForm() {
             gap: '4px'
           }}
         >
-          <span style={{ fontSize: '1.1rem' }}>🏛️</span>
+          <Building2 className="w-5 h-5" style={{ color: selectedRole === 'ADMIN_PROVINCIAL' ? '#181818' : '#FFC700' }} />
           <span>Admin Provincial</span>
         </button>
 
@@ -336,7 +351,7 @@ export default function LoginForm() {
             gap: '4px'
           }}
         >
-          <span style={{ fontSize: '1.1rem' }}>🛡️</span>
+          <Shield className="w-5 h-5" style={{ color: '#FFFFFF' }} />
           <span>Super Admin</span>
         </button>
       </div>
@@ -366,10 +381,25 @@ export default function LoginForm() {
           }`
         }}
       >
-        <span>
-          {selectedRole === 'CIUDADANO_TURISTA' && '👤 Perfil Ciudadano de Persona Física: Votaciones, trámites, mapas y consultas cívicas.'}
-          {selectedRole === 'ADMIN_PROVINCIAL' && '🏛️ Gobierno Local: Publicaciones institucionales, moderación cantonal y gestión municipal.'}
-          {selectedRole === 'SUPER_ADMIN_NACIONAL' && '🛡️ Control Total Nacional: Gestión exclusiva para las 2 identidades acreditadas de la plataforma.'}
+        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {selectedRole === 'CIUDADANO_TURISTA' && (
+            <>
+              <User className="w-4 h-4 text-blue-400" style={{ flexShrink: 0 }} />
+              <span>Perfil Ciudadano de Persona Física: Votaciones, trámites, mapas y consultas cívicas.</span>
+            </>
+          )}
+          {selectedRole === 'ADMIN_PROVINCIAL' && (
+            <>
+              <Building2 className="w-4 h-4 text-amber-400" style={{ flexShrink: 0 }} />
+              <span>Gobierno Local: Publicaciones institucionales, moderación cantonal y gestión municipal.</span>
+            </>
+          )}
+          {selectedRole === 'SUPER_ADMIN_NACIONAL' && (
+            <>
+              <Shield className="w-4 h-4 text-red-400" style={{ flexShrink: 0 }} />
+              <span>Control Total Nacional: Gestión exclusiva para las 2 identidades acreditadas de la plataforma.</span>
+            </>
+          )}
         </span>
       </div>
 
@@ -389,7 +419,7 @@ export default function LoginForm() {
             gap: '8px'
           }}
         >
-          <span>⛔</span>
+          <XCircle className="w-4 h-4 text-red-400" style={{ flexShrink: 0 }} />
           <span>{formError || authError}</span>
         </div>
       )}
@@ -453,7 +483,14 @@ export default function LoginForm() {
               isLoading={isValidatingHacienda}
               style={{ minWidth: '130px', height: '46px', fontSize: '0.82rem' }}
             >
-              {isValidatingHacienda ? 'Consultando...' : '🔍 Validar Cédula'}
+              {isValidatingHacienda ? (
+                'Consultando...'
+              ) : (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                  <Search className="w-3.5 h-3.5" />
+                  <span>Validar Cédula</span>
+                </span>
+              )}
             </CivicButton>
           </div>
 
@@ -469,6 +506,11 @@ export default function LoginForm() {
                 gap: '6px'
               }}
             >
+              {haciendaVerified ? (
+                <Check className="w-3.5 h-3.5 text-emerald-400" style={{ flexShrink: 0 }} />
+              ) : (
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" style={{ flexShrink: 0 }} />
+              )}
               <span>{haciendaMessage}</span>
             </div>
           )}
@@ -482,8 +524,9 @@ export default function LoginForm() {
                 Nombre(s)
               </label>
               {haciendaVerified && (
-                <span style={{ fontSize: '0.75rem', color: '#00D084', fontWeight: 600 }}>
-                  🔒 Protegido por Hacienda
+                <span style={{ fontSize: '0.75rem', color: '#00D084', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <Lock className="w-3 h-3" />
+                  <span>Protegido por Hacienda</span>
                 </span>
               )}
             </div>
@@ -680,7 +723,7 @@ export default function LoginForm() {
                   transition: 'all 0.2s'
                 }}
               >
-                <span>🇨🇷</span>
+                <User className="w-4 h-4" />
                 <span>Ciudadano Residente</span>
               </button>
 
@@ -703,7 +746,7 @@ export default function LoginForm() {
                   transition: 'all 0.2s'
                 }}
               >
-                <span>🌍</span>
+                <Globe className="w-4 h-4" />
                 <span>Turista / Visitante</span>
               </button>
             </div>
@@ -799,8 +842,9 @@ export default function LoginForm() {
               />
             </div>
 
-            <p style={{ margin: '0.6rem 0 0', fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.7)' }}>
-              ℹ️ Redirección obligatoria: Al autenticarse, será dirigido directamente al panel de gestión de su municipalidad.
+            <p style={{ margin: '0.6rem 0 0', fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.7)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <Info className="w-3.5 h-3.5 text-amber-400" style={{ flexShrink: 0 }} />
+              <span>Redirección obligatoria: Al autenticarse, será dirigido directamente al panel de gestión de su municipalidad.</span>
             </p>
           </div>
         )}
@@ -817,8 +861,9 @@ export default function LoginForm() {
             }}
           >
             <div style={{ marginBottom: '0.8rem' }}>
-              <span style={{ fontSize: '0.76rem', color: '#FF8A8A', fontWeight: 700, display: 'block' }}>
-                ⚠️ ACREDITACIÓN RESTRINGIDA A 2 PERSONAS NACIONALES
+              <span style={{ fontSize: '0.76rem', color: '#FF8A8A', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <AlertCircle className="w-4 h-4 text-red-400" style={{ flexShrink: 0 }} />
+                <span>ACREDITACIÓN RESTRINGIDA A 2 PERSONAS NACIONALES</span>
               </span>
               <p style={{ margin: '0.2rem 0 0.6rem', fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.7)' }}>
                 Cédulas autorizadas: 118880999 (Alanie) ó 207770888 (Eiker).
@@ -897,7 +942,17 @@ export default function LoginForm() {
             width: '100%'
           }}
         >
-          <span>{showDemoCredentials ? '▲ Ocultar Credenciales de Demostración' : '▼ Cargar Credenciales de Prueba Rápida'}</span>
+          {showDemoCredentials ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <ChevronUp className="w-3.5 h-3.5" />
+              <span>Ocultar Credenciales de Demostración</span>
+            </span>
+          ) : (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <ChevronDown className="w-3.5 h-3.5" />
+              <span>Cargar Credenciales de Prueba Rápida</span>
+            </span>
+          )}
         </button>
 
         {showDemoCredentials && (
@@ -923,7 +978,10 @@ export default function LoginForm() {
                 textAlign: 'left'
               }}
             >
-              🇨🇷 Ciudadano: 118880999
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                <User className="w-3 h-3 text-blue-400" />
+                <span>Ciudadano: 118880999</span>
+              </span>
             </button>
 
             <button
@@ -940,7 +998,10 @@ export default function LoginForm() {
                 textAlign: 'left'
               }}
             >
-              🌍 Turista DIMEX: 123456789012
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                <Globe className="w-3 h-3 text-emerald-400" />
+                <span>Turista DIMEX: 123456789012</span>
+              </span>
             </button>
 
             <button
@@ -957,7 +1018,10 @@ export default function LoginForm() {
                 textAlign: 'left'
               }}
             >
-              🏛️ Admin San José: 101110222
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                <Building2 className="w-3 h-3 text-amber-400" />
+                <span>Admin San José: 101110222</span>
+              </span>
             </button>
 
             <button
@@ -974,7 +1038,10 @@ export default function LoginForm() {
                 textAlign: 'left'
               }}
             >
-              🛡️ Super Admin: 207770888
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                <Shield className="w-3 h-3 text-red-400" />
+                <span>Super Admin: 207770888</span>
+              </span>
             </button>
           </div>
         )}

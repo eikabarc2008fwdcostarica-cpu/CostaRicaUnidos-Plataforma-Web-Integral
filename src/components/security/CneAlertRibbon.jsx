@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 export const CNE_ALERT_LEVELS = {
   verde: {
@@ -154,10 +155,14 @@ export default function CneAlertRibbon({ currentAlert = 'amarilla', onAlertChang
               padding: '0.2rem 0.55rem',
               fontSize: '0.7rem',
               borderRadius: '6px',
-              fontFamily: 'var(--font-telemetry)'
+              fontFamily: 'var(--font-telemetry)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '3px'
             }}
           >
-            Simular Alerta ▾
+            <span>Simular Alerta</span>
+            <ChevronDown size={11} />
           </button>
 
           {showSelector && (
