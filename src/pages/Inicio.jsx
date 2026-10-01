@@ -21,6 +21,7 @@ import {
   ShieldAlert
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import ProvinciasSection from '../components/provincias/ProvinciasSection';
 import { useLanguage } from '../context/LanguageContext';
 import { CANTONES_OFICIALES } from '../data/costaRicaTerritorialData';
 
@@ -1399,6 +1400,12 @@ export default function Inicio() {
           </div>
         </section>
       </main>
+
+      {/* ==========================================================================
+          MÓDULO TERRITORIAL — LAS 7 PROVINCIAS DE COSTA RICA (PRE-FOOTER)
+          Scaffolding modular: Noticias, Foro, Mapa & GIS y Comercio Local
+          ========================================================================== */}
+      <ProvinciasSection />
 
       {/* ==========================================================================
           5. PIE DE PÁGINA (FOOTER) INSTITUCIONAL SOBERANO

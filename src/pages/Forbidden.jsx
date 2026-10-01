@@ -1,21 +1,30 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ShieldAlert, LogIn, ArrowLeft, Lock, FileCheck2, ShieldCheck, KeyRound } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ShieldAlert, LogIn, ArrowLeft, Lock, FileCheck2, ShieldCheck, KeyRound, LayoutDashboard } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Logo from '../components/common/Logo';
 import { useTheme } from '../context/ThemeContext';
 
 /**
- * PANTALLA OFICIAL ERROR 403 — ACCESO RESTRINGIDO (NIVEL 2)
+ * PANTALLA OFICIAL ERROR 403 — ACCESO RESTRINGIDO
  * Arquitectura Sovereign Civic Glass • República de Costa Rica
- * Marco de Autenticación de Cédula y Firma Digital Gaudi (Art. 13 Código Municipal)
+ * Marco de Autenticación de Cédula y Acceso Cívico Garantizado
  * Adaptación total a Modo Claro (Sede Electrónica) y Modo Oscuro (Obsidiana)
  * Optimizado para pantallas móviles (360px - 480px)
  */
 export default function Forbidden() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme } = useTheme();
   const isLight = theme === 'light';
+
+  const fromLocation = location.state?.from;
+  const redirectTarget =
+    typeof fromLocation === 'string'
+      ? fromLocation
+      : fromLocation?.pathname
+      ? fromLocation.pathname + (fromLocation.search || '')
+      : null;
 
   return (
     <div
@@ -119,7 +128,7 @@ export default function Forbidden() {
               letterSpacing: '-0.01em'
             }}
           >
-            Se Requiere Verificación Ciudadana Nivel 2
+            Acceso Institucional Restringido
           </h1>
 
           {/* Explicación Legal & Cívica */}
@@ -132,7 +141,7 @@ export default function Forbidden() {
               margin: '0 auto 2rem auto'
             }}
           >
-            Para ejercer el voto vinculante de presupuestos participativos o radicar audiencias ante el Concejo Municipal, se requiere autenticación con Cédula verificada o Firma Digital Gaudi (Art. 13 del Código Municipal).
+            Para acceder a trámites ciudadanos, presupuestos participativos y audiencias, su autenticación oficial con <strong>Cédula de Identidad y contraseña</strong> le brinda acceso completo e inmediato. La Firma Digital Gaudi es puramente complementaria y opcional (Ley N° 8454), nunca un requisito bloqueante.
           </p>
 
           {/* Panel Informativo de Requisitos de Seguridad Cívica */}
@@ -152,7 +161,7 @@ export default function Forbidden() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
               <Lock size={16} color={isLight ? '#002B7F' : '#79A6FF'} />
               <span style={{ fontSize: '0.8rem', fontWeight: 800, color: isLight ? '#0F172A' : '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Protocolo de Autenticación Requerido
+                Protocolo de Acceso Ciudadano
               </span>
             </div>
 
@@ -168,13 +177,13 @@ export default function Forbidden() {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
                 <KeyRound size={15} color="#34D399" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <span>
-                  <strong>Cédula de Identidad TSE:</strong> Validación biométrica y registro activo en el padrón cantonal.
+                  <strong>Cédula de Identidad Oficial:</strong> Acceso estándar garantizado con número de cédula y contraseña registrada.
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem' }}>
                 <ShieldCheck size={15} color="#38BDF8" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <span>
-                  <strong>Firma Digital Gaudi:</strong> Certificado digital calificado según Ley N° 8454.
+                  <strong>Firma Digital Gaudi (Opcional):</strong> Mecanismo complementario para actos notariales y funcionarios de nivel de mando.
                 </span>
               </div>
             </div>
@@ -193,6 +202,7 @@ export default function Forbidden() {
             {/* Botón 1: Iniciar Sesión con Cédula */}
             <Link
               to="/login"
+              state={{ from: redirectTarget || fromLocation }}
               className="btn-sovereign"
               style={{
                 minHeight: '48px',
@@ -211,7 +221,31 @@ export default function Forbidden() {
               <span>Iniciar Sesión con Cédula</span>
             </Link>
 
-            {/* Botón 2: Volver a la Página Anterior */}
+            {/* Botón 2: Ir a Trámites Ciudadanos */}
+            <Link
+              to="/dashboard"
+              className="btn-glass-secondary"
+              style={{
+                minHeight: '48px',
+                padding: '0.75rem 1.5rem',
+                fontSize: '0.92rem',
+                fontWeight: 700,
+                flex: '1 1 220px',
+                maxWidth: '280px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textDecoration: 'none',
+                color: isLight ? '#0F172A' : '#FFFFFF',
+                backgroundColor: isLight ? 'rgba(0, 20, 137, 0.06)' : 'rgba(255, 255, 255, 0.08)',
+                borderColor: isLight ? 'rgba(0, 20, 137, 0.2)' : 'rgba(255, 255, 255, 0.2)'
+              }}
+            >
+              <LayoutDashboard className="w-4 h-4 mr-2" />
+              <span>Ir a Sede Electrónica</span>
+            </Link>
+
+            {/* Botón 3: Volver a la Página Anterior */}
             <button
               type="button"
               onClick={() => navigate(-1)}
