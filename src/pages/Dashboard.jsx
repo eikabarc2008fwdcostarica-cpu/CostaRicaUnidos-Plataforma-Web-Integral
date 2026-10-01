@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import dbClient from '../services/dbClient';
@@ -45,9 +45,9 @@ import {
   Image as ImageIcon,
   Wrench,
   X,
-  Camera
+  Camera,
+  Home
 } from 'lucide-react';
-import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 import { useCivicModal } from '../context/CivicModalContext';
 import { getDb } from '../services/dbService';
@@ -1096,16 +1096,17 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#00040D] text-slate-100 flex flex-col selection:bg-sky-500 selection:text-slate-950 font-sans">
-      <Navbar />
+      {/* Si el usuario es administrador, NO renderices <Navbar /> */}
+      {/* La vista del Admin comienza directamente con su Consola de Mando y Sidebar lateral */}
 
-      {/* Notificación Toast Flotante - Reubicada en la esquina superior derecha */}
+      {/* Notificación Toast Flotante */}
       {toastMessage && (
         <div 
           style={{
             position: 'fixed',
-            top: '5.5rem',        // 88px, justo debajo del Navbar
-            right: '1.5rem',       // 24px del borde derecho
-            zIndex: 9999,          // Siempre por encima de cualquier contenido
+            top: '1.5rem',
+            right: '1.5rem',
+            zIndex: 9999,
             display: 'flex',
             flexDirection: 'column',
             gap: '0.75rem',
@@ -1124,12 +1125,12 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Barra Institucional Soberanía Cívica Digital - Anclada debajo del Navbar */}
+      {/* Barra Institucional Soberanía Cívica Digital - Anclada en la parte superior de la Consola */}
       <div 
         style={{
           position: 'sticky',
-          top: '68px',           // Altura exacta del Navbar
-          zIndex: 30,            // Debajo del Navbar pero sobre las tablas
+          top: 0,
+          zIndex: 30,
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)'
         }}
@@ -1170,7 +1171,7 @@ export default function Dashboard() {
         <aside
           className={`${
             sidebarColapsado ? 'w-20' : 'w-64'
-          } transition-all duration-300 border-r border-white/10 bg-[#00040D]/90 backdrop-blur-xl flex flex-col justify-between p-4 shrink-0 sticky top-28 h-[calc(100vh-112px)] z-20`}
+          } transition-all duration-300 border-r border-white/10 bg-[#00040D]/90 backdrop-blur-xl flex flex-col justify-between p-4 shrink-0 sticky top-[53px] h-[calc(100vh-53px)] z-20`}
         >
           {/* Sección Superior: Encabezado y Navegación de Módulos */}
           <div className="space-y-6">
@@ -1251,23 +1252,34 @@ export default function Dashboard() {
             </nav>
           </div>
 
-          {/* Sección Inferior: Pie Institucional */}
-          <div className="pt-4 border-t border-white/10">
-            {!sidebarColapsado ? (
-              <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1">
-                <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-300">
-                  <Shield className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" strokeWidth={1.75} />
-                  <span className="truncate">Soberanía Cívica Digital</span>
-                </div>
-                <p className="text-[10px] text-slate-500 leading-tight">
-                  Control de acceso RBAC bajo Ley N° 8292.
-                </p>
-              </div>
-            ) : (
-              <div className="flex justify-center" title="Soberanía Cívica Digital • Ley N° 8292">
-                <div className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-slate-400">
-                  <Shield className="w-4 h-4 text-sky-400" strokeWidth={1.75} />
-                </div>
+          {/* Sección Inferior: Navegación Pública y Cierre de Sesión */}
+          <div className="pt-3 border-t border-white/10 space-y-1.5">
+            <Link
+              to="/"
+              title={sidebarColapsado ? "Ir al Portal Público" : undefined}
+              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors ${
+                sidebarColapsado ? 'justify-center px-0' : ''
+              }`}
+            >
+              <Home className="w-4 h-4 text-sky-400 flex-shrink-0" />
+              <span>{!sidebarColapsado && "Ir al Portal Público"}</span>
+            </Link>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              title={sidebarColapsado ? "Cerrar Sesión Segura" : undefined}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors cursor-pointer ${
+                sidebarColapsado ? 'justify-center px-0' : ''
+              }`}
+            >
+              <LogOut className="w-4 h-4 text-red-400 flex-shrink-0" strokeWidth={1.75} />
+              <span>{!sidebarColapsado && "Cerrar Sesión"}</span>
+            </button>
+
+            {!sidebarColapsado && (
+              <div className="px-3 pt-1 text-[10px] text-slate-500 leading-tight">
+                Control de acceso RBAC bajo Ley N° 8292.
               </div>
             )}
           </div>
@@ -1309,7 +1321,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Ficha del Administrador & Botón de Salida */}
+            {/* Ficha del Administrador (Limpia, sin botón redundante) */}
             <div className="flex flex-wrap items-center gap-3 bg-white/[0.04] p-3.5 rounded-2xl border border-white/10">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-900/40 border border-blue-500/40 flex items-center justify-center text-blue-300 font-bold">
@@ -1336,16 +1348,6 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="ml-auto lg:ml-2 py-2 px-3.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-300 text-xs font-bold flex items-center gap-1.5 transition-colors"
-                title="Cerrar sesión administrativa segura"
-              >
-                <LogOut className="w-3.5 h-3.5" strokeWidth={1.75} />
-                <span>Cerrar Sesión</span>
-              </button>
             </div>
           </div>
         </div>
