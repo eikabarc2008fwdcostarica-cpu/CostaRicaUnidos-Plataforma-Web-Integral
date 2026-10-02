@@ -34,44 +34,72 @@ const normalizarRolOficial = (rol) => {
   return 'CIUDADANO';
 };
 
+import dbSeed from '../services/db.json';
+
 // ----------------------------------------------------------------------------
 // Registros Oficiales de db.json integrados de forma segura e inmutable
 // ----------------------------------------------------------------------------
-const REGISTROS_DB = [
-  {
-    id: "USR-NAC-001",
-    cedula: "1-0000-0001",
-    nombre: "Superintendencia Nacional de Gobierno Digital",
-    correo: "admin.nacional@gob.cr",
-    password: "Admin123*",
-    rol: "Super Administrador Nacional",
-    nivelAcceso: 5,
-    provincia: "Nacional",
-    canton: "Todas las Municipalidades"
-  },
-  {
-    id: "USR-TER-006",
-    cedula: "6-0123-0456",
-    nombre: "Coordinación Territorial Puntarenas",
-    correo: "gobierno.territorial@gob.cr",
-    password: "Territorial2026*",
-    rol: "Gestor Territorial y Municipal",
-    nivelAcceso: 4,
-    provincia: "Puntarenas",
-    canton: "Puntarenas"
-  },
-  {
-    id: "USR-CIU-001",
-    cedula: "6-0509-0727",
-    nombre: "Eiker Manuel Abarca Murillo",
-    correo: "eiker.abarca@gmail.com",
-    password: "Ciudadano2026*",
-    rol: "Ciudadano Residente",
-    nivelAcceso: 2,
-    provincia: "Puntarenas",
-    canton: "Puntarenas"
-  }
-];
+const REGISTROS_DB = Array.isArray(dbSeed?.usuarios) && dbSeed.usuarios.length > 0
+  ? [
+      ...dbSeed.usuarios,
+      {
+        id: "USR-EMP-002",
+        cedula: "3-102-456123",
+        nombre: "Valeria Chaves Monge",
+        correo: "valeria.chaves@ujarras.cr",
+        password: "Empresa2026*",
+        rol: "Ciudadano Residente",
+        nivelAcceso: 2,
+        provincia: "Cartago",
+        canton: "Cartago"
+      }
+    ].filter((u, index, self) => index === self.findIndex((t) => t.cedula === u.cedula))
+  : [
+      {
+        id: "USR-NAC-001",
+        cedula: "1-0000-0001",
+        nombre: "Superintendencia Nacional de Gobierno Digital",
+        correo: "admin.nacional@gob.cr",
+        password: "Admin123*",
+        rol: "Super Administrador Nacional",
+        nivelAcceso: 5,
+        provincia: "Nacional",
+        canton: "Todas las Municipalidades"
+      },
+      {
+        id: "USR-TER-006",
+        cedula: "6-0123-0456",
+        nombre: "Coordinación Territorial Puntarenas",
+        correo: "gobierno.territorial@gob.cr",
+        password: "Territorial2026*",
+        rol: "Gestor Territorial y Municipal",
+        nivelAcceso: 4,
+        provincia: "Puntarenas",
+        canton: "Puntarenas"
+      },
+      {
+        id: "USR-CIU-001",
+        cedula: "1-1823-0456",
+        nombre: "Eiker Manuel Abarca Murillo",
+        correo: "eiker.abarca@gmail.com",
+        password: "Ciudadano2026*",
+        rol: "Ciudadano Residente",
+        nivelAcceso: 2,
+        provincia: "San José",
+        canton: "San José"
+      },
+      {
+        id: "USR-EMP-002",
+        cedula: "3-102-456123",
+        nombre: "Valeria Chaves Monge",
+        correo: "valeria.chaves@ujarras.cr",
+        password: "Empresa2026*",
+        rol: "Ciudadano Residente",
+        nivelAcceso: 2,
+        provincia: "Cartago",
+        canton: "Cartago"
+      }
+    ];
 
 // ----------------------------------------------------------------------------
 // Iconos Vectoriales Nativos en Línea (Sin dependencias externas)
@@ -464,13 +492,23 @@ export default function Login() {
       if (res && res.success !== false) {
         const userRolNorm = normalizarRolOficial(usuarioEncontrado.rol);
 
-        // Redirección automática según el rol
+        // Guardar usuario y token en almacenamiento local de forma redundante y segura
+        try {
+          localStorage.setItem('cru_user_session', JSON.stringify(usuarioEncontrado));
+          localStorage.setItem('cr_sesion_activa', JSON.stringify(usuarioEncontrado));
+          localStorage.setItem('cru_token', 'TOKEN_SOBERANO_' + (usuarioEncontrado.id || 'SESSION'));
+          localStorage.removeItem('cr_sesion_cerrada');
+        } catch (e) {
+          console.warn('Error al persistir sesión en localStorage:', e);
+        }
+
+        // Redirección automática según el rol: El ciudadano ingresa a la página principal cívica ('/')
         if (userRolNorm === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL) {
-          navigate('/admin/super');
+          navigate('/admin/super', { replace: true });
         } else if (userRolNorm === ROLES_SISTEMA.GESTOR_TERRITORIAL) {
-          navigate('/admin/territorial');
+          navigate('/admin/territorial', { replace: true });
         } else {
-          navigate('/dashboard');
+          navigate('/', { replace: true });
         }
       } else {
         setError(
@@ -535,26 +573,45 @@ export default function Login() {
       });
 
       if (res && res.success !== false) {
-        if (typeof logout === 'function') {
-          logout();
+        // Inicializar sesión ciudadana inmediata
+        const nuevoCiudadano = {
+          id: `USR-CIU-${Date.now()}`,
+          cedula: cleanCedula,
+          nombre: nombreCompleto,
+          primerApellido: cleanPrimerApellido,
+          segundoApellido: cleanSegundoApellido,
+          correo: cleanEmail,
+          email: cleanEmail,
+          password: cleanPass,
+          rol: 'Ciudadano Residente',
+          rolOficial: 'CIUDADANO',
+          nivelAcceso: 2,
+          provincia: 'Puntarenas',
+          canton: 'Puntarenas',
+          distrito: 'Puntarenas',
+          verificadoHacienda: isHaciendaVerified,
+          token: `TOKEN_SOBERANO_${Date.now()}`
+        };
+
+        try {
+          localStorage.setItem('cru_user_session', JSON.stringify(nuevoCiudadano));
+          localStorage.setItem('cr_sesion_activa', JSON.stringify(nuevoCiudadano));
+          localStorage.setItem('cru_token', nuevoCiudadano.token);
+          localStorage.removeItem('cr_sesion_cerrada');
+        } catch (e) {
+          console.warn('Error al guardar sesión de nuevo ciudadano:', e);
+        }
+
+        if (typeof login === 'function') {
+          await login(nuevoCiudadano);
         }
 
         setSuccessMsg(
-          '¡Cuenta ciudadana creada exitosamente! Ahora puede iniciar sesión con su identificación y contraseña.'
+          '¡Cuenta ciudadana creada exitosamente! Ingresando al portal principal cívico...'
         );
-        setIdentificador(cleanCedula || cleanEmail);
-        setPassword('');
-        setRegCedula('');
-        setRegNombres('');
-        setRegPrimerApellido('');
-        setRegSegundoApellido('');
-        setRegEmail('');
-        setRegPassword('');
-        setRegConfirmPassword('');
-        setIsHaciendaVerified(false);
-        setHaciendaSuccess('');
-        setHaciendaError('');
-        setAuthMode('login');
+
+        // Redirección inmediata a la página principal cívica ('/')
+        navigate('/', { replace: true });
       } else {
         setError(
           res?.mensaje ||

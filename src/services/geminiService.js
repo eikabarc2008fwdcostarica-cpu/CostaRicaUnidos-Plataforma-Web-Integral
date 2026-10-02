@@ -8,21 +8,27 @@
  */
 
 // Modelos soportados (prioriza la versión Flash ultrarrápida para baja latencia en voz)
-const GEMINI_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash'];
-const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+export const GEMINI_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.5-flash'];
+export const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 /**
  * Obtiene la API Key de Gemini configurada en el entorno o en localStorage
+ * Prioridad: import.meta.env.VITE_GEMINI_API_KEY > window.ENV.VITE_GEMINI_API_KEY > localStorage
  */
 export function getGeminiApiKey() {
   try {
+    // 1. Variable de entorno Vite o inyección en runtime (window.ENV)
+    const envKey =
+      (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY)) ||
+      (typeof window !== 'undefined' && (window.ENV?.VITE_GEMINI_API_KEY || window.ENV?.GEMINI_API_KEY));
+    if (envKey && typeof envKey === 'string' && envKey.trim()) {
+      return envKey.trim();
+    }
+
+    // 2. Almacenamiento local (localStorage)
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('gemini_api_key') || localStorage.getItem('VITE_GEMINI_API_KEY');
       if (stored && stored.trim()) return stored.trim();
-    }
-    if (typeof import.meta !== 'undefined' && import.meta.env) {
-      const envKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY;
-      if (envKey && envKey.trim()) return envKey.trim();
     }
   } catch (e) {
     console.warn('[GeminiService] Error al leer API Key:', e);
@@ -37,6 +43,7 @@ export function setGeminiApiKey(key) {
   try {
     if (!key || !key.trim()) {
       localStorage.removeItem('gemini_api_key');
+      localStorage.removeItem('VITE_GEMINI_API_KEY');
     } else {
       localStorage.setItem('gemini_api_key', key.trim());
     }

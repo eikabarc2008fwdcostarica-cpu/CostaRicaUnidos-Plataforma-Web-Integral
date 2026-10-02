@@ -45,40 +45,65 @@ export default function TurismoPage() {
   const [logisticaFiltro, setLogisticaFiltro] = useState<LogisticaFiltro>('todos');
   const [geojsonCopiado, setGeojsonCopiado] = useState(false);
   const [mostrarGeoJsonModal, setMostrarGeoJsonModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Manejo defensivo de dataset base de destinos
+  const destinosBase = useMemo(() => {
+    return Array.isArray(DESTINOS_TURISTICOS_DATA) ? DESTINOS_TURISTICOS_DATA : [];
+  }, []);
 
   // Lista dinámica de cantones disponibles en el dataset
   const cantonesDisponibles = useMemo(() => {
-    return Array.from(new Set(DESTINOS_TURISTICOS_DATA.map((d) => d.canton))).sort();
-  }, []);
+    if (!Array.isArray(destinosBase)) return [];
+    return Array.from(new Set(destinosBase.map((d) => d?.canton).filter(Boolean))).sort();
+  }, [destinosBase]);
 
-  // Filtrado reactivo de destinos por texto, categoría, cantón y accesibilidad
+  // Filtrado reactivo de destinos por texto, categoría, cantón y accesibilidad con protección defensiva
   const destinosFiltrados = useMemo(() => {
-    return DESTINOS_TURISTICOS_DATA.filter((dest) => {
+    if (!Array.isArray(destinosBase)) return [];
+    return destinosBase.filter((dest) => {
+      if (!dest) return false;
+      const nom = (dest.nombre || '').toLowerCase();
+      const desc = (dest.descripcion || '').toLowerCase();
+      const dist = (dest.distrito || '').toLowerCase();
+      const cant = (dest.canton || '').toLowerCase();
+      const prov = (dest.provincia || '').toLowerCase();
+      const query = (busqueda || '').toLowerCase().trim();
+
       const matchTexto =
-        dest.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-        dest.descripcion.toLowerCase().includes(busqueda.toLowerCase()) ||
-        dest.distrito.toLowerCase().includes(busqueda.toLowerCase()) ||
-        dest.canton.toLowerCase().includes(busqueda.toLowerCase()) ||
-        dest.provincia.toLowerCase().includes(busqueda.toLowerCase());
+        !query ||
+        nom.includes(query) ||
+        desc.includes(query) ||
+        dist.includes(query) ||
+        cant.includes(query) ||
+        prov.includes(query);
 
       const matchCategoria =
         categoriaActiva === 'todas' || dest.categoria === categoriaActiva;
 
       const matchCanton =
-        cantonFiltro === 'todos' || dest.canton.toLowerCase() === cantonFiltro.toLowerCase();
+        cantonFiltro === 'todos' || cant === cantonFiltro.toLowerCase();
 
+      const badges = Array.isArray(dest.badgesAccesibilidad) ? dest.badgesAccesibilidad : [];
       const matchLogistica =
-        logisticaFiltro === 'todos' || dest.badgesAccesibilidad.includes(logisticaFiltro as AccessibilityBadgeType);
+        logisticaFiltro === 'todos' || badges.includes(logisticaFiltro as AccessibilityBadgeType);
 
       return matchTexto && matchCategoria && matchCanton && matchLogistica;
     });
-  }, [busqueda, categoriaActiva, cantonFiltro, logisticaFiltro]);
+  }, [destinosBase, busqueda, categoriaActiva, cantonFiltro, logisticaFiltro]);
 
   const copiarGeoJson = () => {
-    const geojson = JSON.stringify(getGeoJsonTurismoPOI(), null, 2);
-    navigator.clipboard.writeText(geojson);
-    setGeojsonCopiado(true);
-    setTimeout(() => setGeojsonCopiado(false), 2500);
+    try {
+      const data = typeof getGeoJsonTurismoPOI === 'function' ? getGeoJsonTurismoPOI() : { type: 'FeatureCollection', features: [] };
+      const geojson = JSON.stringify(data, null, 2);
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(geojson);
+      }
+      setGeojsonCopiado(true);
+      setTimeout(() => setGeojsonCopiado(false), 2500);
+    } catch (err) {
+      console.warn('Error al copiar GeoJSON:', err);
+    }
   };
 
   const irAPlanificadorIA = () => {
@@ -364,8 +389,25 @@ export default function TurismoPage() {
           </div>
         </div>
 
-        {/* Grilla de Destinos */}
-        {destinosFiltrados.length === 0 ? (
+        {/* Grilla de Destinos con Soporte de Esqueleto de Carga */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((sk) => (
+              <div
+                key={sk}
+                className="h-96 rounded-2xl bg-white/[0.04] border border-white/10 animate-pulse p-4 flex flex-col justify-between"
+              >
+                <div className="h-48 rounded-xl bg-white/10" />
+                <div className="space-y-3 mt-4">
+                  <div className="h-4 w-3/4 rounded bg-white/10" />
+                  <div className="h-3 w-full rounded bg-white/5" />
+                  <div className="h-3 w-2/3 rounded bg-white/5" />
+                </div>
+                <div className="h-8 rounded-lg bg-white/5 mt-4" />
+              </div>
+            ))}
+          </div>
+        ) : destinosFiltrados.length === 0 ? (
           <div className="py-16 text-center rounded-2xl bg-white/[0.02] border border-white/5 space-y-3">
             <Compass size={40} className="mx-auto text-slate-500" />
             <p className="text-slate-400 text-base">

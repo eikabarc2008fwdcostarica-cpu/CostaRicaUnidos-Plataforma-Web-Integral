@@ -391,11 +391,11 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
       // Ciudadano va SIEMPRE al portal ciudadano cívico (/portal-ciudadano o /)
       // NUNCA al panel administrativo (/dashboard o /admin)
       if (selectedRole === 'Ciudadano/Turista') {
-        navigate(resolveTarget('/portal-ciudadano'), { replace: true });
+        navigate('/', { replace: true });
       } else if (selectedRole === 'Super Administrador Nacional') {
-        navigate(resolveTarget('/admin'), { replace: true });
+        navigate('/admin/super', { replace: true });
       } else {
-        navigate(resolveTarget('/gobernanza'), { replace: true });
+        navigate('/admin/territorial', { replace: true });
       }
     } else if (result.message) {
       setFormError(result.message);
@@ -487,8 +487,8 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
       setHaciendaVerified(false);
       setHaciendaMessage('');
       setTimeout(() => {
-        navigate(resolveTarget('/portal-ciudadano'), { replace: true });
-      }, 1200);
+        navigate('/', { replace: true });
+      }, 1000);
     } else {
       const err = (result as { message?: string; mensaje?: string }).message ||
         (result as { message?: string; mensaje?: string }).mensaje ||
@@ -1298,7 +1298,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                         provincia: 'Puntarenas',
                         password: 'Ciudadano2026*'
                       });
-                      navigate(resolveTarget('/dashboard'), { replace: true });
+                      navigate('/', { replace: true });
                     }}
                     style={{
                       background: '#002B7F',

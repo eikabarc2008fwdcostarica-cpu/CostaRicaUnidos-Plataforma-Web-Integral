@@ -24,6 +24,7 @@ import {
 import Navbar from '../components/Navbar';
 import ProvinciasSection from '../components/provincias/ProvinciasSection';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import { CANTONES_OFICIALES } from '../data/costaRicaTerritorialData';
 
 /**
@@ -34,6 +35,7 @@ import { CANTONES_OFICIALES } from '../data/costaRicaTerritorialData';
 export default function Inicio() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeCantonName, setActiveCantonName] = useState(() => {
@@ -222,6 +224,33 @@ export default function Inicio() {
               alignItems: 'center'
             }}
           >
+            {/* Bienvenida Personalizada para el Ciudadano Autenticado */}
+            {user && (
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.65rem',
+                  backgroundColor: 'rgba(16, 185, 129, 0.18)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(52, 211, 153, 0.45)',
+                  padding: '0.45rem 1.25rem',
+                  borderRadius: '9999px',
+                  marginBottom: '1rem',
+                  boxShadow: '0 4px 20px rgba(16, 185, 129, 0.3)'
+                }}
+              >
+                <ShieldCheck size={16} color="#34D399" />
+                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#A7F3D0' }}>
+                  Bienvenido a tu Sede Cívica, {user.nombre || 'Eiker Manuel Abarca Murillo'}
+                </span>
+                <span style={{ fontSize: '0.75rem', color: '#6EE7B7', fontWeight: 600 }}>
+                  • {user.canton ? `Cantón de ${user.canton}` : 'Ciudadano Activo'}
+                </span>
+              </div>
+            )}
+
             {/* Emblema Heráldico y Kicker Institucional */}
             <div
               style={{

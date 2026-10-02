@@ -24,9 +24,12 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
   };
 
   const abrirEnGoogleMapsRuta = (ruta: RutaPreconfigurada) => {
-    const coords = ruta.paradas.map((p) => `${p.lat},${p.lng}`).join('/');
+    const paradas = Array.isArray(ruta?.paradas) ? ruta.paradas : [];
+    const coords = paradas.map((p) => `${p.lat},${p.lng}`).join('/');
     window.open(`https://www.google.com/maps/dir/${coords}`, '_blank');
   };
+
+  const rutas = Array.isArray(RUTAS_PRECONFIGURADAS_DATA) ? RUTAS_PRECONFIGURADAS_DATA : [];
 
   return (
     <div className="space-y-6">
@@ -43,7 +46,7 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {RUTAS_PRECONFIGURADAS_DATA.map((ruta) => {
+        {rutas.map((ruta) => {
           const estaExpandida = rutaExpandidaId === ruta.id;
           const esAltaDificultad = ruta.duracion === '2 Días';
 
@@ -108,14 +111,14 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
                     className="w-full flex items-center justify-between py-2 text-xs font-bold uppercase tracking-wider text-cyan-400 hover:text-cyan-300 transition-colors"
                   >
                     <span>
-                      Ver Cronograma de Paradas ({ruta.paradas.length} paradas)
+                      Ver Cronograma de Paradas ({(ruta?.paradas || []).length} paradas)
                     </span>
                     {estaExpandida ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </button>
 
                   {estaExpandida && (
                     <div className="mt-3 space-y-3 pl-2 border-l-2 border-cyan-500/30">
-                      {ruta.paradas.map((parada, idx) => (
+                      {(ruta?.paradas || []).map((parada, idx) => (
                         <div key={idx} className="relative pl-4 space-y-1">
                           <div className="absolute -left-[13px] top-1.5 w-2.5 h-2.5 rounded-full bg-cyan-400 ring-4 ring-slate-950" />
                           <div className="flex items-center justify-between gap-2">
@@ -137,7 +140,7 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
                             {parada.descripcion}
                           </p>
                           <div className="flex flex-wrap gap-1 pt-1">
-                            {parada.badges.map((b) => (
+                            {(parada?.badges || []).map((b) => (
                               <AccessibilityBadge key={b} type={b} size="sm" />
                             ))}
                           </div>

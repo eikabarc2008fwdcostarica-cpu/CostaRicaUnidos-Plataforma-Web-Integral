@@ -32,7 +32,13 @@ import {
   Compass
 } from 'lucide-react';
 import { useVoiceTour } from '../../hooks/useVoiceTour';
-import { analyzePageAndGenerateTour, getEmergencyTour } from '../../services/pageAnalyzerService';
+import {
+  analyzePageAndGenerateTour,
+  getEmergencyTour,
+  getCachedTour,
+  setCachedTour,
+  clearCachedTour
+} from '../../services/pageAnalyzerService';
 import { askGeminiAboutSection } from '../../services/geminiService';
 import { useAccessibility } from '../accessibility/AccessibilityContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -54,6 +60,7 @@ export default function UniversalVoiceGuide() {
     isTourActive,
     isAnalyzing,
     setIsAnalyzing,
+    tourPath,
     steps,
     currentStepIndex,
     currentStep,
@@ -96,13 +103,23 @@ export default function UniversalVoiceGuide() {
     return () => window.removeEventListener('cantonChanged', handleCantonChange);
   }, []);
 
-  // Si el usuario cambia de ruta en el navegador mientras el tour está activo, detenerlo limpiamente
+  // Requerimiento 1: Vinculación reactiva estricta a la ruta activa
+  // Al cambiar de ruta o desmontar la pantalla, cancela de inmediato cualquier locución en curso y reinicia a cero el estado del tour
   useEffect(() => {
-    if (isTourActive) {
-      console.log('[Guía Gemini] Cambio de ruta detectado (' + currentPath + '). Deteniendo tour activo previo.');
-      stopTour();
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {}
     }
-  }, [currentPath]);
+    stopTour();
+    if (typeof document !== 'undefined') {
+      try {
+        document.querySelectorAll('[data-tour-scanned]').forEach((el) => {
+          el.removeAttribute('data-tour-scanned');
+        });
+      } catch {}
+    }
+  }, [currentPath, stopTour]);
 
   // Función principal para iniciar el análisis contextual de la pantalla actual
   const handleStartUniversalTour = useCallback(async () => {
@@ -127,19 +144,33 @@ export default function UniversalVoiceGuide() {
     const activePath = (typeof window !== 'undefined' && window.location?.pathname) ? window.location.pathname : currentPath;
     console.log('[Guía Gemini] Analizando vista activa en ruta:', activePath);
 
+    // Requerimiento 1: Comprobar caché estricta de ruta (guia_cache_${location.pathname})
+    // Si la ruta activa coincide con un guion previamente analizado, reutilizarlo al instante
+    const cached = getCachedTour(activePath);
+    if (cached && cached.pathname === activePath && Array.isArray(cached.steps) && cached.steps.length > 0) {
+      console.log(`[Guía Gemini] Cargando guion desde caché estricta para ruta (${activePath}):`, cached.steps.length, 'pasos.');
+      startTour(cached.steps, cached.pageTitle, cached.fromAi, activePath);
+      setIsAnalyzing(false);
+      return;
+    }
+
+    // Si no hay caché para esta ruta, realizar análisis exhaustivo del DOM activo
     try {
       const tourResult = await analyzePageAndGenerateTour(activePath, activeCanton, langCode || 'es-CR');
       if (tourResult && tourResult.steps && tourResult.steps.length > 0) {
-        startTour(tourResult.steps, tourResult.pageTitle, tourResult.fromAi);
+        setCachedTour(activePath, tourResult);
+        startTour(tourResult.steps, tourResult.pageTitle, tourResult.fromAi, activePath);
       } else {
-        console.warn('[Guía Gemini] Sin pasos devueltos, activando guion de emergencia...');
+        console.warn('[Guía Gemini] Sin pasos devueltos, activando guion de respaldo...');
         const emergency = getEmergencyTour(activePath, activeCanton);
-        startTour(emergency.steps, emergency.pageTitle, false);
+        setCachedTour(activePath, emergency);
+        startTour(emergency.steps, emergency.pageTitle, false, activePath);
       }
     } catch (err) {
       console.error('[Guía Gemini] Error en análisis contextual (activando emergencia):', err);
       const emergency = getEmergencyTour(activePath, activeCanton);
-      startTour(emergency.steps, emergency.pageTitle, false);
+      setCachedTour(activePath, emergency);
+      startTour(emergency.steps, emergency.pageTitle, false, activePath);
     } finally {
       setIsAnalyzing(false);
     }

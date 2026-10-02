@@ -38,6 +38,7 @@ import NoticiasPage from '../pages/NoticiasPage';
 import PerfilPage from '../pages/PerfilPage';
 import PortalCiudadanoPage from '../pages/PortalCiudadanoPage';
 import UniversalVoiceGuide from '../components/voiceGuide/UniversalVoiceGuide';
+import GlobalErrorBoundary from '../components/common/GlobalErrorBoundary';
 
 import { useAuth } from '../context/AuthContext';
 import { normalizarRolOficial, ROLES_SISTEMA } from '../config/roles';
@@ -92,7 +93,7 @@ export default function Routing() {
         <Route path="/comercio" element={<ComercioPage />} />
         <Route path="/feria-agricultor" element={<FeriaPage />} />
         <Route path="/feria" element={<FeriaPage />} />
-        <Route path="/turismo" element={<TurismoPage />} />
+        <Route path="/turismo" element={<GlobalErrorBoundary><TurismoPage /></GlobalErrorBoundary>} />
         <Route path="/participacion" element={<ParticipacionPage />} />
         <Route path="/participacion/foro" element={<ForoPage />} />
         <Route path="/foro" element={<ForoPage />} />

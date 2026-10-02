@@ -9,28 +9,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAccessibility } from '../components/accessibility/AccessibilityContext';
 import { useLanguage } from '../context/LanguageContext';
-
-/**
- * Consulta segura de selectores CSS en el DOM.
- * Si el selector tiene pseudo-selectores no estándar o sintaxis inválida,
- * intenta recuperar un selector base o devuelve null sin lanzar excepción.
- */
-function safeQuery(selector) {
-  if (!selector || typeof selector !== 'string' || typeof document === 'undefined') return null;
-  try {
-    return document.querySelector(selector);
-  } catch (err) {
-    try {
-      const sanitized = selector
-        .split(',')[0]
-        .replace(/:has-text\([^)]*\)/gi, '')
-        .replace(/:contains\([^)]*\)/gi, '')
-        .trim();
-      if (sanitized) return document.querySelector(sanitized);
-    } catch {}
-    return null;
-  }
-}
+import { safeQuerySelector } from '../services/pageAnalyzerService';
 
 export function useVoiceTour() {
   const { selectedLang, voiceGender } = useAccessibility();
@@ -44,6 +23,7 @@ export function useVoiceTour() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [pageTitle, setPageTitle] = useState('');
   const [fromAi, setFromAi] = useState(false);
+  const [tourPath, setTourPath] = useState('');
 
   // Estados de voz y spotlight
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -180,7 +160,7 @@ export function useVoiceTour() {
       return null;
     }
 
-    const el = safeQuery(selector);
+    const el = safeQuerySelector(selector);
     if (!el) {
       setTargetRect(null);
       return null;
@@ -270,8 +250,8 @@ export function useVoiceTour() {
     };
   }, [isTourActive, currentStepIndex, steps, cleanupActiveRing, measureTargetElement, speakText, stopVoice]);
 
-  // Iniciar el tour con normalización estricta de pasos
-  const startTour = useCallback((newSteps, title = '', isFromAi = false) => {
+  // Iniciar el tour con normalización estricta de pasos vinculados a la ruta
+  const startTour = useCallback((newSteps, title = '', isFromAi = false, path = '') => {
     if (!newSteps || !Array.isArray(newSteps) || newSteps.length === 0) return;
 
     // Normalizar propiedades para compatibilidad total con Gemini y diccionarios fallback
@@ -288,11 +268,12 @@ export function useVoiceTour() {
     setSteps(normalized);
     setPageTitle(title);
     setFromAi(isFromAi);
+    setTourPath(path || (typeof window !== 'undefined' ? window.location?.pathname || '' : ''));
     setCurrentStepIndex(0);
     setIsTourActive(true);
   }, []);
 
-  // Detener el tour
+  // Detener el tour y reiniciar a cero absolutamente todos los estados
   const stopTour = useCallback(() => {
     stopVoice();
     cleanupActiveRing();
@@ -304,9 +285,14 @@ export function useVoiceTour() {
       } catch {}
     }
     setIsTourActive(false);
+    setIsAnalyzing(false);
     setSteps([]);
     setCurrentStepIndex(0);
+    setPageTitle('');
+    setFromAi(false);
+    setLiveSubtitle('');
     setTargetRect(null);
+    setTourPath('');
   }, [stopVoice, cleanupActiveRing]);
 
   // Siguiente paso
@@ -346,6 +332,7 @@ export function useVoiceTour() {
     isTourActive,
     isAnalyzing,
     setIsAnalyzing,
+    tourPath,
     steps,
     currentStepIndex,
     currentStep,

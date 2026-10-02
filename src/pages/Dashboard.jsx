@@ -200,7 +200,7 @@ export default function Dashboard() {
         rolNorm.includes('emprendedor') ||
         level < 3
       ) {
-        navigate('/portal-ciudadano', { replace: true });
+        navigate('/', { replace: true });
       }
     }
   }, [activeUser, navigate]);
