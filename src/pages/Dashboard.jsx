@@ -1184,7 +1184,9 @@ export default function Dashboard() {
           {/* Badges de Estado (SYS, VERIF, ESTADO, AUDIT) */}
           <div className="flex items-center gap-2 flex-wrap text-xs">
             <span className="px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
-              [SYS] SUPER-ADMIN
+              {(currentUser?.rol === 'SUPER_ADMIN' || currentUser?.rol === 'SUPERADMIN_NACIONAL' || currentUser?.nivelAcceso === 5)
+                ? '[SYS] SUPER-ADMIN'
+                : '[NIVEL 2] JURISDICCIÓN PROVINCIAL | COSTA RICA UNIDOS'}
             </span>
             <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
               [VERIF] Ley 8968
@@ -1254,7 +1256,13 @@ export default function Dashboard() {
                 { id: 'obras', label: 'Obras & Averías', icon: AlertTriangle },
                 { id: 'cne', label: 'Emergencias COE', icon: ShieldAlert },
                 { id: 'ia', label: 'Gobernanza de IA', icon: Cpu }
-              ].map((mod) => {
+              ].filter((mod) => {
+                const isSuper = (currentUser?.rol === 'SUPER_ADMIN' || currentUser?.rol === 'SUPERADMIN_NACIONAL' || currentUser?.nivelAcceso === 5);
+                if (!isSuper && (mod.id === 'ia' || mod.id === 'comercio')) {
+                  return false;
+                }
+                return true;
+              }).map((mod) => {
                 const IconoMod = mod.icon;
                 const isActive = activeTab === mod.id;
 

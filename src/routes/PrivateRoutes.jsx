@@ -1,46 +1,20 @@
+/**
+ * ============================================================================
+ * COSTA RICA UNIDOS — GUARDIÁN DE RUTAS PRIVADAS Y CONTROL RBAC (3 ROLES ÚNICOS)
+ * Validador de Autenticación de Estado y Control de Acceso Basado en Roles
+ * ============================================================================
+ * 
+ * Jerarquía Oficial de Permisos:
+ * 1. SUPER_ADMIN_NACIONAL (Nivel 5): Acceso a /admin/super, /admin/territorial, /dashboard y portales públicos.
+ * 2. GESTOR_TERRITORIAL (Nivel 4): Acceso a /admin/territorial y /dashboard. Intento a /admin/super -> Pantalla 403.
+ * 3. CIUDADANO (Nivel 2): Acceso a /dashboard y /. Intento a /admin/territorial o /admin/super -> Pantalla 403.
+ * 4. No Autenticado (Sin sesión): Redirección inmediata a /login.
+ */
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-
-/**
- * Pantalla institucional mientras se validan credenciales de Estado
- */
-function VerificandoCredenciales() {
-  return (
-    <div
-      style={{
-        minHeight: '100vh',
-        backgroundColor: '#00040D',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#79a6ff'
-      }}
-    >
-      <div style={{ textAlign: 'center' }}>
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '52px',
-            height: '52px',
-            borderRadius: '50%',
-            backgroundColor: 'rgba(0, 43, 127, 0.4)',
-            border: '1px solid rgba(121, 166, 255, 0.4)',
-            marginBottom: '1rem'
-          }}
-        >
-          <ShieldCheck size={28} color="#79a6ff" strokeWidth={1.75} />
-        </div>
-        <div style={{ fontSize: '0.88rem', letterSpacing: '0.06em', color: '#CBD5E1', fontWeight: 600 }}>
-          Verificando credenciales de Estado...
-        </div>
-      </div>
-    </div>
-  );
-}
+import AccessDenied from '../pages/AccessDenied';
+import { ROLES_SISTEMA, normalizarRolOficial } from '../config/roles';
 
 /**
  * Determina de forma flexible si un rol corresponde a la esfera ciudadana
@@ -61,25 +35,52 @@ export function esRolCiudadano(rol) {
 }
 
 /**
- * Componente Guardián de Rutas por Rol y Nivel de Acceso (RBAC)
- * - Lee la sesión persistida en el contexto o en localStorage ('cr_sesion_activa').
- * - Si el usuario no está autenticado, redirige amigablemente a /login preservando state: { from: location }.
- * - Para rutas ciudadanas y trámites (minLevel <= 2), CUALQUIER ciudadano autenticado con cédula
- *   y contraseña tiene acceso total e inmediato sin firmas digitales ni validaciones biométricas excluyentes.
- * - Para consolas administrativas institucionales (minLevel >= 3), valida la jerarquía oficial.
+ * Componente Guardián de Rutas Privadas y Control RBAC
  */
-export function RoleRoute({ minLevel = 1, rolesPermitidos = [] }) {
+export function PrivateRoutes({ allowedRoles, children }) {
   const location = useLocation();
-  const { usuarioActual, user, estaAutenticado, isAuthenticated, cargando, isLoading } = useAuth();
+  const { user, isAuthenticated, usuarioActual, estaAutenticado } = useAuth();
+
+  const activeUser = user || usuarioActual;
+  const authed = isAuthenticated || estaAutenticado || !!activeUser;
+
+  // 1. Si no está autenticado -> Redirigir a Login con memoria de retorno
+  if (!authed || !activeUser) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // 2. Si la ruta exige roles específicos y el usuario NO lo tiene -> Mostrar Error 403
+  if (allowedRoles && allowedRoles.length > 0) {
+    const userRoleNorm = normalizarRolOficial(activeUser.rol);
+    const hasRole = allowedRoles.some((role) => {
+      return role === activeUser.rol || normalizarRolOficial(role) === userRoleNorm;
+    });
+
+    if (!hasRole) {
+      return <AccessDenied requiredRoles={allowedRoles} userRole={activeUser.rol} />;
+    }
+  }
+
+  // 3. Acceso autorizado
+  return children ? children : <Outlet />;
+}
+
+/**
+ * Componente Guardián de Rutas por Rol y Nivel de Acceso (RBAC)
+ */
+export function RoleRoute({ minLevel = 1, rolesPermitidos = [], allowedRoles = [] }) {
+  const location = useLocation();
+  const { user, isAuthenticated, usuarioActual, estaAutenticado, cargando, isLoading } = useAuth();
 
   const loading = cargando ?? isLoading ?? false;
-  if (loading) return <VerificandoCredenciales />;
+  if (loading) {
+    return null;
+  }
 
-  // Leer sesión activa con soporte resiliente de localStorage
-  let activeUser = usuarioActual || user;
+  let activeUser = user || usuarioActual;
   if (!activeUser) {
     try {
-      const saved = localStorage.getItem('cr_sesion_activa');
+      const saved = localStorage.getItem('cr_sesion_activa') || localStorage.getItem('cru_user_session');
       if (saved) {
         activeUser = JSON.parse(saved);
       }
@@ -88,82 +89,38 @@ export function RoleRoute({ minLevel = 1, rolesPermitidos = [] }) {
     }
   }
 
-  const authed = (estaAutenticado ?? isAuthenticated ?? false) || !!activeUser;
+  const authed = (isAuthenticated ?? estaAutenticado ?? false) || !!activeUser;
 
-  // 1. Redirección amigable al Login si no hay sesión activa (con memoria de retorno)
   if (!authed || !activeUser) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  const userLevel = Number(activeUser.nivelAcceso ?? 2);
-  const userRole = activeUser.rol || '';
-
-  // 2. Módulos Ciudadanos y Comunitarios (Nivel <= 2)
-  // Cualquier ciudadano autenticado con su número de cédula y contraseña tiene acceso irrestricto.
-  // La Firma Digital Gaudi es puramente complementaria u opcional, nunca un requisito excluyente.
-  if (minLevel <= 2) {
-    if (rolesPermitidos.length > 0) {
-      const rolPermitido = rolesPermitidos.some((r) => {
-        const rNorm = String(r).toLowerCase().trim();
-        const userNorm = String(userRole).toLowerCase().trim();
-        return (
-          userNorm.includes(rNorm) ||
-          rNorm.includes(userNorm) ||
-          (esRolCiudadano(r) && esRolCiudadano(userRole))
-        );
-      });
-      if (!rolPermitido && userLevel < 3) {
-        return <Navigate to="/403" state={{ from: location }} replace />;
-      }
+  const rolesToCheck = allowedRoles.length > 0 ? allowedRoles : rolesPermitidos;
+  if (rolesToCheck.length > 0) {
+    const userRoleNorm = normalizarRolOficial(activeUser.rol);
+    const isSuperAdmin = userRoleNorm === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL;
+    const isAllowed = isSuperAdmin || rolesToCheck.some((r) => normalizarRolOficial(r) === userRoleNorm || r === activeUser.rol);
+    if (!isAllowed) {
+      return <AccessDenied requiredRoles={rolesToCheck} userRole={activeUser.rol} />;
     }
-    return <Outlet />;
   }
 
-  // 3. Módulos Administrativos Oficiales (Nivel >= 3: Editor Municipal, Admin Provincial, Super Admin)
-  // SEGREGACIÓN ESTRICTA RBAC: Un usuario con rol CIUDADANO/TURISTA nunca debe acceder a la consola administrativa.
-  // Si intenta acceder a /admin o /dashboard, es redirigido automáticamente al portal ciudadano (/portal-ciudadano).
-  if (esRolCiudadano(userRole) || userLevel < 3) {
-    return <Navigate to="/portal-ciudadano" replace />;
+  const userLevel = Number(activeUser.nivelAcceso ?? 2);
+  if (userLevel < minLevel) {
+    return <AccessDenied requiredRoles={rolesToCheck} userRole={activeUser.rol} />;
   }
 
-  const nivelValido = userLevel >= minLevel;
-  const rolValido =
-    rolesPermitidos.length === 0 ||
-    rolesPermitidos.some((r) => String(r).toLowerCase() === String(userRole).toLowerCase());
-
-  if (nivelValido && rolValido) {
-    return <Outlet />;
-  }
-
-  // Redirigir a /portal-ciudadano si no cumple con la jerarquía administrativa
-  return <Navigate to="/portal-ciudadano" replace />;
+  return <Outlet />;
 }
 
-/**
- * Guardián de Rutas Protegidas Estándar (ProtectedRoute)
- * Alias institucional para compatibilidad de enrutamiento
- */
 export const ProtectedRoute = RoleRoute;
 
-/**
- * Guardián de Rutas Administrativas (Nivel >= 3)
- * Admite Editor Municipal (N3), Administrador Provincial (N4) y Super Admin (N5).
- */
 export function AdminRoutes() {
-  return <RoleRoute minLevel={3} />;
+  return <PrivateRoutes allowedRoles={[ROLES_SISTEMA.SUPER_ADMIN_NACIONAL, ROLES_SISTEMA.GESTOR_TERRITORIAL]} />;
 }
 
-/**
- * Guardián de Rutas Provinciales y Nacionales (Nivel >= 4)
- */
 export function ProvincialAdminRoutes() {
-  return <RoleRoute minLevel={4} />;
+  return <PrivateRoutes allowedRoles={[ROLES_SISTEMA.SUPER_ADMIN_NACIONAL, ROLES_SISTEMA.GESTOR_TERRITORIAL]} />;
 }
 
-/**
- * Guardián de Rutas Privadas Generales (Nivel >= 1 o Ciudadano Autenticado)
- */
-export default function PrivateRoutes() {
-  return <RoleRoute minLevel={1} />;
-}
-
+export default PrivateRoutes;
