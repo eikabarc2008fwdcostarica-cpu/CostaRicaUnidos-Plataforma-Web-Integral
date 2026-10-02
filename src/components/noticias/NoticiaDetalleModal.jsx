@@ -25,6 +25,8 @@ import {
   agregarComentarioNoticia,
   obtenerNoticiaPorId
 } from '../../services/noticiasService';
+import { obtenerNombrePublico } from '../../utils/privacyUtils';
+import PerfilPublicoModal from '../perfil/PerfilPublicoModal';
 
 /**
  * Modal de Detalle Completo de Noticia / Comunicado Municipal (M01)
@@ -45,6 +47,7 @@ export default function NoticiaDetalleModal({
   const [reaccionando, setReaccionando] = useState(false);
   const [mensajeFeedback, setMensajeFeedback] = useState(null);
   const [misReacciones, setMisReacciones] = useState({});
+  const [perfilModalAutor, setPerfilModalAutor] = useState(null);
 
   useEffect(() => {
     if (noticia) {
@@ -187,9 +190,10 @@ export default function NoticiaDetalleModal({
     setMensajeFeedback(null);
 
     try {
+      const nombrePublicoCiudadano = obtenerNombrePublico(user.nombre || 'Ciudadano Verificado');
       const nuevoComentarioObj = {
         id: `c-${Date.now()}`,
-        autorNombre: user.nombre || 'Ciudadano Verificado',
+        autorNombre: nombrePublicoCiudadano,
         autorCedula: user.cedula || 'No especificada',
         contenido: textoLimpio,
         fecha: new Date().toISOString()
@@ -207,7 +211,7 @@ export default function NoticiaDetalleModal({
         noticiaActual.id,
         {
           contenido: textoLimpio,
-          autorNombre: user.nombre,
+          autorNombre: nombrePublicoCiudadano,
           autorCedula: user.cedula
         },
         user
@@ -934,7 +938,11 @@ export default function NoticiaDetalleModal({
                         gap: '0.5rem'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                        onClick={() => setPerfilModalAutor(c.autorNombre || 'Ciudadano')}
+                        title="Ver perfil cívico público protegido (Ley N° 8968)"
+                      >
                         <div
                           style={{
                             width: '26px',
@@ -949,24 +957,14 @@ export default function NoticiaDetalleModal({
                             color: '#38BDF8'
                           }}
                         >
-                          {(c.autorNombre || 'C').charAt(0).toUpperCase()}
+                          {obtenerNombrePublico(c.autorNombre).charAt(0).toUpperCase()}
                         </div>
                         <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#F1F5F9' }}>
-                          {c.autorNombre || 'Ciudadano'}
+                          {obtenerNombrePublico(c.autorNombre)}
                         </span>
-                        {c.autorCedula && (
-                          <span
-                            style={{
-                              fontSize: '0.7rem',
-                              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                              color: '#94A3B8',
-                              padding: '0.1rem 0.4rem',
-                              borderRadius: '4px'
-                            }}
-                          >
-                            Cédula: {c.autorCedula}
-                          </span>
-                        )}
+                        <span title="Ciudadano Verificado" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                        </span>
                       </div>
                       <span style={{ fontSize: '0.72rem', color: '#64748B' }}>
                         {formatearFecha(c.fecha)}
@@ -1026,6 +1024,16 @@ export default function NoticiaDetalleModal({
           </button>
         </div>
       </div>
+
+      {/* Modal de Perfil Público Seguro (Ley N° 8968) */}
+      {perfilModalAutor && (
+        <PerfilPublicoModal
+          isOpen={!!perfilModalAutor}
+          onClose={() => setPerfilModalAutor(null)}
+          autorNombre={typeof perfilModalAutor === 'string' ? perfilModalAutor : perfilModalAutor?.nombre}
+          fechaRegistro={typeof perfilModalAutor === 'object' ? perfilModalAutor?.fechaRegistro : undefined}
+        />
+      )}
     </div>
   );
 }

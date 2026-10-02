@@ -29,7 +29,7 @@ function jsonDbServerPlugin() {
           } catch (err) {
             console.error('[jsonDbServer] Error leyendo db.json:', err);
           }
-          return { usuarios: [], sesionesActivas: [], bitacoraAccesos: [], foro_posts: [], noticias: [] };
+          return { usuarios: [], sesionesActivas: [], bitacoraAccesos: [], foro_posts: [], noticias: [], solicitudes_emprendedor: [] };
         };
 
         // Helper para escribir db.json en ambos archivos físicos
@@ -40,6 +40,184 @@ function jsonDbServerPlugin() {
             fs.writeFileSync(dataDbPath, jsonStr, 'utf-8');
           }
         };
+
+        // =====================================================================
+        // RUTA 0: /api/solicitudes_emprendedor (Trámites de Emprendedor Ciudadano)
+        // =====================================================================
+        if (
+          url === '/api/solicitudes_emprendedor' ||
+          url === '/solicitudes_emprendedor' ||
+          url.startsWith('/api/solicitudes_emprendedor/') ||
+          url.startsWith('/solicitudes_emprendedor/')
+        ) {
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 204;
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+            res.end();
+            return;
+          }
+
+          if (req.method === 'GET') {
+            const db = readDb();
+            if (!Array.isArray(db.solicitudes_emprendedor)) db.solicitudes_emprendedor = [];
+            const fullUrl = new URL(req.url, 'http://localhost');
+            const cedulaParam = fullUrl.searchParams.get('cedula');
+            let resultado = [...db.solicitudes_emprendedor];
+            if (cedulaParam) {
+              const cleanCed = cedulaParam.replace(/[^0-9]/g, '');
+              resultado = resultado.filter(
+                (s) => s.cedula === cedulaParam || (s.cedula && s.cedula.replace(/[^0-9]/g, '') === cleanCed)
+              );
+            }
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify(resultado));
+            return;
+          }
+
+          if (req.method === 'POST') {
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const data = JSON.parse(bodyStr || '{}');
+
+                if (!data.cedula || !data.correoComercial || !data.nombreEmprendimiento) {
+                  res.statusCode = 400;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(
+                    JSON.stringify({
+                      success: false,
+                      message: 'La cédula, el correo comercial y el nombre del emprendimiento son obligatorios.'
+                    })
+                  );
+                  return;
+                }
+
+                const db = readDb();
+                if (!Array.isArray(db.solicitudes_emprendedor)) db.solicitudes_emprendedor = [];
+                if (!Array.isArray(db.solicitudesComercio)) db.solicitudesComercio = [];
+
+                const nuevaSolicitud = {
+                  id: data.id || `SOL-EMP-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+                  cedula: String(data.cedula).trim(),
+                  nombreCompleto: String(data.nombreCompleto || 'Ciudadano Solicitante').trim(),
+                  correoPersonal: String(data.correoPersonal || '').trim(),
+                  correoComercial: String(data.correoComercial).toLowerCase().trim(),
+                  nombreEmprendimiento: String(data.nombreEmprendimiento).trim(),
+                  categoriaComercial: data.categoriaComercial || 'Comercio Local',
+                  canton: data.canton || 'San José',
+                  provincia: data.provincia || 'San José',
+                  justificacion: String(data.justificacion || '').trim(),
+                  estado: 'pendiente',
+                  fechaSolicitud: data.fechaSolicitud || new Date().toISOString()
+                };
+
+                // Guardar en la colección de solicitudes_emprendedor
+                db.solicitudes_emprendedor.unshift(nuevaSolicitud);
+
+                // También reflejar en solicitudesComercio para el panel de administración
+                const solComercioItem = {
+                  id: nuevaSolicitud.id,
+                  cedulaJuridica: nuevaSolicitud.cedula,
+                  cedula: nuevaSolicitud.cedula,
+                  nombreComercio: nuevaSolicitud.nombreEmprendimiento,
+                  nombreNegocio: nuevaSolicitud.nombreEmprendimiento,
+                  nombreSolicitante: nuevaSolicitud.nombreCompleto,
+                  actividadHacienda: nuevaSolicitud.justificacion,
+                  actividadEconomicaHacienda: nuevaSolicitud.justificacion,
+                  canton: nuevaSolicitud.canton,
+                  provincia: nuevaSolicitud.provincia,
+                  sectorFeriaSolicitado: `Categoría: ${nuevaSolicitud.categoriaComercial}`,
+                  sectorFeria: `Categoría: ${nuevaSolicitud.categoriaComercial}`,
+                  fechaSolicitud: nuevaSolicitud.fechaSolicitud,
+                  estado: 'PENDIENTE',
+                  justificacion: nuevaSolicitud.justificacion,
+                  notas: `Trámite Emprendedor. Nuevo correo comercial: ${nuevaSolicitud.correoComercial}`,
+                  verificadoHacienda: true
+                };
+                db.solicitudesComercio.unshift(solComercioItem);
+
+                writeDb(db);
+                console.log(`[jsonDbServer] Solicitud de emprendedor registrada: ${nuevaSolicitud.id} (${nuevaSolicitud.cedula})`);
+
+                res.statusCode = 201;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: true, data: nuevaSolicitud }));
+              } catch (err) {
+                console.error('[jsonDbServer] Error en POST /api/solicitudes_emprendedor:', err);
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error al persistir la solicitud.' }));
+              }
+            });
+            return;
+          }
+
+          if (req.method === 'PATCH' || req.method === 'PUT') {
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const updatePayload = JSON.parse(bodyStr || '{}');
+                const targetId = updatePayload.id;
+
+                const db = readDb();
+                if (!Array.isArray(db.solicitudes_emprendedor)) db.solicitudes_emprendedor = [];
+                const idx = db.solicitudes_emprendedor.findIndex((s) => s.id === targetId);
+
+                if (idx !== -1) {
+                  db.solicitudes_emprendedor[idx] = {
+                    ...db.solicitudes_emprendedor[idx],
+                    ...updatePayload,
+                    fechaResolucion: new Date().toISOString()
+                  };
+
+                  // Si se aprueba, actualizar rol del usuario a Emprendedor
+                  if (updatePayload.estado === 'aprobado' || updatePayload.estado === 'APROBADO') {
+                    const solCed = db.solicitudes_emprendedor[idx].cedula;
+                    const cleanCed = solCed.replace(/[^0-9]/g, '');
+                    if (Array.isArray(db.usuarios)) {
+                      const uIdx = db.usuarios.findIndex(
+                        (u) => u.cedula === solCed || (u.cedula && u.cedula.replace(/[^0-9]/g, '') === cleanCed)
+                      );
+                      if (uIdx !== -1) {
+                        db.usuarios[uIdx].rol = 'Emprendedor';
+                        db.usuarios[uIdx].isComerciante = true;
+                      }
+                    }
+                  }
+
+                  writeDb(db);
+                  res.statusCode = 200;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: true, data: db.solicitudes_emprendedor[idx] }));
+                  return;
+                }
+
+                res.statusCode = 404;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Solicitud no encontrada.' }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error actualizando solicitud.' }));
+              }
+            });
+            return;
+          }
+        }
 
         // =====================================================================
         // RUTA 1: /api/usuarios y /usuarios (Gestión de usuarios y registros)
@@ -245,12 +423,13 @@ function jsonDbServerPlugin() {
             }
 
             // Filtrado por provincia:
-            // "nacional" (o vacío): muestra feed nacional completo (nacional + todas las provincias)
-            // Provincia específica: muestra solo publicaciones de esa provincia
+            // "nacional": muestra publicaciones de alcance nacional
+            // Provincia específica ("san-jose", etc.): muestra solo publicaciones de esa provincia
+            // "todas" / "all" / no provisto: muestra todas las publicaciones
             const provParam = fullUrl.searchParams.get('provinciaId');
             let resultado = [...db.foro_posts];
 
-            if (provParam && provParam !== 'nacional' && provParam !== 'todas' && provParam !== 'all') {
+            if (provParam && provParam !== 'todas' && provParam !== 'all') {
               resultado = resultado.filter(
                 (p) => String(p.provinciaId || '').toLowerCase() === provParam.toLowerCase()
               );
@@ -564,12 +743,44 @@ function jsonDbServerPlugin() {
               );
             }
 
+            // Filtro por búsqueda de texto libre
+            const qParam = fullUrl.searchParams.get('q') || fullUrl.searchParams.get('busqueda');
+            if (qParam && qParam.trim()) {
+              const qLower = qParam.toLowerCase().trim();
+              resultado = resultado.filter(
+                (n) =>
+                  String(n.titulo || '').toLowerCase().includes(qLower) ||
+                  String(n.resumen || '').toLowerCase().includes(qLower) ||
+                  String(n.contenido || '').toLowerCase().includes(qLower) ||
+                  String(n.canton || '').toLowerCase().includes(qLower) ||
+                  String(n.institucion || '').toLowerCase().includes(qLower)
+              );
+            }
+
             // Orden cronológico descendente (más recientes primero)
             resultado.sort((a, b) => new Date(b.fechaPublicacion || 0).getTime() - new Date(a.fechaPublicacion || 0).getTime());
 
+            // Paginación por bloques si se envía _page y _limit
+            const pageParam = parseInt(fullUrl.searchParams.get('_page') || fullUrl.searchParams.get('page') || '0', 10);
+            const limitParam = parseInt(fullUrl.searchParams.get('_limit') || fullUrl.searchParams.get('limit') || '0', 10);
+
+            if (pageParam > 0 && limitParam > 0) {
+              const startIndex = (pageParam - 1) * limitParam;
+              const paginated = resultado.slice(startIndex, startIndex + limitParam);
+              res.statusCode = 200;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('X-Total-Count', resultado.length.toString());
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
+              res.end(JSON.stringify(paginated));
+              return;
+            }
+
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
+            res.setHeader('X-Total-Count', resultado.length.toString());
             res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
             res.end(JSON.stringify(resultado));
             return;
           }

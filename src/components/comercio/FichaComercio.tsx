@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import {
   Store,
   MapPin,
@@ -8,20 +8,130 @@ import {
   Navigation,
   ShieldCheck,
   CreditCard,
-  Building
+  Building,
+  ThumbsUp,
+  HeartHandshake,
+  AlertTriangle,
+  MessageSquare,
+  Send,
+  CheckCircle2
 } from 'lucide-react';
 import { ComercioPymePOI } from '../../data/comercioData';
 import { CivicCard } from '../common/CivicCard';
 import { CivicBadge } from '../common/CivicBadge';
 import { CivicButton } from '../common/CivicButton';
+import { useAuth } from '../../context/AuthContext';
+import { obtenerNombrePublico } from '../../utils/privacyUtils';
 
 export interface FichaComercioProps {
   comercio: ComercioPymePOI;
 }
 
+interface ComentarioComercio {
+  id: string;
+  autorNombre: string;
+  contenido: string;
+  fecha: string;
+}
+
 export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
+  const { user } = useAuth();
   const wazeUrl = `https://waze.com/ul?ll=${comercio.lat},${comercio.lng}&navigate=yes`;
   const whatsappUrl = `https://wa.me/${comercio.whatsappNumero}?text=${encodeURIComponent(comercio.whatsappMensajePrellenado)}`;
+
+  // Reacciones cívicas guardadas
+  const [reacciones, setReacciones] = useState(() => {
+    try {
+      const stored = localStorage.getItem(`reacciones_comercio_${comercio.id}`);
+      return stored ? JSON.parse(stored) : { apoyo: 12, recomiendo: 8, alerta: 0 };
+    } catch {
+      return { apoyo: 12, recomiendo: 8, alerta: 0 };
+    }
+  });
+
+  const [miReaccion, setMiReaccion] = useState<string | null>(() => {
+    try {
+      const key = `mi_reaccion_comercio_${comercio.id}_${user?.cedula || 'anon'}`;
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  });
+
+  // Comentarios públicos del comercio
+  const [mostrarComentarios, setMostrarComentarios] = useState(false);
+  const [comentarios, setComentarios] = useState<ComentarioComercio[]>(() => {
+    try {
+      const stored = localStorage.getItem(`comentarios_comercio_${comercio.id}`);
+      return stored ? JSON.parse(stored) : [
+        {
+          id: `c-init-${comercio.id}`,
+          autorNombre: 'Valeria Solano',
+          contenido: 'Excelente servicio y productos frescos. 100% recomendado para apoyar el comercio local.',
+          fecha: new Date(Date.now() - 86400000 * 3).toISOString()
+        }
+      ];
+    } catch {
+      return [];
+    }
+  });
+  const [nuevoComentario, setNuevoComentario] = useState('');
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  const handleReaccionar = (tipo: 'apoyo' | 'recomiendo' | 'alerta') => {
+    const yaReacciono = miReaccion === tipo;
+    const nuevasReacciones = {
+      ...reacciones,
+      [tipo]: yaReacciono ? Math.max(0, reacciones[tipo] - 1) : reacciones[tipo] + 1
+    };
+
+    setReacciones(nuevasReacciones);
+    const nuevaReaccionKey = yaReacciono ? null : tipo;
+    setMiReaccion(nuevaReaccionKey);
+
+    try {
+      localStorage.setItem(`reacciones_comercio_${comercio.id}`, JSON.stringify(nuevasReacciones));
+      const userKey = `mi_reaccion_comercio_${comercio.id}_${user?.cedula || 'anon'}`;
+      if (nuevaReaccionKey) {
+        localStorage.setItem(userKey, nuevaReaccionKey);
+        setFeedback(`¡Has reaccionado con ${tipo === 'apoyo' ? 'Apoyo Cívico' : tipo === 'recomiendo' ? 'Recomendación' : 'Alerta'}!`);
+      } else {
+        localStorage.removeItem(userKey);
+        setFeedback('Reacción cívica retirada');
+      }
+      setTimeout(() => setFeedback(null), 3000);
+    } catch (e) {
+      console.warn('Error al guardar reacción:', e);
+    }
+  };
+
+  const handleEnviarComentario = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!nuevoComentario.trim()) return;
+
+    const nombrePublico = user?.nombre
+      ? obtenerNombrePublico(user.nombre)
+      : 'Ciudadano Comunitario';
+
+    const nuevo: ComentarioComercio = {
+      id: `cc-${Date.now()}`,
+      autorNombre: nombrePublico,
+      contenido: nuevoComentario.trim(),
+      fecha: new Date().toISOString()
+    };
+
+    const nuevosComentarios = [nuevo, ...comentarios];
+    setComentarios(nuevosComentarios);
+    setNuevoComentario('');
+    setFeedback('¡Comentario publicado exitosamente en la ficha del comercio!');
+    setTimeout(() => setFeedback(null), 3500);
+
+    try {
+      localStorage.setItem(`comentarios_comercio_${comercio.id}`, JSON.stringify(nuevosComentarios));
+    } catch (e) {
+      console.warn('Error al guardar comentario:', e);
+    }
+  };
 
   return (
     <CivicCard level={1} interactive>
@@ -164,6 +274,218 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
             </span>
           )}
         </div>
+
+        {/* BARRA DE REACCIONES CÍVICAS PARA EL CIUDADANO (SVG) */}
+        <div
+          style={{
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            paddingTop: '0.65rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '0.4rem',
+            flexWrap: 'wrap'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            {/* Apoyo Cívico */}
+            <button
+              type="button"
+              onClick={() => handleReaccionar('apoyo')}
+              title="Apoyar este comercio local"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                padding: '0.25rem 0.55rem',
+                borderRadius: '6px',
+                border: `1px solid ${miReaccion === 'apoyo' ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
+                background: miReaccion === 'apoyo' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                color: miReaccion === 'apoyo' ? '#38BDF8' : '#94A3B8',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <ThumbsUp size={13} />
+              <span>{reacciones.apoyo}</span>
+            </button>
+
+            {/* Recomiendo */}
+            <button
+              type="button"
+              onClick={() => handleReaccionar('recomiendo')}
+              title="Recomendar a la comunidad"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                padding: '0.25rem 0.55rem',
+                borderRadius: '6px',
+                border: `1px solid ${miReaccion === 'recomiendo' ? '#34D399' : 'rgba(255, 255, 255, 0.1)'}`,
+                background: miReaccion === 'recomiendo' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                color: miReaccion === 'recomiendo' ? '#34D399' : '#94A3B8',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <HeartHandshake size={13} />
+              <span>{reacciones.recomiendo}</span>
+            </button>
+
+            {/* Alerta / Observación */}
+            <button
+              type="button"
+              onClick={() => handleReaccionar('alerta')}
+              title="Reportar novedad o consulta"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                padding: '0.25rem 0.55rem',
+                borderRadius: '6px',
+                border: `1px solid ${miReaccion === 'alerta' ? '#FBBF24' : 'rgba(255, 255, 255, 0.1)'}`,
+                background: miReaccion === 'alerta' ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                color: miReaccion === 'alerta' ? '#FBBF24' : '#94A3B8',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <AlertTriangle size={13} />
+              <span>{reacciones.alerta}</span>
+            </button>
+          </div>
+
+          {/* Botón para desplegar comentarios */}
+          <button
+            type="button"
+            onClick={() => setMostrarComentarios(!mostrarComentarios)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              padding: '0.25rem 0.6rem',
+              borderRadius: '6px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: mostrarComentarios ? 'rgba(56, 189, 248, 0.15)' : 'transparent',
+              color: mostrarComentarios ? '#38BDF8' : '#CBD5E1',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            <MessageSquare size={13} />
+            <span>{comentarios.length} comentarios</span>
+          </button>
+        </div>
+
+        {feedback && (
+          <div
+            style={{
+              padding: '0.35rem 0.65rem',
+              borderRadius: '6px',
+              backgroundColor: 'rgba(52, 211, 153, 0.15)',
+              border: '1px solid rgba(52, 211, 153, 0.3)',
+              color: '#34D399',
+              fontSize: '0.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem'
+            }}
+          >
+            <CheckCircle2 size={13} />
+            <span>{feedback}</span>
+          </div>
+        )}
+
+        {/* SECCIÓN DESPLEGABLE DE COMENTARIOS CÍVICOS */}
+        {mostrarComentarios && (
+          <div
+            style={{
+              marginTop: '0.4rem',
+              padding: '0.75rem',
+              backgroundColor: 'rgba(15, 23, 42, 0.6)',
+              borderRadius: '8px',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.65rem'
+            }}
+          >
+            {/* Formulario para agregar comentario */}
+            <form onSubmit={handleEnviarComentario} style={{ display: 'flex', gap: '0.4rem' }}>
+              <input
+                type="text"
+                value={nuevoComentario}
+                onChange={(e) => setNuevoComentario(e.target.value)}
+                placeholder="Escribe una reseña o consulta cívica..."
+                style={{
+                  flex: 1,
+                  padding: '0.4rem 0.65rem',
+                  backgroundColor: 'rgba(0, 8, 24, 0.8)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '6px',
+                  color: '#FFFFFF',
+                  fontSize: '0.78rem'
+                }}
+              />
+              <button
+                type="submit"
+                disabled={!nuevoComentario.trim()}
+                style={{
+                  padding: '0.4rem 0.75rem',
+                  backgroundColor: nuevoComentario.trim() ? '#0284C7' : 'rgba(255, 255, 255, 0.08)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: nuevoComentario.trim() ? 'pointer' : 'not-allowed',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem'
+                }}
+              >
+                <Send size={12} />
+              </button>
+            </form>
+
+            {/* Lista de comentarios sanitizados (Ley N° 8968) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '180px', overflowY: 'auto' }}>
+              {comentarios.map((c) => (
+                <div
+                  key={c.id}
+                  style={{
+                    padding: '0.45rem 0.6rem',
+                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                    borderRadius: '6px',
+                    borderLeft: '2px solid #38BDF8',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#E2E8F0' }}>
+                      {obtenerNombrePublico(c.autorNombre)}
+                    </span>
+                    <span style={{ fontSize: '0.68rem', color: '#64748B' }}>
+                      {new Date(c.fecha).toLocaleDateString('es-CR')}
+                    </span>
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#94A3B8', lineHeight: 1.4 }}>
+                    {c.contenido}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* CTAs Directos Obligatorios a WhatsApp y Waze */}
         <div

@@ -376,3 +376,60 @@ export const ONBOARDING_STEPS_MULTILINGUE = {
     }
   ]
 };
+
+/**
+ * MODOS DE ADAPTACIÓN PARA DALTONISMO (WCAG 2.1 AA / LEY N° 7600)
+ * 5 configuraciones cromáticas con simulación y corrección SVG W3C
+ */
+export const MODOS_DALTONISMO = [
+  {
+    id: 'normal',
+    nombre: 'Estándar',
+    descripcion: 'Sin alteración cromática (visión tricrómata completa)',
+    badge: 'Desactivado',
+    tipo: 'normal',
+    filtroCss: 'none',
+    filtroSvgId: null,
+    muestraColor: '#38BDF8'
+  },
+  {
+    id: 'protanopia',
+    nombre: 'Protanopía',
+    descripcion: 'Dificultad o ausencia para percibir la luz roja',
+    badge: 'Rojo (L)',
+    tipo: 'protanopia',
+    filtroCss: 'url(#protanopia)',
+    filtroSvgId: 'protanopia',
+    muestraColor: '#EAB308'
+  },
+  {
+    id: 'deuteranopia',
+    nombre: 'Deuteranopía',
+    descripcion: 'Dificultad para percibir la luz verde (más frecuente)',
+    badge: 'Verde (M)',
+    tipo: 'deuteranopia',
+    filtroCss: 'url(#deuteranopia)',
+    filtroSvgId: 'deuteranopia',
+    muestraColor: '#F97316'
+  },
+  {
+    id: 'tritanopia',
+    nombre: 'Tritanopía',
+    descripcion: 'Dificultad para percibir la luz azul y violeta',
+    badge: 'Azul (S)',
+    tipo: 'tritanopia',
+    filtroCss: 'url(#tritanopia)',
+    filtroSvgId: 'tritanopia',
+    muestraColor: '#EC4899'
+  },
+  {
+    id: 'achromatopsia',
+    nombre: 'Acromatopsia',
+    descripcion: 'Ausencia total de color (escala monocromática)',
+    badge: 'Monocromo',
+    tipo: 'achromatopsia',
+    filtroCss: 'url(#achromatopsia)',
+    filtroSvgId: 'achromatopsia',
+    muestraColor: '#94A3B8'
+  }
+];

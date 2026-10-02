@@ -19,6 +19,8 @@ import {
 import ComentariosSection from './ComentariosSection';
 import { votarPost, reaccionarPost, eliminarPost } from '../../services/foroService';
 import { useAuth } from '../../context/AuthContext';
+import { obtenerNombrePublico } from '../../utils/privacyUtils';
+import PerfilPublicoModal from '../perfil/PerfilPublicoModal';
 
 // Mapeo de estilos y colores por provincia
 const PROVINCIA_COLORS = {
@@ -108,6 +110,7 @@ function formatearFecha(fechaIso) {
 export default function PostCard({ post, onActualizado, onEliminado }) {
   const { user } = useAuth();
   const [mostrarComentarios, setMostrarComentarios] = useState(false);
+  const [mostrarPerfilModal, setMostrarPerfilModal] = useState(false);
   const [votando, setVotando] = useState(false);
   const [reaccionando, setReaccionando] = useState(false);
   const [copiado, setCopiado] = useState(false);
@@ -205,8 +208,12 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
           flexWrap: 'wrap'
         }}
       >
-        {/* Autor y datos de publicación */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        {/* Autor y datos de publicación (Ley N° 8968: Sanitizado y cédula protegida) */}
+        <div
+          style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}
+          onClick={() => setMostrarPerfilModal(true)}
+          title="Ver perfil cívico público protegido (Ley N° 8968)"
+        >
           <div
             style={{
               width: '42px',
@@ -223,13 +230,13 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
               boxShadow: '0 0 12px rgba(56, 189, 248, 0.2)'
             }}
           >
-            {post.autorNombre ? post.autorNombre.charAt(0).toUpperCase() : 'C'}
+            {obtenerNombrePublico(post.autorNombre).charAt(0)}
           </div>
 
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#F8FAFC' }}>
-                {post.autorNombre}
+                {obtenerNombrePublico(post.autorNombre)}
               </span>
               <span title="Ciudadano Verificado" style={{ display: 'flex', alignItems: 'center' }}>
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
@@ -246,12 +253,12 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
                 marginTop: '1px'
               }}
             >
-              <span>Céd. {post.autorCedula}</span>
-              <span>•</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 <Clock className="w-3 h-3" />
                 {formatearFecha(post.fecha)}
               </span>
+              <span>•</span>
+              <span style={{ color: '#38BDF8', fontSize: '0.7rem' }}>Identidad Protegida (Ley 8968)</span>
             </div>
           </div>
         </div>
@@ -580,6 +587,16 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
       {/* 5. SECCIÓN DESPLEGABLE DE COMENTARIOS */}
       {mostrarComentarios && (
         <ComentariosSection post={post} onPostActualizado={onActualizado} />
+      )}
+
+      {/* Modal de Perfil Público Protegido */}
+      {mostrarPerfilModal && (
+        <PerfilPublicoModal
+          isOpen={mostrarPerfilModal}
+          onClose={() => setMostrarPerfilModal(false)}
+          autorNombre={post.autorNombre}
+          canton={post.provinciaNombre || 'Costa Rica'}
+        />
       )}
     </article>
   );

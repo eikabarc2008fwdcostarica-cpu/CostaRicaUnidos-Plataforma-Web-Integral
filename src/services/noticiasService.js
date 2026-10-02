@@ -1,3 +1,5 @@
+import { obtenerNombrePublico } from '../utils/privacyUtils';
+
 /**
  * Servicio API para "Noticias y Comunicados Municipales" (Módulo 01)
  * Control de Acceso Basado en Roles (RBAC) y persistencia en tiempo real en db.json
@@ -41,8 +43,8 @@ export function esEditorMunicipal(user) {
 }
 
 /**
- * Obtener lista de noticias con filtros opcionales
- * @param {Object} filtros - { canton, provincia, categoria, id }
+ * Obtener lista de noticias con filtros opcionales y paginación
+ * @param {Object} filtros - { canton, provincia, categoria, id, busqueda, q, _page, _limit }
  */
 export async function obtenerNoticias(filtros = {}) {
   try {
@@ -55,6 +57,15 @@ export async function obtenerNoticias(filtros = {}) {
     }
     if (filtros.categoria && filtros.categoria !== 'todas' && filtros.categoria !== 'TODAS') {
       params.append('categoria', filtros.categoria);
+    }
+    if (filtros.busqueda || filtros.q) {
+      params.append('q', filtros.busqueda || filtros.q);
+    }
+    if (filtros._page) {
+      params.append('_page', String(filtros._page));
+    }
+    if (filtros._limit) {
+      params.append('_limit', String(filtros._limit));
     }
     if (filtros.id) {
       params.append('id', filtros.id);
@@ -73,17 +84,42 @@ export async function obtenerNoticias(filtros = {}) {
       throw new Error(`Error HTTP: ${res.status}`);
     }
 
+    const totalHeader = res.headers.get('X-Total-Count');
     const data = await res.json();
     if (Array.isArray(data)) {
-      _noticiasCache = data;
-      return data;
+      if (!filtros._page || filtros._page === 1) {
+        _noticiasCache = data;
+      }
+      const resultArr = [...data];
+      resultArr.total = totalHeader ? parseInt(totalHeader, 10) : data.length;
+      return resultArr;
     }
-    return [];
+    const empty = [];
+    empty.total = 0;
+    return empty;
   } catch (err) {
     console.warn('[noticiasService] Fallo al consultar API, usando caché:', err);
-    if (_noticiasCache) return _noticiasCache;
-    return [];
+    if (_noticiasCache) {
+      const cached = [..._noticiasCache];
+      cached.total = _noticiasCache.length;
+      return cached;
+    }
+    const fallbackEmpty = [];
+    fallbackEmpty.total = 0;
+    return fallbackEmpty;
   }
+}
+
+/**
+ * Helper explícito para paginación continua en el feed social
+ */
+export async function obtenerNoticiasPaginadas(filtros = {}) {
+  const result = await obtenerNoticias(filtros);
+  return {
+    data: result,
+    total: result.total !== undefined ? result.total : result.length,
+    hasMore: (filtros._page || 1) * (filtros._limit || 5) < (result.total || result.length)
+  };
 }
 
 /**

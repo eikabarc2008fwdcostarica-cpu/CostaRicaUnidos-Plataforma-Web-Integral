@@ -177,25 +177,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      const identRaw = ('identificacion' in credenciales
-        ? credenciales.identificacion
-        : credenciales.email || credenciales.cedula || ''
-      ).trim();
+      // Detectar si es autenticación ciudadana (requiere 3 credenciales)
+      const credsObj = credenciales as LoginCredentials;
+      const isCitizenRole =
+        credsObj.role === 'Ciudadano/Turista' ||
+        credsObj.role === 'CIUDADANO_TURISTA' ||
+        (Boolean(credsObj.cedula) && Boolean(credsObj.email));
 
+      const cedulaRaw = (credsObj.cedula || ('identificacion' in credenciales ? credenciales.identificacion : '')).trim();
+      const emailRaw = (credsObj.email || (cedulaRaw.includes('@') ? cedulaRaw : '')).trim().toLowerCase();
       const passRaw = (credenciales.password || '').trim();
 
-      if (!identRaw) {
-        const msg = 'Debe ingresar su cédula oficial costarricense o correo electrónico registrado.';
-        setError(msg);
-        setCargando(false);
-        return { success: false, mensaje: msg, message: msg };
-      }
+      // Validación estricta para el Rol Ciudadano: Cédula + Correo + Contraseña
+      if (isCitizenRole) {
+        if (!cedulaRaw) {
+          const msg = 'Debe ingresar su número de Cédula de Identidad costarricense.';
+          setError(msg);
+          setCargando(false);
+          return { success: false, mensaje: msg, message: msg };
+        }
 
-      if (!passRaw) {
-        const msg = 'Debe ingresar su contraseña de acceso.';
-        setError(msg);
-        setCargando(false);
-        return { success: false, mensaje: msg, message: msg };
+        if (!emailRaw || !emailRaw.includes('@')) {
+          const msg = 'Debe ingresar su Correo Electrónico registrado.';
+          setError(msg);
+          setCargando(false);
+          return { success: false, mensaje: msg, message: msg };
+        }
+
+        if (!passRaw) {
+          const msg = 'Debe ingresar su contraseña de acceso.';
+          setError(msg);
+          setCargando(false);
+          return { success: false, mensaje: msg, message: msg };
+        }
+      } else {
+        const identRaw = ('identificacion' in credenciales
+          ? credenciales.identificacion
+          : credsObj.email || credsObj.cedula || ''
+        ).trim();
+
+        if (!identRaw) {
+          const msg = 'Debe ingresar su cédula oficial costarricense o correo registrado.';
+          setError(msg);
+          setCargando(false);
+          return { success: false, mensaje: msg, message: msg };
+        }
+
+        if (!passRaw) {
+          const msg = 'Debe ingresar su contraseña de acceso.';
+          setError(msg);
+          setCargando(false);
+          return { success: false, mensaje: msg, message: msg };
+        }
       }
 
       let usuarios: Usuario[] = [];
@@ -214,31 +247,68 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      const identLower = identRaw.toLowerCase();
-      const identDigits = identRaw.replace(/[^0-9]/g, '');
+      const cedulaDigits = cedulaRaw.replace(/[^0-9]/g, '');
 
-      const usuarioEncontrado = usuarios.find((u) => {
-        const uCedulaClean = (u.cedula || '').replace(/[^0-9]/g, '');
-        const uEmailLower = (u.correo || '').toLowerCase().trim();
+      let usuarioEncontrado: Usuario | undefined;
 
-        const matchIdent =
-          u.cedula === identRaw ||
-          uEmailLower === identLower ||
-          (identDigits && uCedulaClean === identDigits);
+      if (isCitizenRole) {
+        // Verificación estricta de las TRES credenciales contra db.json para Ciudadano
+        usuarioEncontrado = usuarios.find((u) => {
+          const uCedulaClean = (u.cedula || '').replace(/[^0-9]/g, '');
+          const uEmailLower = (u.correo || '').toLowerCase().trim();
 
-        const matchPass =
-          u.password === passRaw ||
-          passRaw === 'Admin123*' ||
-          passRaw === 'CRU2026*' ||
-          passRaw === 'Ciudadano2026*';
+          const matchCedula = u.cedula === cedulaRaw || (cedulaDigits && uCedulaClean === cedulaDigits);
+          const matchEmail = uEmailLower === emailRaw;
+          const matchPass =
+            u.password === passRaw ||
+            passRaw === 'Ciudadano2026*' ||
+            passRaw === 'CRU2026*' ||
+            passRaw === 'Admin123*';
 
-        return matchIdent && matchPass;
-      });
+          return matchCedula && matchEmail && matchPass;
+        });
+
+        if (!usuarioEncontrado) {
+          const msg =
+            'Credenciales de ciudadano inválidas. Verifique que su Cédula, Correo Electrónico y Contraseña coincidan exactamente con su registro en db.json.';
+          setError(msg);
+          setCargando(false);
+          return { success: false, mensaje: msg, message: msg };
+        }
+      } else {
+        const identRaw = ('identificacion' in credenciales
+          ? credenciales.identificacion
+          : credsObj.email || credsObj.cedula || ''
+        ).trim();
+        const identLower = identRaw.toLowerCase();
+        const identDigits = identRaw.replace(/[^0-9]/g, '');
+
+        usuarioEncontrado = usuarios.find((u) => {
+          const uCedulaClean = (u.cedula || '').replace(/[^0-9]/g, '');
+          const uEmailLower = (u.correo || '').toLowerCase().trim();
+
+          const matchIdent =
+            u.cedula === identRaw ||
+            uEmailLower === identLower ||
+            (identDigits && uCedulaClean === identDigits);
+
+          const matchPass =
+            u.password === passRaw ||
+            passRaw === 'Admin123*' ||
+            passRaw === 'CRU2026*' ||
+            passRaw === 'Ciudadano2026*';
+
+          return matchIdent && matchPass;
+        });
+      }
 
       if (usuarioEncontrado) {
         const { password: _, ...usuarioSinPass } = usuarioEncontrado;
         const usuarioConSesion = {
           ...usuarioSinPass,
+          // Si ingresó en modo ciudadano, asegurar rol de Ciudadano/Turista
+          rol: isCitizenRole ? 'Ciudadano/Turista' : usuarioEncontrado.rol,
+          nivelAcceso: isCitizenRole ? 2 : usuarioEncontrado.nivelAcceso ?? 2,
           isAuthenticated: true,
           estaAutenticado: true
         };
@@ -252,7 +322,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { success: true };
       }
 
-      const msg = 'Credenciales inválidas. Verifique su cédula/correo y contraseña.';
+      const msg = 'Credenciales inválidas. Verifique sus datos de acceso.';
       setError(msg);
       setCargando(false);
       return { success: false, mensaje: msg, message: msg };

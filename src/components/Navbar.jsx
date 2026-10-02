@@ -319,18 +319,8 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* LADO DERECHO: SOS 911 + ACCIONES (REGISTRARSE / CERRAR SESIÓN) + PANEL CÍVICO (DESKTOP) / MENÚ (MÓVIL) */}
-          <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 xl:gap-2.5 flex-shrink-0">
-            {/* Botón SOS 911 en Rojo Sobrio */}
-            <Link
-              to="/seguridad-emergencias"
-              aria-label="Centro de Seguridad y Auxilio de Emergencias 911"
-              className="px-2 py-1 sm:px-2.5 sm:py-1.5 xl:px-3 xl:py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 hover:border-red-500 text-red-400 hover:text-white text-[11px] xl:text-xs font-bold tracking-wider uppercase transition-all duration-200 flex items-center gap-1 xl:gap-1.5 focus:outline-none focus:ring-2 focus:ring-red-500"
-            >
-              <ShieldAlert className="w-3.5 h-3.5 text-red-500" strokeWidth={1.75} />
-              <span className="hidden sm:inline">{t('navSos', 'SOS 911')}</span>
-              <span className="sm:hidden">911</span>
-            </Link>
+          {/* LADO DERECHO: ACCIONES CÍVICAS (PANEL CÍVICO + MI PERFIL / CERRAR SESIÓN / REGISTRARSE / INICIAR SESIÓN) */}
+          <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 flex-shrink-0">
 
             {/* EN DESKTOP (>= 1024px): BOTÓN VIDRIO ESMERILADO [ Panel Cívico ] */}
             <button

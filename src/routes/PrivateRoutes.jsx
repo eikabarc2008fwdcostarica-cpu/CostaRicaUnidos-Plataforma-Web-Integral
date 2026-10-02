@@ -28,6 +28,7 @@ export function esRolCiudadano(rol) {
     r.includes('cr ciudadano') ||
     r.includes('residente') ||
     r.includes('vecin') ||
+    r.includes('emprendedor') ||
     r === 'nivel_1' ||
     r === 'nivel_2'
   );

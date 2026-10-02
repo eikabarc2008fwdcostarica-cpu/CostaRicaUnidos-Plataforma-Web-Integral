@@ -35,6 +35,9 @@ import ItinerarioIAPage from '../pages/ItinerarioIAPage';
 import ProvincialAdminDashboard from '../pages/ProvincialAdminDashboard';
 import ForoPage from '../pages/ForoPage';
 import NoticiasPage from '../pages/NoticiasPage';
+import PerfilPage from '../pages/PerfilPage';
+import PortalCiudadanoPage from '../pages/PortalCiudadanoPage';
+import UniversalVoiceGuide from '../components/voiceGuide/UniversalVoiceGuide';
 
 import { useAuth } from '../context/AuthContext';
 import { normalizarRolOficial, ROLES_SISTEMA } from '../config/roles';
@@ -99,9 +102,14 @@ export default function Routing() {
         <Route path="/comunicados" element={<NoticiasPage />} />
         <Route path="/noticias-municipales" element={<NoticiasPage />} />
 
+        {/* Portal Cívico Ciudadano y Perfiles Públicos (Ley N° 8968) */}
+        <Route path="/portal-ciudadano" element={<PortalCiudadanoPage />} />
+        <Route path="/portal" element={<PortalCiudadanoPage />} />
+        <Route path="/perfil/:usuarioId" element={<PerfilPage />} />
+
         {/* Rutas Privadas Ciudadanas y Trámites (Cualquier Ciudadano Autenticado con Cédula/Contraseña) */}
         <Route element={<RoleRoute minLevel={1} />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/perfil" element={<PerfilPage />} />
           <Route path="/participacion/votar" element={<ParticipacionPage />} />
           <Route path="/gobernanza/audiencia" element={<ParticipacionPage />} />
         </Route>
@@ -131,6 +139,9 @@ export default function Routing() {
         {/* Ruta Comodín 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      {/* Asistente de Recorrido Contextual Universal con Gemini 3.6 Flash */}
+      <UniversalVoiceGuide />
     </Router>
   );
 }

@@ -185,7 +185,40 @@ export default function Dashboard() {
   const { mostrarAlerta, solicitarConfirmacion, solicitarMotivo } = useCivicModal();
   const navigate = useNavigate();
 
-  const currentUser = usuarioActual || user || {
+  const activeUser = usuarioActual || user;
+
+  // SEGREGACIÓN ESTRICTA RBAC (Ley N° 8968):
+  // Un usuario con rol CIUDADANO/TURISTA nunca debe poder ingresar ni visualizar la
+  // Consola de Mando Cívico y Administración Territorial. Redirección automática a /portal-ciudadano.
+  useEffect(() => {
+    if (activeUser) {
+      const rolNorm = String(activeUser.rol || '').toLowerCase();
+      const level = Number(activeUser.nivelAcceso ?? 2);
+      if (
+        rolNorm.includes('ciudadan') ||
+        rolNorm.includes('turista') ||
+        rolNorm.includes('emprendedor') ||
+        level < 3
+      ) {
+        navigate('/portal-ciudadano', { replace: true });
+      }
+    }
+  }, [activeUser, navigate]);
+
+  if (activeUser) {
+    const rolNorm = String(activeUser.rol || '').toLowerCase();
+    const level = Number(activeUser.nivelAcceso ?? 2);
+    if (
+      rolNorm.includes('ciudadan') ||
+      rolNorm.includes('turista') ||
+      rolNorm.includes('emprendedor') ||
+      level < 3
+    ) {
+      return null;
+    }
+  }
+
+  const currentUser = activeUser || {
     id: 'USR-NAC-001',
     cedula: '1-0000-0001',
     nombre: 'Superintendencia Nacional de Gobierno Digital',

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { MessageSquare, Send, User, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { MessageSquare, Send, User, Clock, CheckCircle2, AlertCircle, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { agregarComentario } from '../../services/foroService';
+import { obtenerNombrePublico } from '../../utils/privacyUtils';
+import PerfilPublicoModal from '../perfil/PerfilPublicoModal';
 
 /**
  * Formatea una fecha ISO o relativa de manera amigable
@@ -37,9 +39,11 @@ export default function ComentariosSection({ post, onPostActualizado }) {
   const [enviando, setEnviando] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [exitoMsg, setExitoMsg] = useState(false);
+  const [perfilModalAutor, setPerfilModalAutor] = useState(null);
 
-  // Datos del autor (del usuario en sesión o valores cívicos predeterminados)
+  // Datos del autor (Ley N° 8968: Se sanitiza el nombre público a Primer Nombre y Primer Apellido)
   const autorNombre = user?.nombre || 'Ciudadano Activo';
+  const nombrePublicoAutor = obtenerNombrePublico(autorNombre);
   const autorCedula = user?.cedula || '1-1823-0456';
 
   const comentarios = Array.isArray(post.comentarios) ? post.comentarios : [];
@@ -56,7 +60,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
       setErrorMsg('');
 
       const comentarioData = {
-        autorNombre,
+        autorNombre: nombrePublicoAutor,
         autorCedula,
         contenido: contenido.trim()
       };
@@ -140,7 +144,11 @@ export default function ComentariosSection({ post, onPostActualizado }) {
                   gap: '0.5rem'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+                  onClick={() => setPerfilModalAutor(c.autorNombre || 'Ciudadano')}
+                  title="Ver perfil cívico público protegido (Ley N° 8968)"
+                >
                   <div
                     style={{
                       width: '24px',
@@ -156,24 +164,14 @@ export default function ComentariosSection({ post, onPostActualizado }) {
                       fontWeight: 'bold'
                     }}
                   >
-                    {c.autorNombre ? c.autorNombre.charAt(0).toUpperCase() : 'C'}
+                    {obtenerNombrePublico(c.autorNombre).charAt(0)}
                   </div>
                   <span style={{ fontSize: '0.825rem', fontWeight: 600, color: '#F1F5F9' }}>
-                    {c.autorNombre || 'Ciudadano'}
+                    {obtenerNombrePublico(c.autorNombre)}
                   </span>
-                  {c.autorCedula && (
-                    <span
-                      style={{
-                        fontSize: '0.7rem',
-                        padding: '1px 6px',
-                        borderRadius: '4px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        color: '#94A3B8'
-                      }}
-                    >
-                      Céd. {c.autorCedula}
-                    </span>
-                  )}
+                  <span title="Ciudadano Verificado" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  </span>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#64748B', fontSize: '0.75rem' }}>
@@ -207,7 +205,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
               setContenido(e.target.value);
               if (errorMsg) setErrorMsg('');
             }}
-            placeholder={`Aporta a este debate cívico como ${autorNombre}...`}
+            placeholder={`Aporta a este debate cívico como ${nombrePublicoAutor}...`}
             rows={2}
             style={{
               width: '100%',
@@ -262,11 +260,13 @@ export default function ComentariosSection({ post, onPostActualizado }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginTop: '0.6rem'
+            marginTop: '0.6rem',
+            flexWrap: 'wrap',
+            gap: '0.5rem'
           }}
         >
           <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
-            Comentando con Cédula: <strong style={{ color: '#94A3B8' }}>{autorCedula}</strong>
+            Comentando como: <strong style={{ color: '#38BDF8' }}>{nombrePublicoAutor}</strong> <span style={{ opacity: 0.7 }}>(Identidad protegida · Ley N° 8968)</span>
           </span>
 
           <button
@@ -293,6 +293,15 @@ export default function ComentariosSection({ post, onPostActualizado }) {
           </button>
         </div>
       </form>
+
+      {/* Modal de Perfil Público Protegido */}
+      {perfilModalAutor && (
+        <PerfilPublicoModal
+          isOpen={Boolean(perfilModalAutor)}
+          onClose={() => setPerfilModalAutor(null)}
+          autorNombre={perfilModalAutor}
+        />
+      )}
     </div>
   );
 }

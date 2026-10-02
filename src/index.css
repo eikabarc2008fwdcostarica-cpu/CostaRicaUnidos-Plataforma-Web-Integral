@@ -1388,3 +1388,31 @@ html.light header button:hover {
   color: #0F172A !important;
 }
 
+/* ==========================================================================
+   ADAPTACIÓN PARA DALTONISMO (WCAG 2.1 AA & LEY N° 7600)
+   Filtros SVG W3C aplicados a html, body y contenedor raíz
+   ========================================================================== */
+html[data-colorblind="protanopia"],
+body[data-colorblind="protanopia"],
+#root[data-colorblind="protanopia"] {
+  filter: url(#protanopia) !important;
+}
+
+html[data-colorblind="deuteranopia"],
+body[data-colorblind="deuteranopia"],
+#root[data-colorblind="deuteranopia"] {
+  filter: url(#deuteranopia) !important;
+}
+
+html[data-colorblind="tritanopia"],
+body[data-colorblind="tritanopia"],
+#root[data-colorblind="tritanopia"] {
+  filter: url(#tritanopia) !important;
+}
+
+html[data-colorblind="achromatopsia"],
+body[data-colorblind="achromatopsia"],
+#root[data-colorblind="achromatopsia"] {
+  filter: url(#achromatopsia) !important;
+}
+

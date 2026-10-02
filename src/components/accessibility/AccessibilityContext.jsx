@@ -1,9 +1,57 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { IDIOMAS_SOPORTADOS, FASES_TIPOGRAFICAS } from './accessibilityData';
+import { IDIOMAS_SOPORTADOS, FASES_TIPOGRAFICAS, MODOS_DALTONISMO } from './accessibilityData';
 
 const AccessibilityContext = createContext(null);
 
 export function AccessibilityProvider({ children }) {
+  // 0. Estado de Adaptación para Daltonismo (WCAG 2.1 AA / Ley N° 7600)
+  const [daltonismoMode, setDaltonismoModeState] = useState(() => {
+    try {
+      return localStorage.getItem('cr_daltonismo') || 'normal';
+    } catch {
+      return 'normal';
+    }
+  });
+
+  const applyDaltonismo = useCallback((mode) => {
+    if (typeof document === 'undefined') return;
+    try {
+      if (mode && mode !== 'normal') {
+        document.documentElement.setAttribute('data-colorblind', mode);
+        document.documentElement.style.filter = `url(#${mode})`;
+        document.body.setAttribute('data-colorblind', mode);
+        document.body.style.filter = `url(#${mode})`;
+      } else {
+        document.documentElement.removeAttribute('data-colorblind');
+        document.documentElement.style.filter = '';
+        document.body.removeAttribute('data-colorblind');
+        document.body.style.filter = '';
+      }
+    } catch (e) {
+      console.warn('[Accesibilidad] Error al aplicar filtro de daltonismo:', e);
+    }
+  }, []);
+
+  const setDaltonismoMode = useCallback((mode) => {
+    const validMode = mode || 'normal';
+    setDaltonismoModeState(validMode);
+    try {
+      localStorage.setItem('cr_daltonismo', validMode);
+    } catch (e) {
+      console.warn('[Accesibilidad] No se pudo guardar modo de daltonismo:', e);
+    }
+    applyDaltonismo(validMode);
+    try {
+      window.dispatchEvent(new CustomEvent('daltonismoChanged', { detail: { mode: validMode } }));
+    } catch {
+      // ignore
+    }
+  }, [applyDaltonismo]);
+
+  // Sincronizar filtro de daltonismo en montaje inicial
+  useEffect(() => {
+    applyDaltonismo(daltonismoMode);
+  }, [daltonismoMode, applyDaltonismo]);
   // 1. Estado de Escala Tipográfica (4 Fases: 100%, 125%, 150%, 200%)
   const [textPhase, setTextPhaseState] = useState(() => {
     try {
@@ -219,6 +267,11 @@ export function AccessibilityProvider({ children }) {
   return (
     <AccessibilityContext.Provider
       value={{
+        // Adaptación para Daltonismo (WCAG 2.1 AA / Ley N° 7600)
+        daltonismoMode,
+        setDaltonismoMode,
+        MODOS_DALTONISMO,
+
         // Escala Tipográfica
         textPhase,
         textScale,
