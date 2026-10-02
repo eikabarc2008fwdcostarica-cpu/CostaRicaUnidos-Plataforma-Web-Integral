@@ -14,7 +14,8 @@ import {
   GraduationCap,
   Sprout,
   Compass,
-  ChevronRight
+  ChevronRight,
+  MessageSquare
 } from 'lucide-react';
 
 export const CATEGORIAS_CIVICAS = [
@@ -65,6 +66,12 @@ export const CATEGORIAS_CIVICAS = [
         desc: 'Votación cívica vinculante de proyectos comunales.',
         path: '/participacion',
         icon: Vote
+      },
+      {
+        titulo: 'Foro Tico (Debate Comunal)',
+        desc: 'Participación ciudadana y cabildo digital nacional y provincial.',
+        path: '/foro',
+        icon: MessageSquare
       }
     ]
   },

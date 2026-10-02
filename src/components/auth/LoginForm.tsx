@@ -8,7 +8,11 @@
  */
 
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+=======
+import { useNavigate, useLocation } from 'react-router-dom';
+>>>>>>> origin/main
 import {
   OfficialRoleName,
   CitizenMode,
@@ -55,8 +59,34 @@ interface LoginFormProps {
 export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
   const navigate = useNavigate();
   const location = useLocation();
+<<<<<<< HEAD
   const [searchParams] = useSearchParams();
   const tabFromUrl = searchParams.get('tab') || searchParams.get('mode');
+=======
+
+  // Detectar ruta de retorno previo si el usuario fue redirigido
+  const fromState = (location.state as any)?.from;
+  const targetDestination =
+    typeof fromState === 'string'
+      ? fromState
+      : fromState?.pathname
+      ? fromState.pathname + (fromState.search || '')
+      : null;
+
+  const resolveTarget = (fallbackPath: string) => {
+    if (
+      targetDestination &&
+      !targetDestination.includes('/login') &&
+      !targetDestination.includes('/403') &&
+      !targetDestination.includes('/acceso-denegado')
+    ) {
+      return targetDestination;
+    }
+    return fallbackPath;
+  };
+
+  const { login, registro, register, seleccionarCuentaDemo, cargando, isLoading, error: authError, clearError } = useAuth();
+>>>>>>> origin/main
 
   // Modo activo: Iniciar Sesión ('LOGIN') es SIEMPRE el valor predeterminado en /login
   const resolvedInitialMode: AuthMode =
@@ -349,11 +379,11 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
 
     if (result.success) {
       refreshDbStats();
-      // Redirección adaptativa según rol oficial
+      // Redirección adaptativa según rol oficial respetando la ruta previa
       if (selectedRole === 'Administrador Provincial' || selectedRole === 'Editor Municipal') {
-        navigate('/gobernanza');
+        navigate(resolveTarget('/gobernanza'), { replace: true });
       } else {
-        navigate('/dashboard');
+        navigate(resolveTarget('/dashboard'), { replace: true });
       }
     } else if (result.message) {
       setFormError(result.message);
@@ -445,7 +475,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
       setHaciendaVerified(false);
       setHaciendaMessage('');
       setTimeout(() => {
-        navigate('/dashboard');
+        navigate(resolveTarget('/dashboard'), { replace: true });
       }, 1200);
     } else {
       const err = (result as { message?: string; mensaje?: string }).message ||
@@ -958,6 +988,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     type="button"
                     onClick={async (e) => {
                       e.stopPropagation();
+<<<<<<< HEAD
                       await login({
                         id: 1,
                         nombre: 'Super Admin Nacional',
@@ -966,6 +997,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                         password: 'Admin123*'
                       });
                       navigate('/admin');
+=======
+                      seleccionarCuentaDemo('USR-NAC-001');
+                      navigate(resolveTarget('/admin'), { replace: true });
+>>>>>>> origin/main
                     }}
                     style={{
                       background: '#CE1126',
@@ -1025,6 +1060,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     type="button"
                     onClick={async (e) => {
                       e.stopPropagation();
+<<<<<<< HEAD
                       await login({
                         id: 2,
                         nombre: 'Coordinación Territorial',
@@ -1035,6 +1071,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                         password: 'Territorial2026*'
                       });
                       navigate('/admin/territorial');
+=======
+                      seleccionarCuentaDemo('USR-PROV-001');
+                      navigate(resolveTarget('/gobernanza'), { replace: true });
+>>>>>>> origin/main
                     }}
                     style={{
                       background: '#D97706',
@@ -1055,7 +1095,72 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   </button>
                 </div>
 
+<<<<<<< HEAD
                 {/* 3. Ciudadano Residente */}
+=======
+                {/* 3. Editor Municipal */}
+                <div
+                  onClick={() =>
+                    loadSeedAccount(
+                      'Editor Municipal',
+                      'editor.concejo@msj.go.cr',
+                      'EditorMuni2026*',
+                      'CIUDADANO',
+                      'muni-sanjose',
+                      'MSJ-2026-SEC'
+                    )
+                  }
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(2, 132, 199, 0.2)',
+                    border: '1px solid rgba(2, 132, 199, 0.4)',
+                    color: '#38BDF8',
+                    fontSize: '0.72rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '4px',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 800, display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <FileText className="w-3.5 h-3.5 text-sky-400" />
+                      <span>Editor Municipal</span>
+                    </div>
+                    <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>editor.concejo@msj.go.cr</div>
+                    <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: EditorMuni2026* (Nivel 3)</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      seleccionarCuentaDemo('USR-MUNI-001');
+                      navigate(resolveTarget('/gobernanza'), { replace: true });
+                    }}
+                    style={{
+                      background: '#0284C7',
+                      border: 'none',
+                      color: '#FFF',
+                      padding: '3px 8px',
+                      borderRadius: '4px',
+                      fontWeight: 700,
+                      fontSize: '0.68rem',
+                      cursor: 'pointer',
+                      marginTop: '4px',
+                      alignSelf: 'flex-start'
+                    }}
+                  >
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      Acceder <Zap className="w-3 h-3" />
+                    </span>
+                  </button>
+                </div>
+
+                {/* 4. Ciudadano / Turista */}
+>>>>>>> origin/main
                 <div
                   onClick={() =>
                     loadSeedAccount(
@@ -1092,6 +1197,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     type="button"
                     onClick={async (e) => {
                       e.stopPropagation();
+<<<<<<< HEAD
                       await login({
                         id: 3,
                         nombre: 'Ciudadano Residente',
@@ -1100,6 +1206,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                         password: 'Ciudadano2026*'
                       });
                       navigate('/dashboard');
+=======
+                      seleccionarCuentaDemo('USR-CIUD-001');
+                      navigate(resolveTarget('/dashboard'), { replace: true });
+>>>>>>> origin/main
                     }}
                     style={{
                       background: '#002B7F',

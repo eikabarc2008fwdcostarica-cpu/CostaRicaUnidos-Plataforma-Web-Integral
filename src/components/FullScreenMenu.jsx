@@ -49,7 +49,7 @@ export default function FullScreenMenu({ isOpen, onClose }) {
 
   // Los 11 Módulos Oficiales del Sistema Nacional
   const modulosSistema = [
-    { number: '01', key: 'portal', label: 'Portal Nacional', path: '/' },
+    { number: '01', key: 'portal', label: 'Portal Nacional & Noticias', path: '/noticias' },
     { number: '02', key: 'territorio', label: 'Territorio 3D & Cartografía', path: '/mapa-gis' },
     { number: '03', key: 'reportes', label: 'Reportes de Infraestructura', path: '/reportar-incidencia' },
     { number: '04', key: 'seguridad', label: 'Seguridad y Emergencias 911', path: '/seguridad-emergencias' },

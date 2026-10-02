@@ -11,8 +11,13 @@
  * 4. No Autenticado: Intento a rutas privadas -> Redirección a /login.
  */
 import React from 'react';
+<<<<<<< HEAD
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import PrivateRoutes, { RoleRoute } from './PrivateRoutes';
+=======
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import PrivateRoutes, { RoleRoute, ProtectedRoute, AdminRoutes } from './PrivateRoutes';
+>>>>>>> origin/main
 import Inicio from '../pages/Inicio';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
@@ -32,6 +37,7 @@ import FeriaPage from '../pages/FeriaPage';
 import TurismoPage from '../pages/TurismoPage';
 import ParticipacionPage from '../pages/ParticipacionPage';
 import ItinerarioIAPage from '../pages/ItinerarioIAPage';
+<<<<<<< HEAD
 import ProvincialAdminDashboard from '../pages/ProvincialAdminDashboard';
 
 import { useAuth } from '../context/AuthContext';
@@ -51,6 +57,10 @@ function AdminDispatcher() {
   }
   return <Navigate to="/dashboard" replace />;
 }
+=======
+import ForoPage from '../pages/ForoPage';
+import NoticiasPage from '../pages/NoticiasPage';
+>>>>>>> origin/main
 
 /**
  * Enrutador principal de la aplicación Costa Rica Unidos
@@ -89,17 +99,30 @@ export default function Routing() {
         <Route path="/feria" element={<FeriaPage />} />
         <Route path="/turismo" element={<TurismoPage />} />
         <Route path="/participacion" element={<ParticipacionPage />} />
+        <Route path="/participacion/foro" element={<ForoPage />} />
+        <Route path="/foro" element={<ForoPage />} />
+        <Route path="/foro-tico" element={<ForoPage />} />
         <Route path="/itinerario-ia" element={<ItinerarioIAPage />} />
+        <Route path="/noticias" element={<NoticiasPage />} />
+        <Route path="/comunicados" element={<NoticiasPage />} />
+        <Route path="/noticias-municipales" element={<NoticiasPage />} />
 
-        {/* Rutas Privadas Ciudadanas Protegidas (Nivel >= 2) */}
-        <Route element={<RoleRoute minLevel={2} />}>
+        {/* Rutas Privadas Ciudadanas y Trámites (Cualquier Ciudadano Autenticado con Cédula/Contraseña) */}
+        <Route element={<RoleRoute minLevel={1} />}>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/participacion/votar" element={<ParticipacionPage />} />
           <Route path="/gobernanza/audiencia" element={<ParticipacionPage />} />
         </Route>
 
+<<<<<<< HEAD
         {/* Despachador de Consola Administrativa Central */}
         <Route element={<RoleRoute minLevel={3} />}>
           <Route path="/admin" element={<AdminDispatcher />} />
+=======
+        {/* Rutas Privadas de Administración Institucional y Mando (Funcionarios Nivel >= 3) */}
+        <Route element={<RoleRoute minLevel={3} />}>
+          <Route path="/admin" element={<Dashboard />} />
+>>>>>>> origin/main
           <Route path="/gobernanza/municipalidad-dashboard" element={<GobernanzaPage />} />
         </Route>
 
