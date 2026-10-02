@@ -7,15 +7,14 @@
 
 export type OfficialRoleName =
   | 'Super Administrador Nacional'
-  | 'Administrador Provincial'
-  | 'Editor Municipal'
+  | 'Gestor Territorial y Municipal'
   | 'Ciudadano/Turista';
 
 export type UserRole =
   | OfficialRoleName
   | 'SUPER_ADMIN_NACIONAL'
-  | 'ADMIN_PROVINCIAL'
-  | 'EDITOR_MUNICIPAL'
+  | 'GESTOR_TERRITORIAL'
+  | 'CIUDADANO'
   | 'CIUDADANO_TURISTA';
 
 export type CitizenMode = 'CIUDADANO' | 'TURISTA';

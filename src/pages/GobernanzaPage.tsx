@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   FileText,
   Users,
@@ -47,7 +47,17 @@ export const GobernanzaPage: FC = () => {
     }
   });
 
+  const location = useLocation();
   const [tabActiva, setTabActiva] = useState<'actas' | 'organigrama' | 'audiencia'>('actas');
+
+  // Sincronizar pestaña activa con parámetro de búsqueda en URL (?tab=...)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tabParam = params.get('tab');
+    if (tabParam && (tabParam === 'actas' || tabParam === 'organigrama' || tabParam === 'audiencia')) {
+      setTabActiva(tabParam);
+    }
+  }, [location.search]);
 
   // Modal para ver agenda pública de la autoridad
   const [autoridadAgenda, setAutoridadAgenda] = useState<AutoridadLocal | null>(null);

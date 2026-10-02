@@ -7,6 +7,7 @@ import {
   Trophy,
   ChevronDown,
   ShieldAlert,
+  ShieldCheck,
   User,
   UserPlus,
   LogOut,
@@ -16,7 +17,7 @@ import {
 import Logo from './common/Logo';
 import MegaMenu, { CATEGORIAS_CIVICAS } from './navigation/MegaMenu';
 import CivicDrawer from './navigation/CivicDrawer';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, PROVINCIAS_COSTA_RICA, normalizarRolOficial } from '../context/AuthContext';
 import { useCivicModal } from '../context/CivicModalContext';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -34,18 +35,24 @@ export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const { t } = useLanguage();
 
+  // Detección estricta de vista administrativa:
+  const isAdminPath = location.pathname.startsWith('/admin');
+  const userRoleNorm = normalizarRolOficial(user?.rol);
+  const isAdminRole =
+    userRoleNorm === 'GESTOR_TERRITORIAL' ||
+    userRoleNorm === 'SUPER_ADMIN_NACIONAL' ||
+    user?.rol === 'Super Administrador Nacional' ||
+    user?.rol === 'Gestor Territorial y Municipal';
+  const isPublicVisitor = (!isAuthenticated || !user) && (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/registro');
+  const isVistaAdministrativa = isAdminPath || (isAuthenticated && isAdminRole && !isPublicVisitor);
+
+  // Nombre de la jurisdicción institucional para la pastilla central
+  const provinciaObj = PROVINCIAS_COSTA_RICA?.find((p) => String(p.id) === String(user?.provinciaId));
+  const jurisdiccionLabel = (user?.provincia || user?.provinciaNombre || provinciaObj?.nombre || 'Puntarenas').toUpperCase();
+
   const confirmarSalida = () => {
-    solicitarConfirmacion({
-      titulo: 'Confirmación de Cierre de Sesión',
-      mensaje: '¿Está seguro de que desea cerrar su sesión institucional en Costa Rica Unidos? Deberá autenticar sus credenciales nuevamente para acceder al sistema.',
-      icono: 'advertencia',
-      textoBotonAceptar: 'Cerrar Sesión',
-      textoBotonCancelar: 'Permanecer Conectado',
-      onAceptar: () => {
-        logout();
-        navigate('/');
-      }
-    });
+    logout();
+    navigate('/');
   };
 
   // Estado del Mega Menú en Desktop
@@ -111,6 +118,96 @@ export default function Navbar() {
     navigate('/');
   };
 
+  // ==========================================================================
+  // RENDERIZADO EXCLUSIVO: HEADER ADMINISTRATIVO MINIMALISTA
+  // Estética Sovereign Civic Glass v2.1
+  // ==========================================================================
+  if (isVistaAdministrativa) {
+    return (
+      <>
+        <header
+          className="sticky top-0 left-0 right-0 z-50 transition-all"
+          style={{
+            backgroundColor: 'rgba(5, 12, 28, 0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.45)'
+          }}
+        >
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-[64px] flex items-center justify-between gap-3">
+            {/* 1. EXTREMO IZQUIERDO: Isotipo y Texto Oficial (Sin Botón Hamburguesa) */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="flex items-center gap-2.5">
+                <Logo showText={false} size="32px" />
+                <div className="flex flex-col">
+                  <span className="text-white font-bold text-[13px] sm:text-sm tracking-wider uppercase leading-none">
+                    COSTA RICA UNIDOS
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono tracking-widest uppercase mt-0.5">
+                    PLATAFORMA CÍVICA
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. CENTRO: Pastilla Institucional Translúcida en JetBrains Mono */}
+            <div className="hidden md:flex items-center justify-center flex-1 mx-2">
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                  backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                  border: '1px solid rgba(245, 158, 11, 0.25)',
+                  color: '#F59E0B',
+                  boxShadow: '0 0 14px rgba(245, 158, 11, 0.12)'
+                }}
+                className="px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase flex items-center gap-2"
+              >
+                <ShieldCheck size={14} className="text-amber-400" />
+                <span>[NIVEL 4] GESTOR TERRITORIAL Y MUNICIPAL | COSTA RICA UNIDOS</span>
+              </div>
+            </div>
+
+            {/* 3. EXTREMO DERECHO: Badge Estado En Línea + Identificador del Usuario Activo */}
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              {/* Badge de estado del sistema (punto verde con pulso luminoso "EN LÍNEA") */}
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.25)',
+                  color: '#34D399'
+                }}
+                className="px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_#34d399]" />
+                </span>
+                <span className="hidden sm:inline">EN LÍNEA</span>
+              </div>
+
+              {/* Identificador del usuario: avatar o inicial con nombre del administrador activo */}
+              <div className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-slate-200">
+                <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-300 font-mono font-bold flex items-center justify-center text-[10px] border border-amber-500/30">
+                  {user?.nombre ? user.nombre.charAt(0).toUpperCase() : 'G'}
+                </div>
+                <div className="hidden lg:flex flex-col text-left">
+                  <span className="text-[11px] font-semibold text-white leading-tight">
+                    {user?.nombre || 'Coordinación Territorial'}
+                  </span>
+                  <span className="text-[9px] text-amber-400 font-mono">
+                    {user?.id || 'USR-TERR-001'} • GESTOR_TERRITORIAL
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+      </>
+    );
+  }
+
   return (
     <>
       <header
@@ -168,7 +265,7 @@ export default function Navbar() {
             ====================================================================== */}
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-3 xl:px-6 h-[68px] flex items-center justify-between gap-1.5 xl:gap-3">
           {/* LADO IZQUIERDO: LOGOTIPO OFICIAL */}
-          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <Logo showText={true} size="36px" />
           </div>
 
@@ -250,21 +347,10 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* BLOQUE DE IDENTIFICACIÓN Y REGISTRO CIUDADANO (REGISTRARSE / INICIAR SESIÓN) */}
+            {/* BLOQUE DE IDENTIFICACIÓN Y ACCESO CÍVICO (INICIAR SESIÓN / CERRAR SESIÓN) */}
             <div className="flex items-center gap-1 sm:gap-1.5" data-tour="registro-login-btn">
-              {/* BOTÓN REGISTRARSE EN LA BARRA DEL MENÚ PRINCIPAL */}
-              <Link
-                to="/registro"
-                aria-label="Registrarse en la plataforma cívica institucional"
-                title="Registrarse"
-                className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 hover:border-sky-400 text-sky-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
-              >
-                <UserPlus className="w-3.5 h-3.5 text-sky-400" strokeWidth={1.75} />
-                <span className="hidden sm:inline lg:hidden xl:inline">{t('navRegistrarse', 'Registrarse')}</span>
-              </Link>
-
-              {/* BOTÓN CERRAR SESIÓN (CUANDO HAY SESIÓN ACTIVA) / INICIAR SESIÓN (SI ESTÁ LOGUEADO COMO ANÓNIMO) */}
               {isAuthenticated && user ? (
+                /* BOTÓN CERRAR SESIÓN (CUANDO HAY SESIÓN ACTIVA) */
                 <button
                   type="button"
                   onClick={handleLogout}
@@ -276,13 +362,14 @@ export default function Navbar() {
                   <span className="hidden sm:inline lg:hidden xl:inline">{t('navCerrarSesion', 'Cerrar Sesión')}</span>
                 </button>
               ) : (
+                /* ÚNICO BOTÓN DE ACCESO: APUNTA DIRECTAMENTE A /login */
                 <Link
                   to="/login"
-                  aria-label="Iniciar sesión en la plataforma cívica"
+                  aria-label="Iniciar sesión en la plataforma cívica institucional"
                   title="Iniciar Sesión"
-                  className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 hover:border-white/35 text-slate-200 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 hover:border-sky-400 text-sky-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
                 >
-                  <LogIn className="w-3.5 h-3.5 text-slate-300" strokeWidth={1.75} />
+                  <LogIn className="w-3.5 h-3.5 text-sky-400" strokeWidth={1.75} />
                   <span className="hidden sm:inline lg:hidden xl:inline">{t('navIniciarSesion', 'Iniciar Sesión')}</span>
                 </Link>
               )}

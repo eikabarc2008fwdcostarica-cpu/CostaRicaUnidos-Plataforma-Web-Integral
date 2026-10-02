@@ -14,29 +14,17 @@
       "verificadoHacienda": true
     },
     {
-      "id": "USR-PROV-001",
-      "cedula": "1-0234-0567",
-      "nombre": "Coordinación Provincial de San José",
-      "correo": "gobierno.sanjose@gob.cr",
-      "password": "AdminProv2026*",
-      "rol": "Administrador Provincial",
+      "id": "USR-TERR-001",
+      "cedula": "6-0123-0456",
+      "nombre": "Coordinación Territorial",
+      "correo": "gobierno.territorial@gob.cr",
+      "password": "Territorial2026*",
+      "rol": "Gestor Territorial y Municipal",
       "nivelAcceso": 4,
-      "provincia": "San José",
-      "canton": "Provincial",
+      "provincia": "Puntarenas",
+      "provinciaId": 6,
+      "canton": "Puntarenas",
       "fechaRegistro": "2026-02-15T08:30:00Z",
-      "verificadoHacienda": true
-    },
-    {
-      "id": "USR-MUNI-001",
-      "cedula": "1-1155-0892",
-      "nombre": "Secretaría del Concejo Municipal de San José",
-      "correo": "editor.concejo@msj.go.cr",
-      "password": "EditorMuni2026*",
-      "rol": "Editor Municipal",
-      "nivelAcceso": 3,
-      "provincia": "San José",
-      "canton": "San José",
-      "fechaRegistro": "2026-03-01T10:00:00Z",
       "verificadoHacienda": true
     },
     {

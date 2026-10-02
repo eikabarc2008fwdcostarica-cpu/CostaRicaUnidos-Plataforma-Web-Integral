@@ -1,0 +1,303 @@
+/**
+ * ============================================================================
+ * COSTA RICA UNIDOS — MÓDULO DE GACETA DE ACTAS Y ACUERDOS MUNICIPALES
+ * Arquitectura: Sovereign Civic Glass v2.1
+ * Normativa: Artículos 13 y 17 del Código Municipal (Ley N° 7794)
+ * Fe Pública y Firma Digital: Ley N° 8454
+ * ============================================================================
+ */
+import React, { useState, useMemo } from 'react';
+import {
+  FileText,
+  ShieldCheck,
+  CheckCircle2,
+  FileCheck,
+  Download,
+  Filter,
+  Search,
+  Calendar,
+  Building2,
+  Hash,
+  Award
+} from 'lucide-react';
+import { CANTONES_OFICIALES, PROVINCIAS_DATA } from '../../../data/costaRicaTerritorialData';
+import { getActasCanton } from '../../../data/gobernanzaData';
+import { TablaActas } from '../../gobernanza/TablaActas';
+
+export default function GacetaActasModule({
+  provincia = 'Puntarenas',
+  onNavigateModule = null
+}) {
+  // Resolver provincia activa
+  const provinciaObj = useMemo(() => {
+    const raw = typeof provincia === 'object' && provincia !== null ? provincia.nombre || provincia.id : provincia;
+    const str = String(raw || 'Puntarenas').toLowerCase().trim();
+    return (
+      PROVINCIAS_DATA.find(
+        (p) => p.nombre.toLowerCase() === str || String(p.id) === str || p.codigo.toLowerCase() === str
+      ) || PROVINCIAS_DATA[5]
+    );
+  }, [provincia]);
+
+  // Cantones de la provincia
+  const cantones = useMemo(() => {
+    return CANTONES_OFICIALES.filter((c) => c.provinciaId === provinciaObj.id);
+  }, [provinciaObj.id]);
+
+  // Cantón seleccionado
+  const [selectedCantonId, setSelectedCantonId] = useState(() => {
+    return cantones.length > 0 ? cantones[0].id : 1;
+  });
+
+  const cantonActual = useMemo(() => {
+    return cantones.find((c) => c.id === selectedCantonId) || cantones[0] || {
+      id: 1,
+      nombre: provinciaObj.nombre,
+      codigoDta: `${provinciaObj.id}01`,
+      cabecera: provinciaObj.cabecera
+    };
+  }, [cantones, selectedCantonId]);
+
+  // Actas del cantón
+  const actas = useMemo(() => {
+    return getActasCanton(cantonActual.id);
+  }, [cantonActual.id]);
+
+  // Conteo de acuerdos totales
+  const totalAcuerdos = useMemo(() => {
+    return actas.reduce((acc, a) => acc + (a.acuerdosDestacados?.length || 0), 0);
+  }, [actas]);
+
+  return (
+    <div
+      id="modulo-gaceta-actas"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2rem',
+        animation: 'fadeInModule 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+      }}
+    >
+      <style>{`
+        @keyframes fadeInModule {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* =================================================================== */}
+      {/* 1. ENCABEZADO DE GACETA MUNICIPAL SOBERANA                          */}
+      {/* =================================================================== */}
+      <section
+        style={{
+          backgroundColor: 'rgba(5, 12, 28, 0.72)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: '24px',
+          padding: '2rem 2.25rem',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 20px 50px rgba(0, 4, 13, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            background: 'linear-gradient(90deg, #1E88E5 0%, #38BDF8 50%, #10B981 100%)'
+          }}
+        />
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1.75rem'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.25rem', maxWidth: '820px' }}>
+            <div
+              style={{
+                width: '68px',
+                height: '68px',
+                borderRadius: '18px',
+                backgroundColor: 'rgba(30, 136, 229, 0.15)',
+                border: '1.5px solid rgba(56, 189, 248, 0.4)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 8px 24px rgba(30, 136, 229, 0.35)',
+                flexShrink: 0
+              }}
+            >
+              <FileText size={34} color="#38BDF8" />
+            </div>
+
+            <div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.65rem',
+                  marginBottom: '0.45rem',
+                  flexWrap: 'wrap'
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '6px',
+                    backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                    color: '#38BDF8',
+                    border: '1px solid rgba(56, 189, 248, 0.3)'
+                  }}
+                >
+                  TRANSPARENCIA ACTIVA
+                </span>
+                <span style={{ fontSize: '0.76rem', color: '#94A3B8', fontWeight: 600 }}>
+                  PROVINCIA DE {provinciaObj.nombre.toUpperCase()} • DTA {cantonActual.codigoDta}
+                </span>
+                <span style={{ color: '#475569' }}>•</span>
+                <span style={{ fontSize: '0.76rem', color: '#34D399', fontWeight: 700 }}>
+                  CABECERA: {cantonActual.cabecera.toUpperCase()}
+                </span>
+              </div>
+
+              <h1
+                style={{
+                  fontFamily: "'Mistical Spring', Georgia, serif",
+                  fontSize: 'clamp(1.6rem, 3.2vw, 2.3rem)',
+                  fontWeight: 700,
+                  color: '#FFFFFF',
+                  letterSpacing: '-0.01em',
+                  margin: '0 0 0.5rem 0',
+                  lineHeight: 1.2
+                }}
+              >
+                Gaceta de Actas y Acuerdos de {cantonActual.nombre}
+              </h1>
+
+              <p
+                style={{
+                  fontSize: '0.94rem',
+                  color: '#CBD5E1',
+                  margin: 0,
+                  lineHeight: 1.5,
+                  maxWidth: '720px'
+                }}
+              >
+                Registro público oficial de sesiones ordinarias, extraordinarias y acuerdos firmes del Concejo Municipal. Autenticidad legal respaldada por firma digital conforme a la Ley N° 8454.
+              </p>
+            </div>
+          </div>
+
+          {/* Selector de Cantón */}
+          <div
+            style={{
+              backgroundColor: 'rgba(0, 4, 13, 0.65)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '16px',
+              padding: '1.1rem 1.35rem',
+              minWidth: '260px'
+            }}
+          >
+            <label
+              htmlFor="canton-gaceta-select"
+              style={{
+                display: 'block',
+                fontSize: '0.72rem',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontWeight: 700,
+                color: '#94A3B8',
+                textTransform: 'uppercase',
+                marginBottom: '0.5rem'
+              }}
+            >
+              Filtrar por Municipalidad:
+            </label>
+            <select
+              id="canton-gaceta-select"
+              value={selectedCantonId}
+              onChange={(e) => setSelectedCantonId(Number(e.target.value))}
+              style={{
+                width: '100%',
+                backgroundColor: 'rgba(5, 12, 28, 0.95)',
+                color: '#FFFFFF',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                borderRadius: '8px',
+                padding: '0.55rem 0.75rem',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {cantones.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.nombre} (DTA {c.codigoDta})
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* 4 KPIs de la Gaceta */}
+        <div
+          style={{
+            marginTop: '1.75rem',
+            paddingTop: '1.5rem',
+            borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '1rem'
+          }}
+        >
+          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', padding: '1rem', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
+            <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>ACTAS PUBLICADAS</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#38BDF8', marginTop: '0.2rem', fontFamily: "'JetBrains Mono', monospace" }}>{actas.length}</div>
+            <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.2rem' }}>Periodo 2024 - 2026</div>
+          </div>
+
+          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', padding: '1rem', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
+            <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>ACUERDOS DESTACADOS</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10B981', marginTop: '0.2rem', fontFamily: "'JetBrains Mono', monospace" }}>{totalAcuerdos}</div>
+            <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.2rem' }}>Aprobados y firmes</div>
+          </div>
+
+          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', padding: '1rem', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
+            <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>QUÓRUM PROMEDIO</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#FBBF24', marginTop: '0.2rem', fontFamily: "'JetBrains Mono', monospace" }}>100%</div>
+            <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.2rem' }}>Asistencia reglamentaria</div>
+          </div>
+
+          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', padding: '1rem', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
+            <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>VALIDEZ JURÍDICA</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginTop: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <ShieldCheck size={18} color="#10B981" />
+              <span>Firma TSE/MICITT</span>
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.2rem' }}>Certificado Digital SHA-256</div>
+          </div>
+        </div>
+      </section>
+
+      {/* =================================================================== */}
+      {/* 2. TABLA COMPONENTE OFICIAL DE ACTAS (TablaActas)                   */}
+      {/* =================================================================== */}
+      <section aria-label="Visor Oficial de Actas y Acuerdos Municipales">
+        <TablaActas actas={actas} />
+      </section>
+    </div>
+  );
+}
