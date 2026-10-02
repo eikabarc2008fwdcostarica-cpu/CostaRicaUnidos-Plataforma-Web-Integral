@@ -340,17 +340,33 @@ export default function Navbar() {
             {/* BLOQUE DE IDENTIFICACIÓN Y ACCESO CÍVICO (INICIAR SESIÓN / CERRAR SESIÓN) */}
             <div className="flex items-center gap-1 sm:gap-1.5" data-tour="registro-login-btn">
               {isAuthenticated && user ? (
-                /* BOTÓN CERRAR SESIÓN (CUANDO HAY SESIÓN ACTIVA) */
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  aria-label="Cerrar sesión activa"
-                  title="Cerrar Sesión"
-                  className="inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 hover:border-red-400 text-red-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"
-                >
-                  <LogOut className="w-3.5 h-3.5 text-red-400" strokeWidth={1.75} />
-                  <span className="hidden sm:inline lg:hidden xl:inline">{t('navCerrarSesion', 'Cerrar Sesión')}</span>
-                </button>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  {/* Pastilla Ciudadana con Nombre Oficial */}
+                  <Link
+                    to="/portal-ciudadano"
+                    aria-label={`Perfil cívico de ${user.nombre || 'Ciudadano'}`}
+                    title={`Ciudadano autenticado: ${user.nombre || 'Eiker Abarca'}`}
+                    className="inline-flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 hover:border-emerald-400 text-emerald-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all shadow-sm"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" strokeWidth={1.75} />
+                    <span className="max-w-[120px] sm:max-w-[160px] truncate">
+                      {user.nombre?.split(' ')[0]} {user.nombre?.split(' ')[1] || (user.nombre?.includes('Abarca') ? 'Abarca' : '')}
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+                  </Link>
+
+                  {/* Botón Cerrar Sesión */}
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    aria-label="Cerrar sesión activa"
+                    title="Cerrar Sesión"
+                    className="inline-flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 hover:border-red-400 text-red-300 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"
+                  >
+                    <LogOut className="w-3.5 h-3.5 text-red-400" strokeWidth={1.75} />
+                    <span className="hidden sm:inline lg:hidden xl:inline">{t('navCerrarSesion', 'Cerrar Sesión')}</span>
+                  </button>
+                </div>
               ) : (
                 /* ÚNICO BOTÓN DE ACCESO: APUNTA DIRECTAMENTE A /login */
                 <Link
