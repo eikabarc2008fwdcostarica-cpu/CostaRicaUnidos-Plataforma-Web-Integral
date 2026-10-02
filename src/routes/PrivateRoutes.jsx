@@ -1,48 +1,85 @@
+<<<<<<< HEAD
+=======
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
+>>>>>>> origin/main
 /**
- * Pantalla institucional mientras se validan credenciales de Estado
+ * ============================================================================
+ * COSTA RICA UNIDOS — GUARDIÁN DE RUTAS PRIVADAS Y CONTROL RBAC (3 ROLES ÚNICOS)
+ * Validador de Autenticación de Estado y Control de Acceso Basado en Roles
+ * ============================================================================
+ * 
+ * Jerarquía Oficial de Permisos:
+ * 1. SUPER_ADMIN_NACIONAL (Nivel 5): Acceso a /admin/super, /admin/territorial, /dashboard y portales públicos.
+ * 2. GESTOR_TERRITORIAL (Nivel 4): Acceso a /admin/territorial y /dashboard. Intento a /admin/super -> Pantalla 403.
+ * 3. CIUDADANO (Nivel 2): Acceso a /dashboard y /. Intento a /admin/territorial o /admin/super -> Pantalla 403.
+ * 4. No Autenticado (Sin sesión): Redirección inmediata a /login.
  */
-function VerificandoCredenciales() {
-  return (
-    <div
-      style={{
-        minHeight: '100vh',
-        backgroundColor: '#00040D',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#79a6ff'
-      }}
-    >
-      <div style={{ textAlign: 'center' }}>
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '52px',
-            height: '52px',
-            borderRadius: '50%',
-            backgroundColor: 'rgba(0, 43, 127, 0.4)',
-            border: '1px solid rgba(121, 166, 255, 0.4)',
-            marginBottom: '1rem'
-          }}
-        >
-          <ShieldCheck size={28} color="#79a6ff" strokeWidth={1.75} />
-        </div>
-        <div style={{ fontSize: '0.88rem', letterSpacing: '0.06em', color: '#CBD5E1', fontWeight: 600 }}>
-          Verificando credenciales de Estado...
-        </div>
-      </div>
-    </div>
-  );
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import AccessDenied from "../pages/AccessDenied";
+import { ROLES_SISTEMA, normalizarRolOficial } from "../config/roles";
+
+function PrivateRoutes({ allowedRoles, children }) {
+  const { user, isAuthenticated } = useAuth();
+
+  // 1. Si no está autenticado -> Redirigir a Login
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // 2. Si la ruta exige roles específicos y el usuario NO lo tiene -> Mostrar Error 403 (Sin rebotes silenciosos)
+  if (allowedRoles && allowedRoles.length > 0) {
+    const userRoleNorm = normalizarRolOficial(user.rol);
+    const hasRole = allowedRoles.some((role) => {
+      return role === user.rol || normalizarRolOficial(role) === userRoleNorm;
+    });
+
+    if (!hasRole) {
+      return <AccessDenied requiredRoles={allowedRoles} userRole={user.rol} />;
+    }
+  }
+
+  // 3. Acceso autorizado
+  return children ? children : <Outlet />;
 }
 
 /**
+<<<<<<< HEAD
+ * Guardián de compatibilidad para rutas basadas en nivel numérico o roles permitidos
+ */
+export function RoleRoute({ minLevel = 2, rolesPermitidos = [], allowedRoles = [] }) {
+  const { user, isAuthenticated } = useAuth();
+
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const rolesToCheck = allowedRoles.length > 0 ? allowedRoles : rolesPermitidos;
+  if (rolesToCheck.length > 0) {
+    const userRoleNorm = normalizarRolOficial(user?.rol);
+    const isSuperAdmin = userRoleNorm === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL;
+    const isAllowed = isSuperAdmin || rolesToCheck.some((r) => normalizarRolOficial(r) === userRoleNorm || r === user?.rol);
+    if (!isAllowed) {
+      return <AccessDenied requiredRoles={rolesToCheck} userRole={user?.rol} />;
+    }
+  }
+
+  const userLevel = user?.nivelAcceso ?? 2;
+  if (userLevel < minLevel) {
+    return <AccessDenied requiredRoles={rolesToCheck} userRole={user?.rol} />;
+  }
+
+  return <Outlet />;
+}
+
+/**
+ * Guardián de Rutas Administrativas
+=======
  * Determina de forma flexible si un rol corresponde a la esfera ciudadana
  */
 export function esRolCiudadano(rol) {
@@ -141,18 +178,22 @@ export const ProtectedRoute = RoleRoute;
 /**
  * Guardián de Rutas Administrativas (Nivel >= 3)
  * Admite Editor Municipal (N3), Administrador Provincial (N4) y Super Admin (N5).
+>>>>>>> origin/main
  */
 export function AdminRoutes() {
-  return <RoleRoute minLevel={3} />;
+  return <PrivateRoutes allowedRoles={[ROLES_SISTEMA.SUPER_ADMIN_NACIONAL, ROLES_SISTEMA.GESTOR_TERRITORIAL]} />;
 }
 
 /**
- * Guardián de Rutas Provinciales y Nacionales (Nivel >= 4)
+ * Guardián de Rutas Territoriales (Nivel 4)
  */
 export function ProvincialAdminRoutes() {
-  return <RoleRoute minLevel={4} />;
+  return <PrivateRoutes allowedRoles={[ROLES_SISTEMA.SUPER_ADMIN_NACIONAL, ROLES_SISTEMA.GESTOR_TERRITORIAL]} />;
 }
 
+<<<<<<< HEAD
+export default PrivateRoutes;
+=======
 /**
  * Guardián de Rutas Privadas Generales (Nivel >= 1 o Ciudadano Autenticado)
  */
@@ -160,3 +201,4 @@ export default function PrivateRoutes() {
   return <RoleRoute minLevel={1} />;
 }
 
+>>>>>>> origin/main

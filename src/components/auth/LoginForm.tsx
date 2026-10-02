@@ -8,7 +8,11 @@
  */
 
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+=======
 import { useNavigate, useLocation } from 'react-router-dom';
+>>>>>>> origin/main
 import {
   OfficialRoleName,
   CitizenMode,
@@ -55,6 +59,10 @@ interface LoginFormProps {
 export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
   const navigate = useNavigate();
   const location = useLocation();
+<<<<<<< HEAD
+  const [searchParams] = useSearchParams();
+  const tabFromUrl = searchParams.get('tab') || searchParams.get('mode');
+=======
 
   // Detectar ruta de retorno previo si el usuario fue redirigido
   const fromState = (location.state as any)?.from;
@@ -78,15 +86,27 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
   };
 
   const { login, registro, register, seleccionarCuentaDemo, cargando, isLoading, error: authError, clearError } = useAuth();
+>>>>>>> origin/main
 
-  // Modo activo: Iniciar Sesión o Registrarse
-  const [authMode, setAuthMode] = useState<AuthMode>(initialMode);
+  // Modo activo: Iniciar Sesión ('LOGIN') es SIEMPRE el valor predeterminado en /login
+  const resolvedInitialMode: AuthMode =
+    location.pathname === '/login' || tabFromUrl === 'login'
+      ? 'LOGIN'
+      : location.pathname === '/registro' || tabFromUrl === 'register'
+      ? 'REGISTER'
+      : initialMode || 'LOGIN';
+
+  const [authMode, setAuthMode] = useState<AuthMode>(resolvedInitialMode);
 
   useEffect(() => {
-    if (initialMode) {
-      setAuthMode(initialMode);
+    if (location.pathname === '/login' || tabFromUrl === 'login') {
+      setAuthMode('LOGIN');
+    } else if (location.pathname === '/registro' || tabFromUrl === 'register') {
+      setAuthMode('REGISTER');
     }
-  }, [initialMode]);
+  }, [location.pathname, tabFromUrl]);
+
+  const { login, registro, register, seleccionarCuentaDemo, cargando, isLoading, error: authError, clearError } = useAuth();
 
   // Rol activo seleccionado para el inicio de sesión
   const [selectedRole, setSelectedRole] = useState<OfficialRoleName>('Ciudadano/Turista');
@@ -652,213 +672,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
       {/* ========================================================================= */}
       {authMode === 'LOGIN' && (
         <>
-          {/* Selector de los 4 Roles Oficiales */}
-          <div style={{ marginBottom: '1.2rem' }}>
-            <label
-              style={{
-                display: 'block',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                color: 'rgba(255, 255, 255, 0.85)',
-                marginBottom: '0.5rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}
-            >
-              Seleccione el Nivel y Rol de Acceso (SRS v2.1):
-            </label>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '5px',
-                background: 'rgba(0, 4, 13, 0.85)',
-                padding: '5px',
-                borderRadius: '10px',
-                border: '1px solid rgba(255, 255, 255, 0.12)'
-              }}
-            >
-              {/* Rol 1: Ciudadano / Turista (Nivel 2) */}
-              <button
-                type="button"
-                onClick={() => setSelectedRole('Ciudadano/Turista')}
-                style={{
-                  padding: '8px 4px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background:
-                    selectedRole === 'Ciudadano/Turista'
-                      ? 'linear-gradient(135deg, #002B7F 0%, #0A3282 100%)'
-                      : 'transparent',
-                  color: selectedRole === 'Ciudadano/Turista' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
-                  fontWeight: selectedRole === 'Ciudadano/Turista' ? 700 : 500,
-                  fontSize: '0.74rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-              >
-                <User className="w-4 h-4 text-sky-400" />
-                <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Ciudadano</span>
-                <span style={{ fontSize: '0.62rem', opacity: 0.75 }}>Nivel 2</span>
-              </button>
-
-              {/* Rol 2: Editor Municipal (Nivel 3) */}
-              <button
-                type="button"
-                onClick={() => setSelectedRole('Editor Municipal')}
-                style={{
-                  padding: '8px 4px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background:
-                    selectedRole === 'Editor Municipal'
-                      ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)'
-                      : 'transparent',
-                  color: selectedRole === 'Editor Municipal' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
-                  fontWeight: selectedRole === 'Editor Municipal' ? 700 : 500,
-                  fontSize: '0.74rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-              >
-                <FileText className="w-4 h-4 text-sky-400" />
-                <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Editor Muni</span>
-                <span style={{ fontSize: '0.62rem', opacity: 0.75 }}>Nivel 3</span>
-              </button>
-
-              {/* Rol 3: Administrador Provincial (Nivel 4) */}
-              <button
-                type="button"
-                onClick={() => setSelectedRole('Administrador Provincial')}
-                style={{
-                  padding: '8px 4px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background:
-                    selectedRole === 'Administrador Provincial'
-                      ? 'linear-gradient(135deg, #FFC700 0%, #D97706 100%)'
-                      : 'transparent',
-                  color: selectedRole === 'Administrador Provincial' ? '#111827' : 'rgba(255, 255, 255, 0.65)',
-                  fontWeight: selectedRole === 'Administrador Provincial' ? 800 : 500,
-                  fontSize: '0.74rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-              >
-                <Landmark
-                  className={`w-4 h-4 transition-colors duration-200 ${
-                    selectedRole === 'Administrador Provincial'
-                      ? 'text-slate-950 font-bold'
-                      : 'text-amber-400'
-                  }`}
-                  style={{
-                    color: selectedRole === 'Administrador Provincial' ? '#0f172a' : undefined,
-                    marginBottom: '2px'
-                  }}
-                />
-                <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Admin Prov</span>
-                <span style={{ fontSize: '0.62rem', opacity: 0.85 }}>Nivel 4</span>
-              </button>
-
-              {/* Rol 4: Super Administrador Nacional (Nivel 5) */}
-              <button
-                type="button"
-                onClick={() => setSelectedRole('Super Administrador Nacional')}
-                style={{
-                  padding: '8px 4px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background:
-                    selectedRole === 'Super Administrador Nacional'
-                      ? 'linear-gradient(135deg, #CE1126 0%, #850A18 100%)'
-                      : 'transparent',
-                  color: '#FFFFFF',
-                  fontWeight: selectedRole === 'Super Administrador Nacional' ? 800 : 500,
-                  fontSize: '0.74rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-              >
-                <ShieldCheck className="w-4 h-4 text-red-400" />
-                <span style={{ textAlign: 'center', lineHeight: 1.1 }}>Super Admin</span>
-                <span style={{ fontSize: '0.62rem', opacity: 0.75 }}>Nivel 5</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Banner de Descripción del Rol Seleccionado */}
-          <div
-            style={{
-              padding: '0.65rem 0.9rem',
-              borderRadius: '8px',
-              marginBottom: '1.25rem',
-              fontSize: '0.8rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              backgroundColor:
-                selectedRole === 'Ciudadano/Turista'
-                  ? 'rgba(0, 43, 127, 0.25)'
-                  : selectedRole === 'Editor Municipal'
-                  ? 'rgba(2, 132, 199, 0.25)'
-                  : selectedRole === 'Administrador Provincial'
-                  ? 'rgba(255, 199, 0, 0.15)'
-                  : 'rgba(206, 17, 38, 0.2)',
-              borderLeft: `4px solid ${
-                selectedRole === 'Ciudadano/Turista'
-                  ? '#002B7F'
-                  : selectedRole === 'Editor Municipal'
-                  ? '#0284C7'
-                  : selectedRole === 'Administrador Provincial'
-                  ? '#FFC700'
-                  : '#CE1126'
-              }`
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {selectedRole === 'Ciudadano/Turista' && (
-                <>
-                  <User className="w-4 h-4 text-sky-400 shrink-0" />
-                  <span>Persona Física: Votaciones cívicas, trámites, mapas GIS e incidencias.</span>
-                </>
-              )}
-              {selectedRole === 'Editor Municipal' && (
-                <>
-                  <FileText className="w-4 h-4 text-sky-400 shrink-0" />
-                  <span>Secretaría del Concejo: Edición de actas, convocatorias y proyectos cantonales.</span>
-                </>
-              )}
-              {selectedRole === 'Administrador Provincial' && (
-                <>
-                  <Landmark className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>Coordinación Cantonal: Publicaciones de gobierno local y moderación cantonal.</span>
-                </>
-              )}
-              {selectedRole === 'Super Administrador Nacional' && (
-                <>
-                  <ShieldCheck className="w-4 h-4 text-red-400 shrink-0" />
-                  <span>Superintendencia Nacional: Control maestro de los 84 cantones y auditoría.</span>
-                </>
-              )}
-            </div>
-          </div>
 
           {/* Formulario de Login */}
           <form onSubmit={handleLoginSubmit}>
@@ -1133,7 +947,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
             </div>
 
             {showDemoCredentials && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
                 {/* 1. Super Admin Nacional */}
                 <div
                   onClick={() =>
@@ -1172,10 +986,21 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   </div>
                   <button
                     type="button"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
+<<<<<<< HEAD
+                      await login({
+                        id: 1,
+                        nombre: 'Super Admin Nacional',
+                        email: 'admin.nacional@gob.cr',
+                        rol: 'SUPER_ADMIN_NACIONAL',
+                        password: 'Admin123*'
+                      });
+                      navigate('/admin');
+=======
                       seleccionarCuentaDemo('USR-NAC-001');
                       navigate(resolveTarget('/admin'), { replace: true });
+>>>>>>> origin/main
                     }}
                     style={{
                       background: '#CE1126',
@@ -1196,24 +1021,24 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   </button>
                 </div>
 
-                {/* 2. Admin Provincial */}
+                {/* 2. Gestor Territorial y Municipal */}
                 <div
                   onClick={() =>
                     loadSeedAccount(
-                      'Administrador Provincial',
-                      'gobierno.sanjose@gob.cr',
-                      'AdminProv2026*',
+                      'Gestor Territorial y Municipal',
+                      'gobierno.territorial@gob.cr',
+                      'Territorial2026*',
                       'CIUDADANO',
-                      'muni-sanjose',
-                      'MSJ-2026-SEC'
+                      'muni-puntarenas',
+                      'MPU-2026-SEC'
                     )
                   }
                   style={{
                     padding: '8px 10px',
                     borderRadius: '8px',
-                    backgroundColor: 'rgba(255, 199, 0, 0.16)',
-                    border: '1px solid rgba(255, 199, 0, 0.4)',
-                    color: '#FFC700',
+                    backgroundColor: 'rgba(245, 158, 11, 0.18)',
+                    border: '1px solid rgba(245, 158, 11, 0.45)',
+                    color: '#FCD34D',
                     fontSize: '0.72rem',
                     cursor: 'pointer',
                     display: 'flex',
@@ -1226,22 +1051,35 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   <div>
                     <div style={{ fontWeight: 800, display: 'flex', alignItems: 'center', gap: '5px' }}>
                       <Landmark className="w-3.5 h-3.5 text-amber-400" />
-                      <span>Admin Provincial</span>
+                      <span>Gestor Territorial y Municipal</span>
                     </div>
-                    <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>gobierno.sanjose@gob.cr</div>
-                    <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: AdminProv2026* (Nivel 4)</div>
+                    <div style={{ opacity: 0.8, fontSize: '0.68rem', fontFamily: 'monospace' }}>gobierno.territorial@gob.cr</div>
+                    <div style={{ opacity: 0.65, fontSize: '0.66rem' }}>Pass: Territorial2026* (Nivel 4)</div>
                   </div>
                   <button
                     type="button"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
+<<<<<<< HEAD
+                      await login({
+                        id: 2,
+                        nombre: 'Coordinación Territorial',
+                        email: 'gobierno.territorial@gob.cr',
+                        rol: 'GESTOR_TERRITORIAL',
+                        provincia: 'Puntarenas',
+                        provinciaId: 6,
+                        password: 'Territorial2026*'
+                      });
+                      navigate('/admin/territorial');
+=======
                       seleccionarCuentaDemo('USR-PROV-001');
                       navigate(resolveTarget('/gobernanza'), { replace: true });
+>>>>>>> origin/main
                     }}
                     style={{
-                      background: '#FFC700',
+                      background: '#D97706',
                       border: 'none',
-                      color: '#181818',
+                      color: '#FFF',
                       padding: '3px 8px',
                       borderRadius: '4px',
                       fontWeight: 800,
@@ -1257,6 +1095,9 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   </button>
                 </div>
 
+<<<<<<< HEAD
+                {/* 3. Ciudadano Residente */}
+=======
                 {/* 3. Editor Municipal */}
                 <div
                   onClick={() =>
@@ -1319,6 +1160,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                 </div>
 
                 {/* 4. Ciudadano / Turista */}
+>>>>>>> origin/main
                 <div
                   onClick={() =>
                     loadSeedAccount(
@@ -1353,10 +1195,21 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   </div>
                   <button
                     type="button"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
+<<<<<<< HEAD
+                      await login({
+                        id: 3,
+                        nombre: 'Ciudadano Residente',
+                        email: 'eiker.abarca@gmail.com',
+                        rol: 'CIUDADANO',
+                        password: 'Ciudadano2026*'
+                      });
+                      navigate('/dashboard');
+=======
                       seleccionarCuentaDemo('USR-CIUD-001');
                       navigate(resolveTarget('/dashboard'), { replace: true });
+>>>>>>> origin/main
                     }}
                     style={{
                       background: '#002B7F',
