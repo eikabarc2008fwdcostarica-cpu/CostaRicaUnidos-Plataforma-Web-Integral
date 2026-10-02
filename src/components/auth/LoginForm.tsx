@@ -8,11 +8,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-=======
-import { useNavigate, useLocation } from 'react-router-dom';
->>>>>>> origin/main
 import {
   OfficialRoleName,
   CitizenMode,
@@ -59,42 +55,21 @@ interface LoginFormProps {
 export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
   const navigate = useNavigate();
   const location = useLocation();
-<<<<<<< HEAD
   const [searchParams] = useSearchParams();
   const tabFromUrl = searchParams.get('tab') || searchParams.get('mode');
-=======
 
-  // Detectar ruta de retorno previo si el usuario fue redirigido
-  const fromState = (location.state as any)?.from;
-  const targetDestination =
-    typeof fromState === 'string'
-      ? fromState
-      : fromState?.pathname
-      ? fromState.pathname + (fromState.search || '')
-      : null;
-
-  const resolveTarget = (fallbackPath: string) => {
-    if (
-      targetDestination &&
-      !targetDestination.includes('/login') &&
-      !targetDestination.includes('/403') &&
-      !targetDestination.includes('/acceso-denegado')
-    ) {
-      return targetDestination;
-    }
-    return fallbackPath;
+  const resolveTarget = (defaultPath: string) => {
+    const from = (location.state as { from?: { pathname?: string } })?.from?.pathname;
+    return from || defaultPath;
   };
-
-  const { login, registro, register, seleccionarCuentaDemo, cargando, isLoading, error: authError, clearError } = useAuth();
->>>>>>> origin/main
 
   // Modo activo: Iniciar Sesión ('LOGIN') es SIEMPRE el valor predeterminado en /login
   const resolvedInitialMode: AuthMode =
     location.pathname === '/login' || tabFromUrl === 'login'
       ? 'LOGIN'
       : location.pathname === '/registro' || tabFromUrl === 'register'
-      ? 'REGISTER'
-      : initialMode || 'LOGIN';
+        ? 'REGISTER'
+        : initialMode || 'LOGIN';
 
   const [authMode, setAuthMode] = useState<AuthMode>(resolvedInitialMode);
 
@@ -912,8 +887,8 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                 selectedRole === 'Super Administrador Nacional'
                   ? 'danger'
                   : selectedRole === 'Administrador Provincial'
-                  ? 'warning'
-                  : 'primary'
+                    ? 'warning'
+                    : 'primary'
               }
               isLoading={isLoading}
               style={{ width: '100%', height: '48px', fontSize: '0.95rem', fontWeight: 700 }}
@@ -954,11 +929,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     loadSeedAccount(
                       'Super Administrador Nacional',
                       'admin.nacional@gob.cr',
-                      'Admin123*',
-                      'CIUDADANO',
-                      'muni-sanjose',
-                      'MSJ-2026-SEC',
-                      'CRU-MASTER-2026'
+                      'Admin123*'
                     )
                   }
                   style={{
@@ -988,19 +959,18 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     type="button"
                     onClick={async (e) => {
                       e.stopPropagation();
-<<<<<<< HEAD
                       await login({
-                        id: 1,
-                        nombre: 'Super Admin Nacional',
+                        id: 'USR-NAC-001',
+                        cedula: '1-0000-0001',
+                        nombre: 'Superintendencia Nacional de Gobierno Digital',
+                        correo: 'admin.nacional@gob.cr',
                         email: 'admin.nacional@gob.cr',
                         rol: 'SUPER_ADMIN_NACIONAL',
+                        nivelAcceso: 5,
+                        provincia: 'Nacional',
                         password: 'Admin123*'
                       });
-                      navigate('/admin');
-=======
-                      seleccionarCuentaDemo('USR-NAC-001');
-                      navigate(resolveTarget('/admin'), { replace: true });
->>>>>>> origin/main
+                      navigate(resolveTarget('/admin/super'), { replace: true });
                     }}
                     style={{
                       background: '#CE1126',
@@ -1060,21 +1030,19 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     type="button"
                     onClick={async (e) => {
                       e.stopPropagation();
-<<<<<<< HEAD
                       await login({
-                        id: 2,
-                        nombre: 'Coordinación Territorial',
+                        id: 'USR-TER-006',
+                        cedula: '6-0123-0456',
+                        nombre: 'Coordinación Territorial Puntarenas',
+                        correo: 'gobierno.territorial@gob.cr',
                         email: 'gobierno.territorial@gob.cr',
                         rol: 'GESTOR_TERRITORIAL',
                         provincia: 'Puntarenas',
                         provinciaId: 6,
+                        nivelAcceso: 4,
                         password: 'Territorial2026*'
                       });
-                      navigate('/admin/territorial');
-=======
-                      seleccionarCuentaDemo('USR-PROV-001');
-                      navigate(resolveTarget('/gobernanza'), { replace: true });
->>>>>>> origin/main
+                      navigate(resolveTarget('/admin/territorial'), { replace: true });
                     }}
                     style={{
                       background: '#D97706',
@@ -1095,9 +1063,6 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   </button>
                 </div>
 
-<<<<<<< HEAD
-                {/* 3. Ciudadano Residente */}
-=======
                 {/* 3. Editor Municipal */}
                 <div
                   onClick={() =>
@@ -1135,9 +1100,19 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   </div>
                   <button
                     type="button"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
-                      seleccionarCuentaDemo('USR-MUNI-001');
+                      await login({
+                        id: 'USR-MUNI-001',
+                        cedula: '1-0101-0101',
+                        nombre: 'Editor Municipal San José',
+                        correo: 'editor.concejo@msj.go.cr',
+                        email: 'editor.concejo@msj.go.cr',
+                        rol: 'GESTOR_TERRITORIAL',
+                        nivelAcceso: 3,
+                        provincia: 'San José',
+                        password: 'EditorMuni2026*'
+                      });
                       navigate(resolveTarget('/gobernanza'), { replace: true });
                     }}
                     style={{
@@ -1159,8 +1134,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                   </button>
                 </div>
 
-                {/* 4. Ciudadano / Turista */}
->>>>>>> origin/main
+                {/* 4. Ciudadano Residente */}
                 <div
                   onClick={() =>
                     loadSeedAccount(
@@ -1197,19 +1171,18 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     type="button"
                     onClick={async (e) => {
                       e.stopPropagation();
-<<<<<<< HEAD
                       await login({
-                        id: 3,
-                        nombre: 'Ciudadano Residente',
+                        id: 'USR-CIU-001',
+                        cedula: '6-0509-0727',
+                        nombre: 'Eiker Manuel Abarca Murillo',
+                        correo: 'eiker.abarca@gmail.com',
                         email: 'eiker.abarca@gmail.com',
                         rol: 'CIUDADANO',
+                        nivelAcceso: 2,
+                        provincia: 'Puntarenas',
                         password: 'Ciudadano2026*'
                       });
-                      navigate('/dashboard');
-=======
-                      seleccionarCuentaDemo('USR-CIUD-001');
                       navigate(resolveTarget('/dashboard'), { replace: true });
->>>>>>> origin/main
                     }}
                     style={{
                       background: '#002B7F',
@@ -1235,583 +1208,585 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
         </>
       )}
 
-      {/* ========================================================================= */}
-      {/* 2. VISTA DE REGISTRO CIUDADANO (SINCRONIZA EN db.json / localStorage)    */}
-      {/* ========================================================================= */}
-      {authMode === 'REGISTER' && (
-        <form onSubmit={handleRegisterSubmit}>
-          {/* PASO 1: Cédula con Consulta Hacienda */}
-          <div style={{ marginBottom: '1.15rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-              <label
-                htmlFor="reg-cedula-input"
-                style={{ fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)' }}
-              >
-                1. Cédula Costarricense o DIMEX Oficial
-              </label>
-              <span style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.55)', fontFamily: 'monospace' }}>
-                9 a 12 dígitos
-              </span>
-            </div>
-
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <input
-                id="reg-cedula-input"
-                type="text"
-                placeholder="1-1823-0456 ó 118230456"
-                value={regCedula}
-                onChange={(e) => {
-                  setRegCedula(e.target.value);
-                  setHaciendaVerified(false);
-                  setIdentityStatus(null);
-                }}
-                onBlur={() => {
-                  if (regCedula.replace(/[^0-9]/g, '').length >= 9 && !haciendaVerified) {
-                    handleValidateCedula(regCedula);
-                  }
-                }}
-                style={{
-                  flex: 1,
-                  padding: '0.75rem 0.9rem',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(0, 4, 13, 0.75)',
-                  border: haciendaVerified
-                    ? '1px solid #00D084'
-                    : identityStatus === 'PENDIENTE_VERIFICACION'
-                    ? '1px solid #FFC700'
-                    : '1px solid rgba(255, 255, 255, 0.22)',
-                  color: '#FFFFFF',
-                  fontSize: '0.92rem',
-                  fontFamily: 'monospace',
-                  outline: 'none'
-                }}
-              />
-
-              <CivicButton
-                type="button"
-                variant="secondary"
-                onClick={() => handleValidateCedula(regCedula)}
-                disabled={isValidatingHacienda || !regCedula.trim()}
-                isLoading={isValidatingHacienda}
-                style={{ minWidth: '120px', height: '42px', fontSize: '0.78rem' }}
-              >
-                {isValidatingHacienda ? (
-                  'Consultando...'
-                ) : (
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                    <Search className="w-3.5 h-3.5" />
-                    <span>Validar</span>
-                  </span>
-                )}
-              </CivicButton>
-            </div>
-
-            {haciendaMessage && (
-              <div
-                style={{
-                  marginTop: '0.4rem',
-                  fontSize: '0.76rem',
-                  color: haciendaVerified ? '#00D084' : '#FFC700',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                {haciendaVerified ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                ) : (
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                )}
-                <span>{haciendaMessage}</span>
-              </div>
-            )}
-          </div>
-
-          {/* PASO 2: Nombres y Apellidos */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '1.15rem' }}>
-            <div style={{ gridColumn: 'span 2' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-                <label style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)' }}>
-                  Nombre(s)
-                </label>
-                {haciendaVerified && (
-                  <span style={{ fontSize: '0.72rem', color: '#00D084', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Verificado por Hacienda</span>
-                  </span>
-                )}
-              </div>
-              <input
-                type="text"
-                placeholder="Nombre oficial"
-                value={regNombre}
-                onChange={(e) => setRegNombre(e.target.value)}
-                readOnly={haciendaVerified}
-                style={{
-                  width: '100%',
-                  padding: '0.7rem 0.85rem',
-                  borderRadius: '6px',
-                  backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
-                  border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  fontSize: '0.88rem',
-                  outline: 'none',
-                  cursor: haciendaVerified ? 'not-allowed' : 'text'
-                }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
-                Primer Apellido
-              </label>
-              <input
-                type="text"
-                placeholder="Primer Apellido"
-                value={regPrimerApellido}
-                onChange={(e) => setRegPrimerApellido(e.target.value)}
-                readOnly={haciendaVerified}
-                style={{
-                  width: '100%',
-                  padding: '0.7rem 0.85rem',
-                  borderRadius: '6px',
-                  backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
-                  border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  fontSize: '0.88rem',
-                  outline: 'none',
-                  cursor: haciendaVerified ? 'not-allowed' : 'text'
-                }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
-                Segundo Apellido
-              </label>
-              <input
-                type="text"
-                placeholder="Segundo Apellido"
-                value={regSegundoApellido}
-                onChange={(e) => setRegSegundoApellido(e.target.value)}
-                readOnly={haciendaVerified}
-                style={{
-                  width: '100%',
-                  padding: '0.7rem 0.85rem',
-                  borderRadius: '6px',
-                  backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
-                  border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  fontSize: '0.88rem',
-                  outline: 'none',
-                  cursor: haciendaVerified ? 'not-allowed' : 'text'
-                }}
-              />
-            </div>
-          </div>
-
-          {/* PASO 3: Correo Electrónico */}
-          <div style={{ marginBottom: '1.15rem' }}>
-            <label
-              htmlFor="reg-email-input"
-              style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)', marginBottom: '0.35rem' }}
-            >
-              2. Correo Electrónico (Notificaciones Cívicas)
-            </label>
-            <input
-              id="reg-email-input"
-              type="email"
-              placeholder="correo@ejemplo.com"
-              value={regEmail}
-              onChange={(e) => setRegEmail(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem 0.9rem',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(0, 4, 13, 0.75)',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
-                color: '#FFFFFF',
-                fontSize: '0.92rem',
-                outline: 'none'
-              }}
-            />
-          </div>
-
-          {/* PASO 4: Contraseña y Confirmación */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '1.15rem' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
-                Contraseña
-              </label>
-              <input
-                type="password"
-                placeholder="Mínimo 4 caracteres"
-                value={regPassword}
-                onChange={(e) => setRegPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.7rem 0.85rem',
-                  borderRadius: '6px',
-                  backgroundColor: 'rgba(0, 4, 13, 0.75)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  fontSize: '0.88rem',
-                  outline: 'none'
-                }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
-                Confirmar Contraseña
-              </label>
-              <input
-                type="password"
-                placeholder="Repetir contraseña"
-                value={regConfirmPassword}
-                onChange={(e) => setRegConfirmPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.7rem 0.85rem',
-                  borderRadius: '6px',
-                  backgroundColor: 'rgba(0, 4, 13, 0.75)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  fontSize: '0.88rem',
-                  outline: 'none'
-                }}
-              />
-            </div>
-          </div>
-
-          {/* PASO 5: Jurisdicción Territorial en Cascada Dinámica */}
-          <div
-            style={{
-              padding: '1.1rem',
-              borderRadius: '10px',
-              backgroundColor: 'rgba(14, 20, 36, 0.85)',
-              border: '1px solid #1e293b',
-              marginBottom: '1.25rem',
-              boxShadow: '0 4px 20px rgba(0, 4, 13, 0.5)'
-            }}
+{/* ========================================================================= */ }
+{/* 2. VISTA DE REGISTRO CIUDADANO (SINCRONIZA EN db.json / localStorage)    */ }
+{/* ========================================================================= */ }
+{
+  authMode === 'REGISTER' && (
+    <form onSubmit={handleRegisterSubmit}>
+      {/* PASO 1: Cédula con Consulta Hacienda */}
+      <div style={{ marginBottom: '1.15rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+          <label
+            htmlFor="reg-cedula-input"
+            style={{ fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)' }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <MapPin className="w-3.5 h-3.5 text-sky-400" />
-                3. Jurisdicción Territorial:
-              </span>
-              <span style={{ fontSize: '0.66rem', color: '#64748B', fontFamily: 'monospace', letterSpacing: '0.04em' }}>
-                DIVISIÓN TERRITORIAL DINÁMICA
-              </span>
-            </div>
-
-            {/* Fila 1: Provincia y Cantón en Cascada */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '0.75rem' }}>
-              {/* Selector de Provincia */}
-              <div>
-                <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                  <span>Provincia</span>
-                  {loadingProvincias && <span style={{ color: '#38bdf8', fontSize: '0.65rem' }}>Cargando...</span>}
-                </label>
-                <div style={{ position: 'relative' }}>
-                  <select
-                    value={selectedProvinciaId}
-                    onChange={handleProvinciaChange}
-                    disabled={loadingProvincias}
-                    style={{
-                      width: '100%',
-                      padding: '0.62rem 2.2rem 0.62rem 0.85rem',
-                      borderRadius: '8px',
-                      backgroundColor: '#0e1424',
-                      border: '1px solid #1e293b',
-                      color: selectedProvinciaId ? '#FFFFFF' : '#94A3B8',
-                      fontSize: '0.82rem',
-                      outline: 'none',
-                      cursor: loadingProvincias ? 'wait' : 'pointer',
-                      appearance: 'none',
-                      WebkitAppearance: 'none',
-                      MozAppearance: 'none',
-                      transition: 'border-color 0.2s, box-shadow 0.2s'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#38bdf8';
-                      e.currentTarget.style.boxShadow = '0 0 0 2px rgba(56, 189, 248, 0.2)';
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#1e293b';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <option value="" style={{ backgroundColor: '#0e1424', color: '#64748B' }}>
-                      {loadingProvincias ? 'Cargando provincias...' : 'Seleccione Provincia'}
-                    </option>
-                    {provinciasList.map((p) => (
-                      <option key={p.id} value={p.id} style={{ backgroundColor: '#0e1424', color: '#FFFFFF' }}>
-                        {p.nombre}
-                      </option>
-                    ))}
-                  </select>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      right: '10px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      pointerEvents: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: '#94A3B8'
-                    }}
-                  >
-                    {loadingProvincias ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
-                    ) : (
-                      <ChevronDown className="w-3.5 h-3.5" />
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Selector de Cantón (Habilitado solo tras elegir Provincia) */}
-              <div>
-                <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                  <span>Cantón</span>
-                  {loadingCantones && <span style={{ color: '#38bdf8', fontSize: '0.65rem' }}>Consultando API...</span>}
-                </label>
-                <div style={{ position: 'relative' }}>
-                  <select
-                    value={selectedCantonId}
-                    onChange={handleCantonChange}
-                    disabled={!selectedProvinciaId || loadingCantones}
-                    style={{
-                      width: '100%',
-                      padding: '0.62rem 2.2rem 0.62rem 0.85rem',
-                      borderRadius: '8px',
-                      backgroundColor: (!selectedProvinciaId || loadingCantones) ? 'rgba(10, 15, 26, 0.6)' : '#0e1424',
-                      border: (!selectedProvinciaId || loadingCantones) ? '1px solid rgba(30, 41, 59, 0.6)' : '1px solid #1e293b',
-                      color: selectedCantonId ? '#FFFFFF' : '#94A3B8',
-                      fontSize: '0.82rem',
-                      outline: 'none',
-                      cursor: (!selectedProvinciaId || loadingCantones) ? 'not-allowed' : 'pointer',
-                      appearance: 'none',
-                      WebkitAppearance: 'none',
-                      MozAppearance: 'none',
-                      transition: 'border-color 0.2s, box-shadow 0.2s'
-                    }}
-                    onFocus={(e) => {
-                      if (selectedProvinciaId && !loadingCantones) {
-                        e.currentTarget.style.borderColor = '#38bdf8';
-                        e.currentTarget.style.boxShadow = '0 0 0 2px rgba(56, 189, 248, 0.2)';
-                      }
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = (!selectedProvinciaId || loadingCantones) ? 'rgba(30, 41, 59, 0.6)' : '#1e293b';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <option value="" style={{ backgroundColor: '#0e1424', color: '#64748B' }}>
-                      {loadingCantones
-                        ? 'Cargando cantones...'
-                        : !selectedProvinciaId
-                        ? 'Primero elija provincia'
-                        : 'Seleccione Cantón'}
-                    </option>
-                    {cantonesList.map((c) => (
-                      <option key={c.id} value={c.id} style={{ backgroundColor: '#0e1424', color: '#FFFFFF' }}>
-                        {c.nombre}
-                      </option>
-                    ))}
-                  </select>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      right: '10px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      pointerEvents: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: (!selectedProvinciaId || loadingCantones) ? '#475569' : '#94A3B8'
-                    }}
-                  >
-                    {loadingCantones ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
-                    ) : (
-                      <ChevronDown className="w-3.5 h-3.5" />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Fila 2: Selector de Distrito (Habilitado solo tras elegir Cantón) */}
-            <div>
-              <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                <span>Distrito</span>
-                {loadingDistritos && <span style={{ color: '#38bdf8', fontSize: '0.65rem' }}>Consultando API...</span>}
-              </label>
-              <div style={{ position: 'relative' }}>
-                <select
-                  value={selectedDistritoId}
-                  onChange={handleDistritoChange}
-                  disabled={!selectedCantonId || loadingDistritos}
-                  style={{
-                    width: '100%',
-                    padding: '0.62rem 2.2rem 0.62rem 0.85rem',
-                    borderRadius: '8px',
-                    backgroundColor: (!selectedCantonId || loadingDistritos) ? 'rgba(10, 15, 26, 0.6)' : '#0e1424',
-                    border: (!selectedCantonId || loadingDistritos) ? '1px solid rgba(30, 41, 59, 0.6)' : '1px solid #1e293b',
-                    color: selectedDistritoId ? '#FFFFFF' : '#94A3B8',
-                    fontSize: '0.82rem',
-                    outline: 'none',
-                    cursor: (!selectedCantonId || loadingDistritos) ? 'not-allowed' : 'pointer',
-                    appearance: 'none',
-                    WebkitAppearance: 'none',
-                    MozAppearance: 'none',
-                    transition: 'border-color 0.2s, box-shadow 0.2s'
-                  }}
-                  onFocus={(e) => {
-                    if (selectedCantonId && !loadingDistritos) {
-                      e.currentTarget.style.borderColor = '#38bdf8';
-                      e.currentTarget.style.boxShadow = '0 0 0 2px rgba(56, 189, 248, 0.2)';
-                    }
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = (!selectedCantonId || loadingDistritos) ? 'rgba(30, 41, 59, 0.6)' : '#1e293b';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                >
-                  <option value="" style={{ backgroundColor: '#0e1424', color: '#64748B' }}>
-                    {loadingDistritos
-                      ? 'Cargando distritos...'
-                      : !selectedCantonId
-                      ? 'Primero elija cantón'
-                      : 'Seleccione Distrito'}
-                  </option>
-                  {distritosList.map((d) => (
-                    <option key={d.id} value={d.id} style={{ backgroundColor: '#0e1424', color: '#FFFFFF' }}>
-                      {d.nombre}
-                    </option>
-                  ))}
-                </select>
-                <div
-                  style={{
-                    position: 'absolute',
-                    right: '10px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    pointerEvents: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: (!selectedCantonId || loadingDistritos) ? '#475569' : '#94A3B8'
-                  }}
-                >
-                  {loadingDistritos ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
-                  ) : (
-                    <ChevronDown className="w-3.5 h-3.5" />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* PASO 6: Rol del Usuario Creado */}
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', fontSize: '0.78rem', color: '#94A3B8', marginBottom: '0.35rem' }}>
-              Rol Asignado:
-            </label>
-            <div
-              style={{
-                padding: '0.75rem 1rem',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(0, 4, 13, 0.65)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <User className="w-4 h-4 text-sky-400" />
-                <span style={{ color: '#FFFFFF', fontWeight: 700, fontSize: '0.85rem' }}>
-                  Ciudadano / Turista
-                </span>
-              </div>
-              <span
-                style={{
-                  fontSize: '0.72rem',
-                  backgroundColor: 'rgba(0, 43, 127, 0.4)',
-                  color: '#79a6ff',
-                  padding: '3px 8px',
-                  borderRadius: '999px',
-                  border: '1px solid rgba(121, 166, 255, 0.3)'
-                }}
-              >
-                Nivel 2 de Acceso
-              </span>
-            </div>
-          </div>
-
-          {/* Botón de Enviar Registro */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full h-12 py-3 px-6 rounded-xl font-bold text-white text-base tracking-wide bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] border-2 border-emerald-400 shadow-[0_4px_20px_rgba(16,185,129,0.45)] hover:shadow-[0_6px_25px_rgba(16,185,129,0.6)] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-[#00040D]"
-            style={{
-              background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-              border: '2px solid #34D399',
-              boxShadow: '0 4px 20px rgba(16, 185, 129, 0.45)',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              opacity: isLoading ? 0.75 : 1
-            }}
-          >
-            {isLoading ? (
-              <span className="inline-flex items-center gap-2 font-bold text-white">
-                <Loader2 className="w-5 h-5 animate-spin text-white" />
-                <span>Registrando...</span>
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-2 font-bold text-white">
-                <UserPlus className="w-5 h-5 text-white" />
-                <span>Registrarme</span>
-              </span>
-            )}
-          </button>
-        </form>
-      )}
-
-      {/* Pie de Auditoría y Estado del Sistema */}
-      <div
-        style={{
-          marginTop: '1.5rem',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-          paddingTop: '0.85rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          fontSize: '0.72rem',
-          color: 'rgba(255, 255, 255, 0.6)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span
-            style={{
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              backgroundColor: '#00D084',
-              boxShadow: '0 0 8px rgba(0, 208, 132, 0.7)',
-              display: 'inline-block'
-            }}
-          />
-          <span style={{ fontWeight: 500 }}>Sistema en línea</span>
+            1. Cédula Costarricense o DIMEX Oficial
+          </label>
+          <span style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.55)', fontFamily: 'monospace' }}>
+            9 a 12 dígitos
+          </span>
         </div>
 
-        <span style={{ color: 'rgba(255, 255, 255, 0.45)', fontSize: '0.7rem' }}>
-          Sede Digital Verificada
-        </span>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input
+            id="reg-cedula-input"
+            type="text"
+            placeholder="1-1823-0456 ó 118230456"
+            value={regCedula}
+            onChange={(e) => {
+              setRegCedula(e.target.value);
+              setHaciendaVerified(false);
+              setIdentityStatus(null);
+            }}
+            onBlur={() => {
+              if (regCedula.replace(/[^0-9]/g, '').length >= 9 && !haciendaVerified) {
+                handleValidateCedula(regCedula);
+              }
+            }}
+            style={{
+              flex: 1,
+              padding: '0.75rem 0.9rem',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(0, 4, 13, 0.75)',
+              border: haciendaVerified
+                ? '1px solid #00D084'
+                : identityStatus === 'PENDIENTE_VERIFICACION'
+                  ? '1px solid #FFC700'
+                  : '1px solid rgba(255, 255, 255, 0.22)',
+              color: '#FFFFFF',
+              fontSize: '0.92rem',
+              fontFamily: 'monospace',
+              outline: 'none'
+            }}
+          />
+
+          <CivicButton
+            type="button"
+            variant="secondary"
+            onClick={() => handleValidateCedula(regCedula)}
+            disabled={isValidatingHacienda || !regCedula.trim()}
+            isLoading={isValidatingHacienda}
+            style={{ minWidth: '120px', height: '42px', fontSize: '0.78rem' }}
+          >
+            {isValidatingHacienda ? (
+              'Consultando...'
+            ) : (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <Search className="w-3.5 h-3.5" />
+                <span>Validar</span>
+              </span>
+            )}
+          </CivicButton>
+        </div>
+
+        {haciendaMessage && (
+          <div
+            style={{
+              marginTop: '0.4rem',
+              fontSize: '0.76rem',
+              color: haciendaVerified ? '#00D084' : '#FFC700',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            {haciendaVerified ? (
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            ) : (
+              <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            )}
+            <span>{haciendaMessage}</span>
+          </div>
+        )}
       </div>
-    </CivicCard>
+
+      {/* PASO 2: Nombres y Apellidos */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '1.15rem' }}>
+        <div style={{ gridColumn: 'span 2' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
+            <label style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)' }}>
+              Nombre(s)
+            </label>
+            {haciendaVerified && (
+              <span style={{ fontSize: '0.72rem', color: '#00D084', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Verificado por Hacienda</span>
+              </span>
+            )}
+          </div>
+          <input
+            type="text"
+            placeholder="Nombre oficial"
+            value={regNombre}
+            onChange={(e) => setRegNombre(e.target.value)}
+            readOnly={haciendaVerified}
+            style={{
+              width: '100%',
+              padding: '0.7rem 0.85rem',
+              borderRadius: '6px',
+              backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
+              border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#FFFFFF',
+              fontSize: '0.88rem',
+              outline: 'none',
+              cursor: haciendaVerified ? 'not-allowed' : 'text'
+            }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
+            Primer Apellido
+          </label>
+          <input
+            type="text"
+            placeholder="Primer Apellido"
+            value={regPrimerApellido}
+            onChange={(e) => setRegPrimerApellido(e.target.value)}
+            readOnly={haciendaVerified}
+            style={{
+              width: '100%',
+              padding: '0.7rem 0.85rem',
+              borderRadius: '6px',
+              backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
+              border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#FFFFFF',
+              fontSize: '0.88rem',
+              outline: 'none',
+              cursor: haciendaVerified ? 'not-allowed' : 'text'
+            }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
+            Segundo Apellido
+          </label>
+          <input
+            type="text"
+            placeholder="Segundo Apellido"
+            value={regSegundoApellido}
+            onChange={(e) => setRegSegundoApellido(e.target.value)}
+            readOnly={haciendaVerified}
+            style={{
+              width: '100%',
+              padding: '0.7rem 0.85rem',
+              borderRadius: '6px',
+              backgroundColor: haciendaVerified ? 'rgba(0, 43, 127, 0.25)' : 'rgba(0, 4, 13, 0.75)',
+              border: haciendaVerified ? '1px solid rgba(0, 208, 132, 0.4)' : '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#FFFFFF',
+              fontSize: '0.88rem',
+              outline: 'none',
+              cursor: haciendaVerified ? 'not-allowed' : 'text'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* PASO 3: Correo Electrónico */}
+      <div style={{ marginBottom: '1.15rem' }}>
+        <label
+          htmlFor="reg-email-input"
+          style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.95)', marginBottom: '0.35rem' }}
+        >
+          2. Correo Electrónico (Notificaciones Cívicas)
+        </label>
+        <input
+          id="reg-email-input"
+          type="email"
+          placeholder="correo@ejemplo.com"
+          value={regEmail}
+          onChange={(e) => setRegEmail(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.75rem 0.9rem',
+            borderRadius: '8px',
+            backgroundColor: 'rgba(0, 4, 13, 0.75)',
+            border: '1px solid rgba(255, 255, 255, 0.22)',
+            color: '#FFFFFF',
+            fontSize: '0.92rem',
+            outline: 'none'
+          }}
+        />
+      </div>
+
+      {/* PASO 4: Contraseña y Confirmación */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '1.15rem' }}>
+        <div>
+          <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
+            Contraseña
+          </label>
+          <input
+            type="password"
+            placeholder="Mínimo 4 caracteres"
+            value={regPassword}
+            onChange={(e) => setRegPassword(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.7rem 0.85rem',
+              borderRadius: '6px',
+              backgroundColor: 'rgba(0, 4, 13, 0.75)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#FFFFFF',
+              fontSize: '0.88rem',
+              outline: 'none'
+            }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.85)', marginBottom: '0.3rem' }}>
+            Confirmar Contraseña
+          </label>
+          <input
+            type="password"
+            placeholder="Repetir contraseña"
+            value={regConfirmPassword}
+            onChange={(e) => setRegConfirmPassword(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.7rem 0.85rem',
+              borderRadius: '6px',
+              backgroundColor: 'rgba(0, 4, 13, 0.75)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#FFFFFF',
+              fontSize: '0.88rem',
+              outline: 'none'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* PASO 5: Jurisdicción Territorial en Cascada Dinámica */}
+      <div
+        style={{
+          padding: '1.1rem',
+          borderRadius: '10px',
+          backgroundColor: 'rgba(14, 20, 36, 0.85)',
+          border: '1px solid #1e293b',
+          marginBottom: '1.25rem',
+          boxShadow: '0 4px 20px rgba(0, 4, 13, 0.5)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <MapPin className="w-3.5 h-3.5 text-sky-400" />
+            3. Jurisdicción Territorial:
+          </span>
+          <span style={{ fontSize: '0.66rem', color: '#64748B', fontFamily: 'monospace', letterSpacing: '0.04em' }}>
+            DIVISIÓN TERRITORIAL DINÁMICA
+          </span>
+        </div>
+
+        {/* Fila 1: Provincia y Cantón en Cascada */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '0.75rem' }}>
+          {/* Selector de Provincia */}
+          <div>
+            <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+              <span>Provincia</span>
+              {loadingProvincias && <span style={{ color: '#38bdf8', fontSize: '0.65rem' }}>Cargando...</span>}
+            </label>
+            <div style={{ position: 'relative' }}>
+              <select
+                value={selectedProvinciaId}
+                onChange={handleProvinciaChange}
+                disabled={loadingProvincias}
+                style={{
+                  width: '100%',
+                  padding: '0.62rem 2.2rem 0.62rem 0.85rem',
+                  borderRadius: '8px',
+                  backgroundColor: '#0e1424',
+                  border: '1px solid #1e293b',
+                  color: selectedProvinciaId ? '#FFFFFF' : '#94A3B8',
+                  fontSize: '0.82rem',
+                  outline: 'none',
+                  cursor: loadingProvincias ? 'wait' : 'pointer',
+                  appearance: 'none',
+                  WebkitAppearance: 'none',
+                  MozAppearance: 'none',
+                  transition: 'border-color 0.2s, box-shadow 0.2s'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#38bdf8';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(56, 189, 248, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#1e293b';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <option value="" style={{ backgroundColor: '#0e1424', color: '#64748B' }}>
+                  {loadingProvincias ? 'Cargando provincias...' : 'Seleccione Provincia'}
+                </option>
+                {provinciasList.map((p) => (
+                  <option key={p.id} value={p.id} style={{ backgroundColor: '#0e1424', color: '#FFFFFF' }}>
+                    {p.nombre}
+                  </option>
+                ))}
+              </select>
+              <div
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  pointerEvents: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: '#94A3B8'
+                }}
+              >
+                {loadingProvincias ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
+                ) : (
+                  <ChevronDown className="w-3.5 h-3.5" />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Selector de Cantón (Habilitado solo tras elegir Provincia) */}
+          <div>
+            <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+              <span>Cantón</span>
+              {loadingCantones && <span style={{ color: '#38bdf8', fontSize: '0.65rem' }}>Consultando API...</span>}
+            </label>
+            <div style={{ position: 'relative' }}>
+              <select
+                value={selectedCantonId}
+                onChange={handleCantonChange}
+                disabled={!selectedProvinciaId || loadingCantones}
+                style={{
+                  width: '100%',
+                  padding: '0.62rem 2.2rem 0.62rem 0.85rem',
+                  borderRadius: '8px',
+                  backgroundColor: (!selectedProvinciaId || loadingCantones) ? 'rgba(10, 15, 26, 0.6)' : '#0e1424',
+                  border: (!selectedProvinciaId || loadingCantones) ? '1px solid rgba(30, 41, 59, 0.6)' : '1px solid #1e293b',
+                  color: selectedCantonId ? '#FFFFFF' : '#94A3B8',
+                  fontSize: '0.82rem',
+                  outline: 'none',
+                  cursor: (!selectedProvinciaId || loadingCantones) ? 'not-allowed' : 'pointer',
+                  appearance: 'none',
+                  WebkitAppearance: 'none',
+                  MozAppearance: 'none',
+                  transition: 'border-color 0.2s, box-shadow 0.2s'
+                }}
+                onFocus={(e) => {
+                  if (selectedProvinciaId && !loadingCantones) {
+                    e.currentTarget.style.borderColor = '#38bdf8';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px rgba(56, 189, 248, 0.2)';
+                  }
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = (!selectedProvinciaId || loadingCantones) ? 'rgba(30, 41, 59, 0.6)' : '#1e293b';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <option value="" style={{ backgroundColor: '#0e1424', color: '#64748B' }}>
+                  {loadingCantones
+                    ? 'Cargando cantones...'
+                    : !selectedProvinciaId
+                      ? 'Primero elija provincia'
+                      : 'Seleccione Cantón'}
+                </option>
+                {cantonesList.map((c) => (
+                  <option key={c.id} value={c.id} style={{ backgroundColor: '#0e1424', color: '#FFFFFF' }}>
+                    {c.nombre}
+                  </option>
+                ))}
+              </select>
+              <div
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  pointerEvents: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: (!selectedProvinciaId || loadingCantones) ? '#475569' : '#94A3B8'
+                }}
+              >
+                {loadingCantones ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
+                ) : (
+                  <ChevronDown className="w-3.5 h-3.5" />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fila 2: Selector de Distrito (Habilitado solo tras elegir Cantón) */}
+        <div>
+          <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+            <span>Distrito</span>
+            {loadingDistritos && <span style={{ color: '#38bdf8', fontSize: '0.65rem' }}>Consultando API...</span>}
+          </label>
+          <div style={{ position: 'relative' }}>
+            <select
+              value={selectedDistritoId}
+              onChange={handleDistritoChange}
+              disabled={!selectedCantonId || loadingDistritos}
+              style={{
+                width: '100%',
+                padding: '0.62rem 2.2rem 0.62rem 0.85rem',
+                borderRadius: '8px',
+                backgroundColor: (!selectedCantonId || loadingDistritos) ? 'rgba(10, 15, 26, 0.6)' : '#0e1424',
+                border: (!selectedCantonId || loadingDistritos) ? '1px solid rgba(30, 41, 59, 0.6)' : '1px solid #1e293b',
+                color: selectedDistritoId ? '#FFFFFF' : '#94A3B8',
+                fontSize: '0.82rem',
+                outline: 'none',
+                cursor: (!selectedCantonId || loadingDistritos) ? 'not-allowed' : 'pointer',
+                appearance: 'none',
+                WebkitAppearance: 'none',
+                MozAppearance: 'none',
+                transition: 'border-color 0.2s, box-shadow 0.2s'
+              }}
+              onFocus={(e) => {
+                if (selectedCantonId && !loadingDistritos) {
+                  e.currentTarget.style.borderColor = '#38bdf8';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(56, 189, 248, 0.2)';
+                }
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = (!selectedCantonId || loadingDistritos) ? 'rgba(30, 41, 59, 0.6)' : '#1e293b';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <option value="" style={{ backgroundColor: '#0e1424', color: '#64748B' }}>
+                {loadingDistritos
+                  ? 'Cargando distritos...'
+                  : !selectedCantonId
+                    ? 'Primero elija cantón'
+                    : 'Seleccione Distrito'}
+              </option>
+              {distritosList.map((d) => (
+                <option key={d.id} value={d.id} style={{ backgroundColor: '#0e1424', color: '#FFFFFF' }}>
+                  {d.nombre}
+                </option>
+              ))}
+            </select>
+            <div
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                pointerEvents: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                color: (!selectedCantonId || loadingDistritos) ? '#475569' : '#94A3B8'
+              }}
+            >
+              {loadingDistritos ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-400" />
+              ) : (
+                <ChevronDown className="w-3.5 h-3.5" />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* PASO 6: Rol del Usuario Creado */}
+      <div style={{ marginBottom: '1.25rem' }}>
+        <label style={{ display: 'block', fontSize: '0.78rem', color: '#94A3B8', marginBottom: '0.35rem' }}>
+          Rol Asignado:
+        </label>
+        <div
+          style={{
+            padding: '0.75rem 1rem',
+            borderRadius: '8px',
+            backgroundColor: 'rgba(0, 4, 13, 0.65)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <User className="w-4 h-4 text-sky-400" />
+            <span style={{ color: '#FFFFFF', fontWeight: 700, fontSize: '0.85rem' }}>
+              Ciudadano / Turista
+            </span>
+          </div>
+          <span
+            style={{
+              fontSize: '0.72rem',
+              backgroundColor: 'rgba(0, 43, 127, 0.4)',
+              color: '#79a6ff',
+              padding: '3px 8px',
+              borderRadius: '999px',
+              border: '1px solid rgba(121, 166, 255, 0.3)'
+            }}
+          >
+            Nivel 2 de Acceso
+          </span>
+        </div>
+      </div>
+
+      {/* Botón de Enviar Registro */}
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="w-full h-12 py-3 px-6 rounded-xl font-bold text-white text-base tracking-wide bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] border-2 border-emerald-400 shadow-[0_4px_20px_rgba(16,185,129,0.45)] hover:shadow-[0_6px_25px_rgba(16,185,129,0.6)] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-[#00040D]"
+        style={{
+          background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+          border: '2px solid #34D399',
+          boxShadow: '0 4px 20px rgba(16, 185, 129, 0.45)',
+          cursor: isLoading ? 'not-allowed' : 'pointer',
+          opacity: isLoading ? 0.75 : 1
+        }}
+      >
+        {isLoading ? (
+          <span className="inline-flex items-center gap-2 font-bold text-white">
+            <Loader2 className="w-5 h-5 animate-spin text-white" />
+            <span>Registrando...</span>
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-2 font-bold text-white">
+            <UserPlus className="w-5 h-5 text-white" />
+            <span>Registrarme</span>
+          </span>
+        )}
+      </button>
+    </form>
+  )
+}
+
+{/* Pie de Auditoría y Estado del Sistema */ }
+<div
+  style={{
+    marginTop: '1.5rem',
+    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+    paddingTop: '0.85rem',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '0.72rem',
+    color: 'rgba(255, 255, 255, 0.6)'
+  }}
+>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+    <span
+      style={{
+        width: '7px',
+        height: '7px',
+        borderRadius: '50%',
+        backgroundColor: '#00D084',
+        boxShadow: '0 0 8px rgba(0, 208, 132, 0.7)',
+        display: 'inline-block'
+      }}
+    />
+    <span style={{ fontWeight: 500 }}>Sistema en línea</span>
+  </div>
+
+  <span style={{ color: 'rgba(255, 255, 255, 0.45)', fontSize: '0.7rem' }}>
+    Sede Digital Verificada
+  </span>
+</div>
+    </CivicCard >
   );
 }
