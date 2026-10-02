@@ -17,7 +17,8 @@ import {
   Building2,
   Sliders,
   HelpCircle,
-  ExternalLink
+  ExternalLink,
+  Eye
 } from 'lucide-react';
 import Logo from '../common/Logo';
 import { CATEGORIAS_CIVICAS } from './MegaMenu';
@@ -38,7 +39,10 @@ export default function CivicDrawer({ isOpen, onClose, initialTab }) {
     stopSpeaking,
     isSpeaking,
     readCurrentPage,
-    openOnboarding
+    openOnboarding,
+    daltonismoMode,
+    setDaltonismoMode,
+    MODOS_DALTONISMO
   } = useAccessibility();
 
   // Control de pestaña interna (en desktop o móvil)
@@ -424,7 +428,63 @@ export default function CivicDrawer({ isOpen, onClose, initialTab }) {
                 </div>
               </div>
 
-              {/* 5. SELECTOR DE LOS 8 IDIOMAS OFICIALES */}
+              {/* 5. ADAPTACIÓN PARA DALTONISMO (WCAG 2.1 AA / LEY N° 7600) */}
+              <div className="rounded-2xl p-4 bg-white/[0.03] border border-white/10 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-300">
+                    <Eye className="w-4 h-4 text-emerald-400" strokeWidth={1.75} />
+                    <span>{t('adaptacionDaltonismo', 'Adaptación para Daltonismo')}</span>
+                  </div>
+                  <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+                    {MODOS_DALTONISMO?.find((m) => m.id === daltonismoMode)?.nombre || 'Estándar'}
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  Filtros SVG estándar (W3C) aplicados en tiempo real a toda la plataforma bajo norma WCAG 2.1 AA y Ley N° 7600.
+                </p>
+
+                <div className="space-y-1.5">
+                  {(MODOS_DALTONISMO || []).map((modo) => {
+                    const isSelected = (daltonismoMode || 'normal') === modo.id;
+                    return (
+                      <button
+                        key={modo.id}
+                        type="button"
+                        onClick={() => setDaltonismoMode(modo.id)}
+                        className={`w-full p-2.5 rounded-xl text-left border flex items-center justify-between transition-all ${
+                          isSelected
+                            ? 'bg-emerald-500/15 border-emerald-500 text-white font-bold shadow-md shadow-emerald-500/10'
+                            : 'bg-white/[0.02] border-white/10 text-slate-300 hover:bg-white/[0.06] hover:text-white'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span
+                            className="w-3.5 h-3.5 rounded-full flex-shrink-0 border border-white/20 shadow-sm"
+                            style={{ backgroundColor: modo.muestraColor }}
+                          />
+                          <div className="truncate">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold text-slate-100">{modo.nombre}</span>
+                              <span className="text-[10px] px-1.5 py-0.2 rounded bg-white/10 text-slate-300 font-medium">
+                                {modo.badge}
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-slate-400 truncate">
+                              {modo.descripcion}
+                            </div>
+                          </div>
+                        </div>
+                        {isSelected && (
+                          <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 ml-2" strokeWidth={2.5} />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 6. SELECTOR DE LOS 8 IDIOMAS OFICIALES */}
               <div className="rounded-2xl p-4 bg-white/[0.03] border border-white/10 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-300">

@@ -26,8 +26,8 @@ export const CATEGORIAS_CIVICAS = [
     modulos: [
       {
         titulo: 'Ventanilla Única de Trámites',
-        desc: 'Certificaciones, tasas municipales y pagos.',
-        path: '/dashboard',
+        desc: 'Certificaciones, tasas municipales y gestión cívica.',
+        path: '/portal-ciudadano',
         icon: FileCheck2
       },
       {

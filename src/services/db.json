@@ -84,6 +84,25 @@
   ],
   "solicitudesComercio": [
     {
+      "id": "SOL-EMP-1790954594154-217",
+      "cedulaJuridica": "1-1823-0456",
+      "cedula": "1-1823-0456",
+      "nombreComercio": "kk",
+      "nombreNegocio": "kk",
+      "nombreSolicitante": "Eiker Manuel Abarca Murillo",
+      "actividadHacienda": "oubbiubio",
+      "actividadEconomicaHacienda": "oubbiubio",
+      "canton": "San José",
+      "provincia": "San José",
+      "sectorFeriaSolicitado": "Categoría: Gastronomía y Alimentos",
+      "sectorFeria": "Categoría: Gastronomía y Alimentos",
+      "fechaSolicitud": "2026-10-02T15:23:14.154Z",
+      "estado": "PENDIENTE",
+      "justificacion": "oubbiubio",
+      "notas": "Trámite Emprendedor. Nuevo correo comercial: alanie@gmail.com",
+      "verificadoHacienda": true
+    },
+    {
       "id": "SOL-COM-001",
       "cedulaJuridica": "3-101-789456",
       "cedula": "3-101-789456",
@@ -556,6 +575,64 @@
       ]
     },
     {
+      "id": "post-nac-101",
+      "titulo": "Ventanilla Única Soberana de Digitalización de Trámites y Cero Papel para los 84 Cantones",
+      "contenido": "Iniciativa nacional para exigir la interoperabilidad obligatoria entre todas las municipalidades e instituciones públicas del país, eliminando certificaciones notariales redundantes y habilitando expedientes digitales de libre acceso cívico.",
+      "provinciaId": "nacional",
+      "provinciaNombre": "Nacional (Todo el País)",
+      "categoria": "Gobernanza & Presupuesto",
+      "autorNombre": "Red Nacional de Gobierno Digital",
+      "autorCedula": "1-0000-0001",
+      "fecha": "2026-10-01T15:30:00Z",
+      "likes": 52,
+      "dislikes": 1,
+      "reacciones": {
+        "apoyo": 44,
+        "urgente": 28,
+        "idea": 36
+      },
+      "usuariosVotaron": {
+        "1-0000-0001": "like"
+      },
+      "comentarios": [
+        {
+          "id": "com-nac-1",
+          "autorNombre": "Valeria Mora Solís",
+          "autorCedula": "117650432",
+          "contenido": "Esto reduciría meses de burocracia en permisos de construcción y patentes en todo el país.",
+          "fecha": "2026-10-01T16:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "post-nac-102",
+      "titulo": "Estrategia Nacional de Corredores Biológicos Interurbanos y Reforestación Nativa",
+      "contenido": "Propuesta ciudadana de articulación nacional para conectar las microcuencas de las 7 provincias a través de corredores verdes urbanos protegidos, fomentando la biodiversidad, la captura de carbono y la resiliencia ante el cambio climático.",
+      "provinciaId": "nacional",
+      "provinciaNombre": "Nacional (Todo el País)",
+      "categoria": "Medio Ambiente & Recursos Hídricos",
+      "autorNombre": "Alianza Nacional por la Biodiversidad",
+      "autorCedula": "1-1823-0456",
+      "fecha": "2026-10-01T14:00:00Z",
+      "likes": 38,
+      "dislikes": 0,
+      "reacciones": {
+        "apoyo": 31,
+        "urgente": 14,
+        "idea": 25
+      },
+      "usuariosVotaron": {},
+      "comentarios": [
+        {
+          "id": "com-nac-2",
+          "autorNombre": "Marta Calderón Jiménez",
+          "autorCedula": "302450891",
+          "contenido": "Una visión integral para unir esfuerzos comunitarios desde Guanacaste hasta Limón. Apoyo total.",
+          "fecha": "2026-10-01T14:40:00Z"
+        }
+      ]
+    },
+    {
       "id": "post-3",
       "titulo": "Plan de Regeneración Urbana y Seguridad Nocturna en el Casco Central de San José",
       "contenido": "Proponemos instalar corredores seguros iluminados entre La Sabana, Avenida Central y el Museo Nacional, junto con cámaras de vigilancia integradas al sistema cantonal y presencia policial 24/7.",
@@ -739,13 +816,21 @@
       "autorRol": "Editor Municipal",
       "autorCedula": "1-1155-0892",
       "fechaPublicacion": "2026-10-01T21:06:51.211Z",
-      "imagenUrl": "",
+      "imagenUrl": "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=1200&q=80",
       "reacciones": {
-        "apoyo": 0,
-        "interesante": 0,
-        "alerta": 0
+        "apoyo": 13,
+        "interesante": 8,
+        "alerta": 1
       },
-      "comentarios": []
+      "comentarios": [
+        {
+          "id": "c-1790953374333-228",
+          "autorNombre": "Secretaría del Concejo Municipal de San José",
+          "autorCedula": "1-1155-0892",
+          "contenido": "Excelente proyecto para el cantón josefino.",
+          "fecha": "2026-10-02T15:02:54.333Z"
+        }
+      ]
     },
     {
       "id": "noticia-101",
@@ -759,7 +844,7 @@
       "autorRol": "Editor Municipal",
       "autorCedula": "118230456",
       "fechaPublicacion": "2026-10-01T14:30:00Z",
-      "imagenUrl": "",
+      "imagenUrl": "https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&w=1200&q=80",
       "reacciones": {
         "apoyo": 16,
         "interesante": 8,
@@ -822,7 +907,7 @@
       "autorRol": "Editor Municipal",
       "autorCedula": "302340567",
       "fechaPublicacion": "2026-10-01T10:15:00Z",
-      "imagenUrl": "",
+      "imagenUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
       "reacciones": {
         "apoyo": 42,
         "interesante": 19,
@@ -850,7 +935,7 @@
       "autorRol": "Editor Municipal",
       "autorCedula": "204560789",
       "fechaPublicacion": "2026-09-30T16:00:00Z",
-      "imagenUrl": "",
+      "imagenUrl": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
       "reacciones": {
         "apoyo": 28,
         "interesante": 14,
@@ -878,7 +963,7 @@
       "autorRol": "Editor Municipal",
       "autorCedula": "401980321",
       "fechaPublicacion": "2026-09-30T11:20:00Z",
-      "imagenUrl": "",
+      "imagenUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=80",
       "reacciones": {
         "apoyo": 51,
         "interesante": 38,
@@ -898,7 +983,7 @@
       "autorRol": "Editor Municipal",
       "autorCedula": "501870234",
       "fechaPublicacion": "2026-09-29T14:00:00Z",
-      "imagenUrl": "",
+      "imagenUrl": "https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80",
       "reacciones": {
         "apoyo": 47,
         "interesante": 29,
@@ -918,7 +1003,7 @@
       "autorRol": "Editor Municipal",
       "autorCedula": "602340567",
       "fechaPublicacion": "2026-09-28T17:30:00Z",
-      "imagenUrl": "",
+      "imagenUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
       "reacciones": {
         "apoyo": 38,
         "interesante": 24,
@@ -945,6 +1030,22 @@
         "alerta": 7
       },
       "comentarios": []
+    }
+  ],
+  "solicitudes_emprendedor": [
+    {
+      "id": "SOL-EMP-1790954594154-217",
+      "cedula": "1-1823-0456",
+      "nombreCompleto": "Eiker Manuel Abarca Murillo",
+      "correoPersonal": "eiker.abarca@gmail.com",
+      "correoComercial": "alanie@gmail.com",
+      "nombreEmprendimiento": "kk",
+      "categoriaComercial": "Gastronomía y Alimentos",
+      "canton": "San José",
+      "provincia": "San José",
+      "justificacion": "oubbiubio",
+      "estado": "pendiente",
+      "fechaSolicitud": "2026-10-02T15:23:14.154Z"
     }
   ]
 }

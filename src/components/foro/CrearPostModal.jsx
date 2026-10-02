@@ -9,10 +9,12 @@ import {
   AlertCircle,
   CheckCircle2,
   Sparkles,
-  Info
+  Info,
+  Lock
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { crearPost } from '../../services/foroService';
+import { obtenerNombrePublico } from '../../utils/privacyUtils';
 
 const PROVINCIAS_OPCIONES = [
   { id: 'nacional', nombre: 'Nacional (Todo el País)' },
@@ -24,6 +26,26 @@ const PROVINCIAS_OPCIONES = [
   { id: 'puntarenas', nombre: 'Puntarenas' },
   { id: 'limon', nombre: 'Limón' }
 ];
+
+export function normalizarProvinciaId(provStr) {
+  if (!provStr) return '';
+  const limpia = String(provStr)
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-');
+
+  if (limpia.includes('nacional') || limpia === 'pais' || limpia === 'todas') return 'nacional';
+  if (limpia.includes('jose')) return 'san-jose';
+  if (limpia.includes('alajuela')) return 'alajuela';
+  if (limpia.includes('cartago')) return 'cartago';
+  if (limpia.includes('heredia')) return 'heredia';
+  if (limpia.includes('guanacaste')) return 'guanacaste';
+  if (limpia.includes('puntarenas')) return 'puntarenas';
+  if (limpia.includes('limon')) return 'limon';
+  return limpia;
+}
 
 const CATEGORIAS_OPCIONES = [
   'Infraestructura & Movilidad',
@@ -43,7 +65,46 @@ export default function CrearPostModal({
 }) {
   const { user } = useAuth();
 
-  const [provinciaId, setProvinciaId] = useState(provinciaInicial);
+  // Resolver usuario activo desde contexto o sesión persistida
+  const activeUser = user || (() => {
+    try {
+      const s = localStorage.getItem('cr_sesion_activa');
+      if (s) return JSON.parse(s);
+    } catch {}
+    return null;
+  })();
+
+  const esAdmin = Boolean(
+    activeUser?.nivelAcceso >= 5 ||
+    String(activeUser?.rol || '').toLowerCase().includes('super admin') ||
+    String(activeUser?.rol || '').toLowerCase().includes('superadministrador') ||
+    String(activeUser?.rol || '').toLowerCase().includes('auditor')
+  );
+
+  const userProvRaw =
+    activeUser?.provincia ||
+    activeUser?.provinciaNombre ||
+    activeUser?.provinciaId ||
+    (() => {
+      try {
+        const c = localStorage.getItem('cr_active_canton');
+        if (c) return c;
+      } catch {}
+      return 'San José';
+    })();
+  const userProvId = normalizarProvinciaId(userProvRaw) || 'san-jose';
+
+  // Segmentación RBAC: Opciones de provincia permitidas
+  const opcionesPermitidas = React.useMemo(() => {
+    if (esAdmin) {
+      return PROVINCIAS_OPCIONES;
+    }
+    // Para ciudadanos: estrictamente Nacional + su provincia registrada
+    const filtradas = PROVINCIAS_OPCIONES.filter((p) => p.id === 'nacional' || p.id === userProvId);
+    return filtradas.length > 0 ? filtradas : [PROVINCIAS_OPCIONES[0], PROVINCIAS_OPCIONES[1]];
+  }, [esAdmin, userProvId]);
+
+  const [provinciaId, setProvinciaId] = useState('nacional');
   const [categoria, setCategoria] = useState(CATEGORIAS_OPCIONES[0]);
   const [titulo, setTitulo] = useState('');
   const [contenido, setContenido] = useState('');
@@ -53,19 +114,24 @@ export default function CrearPostModal({
   const [errorMsg, setErrorMsg] = useState('');
   const [exito, setExito] = useState(false);
 
-  // Inicializar datos al abrir modal
+  // Inicializar datos al abrir modal con estricta validación territorial
   useEffect(() => {
     if (isOpen) {
-      setProvinciaId(provinciaInicial || 'nacional');
+      const normInicial = normalizarProvinciaId(provinciaInicial);
+      const inicialValida = opcionesPermitidas.some((p) => p.id === normInicial)
+        ? normInicial
+        : (opcionesPermitidas.find((p) => p.id !== 'nacional')?.id || 'nacional');
+
+      setProvinciaId(inicialValida);
       setCategoria(CATEGORIAS_OPCIONES[0]);
       setTitulo('');
       setContenido('');
-      setAutorNombre(user?.nombre || 'Ciudadano Activo');
-      setAutorCedula(user?.cedula || '1-1823-0456');
+      setAutorNombre(activeUser?.nombre || 'Ciudadano Activo');
+      setAutorCedula(activeUser?.cedula || '1-1823-0456');
       setErrorMsg('');
       setExito(false);
     }
-  }, [isOpen, provinciaInicial, user]);
+  }, [isOpen, provinciaInicial, activeUser, opcionesPermitidas]);
 
   // Manejar tecla Escape para cerrar
   useEffect(() => {
@@ -96,6 +162,14 @@ export default function CrearPostModal({
       return;
     }
 
+    // Blindaje RBAC: Validar que el usuario no envíe un provinciaId fuera de sus opciones autorizadas
+    if (!opcionesPermitidas.some((p) => p.id === provinciaId)) {
+      setErrorMsg(
+        'Acceso no autorizado: Solo tiene permitido asociar publicaciones a su provincia registrada o a nivel nacional.'
+      );
+      return;
+    }
+
     try {
       setEnviando(true);
       setErrorMsg('');
@@ -103,14 +177,17 @@ export default function CrearPostModal({
       const provObj = PROVINCIAS_OPCIONES.find((p) => p.id === provinciaId);
       const provinciaNombre = provObj ? provObj.nombre : 'Nacional';
 
+      const nombreLimpio = obtenerNombrePublico(autorNombre.trim() || user?.nombre || 'Ciudadano');
+      const cedulaProtegida = user?.cedula || '1-1823-0456';
+
       const nuevoPost = {
         titulo: titulo.trim(),
         contenido: contenido.trim(),
         provinciaId,
         provinciaNombre,
         categoria,
-        autorNombre: autorNombre.trim() || 'Ciudadano',
-        autorCedula: autorCedula.trim() || '1-1823-0456',
+        autorNombre: nombreLimpio,
+        autorCedula: cedulaProtegida,
         fecha: new Date().toISOString(),
         likes: 0,
         dislikes: 0,
@@ -314,12 +391,34 @@ export default function CrearPostModal({
                   cursor: 'pointer'
                 }}
               >
-                {PROVINCIAS_OPCIONES.map((p) => (
+                {opcionesPermitidas.map((p) => (
                   <option key={p.id} value={p.id} style={{ backgroundColor: '#070D1B', color: '#FFFFFF' }}>
                     {p.nombre}
                   </option>
                 ))}
               </select>
+
+              {!esAdmin && (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    fontSize: '0.72rem',
+                    color: '#38BDF8',
+                    marginTop: '0.4rem',
+                    backgroundColor: 'rgba(56, 189, 248, 0.08)',
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(56, 189, 248, 0.2)'
+                  }}
+                >
+                  <Lock className="w-3 h-3 flex-shrink-0" />
+                  <span>
+                    Ámbito Soberano: Limitado a <strong>{userProvRaw}</strong> y <strong>Nacional</strong>.
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Categoría Temática */}
@@ -492,24 +591,26 @@ export default function CrearPostModal({
 
             <div>
               <label style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block', marginBottom: '0.25rem' }}>
-                Cédula Oficial
+                Identidad Cívica (Ley N° 8968)
               </label>
-              <input
-                type="text"
-                value={autorCedula}
-                onChange={(e) => setAutorCedula(e.target.value)}
+              <div
                 style={{
                   width: '100%',
                   padding: '0.55rem 0.75rem',
                   borderRadius: '8px',
-                  backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#CBD5E1',
-                  fontSize: '0.8rem',
-                  outline: 'none',
+                  backgroundColor: 'rgba(0, 43, 127, 0.25)',
+                  border: '1px solid rgba(121, 166, 255, 0.3)',
+                  color: '#93C5FD',
+                  fontSize: '0.75rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
                   boxSizing: 'border-box'
                 }}
-              />
+              >
+                <Lock className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                <span>Cédula protegida · Solo se mostrará su Primer Nombre y Primer Apellido</span>
+              </div>
             </div>
           </div>
 

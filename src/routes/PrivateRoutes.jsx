@@ -54,6 +54,7 @@ export function esRolCiudadano(rol) {
     r.includes('cr ciudadano') ||
     r.includes('residente') ||
     r.includes('vecin') ||
+    r.includes('emprendedor') ||
     r === 'nivel_1' ||
     r === 'nivel_2'
   );
@@ -119,6 +120,12 @@ export function RoleRoute({ minLevel = 1, rolesPermitidos = [] }) {
   }
 
   // 3. Módulos Administrativos Oficiales (Nivel >= 3: Editor Municipal, Admin Provincial, Super Admin)
+  // SEGREGACIÓN ESTRICTA RBAC: Un usuario con rol CIUDADANO/TURISTA nunca debe acceder a la consola administrativa.
+  // Si intenta acceder a /admin o /dashboard, es redirigido automáticamente al portal ciudadano (/portal-ciudadano).
+  if (esRolCiudadano(userRole) || userLevel < 3) {
+    return <Navigate to="/portal-ciudadano" replace />;
+  }
+
   const nivelValido = userLevel >= minLevel;
   const rolValido =
     rolesPermitidos.length === 0 ||
@@ -128,8 +135,8 @@ export function RoleRoute({ minLevel = 1, rolesPermitidos = [] }) {
     return <Outlet />;
   }
 
-  // Redirigir a 403 únicamente si un usuario de menor jerarquía intenta entrar a consolas administrativas
-  return <Navigate to="/403" state={{ from: location }} replace />;
+  // Redirigir a /portal-ciudadano si no cumple con la jerarquía administrativa
+  return <Navigate to="/portal-ciudadano" replace />;
 }
 
 /**

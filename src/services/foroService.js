@@ -34,7 +34,7 @@ function notificarCambios(posts) {
 export async function obtenerPosts(provinciaId = 'nacional') {
   try {
     let url = API_BASE_URL;
-    if (provinciaId && provinciaId !== 'nacional' && provinciaId !== 'todas') {
+    if (provinciaId && provinciaId !== 'todas' && provinciaId !== 'all') {
       url += `?provinciaId=${encodeURIComponent(provinciaId)}`;
     }
 
@@ -57,7 +57,7 @@ export async function obtenerPosts(provinciaId = 'nacional') {
   } catch (err) {
     console.warn('[foroService] Fallo al consultar API, usando caché:', err);
     if (_postsCache) {
-      if (provinciaId && provinciaId !== 'nacional' && provinciaId !== 'todas') {
+      if (provinciaId && provinciaId !== 'todas' && provinciaId !== 'all') {
         return _postsCache.filter(
           (p) => String(p.provinciaId || '').toLowerCase() === provinciaId.toLowerCase()
         );

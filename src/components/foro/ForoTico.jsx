@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   MessageSquare,
   Plus,
@@ -15,14 +16,17 @@ import {
   RefreshCw,
   SlidersHorizontal,
   ChevronRight,
-  ShieldCheck
+  ShieldCheck,
+  AlertTriangle,
+  Lock
 } from 'lucide-react';
 import PostCard from './PostCard';
 import CrearPostModal from './CrearPostModal';
 import { obtenerPosts, suscribirCambiosForo } from '../../services/foroService';
+import { useAuth } from '../../context/AuthContext';
 
 // Ámbitos territoriales oficiales
-const AMBITOS_TERRITORIALES = [
+export const AMBITOS_TERRITORIALES = [
   {
     id: 'nacional',
     nombre: 'Foro Nacional',
@@ -97,9 +101,113 @@ const AMBITOS_TERRITORIALES = [
   }
 ];
 
+/**
+ * Normaliza nombres de provincia a los IDs oficiales del sistema
+ */
+export function normalizarProvinciaId(provStr) {
+  if (!provStr) return '';
+  const limpia = String(provStr)
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-');
+
+  if (limpia.includes('nacional') || limpia === 'pais' || limpia === 'todas') return 'nacional';
+  if (limpia.includes('jose')) return 'san-jose';
+  if (limpia.includes('alajuela')) return 'alajuela';
+  if (limpia.includes('cartago')) return 'cartago';
+  if (limpia.includes('heredia')) return 'heredia';
+  if (limpia.includes('guanacaste')) return 'guanacaste';
+  if (limpia.includes('puntarenas')) return 'puntarenas';
+  if (limpia.includes('limon')) return 'limon';
+  return limpia;
+}
+
+/**
+ * Verifica si el usuario tiene privilegios de Super Administrador Nacional o auditoría
+ */
+export function esSuperAdmin(user) {
+  if (!user) return false;
+  const rol = String(user.rol || '').toLowerCase().trim();
+  const nivel = Number(user.nivelAcceso || 0);
+  return (
+    nivel >= 5 ||
+    rol.includes('super admin') ||
+    rol.includes('superadministrador') ||
+    rol.includes('auditor')
+  );
+}
+
 export default function ForoTico({ initialScope = 'nacional', showHeader = true }) {
-  // Estado del ámbito activo: 'nacional' o provincia específica
-  const [ambitoActivo, setAmbitoActivo] = useState(initialScope);
+  const { user, usuarioActual } = useAuth();
+
+  // Resolver usuario activo desde contexto o sesión persistida
+  const activeUser = user || usuarioActual || (() => {
+    try {
+      const s = localStorage.getItem('cr_sesion_activa');
+      if (s) return JSON.parse(s);
+    } catch {}
+    return null;
+  })();
+
+  const esAdmin = esSuperAdmin(activeUser);
+
+  // Extraer provincia de residencia/registro del ciudadano
+  const provinciaUsuarioRaw =
+    activeUser?.provincia ||
+    activeUser?.provinciaNombre ||
+    activeUser?.provinciaId ||
+    (() => {
+      try {
+        const c = localStorage.getItem('cr_active_canton');
+        if (c) return c;
+      } catch {}
+      return 'San José';
+    })();
+
+  const provinciaUsuarioId = normalizarProvinciaId(provinciaUsuarioRaw) || 'san-jose';
+  const provinciaUsuarioObj =
+    AMBITOS_TERRITORIALES.find((a) => a.id === provinciaUsuarioId) || AMBITOS_TERRITORIALES[1];
+
+  // =========================================================================
+  // REQUERIMIENTO 1: FILTRADO DINÁMICO SEGÚN PERFIL CIUDADANO (RBAC TERRITORIAL)
+  // - Rol Ciudadano: Única y estrictamente dos pestañas (Foro Nacional + Su Provincia)
+  // - Super Administrador: Conserva las 8 opciones completas (Nacional + 7 Provincias)
+  // =========================================================================
+  const ambitosVisibles = useMemo(() => {
+    if (esAdmin) {
+      return AMBITOS_TERRITORIALES;
+    }
+    // Para ciudadanos, las restantes 6 provincias no existen en el DOM
+    return [AMBITOS_TERRITORIALES[0], provinciaUsuarioObj];
+  }, [esAdmin, provinciaUsuarioObj]);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [alertaAccesoDenegado, setAlertaAccesoDenegado] = useState(null);
+
+  // Determinar ámbito inicial válido respetando RBAC
+  const getInitialAmbito = () => {
+    const rawParam = searchParams.get('provincia') || searchParams.get('ambito');
+    if (rawParam) {
+      const norm = normalizarProvinciaId(rawParam);
+      const permitidos = esAdmin
+        ? AMBITOS_TERRITORIALES.map((a) => a.id)
+        : ['nacional', provinciaUsuarioId];
+      if (permitidos.includes(norm)) return norm;
+    }
+    if (initialScope) {
+      const norm = normalizarProvinciaId(initialScope);
+      const permitidos = esAdmin
+        ? AMBITOS_TERRITORIALES.map((a) => a.id)
+        : ['nacional', provinciaUsuarioId];
+      if (permitidos.includes(norm)) return norm;
+    }
+    // Por defecto: Foro Nacional o su provincia autorizada
+    return 'nacional';
+  };
+
+  const [ambitoActivo, setAmbitoActivo] = useState(getInitialAmbito);
   const [posts, setPosts] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [modalCrearAbierto, setModalCrearAbierto] = useState(false);
@@ -109,12 +217,51 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
   const [categoriaFiltro, setCategoriaFiltro] = useState('TODAS');
   const [orden, setOrden] = useState('RECIENTES'); // 'RECIENTES' | 'VOTOS' | 'COMENTARIOS'
 
-  // Sincronizar ámbito inicial si cambia desde props
+  // =========================================================================
+  // REQUERIMIENTO 2: BLINDAJE CONTRA MANIPULACIÓN DE URL Y PARÁMETROS
+  // Si el ciudadano intenta forzar la vista de otra provincia (?provincia=...),
+  // se valida contra user.provincia y se redirige de inmediato a su ámbito autorizado.
+  // =========================================================================
   useEffect(() => {
-    if (initialScope) {
-      setAmbitoActivo(initialScope);
+    const rawParam = searchParams.get('provincia') || searchParams.get('ambito');
+    if (rawParam) {
+      const norm = normalizarProvinciaId(rawParam);
+      const permitidos = ambitosVisibles.map((a) => a.id);
+
+      if (!permitidos.includes(norm)) {
+        // Manipulación o acceso no autorizado interceptado
+        const provUsuarioNombre = provinciaUsuarioObj?.nombre || 'su provincia asignada';
+        setAlertaAccesoDenegado({
+          solicitado: rawParam,
+          mensaje: `Acceso restringido: Según la Ley N° 8968 y el principio de soberanía territorial, su cuenta ciudadana no tiene autorización para acceder a los foros de "${rawParam}". Se ha restablecido su navegación al ámbito autorizado (${provUsuarioNombre} y Foro Nacional).`
+        });
+        setAmbitoActivo(provinciaUsuarioId);
+        setSearchParams({ provincia: provinciaUsuarioId }, { replace: true });
+        return;
+      }
+
+      if (norm !== ambitoActivo) {
+        setAmbitoActivo(norm);
+      }
     }
-  }, [initialScope]);
+  }, [searchParams, ambitosVisibles, provinciaUsuarioId, provinciaUsuarioObj]);
+
+  // Si el ámbito activo no es permitido (por cambio de usuario o sesión), restablecerlo
+  useEffect(() => {
+    const permitidos = ambitosVisibles.map((a) => a.id);
+    if (!permitidos.includes(ambitoActivo)) {
+      const fallback = provinciaUsuarioId || 'nacional';
+      setAmbitoActivo(fallback);
+      setSearchParams({ provincia: fallback }, { replace: true });
+    }
+  }, [ambitosVisibles, ambitoActivo, provinciaUsuarioId]);
+
+  // Manejador al hacer clic en una pestaña autorizada
+  const handleSeleccionarAmbito = (nuevoId) => {
+    setAlertaAccesoDenegado(null);
+    setAmbitoActivo(nuevoId);
+    setSearchParams({ provincia: nuevoId }, { replace: true });
+  };
 
   // Cargar publicaciones desde el servidor API (db.json)
   const cargarPosts = async (scope) => {
@@ -134,15 +281,11 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
 
     // Suscripción reactiva para cambios en tiempo real
     const unsubscribe = suscribirCambiosForo((updatedList) => {
-      if (ambitoActivo === 'nacional') {
-        setPosts(updatedList);
-      } else {
-        setPosts(
-          updatedList.filter(
-            (p) => String(p.provinciaId || '').toLowerCase() === ambitoActivo.toLowerCase()
-          )
-        );
-      }
+      setPosts(
+        updatedList.filter(
+          (p) => String(p.provinciaId || '').toLowerCase() === ambitoActivo.toLowerCase()
+        )
+      );
     });
 
     return () => unsubscribe();
@@ -180,9 +323,8 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
 
   // Manejo de post nuevo creado
   const handlePostCreado = (nuevoPost) => {
-    // Si estamos en nacional o en la provincia del nuevo post, lo agregamos al inicio
     const postProv = String(nuevoPost.provinciaId || '').toLowerCase();
-    if (ambitoActivo === 'nacional' || ambitoActivo === postProv) {
+    if (ambitoActivo === postProv) {
       setPosts((prev) => [nuevoPost, ...prev]);
     }
   };
@@ -240,7 +382,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
 
   // Ámbito actual
   const ambitoActualObj =
-    AMBITOS_TERRITORIALES.find((a) => a.id === ambitoActivo) || AMBITOS_TERRITORIALES[0];
+    ambitosVisibles.find((a) => a.id === ambitoActivo) || ambitosVisibles[0] || AMBITOS_TERRITORIALES[0];
 
   return (
     <section
@@ -356,6 +498,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
             {/* Botón Principal: Nueva Publicación */}
             <button
               type="button"
+              data-tour="btn-crear-post"
               onClick={() => setModalCrearAbierto(true)}
               style={{
                 display: 'inline-flex',
@@ -382,6 +525,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
 
           {/* Tarjetas de Métricas Rápidas */}
           <div
+            data-tour="foro-metricas"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
@@ -448,46 +592,134 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
               }}
             >
               <div style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase' }}>
-                Cobertura Territorial
+                {esAdmin ? 'Cobertura Territorial' : 'Ámbito Autorizado'}
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#FACC15', marginTop: '0.25rem' }}>
-                7 Provincias + Nacional
+              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FACC15', marginTop: '0.25rem' }}>
+                {esAdmin ? '7 Provincias + Nacional' : `${provinciaUsuarioObj?.nombre || 'Provincia'} + Nacional`}
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* 2. SELECTOR DE ÁMBITO TERRITORIAL (NACIONAL + 7 PROVINCIAS) */}
-      <div>
+      {/* ALERTA DE ACCESO TERRITORIAL RESTRINGIDO / CORREGIDO POR RBAC */}
+      {alertaAccesoDenegado && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            padding: '1.1rem 1.35rem',
+            borderRadius: '16px',
+            backgroundColor: 'rgba(245, 158, 11, 0.12)',
+            border: '1.5px solid rgba(245, 158, 11, 0.35)',
+            boxShadow: '0 8px 25px -5px rgba(245, 158, 11, 0.2)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
+                backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}
+            >
+              <AlertTriangle className="w-5 h-5 text-amber-400" />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#FCD34D', marginBottom: '0.25rem' }}>
+                Segmentación Territorial RBAC (Ley N° 8968)
+              </div>
+              <div style={{ fontSize: '0.84rem', color: '#FEF3C7', lineHeight: 1.5 }}>
+                {alertaAccesoDenegado.mensaje}
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setAlertaAccesoDenegado(null)}
+            style={{
+              background: 'rgba(245, 158, 11, 0.18)',
+              border: '1px solid rgba(245, 158, 11, 0.35)',
+              color: '#FDE68A',
+              cursor: 'pointer',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              padding: '0.35rem 0.85rem',
+              borderRadius: '8px',
+              flexShrink: 0,
+              transition: 'all 0.15s ease'
+            }}
+            className="hover:bg-amber-400/30 active:scale-95"
+          >
+            Entendido
+          </button>
+        </div>
+      )}
+
+      {/* 2. SELECTOR DE ÁMBITO TERRITORIAL (SEGMENTACIÓN DINÁMICA POR ROL) */}
+      <div data-tour="selector-ambito-territorial">
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
             marginBottom: '0.85rem'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flexWrap: 'wrap' }}>
             <MapPin className="w-4 h-4 text-sky-400" />
             <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
               Ámbito Territorial del Debate
             </h2>
+            {!esAdmin && (
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  color: '#38BDF8',
+                  backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                  padding: '2px 9px',
+                  borderRadius: '9999px'
+                }}
+              >
+                <Lock className="w-3 h-3" />
+                Segregación RBAC: 2 Foros ({provinciaUsuarioObj?.nombre} & Nacional)
+              </span>
+            )}
           </div>
           <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
-            Selecciona para segmentar la conversación cívica
+            {esAdmin
+              ? 'Supervisión completa: 7 Provincias + Nacional'
+              : `Espacios cívicos exclusivos para residentes de ${provinciaUsuarioObj?.nombre || 'Costa Rica'}`}
           </span>
         </div>
 
-        {/* Barra deslizante / botones de ámbito */}
+        {/* Barra deslizante / botones de ámbito con adaptación visual para 2 opciones */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(135px, 1fr))',
-            gap: '0.65rem'
+            gridTemplateColumns:
+              ambitosVisibles.length <= 2
+                ? 'repeat(auto-fit, minmax(260px, 1fr))'
+                : 'repeat(auto-fill, minmax(135px, 1fr))',
+            maxWidth: ambitosVisibles.length <= 2 ? '680px' : '100%',
+            gap: ambitosVisibles.length <= 2 ? '0.85rem' : '0.65rem'
           }}
         >
-          {AMBITOS_TERRITORIALES.map((amb) => {
+          {ambitosVisibles.map((amb) => {
             const esActivo = ambitoActivo === amb.id;
             const IconoAmb = amb.icono;
 
@@ -495,38 +727,67 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
               <button
                 key={amb.id}
                 type="button"
-                onClick={() => setAmbitoActivo(amb.id)}
+                onClick={() => handleSeleccionarAmbito(amb.id)}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'flex-start',
-                  padding: '0.85rem 1rem',
-                  borderRadius: '14px',
-                  backgroundColor: esActivo ? amb.bg : 'rgba(15, 23, 42, 0.7)',
-                  border: esActivo ? `1.5px solid ${amb.border}` : '1px solid rgba(255, 255, 255, 0.08)',
+                  padding: ambitosVisibles.length <= 2 ? '1.1rem 1.35rem' : '0.85rem 1rem',
+                  borderRadius: '16px',
+                  backgroundColor: esActivo ? amb.bg : 'rgba(15, 23, 42, 0.75)',
+                  border: esActivo ? `2px solid ${amb.border}` : '1px solid rgba(255, 255, 255, 0.08)',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                   textAlign: 'left',
-                  boxShadow: esActivo ? `0 4px 15px ${amb.bg}` : 'none'
+                  boxShadow: esActivo ? `0 8px 24px -4px ${amb.bg}` : 'none',
+                  position: 'relative'
                 }}
-                className={esActivo ? '' : 'hover:border-white/20 hover:bg-white/[0.04]'}
+                className={esActivo ? 'scale-[1.01]' : 'hover:border-white/20 hover:bg-white/[0.04]'}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', width: '100%', marginBottom: '0.35rem' }}>
-                  <IconoAmb className="w-4 h-4" style={{ color: esActivo ? amb.color : '#94A3B8' }} />
-                  <span
-                    style={{
-                      fontSize: '0.85rem',
-                      fontWeight: 700,
-                      color: esActivo ? '#FFFFFF' : '#CBD5E1'
-                    }}
-                  >
-                    {amb.nombre}
-                  </span>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    marginBottom: '0.4rem'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <IconoAmb className="w-4 h-4" style={{ color: esActivo ? amb.color : '#94A3B8' }} />
+                    <span
+                      style={{
+                        fontSize: ambitosVisibles.length <= 2 ? '0.98rem' : '0.85rem',
+                        fontWeight: 700,
+                        color: esActivo ? '#FFFFFF' : '#CBD5E1'
+                      }}
+                    >
+                      {amb.nombre}
+                    </span>
+                  </div>
+
+                  {esActivo && (
+                    <span
+                      style={{
+                        fontSize: '0.65rem',
+                        fontWeight: 800,
+                        letterSpacing: '0.05em',
+                        color: amb.color,
+                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                        border: `1px solid ${amb.border}`,
+                        padding: '2px 8px',
+                        borderRadius: '9999px',
+                        textTransform: 'uppercase'
+                      }}
+                    >
+                      Activo
+                    </span>
+                  )}
                 </div>
 
                 <div
                   style={{
-                    fontSize: '0.7rem',
+                    fontSize: ambitosVisibles.length <= 2 ? '0.78rem' : '0.7rem',
                     color: esActivo ? amb.color : '#64748B',
                     fontWeight: 500
                   }}
@@ -554,7 +815,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
         }}
       >
         {/* Buscador de texto */}
-        <div style={{ position: 'relative', flex: '1 1 260px' }}>
+        <div data-tour="buscador-foro" style={{ position: 'relative', flex: '1 1 260px' }}>
           <Search
             className="w-4 h-4 text-slate-400"
             style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }}
@@ -674,7 +935,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
       </div>
 
       {/* 4. FEED DE PUBLICACIONES */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      <div data-tour="feed-publicaciones-foro" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         {cargando && posts.length === 0 ? (
           <div
             style={{

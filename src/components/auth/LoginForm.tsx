@@ -45,6 +45,7 @@ import {
 import CivicButton from '../common/CivicButton';
 import CivicCard from '../common/CivicCard';
 import CivicBadge from '../common/CivicBadge';
+import EmergencyQuickAccess from '../common/EmergencyQuickAccess';
 
 type AuthMode = 'LOGIN' | 'REGISTER';
 
@@ -95,7 +96,9 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
   const [citizenMode, setCitizenMode] = useState<CitizenMode>('CIUDADANO');
 
   // Credenciales de Login
-  const [loginIdentifier, setLoginIdentifier] = useState<string>(''); // Cédula o Correo
+  const [loginIdentifier, setLoginIdentifier] = useState<string>(''); // Cédula o Correo para roles administrativos
+  const [loginCedula, setLoginCedula] = useState<string>('1-1823-0456'); // Cédula para rol Ciudadano
+  const [loginEmail, setLoginEmail] = useState<string>('eiker.abarca@gmail.com'); // Correo para rol Ciudadano
   const [loginPassword, setLoginPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -320,50 +323,84 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
     setSuccessMessage(null);
     clearError();
 
-    const cleanIdent = loginIdentifier.trim();
-    if (!cleanIdent) {
-      setFormError('Por favor ingrese su cédula oficial costarricense o correo electrónico.');
-      return;
-    }
+    let result;
 
-    if (!loginPassword) {
-      setFormError('Por favor ingrese su contraseña de acceso.');
-      return;
-    }
+    if (selectedRole === 'Ciudadano/Turista') {
+      // Requerimiento 2: Tres credenciales verificables contra db.json para Ciudadano
+      const cleanCedula = loginCedula.trim();
+      const cleanEmail = loginEmail.trim().toLowerCase();
 
-    // Reglas adicionales por rol
-    if (selectedRole === 'Administrador Provincial' && !municipalSecurityCode.trim()) {
-      setFormError('Debe ingresar el código institucional o clave de seguridad municipal.');
-      return;
-    }
-
-    if (selectedRole === 'Super Administrador Nacional') {
-      const digitsOnly = cleanIdent.replace(/[^0-9]/g, '');
-      const isAuthorizedCedula = AUTHORIZED_SUPER_ADMIN_CEDULAS.includes(cleanIdent) || AUTHORIZED_SUPER_ADMIN_CEDULAS.includes(digitsOnly) || cleanIdent.includes('admin.nacional');
-      if (!isAuthorizedCedula) {
-        setFormError('Acceso denegado: Esta cuenta no pertenece a los 2 Super Administradores Nacionales autorizados.');
+      if (!cleanCedula) {
+        setFormError('Por favor ingrese su número de Cédula de Identidad oficial.');
         return;
       }
-    }
 
-    // Ejecutar login contra AuthContext y dbService
-    const result = await login({
-      cedula: cleanIdent,
-      email: cleanIdent.includes('@') ? cleanIdent : undefined,
-      password: loginPassword,
-      role: selectedRole,
-      citizenMode,
-      municipalityId: selectedMunicipalityId,
-      municipalCode: municipalSecurityCode
-    });
+      if (!cleanEmail || !cleanEmail.includes('@')) {
+        setFormError('Por favor ingrese su Correo Electrónico registrado.');
+        return;
+      }
+
+      if (!loginPassword) {
+        setFormError('Por favor ingrese su contraseña de acceso.');
+        return;
+      }
+
+      result = await login({
+        cedula: cleanCedula,
+        email: cleanEmail,
+        password: loginPassword,
+        role: 'Ciudadano/Turista',
+        citizenMode
+      });
+    } else {
+      // Roles Administrativos e Institucionales
+      const cleanIdent = loginIdentifier.trim();
+      if (!cleanIdent) {
+        setFormError('Por favor ingrese su cédula oficial costarricense o correo institucional.');
+        return;
+      }
+
+      if (!loginPassword) {
+        setFormError('Por favor ingrese su contraseña de acceso.');
+        return;
+      }
+
+      if (selectedRole === 'Administrador Provincial' && !municipalSecurityCode.trim()) {
+        setFormError('Debe ingresar el código institucional o clave de seguridad municipal.');
+        return;
+      }
+
+      if (selectedRole === 'Super Administrador Nacional') {
+        const digitsOnly = cleanIdent.replace(/[^0-9]/g, '');
+        const isAuthorizedCedula = AUTHORIZED_SUPER_ADMIN_CEDULAS.includes(cleanIdent) || AUTHORIZED_SUPER_ADMIN_CEDULAS.includes(digitsOnly) || cleanIdent.includes('admin.nacional');
+        if (!isAuthorizedCedula) {
+          setFormError('Acceso denegado: Esta cuenta no pertenece a los 2 Super Administradores Nacionales autorizados.');
+          return;
+        }
+      }
+
+      result = await login({
+        cedula: cleanIdent,
+        email: cleanIdent.includes('@') ? cleanIdent : undefined,
+        password: loginPassword,
+        role: selectedRole,
+        citizenMode,
+        municipalityId: selectedMunicipalityId,
+        municipalCode: municipalSecurityCode
+      });
+    }
 
     if (result.success) {
       refreshDbStats();
-      // Redirección adaptativa según rol oficial respetando la ruta previa
-      if (selectedRole === 'Administrador Provincial' || selectedRole === 'Editor Municipal') {
-        navigate(resolveTarget('/gobernanza'), { replace: true });
+      // SEGREGACIÓN ESTRICTA RBAC:
+      // Ciudadano va SIEMPRE al portal ciudadano cívico (/portal-ciudadano o /)
+      // NUNCA al panel administrativo (/dashboard o /admin)
+      if (selectedRole === 'Ciudadano/Turista') {
+        navigate(resolveTarget('/portal-ciudadano'), { replace: true });
+      } else if (selectedRole === 'Super Administrador Nacional') {
+        navigate(resolveTarget('/admin'), { replace: true });
       } else {
-        navigate(resolveTarget('/dashboard'), { replace: true });
+        navigate(resolveTarget('/gobernanza'), { replace: true });
       }
     } else if (result.message) {
       setFormError(result.message);
@@ -455,7 +492,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
       setHaciendaVerified(false);
       setHaciendaMessage('');
       setTimeout(() => {
-        navigate(resolveTarget('/dashboard'), { replace: true });
+        navigate(resolveTarget('/portal-ciudadano'), { replace: true });
       }, 1200);
     } else {
       const err = (result as { message?: string; mensaje?: string }).message ||
@@ -477,6 +514,10 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
     setAuthMode('LOGIN');
     setSelectedRole(role);
     setLoginIdentifier(identifier);
+    if (role === 'Ciudadano/Turista') {
+      setLoginCedula('1-1823-0456');
+      setLoginEmail(identifier || 'eiker.abarca@gmail.com');
+    }
     setLoginPassword(pass);
     setCitizenMode(mode);
     setSelectedMunicipalityId(muniId);
@@ -506,6 +547,9 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
         border: '1px solid rgba(255, 255, 255, 0.16)'
       }}
     >
+      {/* Acceso Rápido y Visible de Emergencia SOS 911 (Sin requerir autenticación) */}
+      <EmergencyQuickAccess />
+
       {/* Encabezado Institucional */}
       <div style={{ textAlign: 'center', marginBottom: '1.6rem' }}>
         <CivicBadge variant="accent" style={{ marginBottom: '0.6rem' }}>
@@ -862,39 +906,111 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
 
           {/* Formulario de Login */}
           <form onSubmit={handleLoginSubmit}>
-            {/* Campo 1: Cédula o Correo */}
-            <div style={{ marginBottom: '1.15rem' }}>
-              <label
-                htmlFor="login-ident-input"
-                style={{
-                  display: 'block',
-                  fontSize: '0.82rem',
-                  fontWeight: 600,
-                  color: 'rgba(255, 255, 255, 0.95)',
-                  marginBottom: '0.35rem'
-                }}
-              >
-                Cédula Costarricense o Correo Institucional
-              </label>
-              <input
-                id="login-ident-input"
-                type="text"
-                placeholder="Cédula o correo electrónico"
-                value={loginIdentifier}
-                onChange={(e) => setLoginIdentifier(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(0, 4, 13, 0.75)',
-                  border: '1px solid rgba(255, 255, 255, 0.22)',
-                  color: '#FFFFFF',
-                  fontSize: '0.92rem',
-                  fontFamily: 'inherit',
-                  outline: 'none'
-                }}
-              />
-            </div>
+            {selectedRole === 'Ciudadano/Turista' ? (
+              <>
+                {/* Requerimiento 2: Campo 1 - Cédula de Identidad */}
+                <div style={{ marginBottom: '1rem' }}>
+                  <label
+                    htmlFor="login-cedula-input"
+                    style={{
+                      display: 'block',
+                      fontSize: '0.82rem',
+                      fontWeight: 600,
+                      color: 'rgba(255, 255, 255, 0.95)',
+                      marginBottom: '0.35rem'
+                    }}
+                  >
+                    1. Cédula de Identidad <span style={{ color: '#38BDF8', fontSize: '0.72rem' }}>(Oficial o Numérica)</span>
+                  </label>
+                  <input
+                    id="login-cedula-input"
+                    type="text"
+                    placeholder="Ej: 1-1823-0456 o 118230456"
+                    value={loginCedula}
+                    onChange={(e) => setLoginCedula(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(0, 4, 13, 0.75)',
+                      border: '1px solid rgba(56, 189, 248, 0.35)',
+                      color: '#FFFFFF',
+                      fontSize: '0.92rem',
+                      fontFamily: 'inherit',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+
+                {/* Requerimiento 2: Campo 2 - Correo Electrónico */}
+                <div style={{ marginBottom: '1rem' }}>
+                  <label
+                    htmlFor="login-email-input"
+                    style={{
+                      display: 'block',
+                      fontSize: '0.82rem',
+                      fontWeight: 600,
+                      color: 'rgba(255, 255, 255, 0.95)',
+                      marginBottom: '0.35rem'
+                    }}
+                  >
+                    2. Correo Electrónico Registrado
+                  </label>
+                  <input
+                    id="login-email-input"
+                    type="email"
+                    placeholder="ejemplo@correo.com"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(0, 4, 13, 0.75)',
+                      border: '1px solid rgba(56, 189, 248, 0.35)',
+                      color: '#FFFFFF',
+                      fontSize: '0.92rem',
+                      fontFamily: 'inherit',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+              </>
+            ) : (
+              /* Roles Administrativos: Cédula o Correo Institucional */
+              <div style={{ marginBottom: '1.15rem' }}>
+                <label
+                  htmlFor="login-ident-input"
+                  style={{
+                    display: 'block',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    color: 'rgba(255, 255, 255, 0.95)',
+                    marginBottom: '0.35rem'
+                  }}
+                >
+                  Cédula Costarricense o Correo Institucional
+                </label>
+                <input
+                  id="login-ident-input"
+                  type="text"
+                  placeholder="Cédula o correo electrónico"
+                  value={loginIdentifier}
+                  onChange={(e) => setLoginIdentifier(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(0, 4, 13, 0.75)',
+                    border: '1px solid rgba(255, 255, 255, 0.22)',
+                    color: '#FFFFFF',
+                    fontSize: '0.92rem',
+                    fontFamily: 'inherit',
+                    outline: 'none'
+                  }}
+                />
+              </div>
+            )}
 
             {/* Campo 2: Contraseña */}
             <div style={{ marginBottom: '1.25rem' }}>
@@ -1356,7 +1472,7 @@ export default function LoginForm({ initialMode = 'LOGIN' }: LoginFormProps) {
                     onClick={(e) => {
                       e.stopPropagation();
                       seleccionarCuentaDemo('USR-CIUD-001');
-                      navigate(resolveTarget('/dashboard'), { replace: true });
+                      navigate(resolveTarget('/portal-ciudadano'), { replace: true });
                     }}
                     style={{
                       background: '#002B7F',

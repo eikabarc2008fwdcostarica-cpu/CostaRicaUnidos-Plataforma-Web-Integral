@@ -10,7 +10,7 @@ const SLIDES = [
     bajada: 'Unificando la gestión territorial, la fiscalización de obra pública y la transparencia cívica de los 84 cantones y 492 distritos bajo un estándar digital transparente y auditable.',
     badgeIcon: Landmark,
     ctaPrimary: { text: 'Explorar Mapa Nacional', targetId: 'seccion-mapa-svg' },
-    ctaSecondary: { text: 'Auditoría Cívica', href: '/dashboard' },
+    ctaSecondary: { text: 'Portal Ciudadano', href: '/portal-ciudadano' },
     statNumber: '84',
     statLabel: 'Cantones Oficiales DTA',
     accentColor: '#002B7F'
@@ -22,7 +22,7 @@ const SLIDES = [
     bajada: 'Supervisión activa del avance físico y financiero de las obras de infraestructura vial, contratos estatales SICOP y situación tributaria de contribuyentes con datos abiertos.',
     badgeIcon: BarChart3,
     ctaPrimary: { text: 'Filtrar por Territorio', targetId: 'seccion-selector-territorial' },
-    ctaSecondary: { text: 'Ver Módulo de Hacienda', href: '/dashboard' },
+    ctaSecondary: { text: 'Directorio Comercial', href: '/comercio' },
     statNumber: '₡ 617,450 M',
     statLabel: 'Fondo Cantonal Monitoreado',
     accentColor: '#CE1126'
