@@ -1,4 +1,8 @@
-{
+/**
+ * DATOS SEMILLA ESTÁTICOS (TypeScript)
+ * Desacoplado de db.json en disco para evitar recargas no deseadas de Vite.
+ */
+export const MASTER_SEED_DATA = {
   "usuarios": [
     {
       "id": "USR-NAC-001",
@@ -25,48 +29,6 @@
       "provinciaId": 6,
       "canton": "Puntarenas",
       "fechaRegistro": "2026-02-15T08:30:00Z",
-      "verificadoHacienda": true
-    },
-    {
-      "id": "USR-CIUD-001",
-      "cedula": "1-1823-0456",
-      "nombre": "Eiker Manuel Abarca Murillo",
-      "correo": "eiker.abarca@gmail.com",
-      "password": "Ciudadano2026*",
-      "rol": "Ciudadano/Turista",
-      "nivelAcceso": 2,
-      "provincia": "San José",
-      "canton": "San José",
-      "distrito": "Carmen",
-      "fechaRegistro": "2026-05-10T14:20:00Z",
-      "verificadoHacienda": true
-    },
-    {
-      "id": "USR-CIUD-8909",
-      "cedula": "1-1999-0777",
-      "nombre": "GUADALUPE RUIZ CHINCHILLA VALENTINA DE",
-      "correo": "mariana.solis@costarica.cr",
-      "password": "Ciudadano2026*",
-      "rol": "Ciudadano/Turista",
-      "nivelAcceso": 2,
-      "provincia": "San José",
-      "canton": "San José",
-      "distrito": "Carmen",
-      "fechaRegistro": "2026-10-01T16:17:28.909Z",
-      "verificadoHacienda": true
-    },
-    {
-      "id": "USR-CIUD-9238",
-      "cedula": "605090727",
-      "nombre": "EIKER MANUEL ABARCA MURILLO",
-      "correo": "aquiangquiros2025fwd@gmail.com",
-      "password": "1234",
-      "rol": "Ciudadano/Turista",
-      "nivelAcceso": 2,
-      "provincia": "Guanacaste",
-      "canton": "La Cruz",
-      "distrito": "Santa Cecilia",
-      "fechaRegistro": "2026-10-01T16:41:19.238Z",
       "verificadoHacienda": true
     }
   ],
@@ -443,6 +405,27 @@
       "accion": "REGISTRO_USUARIO",
       "detalles": "Registro exitoso para EIKER MANUEL ABARCA MURILLO en cantón La Cruz.",
       "timestamp": "2026-10-01T16:41:19.238Z"
+    },
+    {
+      "id": "LOG-3416",
+      "usuarioId": "USR-CIUD-9238",
+      "accion": "BAJA_DEFINITIVA_USUARIO",
+      "detalles": "Eliminación física del usuario USR-CIUD-9238 de db.json bajo Ley N° 8292.",
+      "timestamp": "2026-10-02T19:44:43.416Z"
+    },
+    {
+      "id": "LOG-7866",
+      "usuarioId": "USR-CIUD-001",
+      "accion": "BAJA_DEFINITIVA_USUARIO",
+      "detalles": "Eliminación física del usuario USR-CIUD-001 de db.json bajo Ley N° 8292.",
+      "timestamp": "2026-10-02T19:51:07.866Z"
+    },
+    {
+      "id": "LOG-3109",
+      "usuarioId": "USR-CIUD-8909",
+      "accion": "BAJA_DEFINITIVA_USUARIO",
+      "detalles": "Eliminación física del usuario USR-CIUD-8909 de db.json bajo Ley N° 8292.",
+      "timestamp": "2026-10-02T19:52:43.109Z"
     }
   ],
   "foro_posts": [
@@ -1036,4 +1019,7 @@
       "fechaSolicitud": "2026-10-02T15:23:14.154Z"
     }
   ]
-}
+} as const;
+
+export const SEED_DB_DATA = MASTER_SEED_DATA;
+export default MASTER_SEED_DATA;

@@ -91,3 +91,44 @@ export async function obtenerUsuariosApi(): Promise<Usuario[]> {
     return [];
   }
 }
+
+const JSON_SERVER_URL = 'http://localhost:3001/usuarios';
+
+/**
+ * Elimina físicamente un usuario del archivo db.json en el disco duro.
+ * Intenta primero el endpoint local de json-server (puerto 3001),
+ * y utiliza como fallback defensivo el middleware de Vite (/api/usuarios).
+ */
+export const eliminarUsuarioApi = async (idUsuario: string): Promise<boolean> => {
+  try {
+    // 1. Intento primario: json-server en http://localhost:3001/usuarios
+    try {
+      const response = await fetch(`${JSON_SERVER_URL}/${idUsuario}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (response.ok) {
+        return true;
+      }
+    } catch (_jsonServerErr) {
+      // json-server no activo en 3001, probar endpoint de middleware Vite
+    }
+
+    // 2. Fallback: Servidor de desarrollo Vite (/api/usuarios/:id)
+    const viteResponse = await fetch(`${API_USUARIOS_URL}/${idUsuario}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    });
+
+    return viteResponse.ok;
+  } catch (error) {
+    console.error('Error al eliminar usuario en db.json:', error);
+    return false;
+  }
+};
+

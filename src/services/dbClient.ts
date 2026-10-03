@@ -7,7 +7,7 @@
  * ============================================================================
  */
 
-import masterSeedData from '../data/db.json';
+import masterSeedData from '../data/seedData';
 import {
   MasterDbSchema,
   Usuario,

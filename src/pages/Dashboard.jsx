@@ -51,6 +51,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useCivicModal } from '../context/CivicModalContext';
 import { getDb } from '../services/dbService';
+import UsuariosAuditoriaModule from '../components/admin/UsuariosAuditoriaModule';
 import {
   obtenerSolicitudesComercio,
   resolverSolicitudComercio,
@@ -1801,168 +1802,11 @@ export default function Dashboard() {
 
         {activeTab === 'usuarios' && (
           <div className="space-y-8 animate-fadeIn">
-            {/* Sección A: Directorio de Usuarios Registrados */}
-            <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Users className="w-5 h-5 text-sky-400" strokeWidth={1.75} />
-                    <span>Directorio Cívico de Usuarios y Control RBAC</span>
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    Padrón de identidades digitales registradas con cotejo tributario ante el Ministerio de Hacienda.
-                  </p>
-                </div>
-
-                {/* Filtro y Búsqueda */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="relative">
-                    <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" strokeWidth={1.75} />
-                    <input
-                      type="text"
-                      value={busquedaUsuario}
-                      onChange={(e) => setBusquedaUsuario(e.target.value)}
-                      placeholder="Buscar por cédula o nombre..."
-                      className="pl-9 pr-4 py-1.5 text-xs rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none w-56 sm:w-64"
-                    />
-                  </div>
-
-                  <select
-                    value={filtroRolUsuario}
-                    onChange={(e) => setFiltroRolUsuario(e.target.value)}
-                    className="py-1.5 px-3 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-slate-300 focus:border-sky-500 focus:outline-none"
-                  >
-                    <option value="TODOS">Todos los Roles</option>
-                    <option value="SUPER">Super Administrador</option>
-                    <option value="PROV">Administrador Provincial</option>
-                    <option value="MUNI">Editor Municipal</option>
-                    <option value="CIUD">Ciudadano/Turista</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Tabla de Usuarios */}
-              <div className="overflow-x-auto rounded-2xl border border-white/10">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-white/[0.04] text-slate-400 uppercase tracking-wider font-semibold border-b border-white/10">
-                    <tr>
-                      <th className="py-3 px-4">Cédula Oficial</th>
-                      <th className="py-3 px-4">Nombre Completo</th>
-                      <th className="py-3 px-4">Rol Institucional</th>
-                      <th className="py-3 px-4">Nivel RBAC</th>
-                      <th className="py-3 px-4">Hacienda ATV</th>
-                      <th className="py-3 px-4">Jurisdicción</th>
-                      <th className="py-3 px-4 text-right">Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5">
-                    {usuariosFiltrados.length === 0 ? (
-                      <tr>
-                        <td colSpan={7} className="py-8 text-center text-slate-500">
-                          No se encontraron usuarios coincidentes con el criterio de búsqueda.
-                        </td>
-                      </tr>
-                    ) : (
-                      usuariosFiltrados.map((u) => (
-                        <tr key={u.id} className="hover:bg-white/[0.02] transition-colors">
-                          <td className="py-3 px-4 font-mono font-bold text-sky-300">{u.cedula}</td>
-                          <td className="py-3 px-4 font-semibold text-white">{u.nombre}</td>
-                          <td className="py-3 px-4">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/[0.06] border border-white/10 text-slate-200">
-                              {u.rol}
-                            </span>
-                          </td>
-                          <td className="py-3 px-4">
-                            <span className="font-bold text-amber-400 font-mono">Nivel {u.nivelAcceso || 2}</span>
-                          </td>
-                          <td className="py-3 px-4">
-                            {u.verificadoHacienda ? (
-                              <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-bold">
-                                <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} /> Verificado
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 text-[11px] text-amber-400">
-                                <Clock className="w-3.5 h-3.5" strokeWidth={2} /> Pendiente
-                              </span>
-                            )}
-                          </td>
-                          <td className="py-3 px-4 text-slate-300">{u.canton}, {u.provincia}</td>
-                          <td className="py-3 px-4 text-right">
-                            <button
-                              type="button"
-                              onClick={() => setUsuarioConsultado(u)}
-                              className="py-1 px-2.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 text-xs font-semibold inline-flex items-center gap-1 transition-colors"
-                            >
-                              <Eye className="w-3 h-3" strokeWidth={2} />
-                              <span>Ver Actividad</span>
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Modal de Detalle de Usuario Consultado */}
-            {usuarioConsultado && (
-              <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-                <div className="max-w-md w-full rounded-3xl bg-[#000d26] border border-sky-400/40 p-6 space-y-4 shadow-2xl">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                    <h4 className="font-bold text-white text-base flex items-center gap-2">
-                      <User className="w-4 h-4 text-sky-400" strokeWidth={1.75} />
-                      <span>Ficha de Identidad Cívica</span>
-                    </h4>
-                    <button
-                      type="button"
-                      onClick={() => setUsuarioConsultado(null)}
-                      className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
-                      title="Cerrar ficha"
-                      aria-label="Cerrar ficha"
-                    >
-                      <XCircle className="w-4 h-4" strokeWidth={1.75} />
-                    </button>
-                  </div>
-
-                  <div className="space-y-2 text-xs text-slate-300">
-                    <div className="p-3 rounded-xl bg-white/[0.03] space-y-1">
-                      <div className="text-slate-400 text-[10px] uppercase font-semibold">Nombre Registrado:</div>
-                      <div className="text-sm font-bold text-white">{usuarioConsultado.nombre}</div>
-                      <div>Cédula: <strong className="font-mono text-sky-300">{usuarioConsultado.cedula}</strong></div>
-                      <div>Correo Electrónico: {usuarioConsultado.correo}</div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="p-3 rounded-xl bg-white/[0.03]">
-                        <div className="text-slate-400 text-[10px] uppercase font-semibold">Rol Asignado</div>
-                        <div className="font-bold text-amber-300 mt-1">{usuarioConsultado.rol}</div>
-                        <div className="text-slate-400 mt-0.5 font-mono">Acceso Nivel {usuarioConsultado.nivelAcceso}</div>
-                      </div>
-                      <div className="p-3 rounded-xl bg-white/[0.03]">
-                        <div className="text-slate-400 text-[10px] uppercase font-semibold">Jurisdicción</div>
-                        <div className="font-bold text-white mt-1">{usuarioConsultado.canton}</div>
-                        <div className="text-slate-400 mt-0.5">{usuarioConsultado.provincia}</div>
-                      </div>
-                    </div>
-
-                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-                      Situación tributaria validada con la Dirección General de Tributación Directa.
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setUsuarioConsultado(null)}
-                      className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-semibold transition-colors"
-                    >
-                      Cerrar Consulta
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* Módulo Oficial de Padrón Cívico, Auditoría y Control RBAC */}
+            <UsuariosAuditoriaModule
+              currentUser={currentUser}
+              onUsuariosChange={(nuevos) => setUsuarios(nuevos)}
+            />
 
             {/* Sección B: Muro de la Bitácora de Auditoría Legal */}
             <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-4">

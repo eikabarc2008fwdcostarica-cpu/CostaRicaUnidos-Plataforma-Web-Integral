@@ -6,7 +6,7 @@
  * ============================================================================
  */
 
-import masterSeedData from '../data/db.json';
+import masterSeedData from '../data/seedData';
 
 export const DB_STORAGE_KEY = 'cru_mock_db_v2';
 export const DB_UPDATE_EVENT = 'cru_db_updated';

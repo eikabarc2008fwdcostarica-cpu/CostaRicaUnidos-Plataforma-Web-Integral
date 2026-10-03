@@ -6,7 +6,6 @@
  * ============================================================================
  */
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import dbSeed from '../data/db.json';
 import { registrarUsuarioApi, obtenerUsuariosApi } from '../services/userService';
 import {
   Usuario,
@@ -20,6 +19,23 @@ import {
   RegisterUserData,
   AuthContextType
 } from '../types/auth';
+
+const DEFAULT_SEED_USERS: Usuario[] = [
+  {
+    id: 'USR-NAC-001',
+    cedula: '1-0000-0001',
+    nombre: 'Superintendencia Nacional de Gobierno Digital',
+    correo: 'admin.nacional@gob.cr',
+    email: 'admin.nacional@gob.cr',
+    password: 'Admin123*',
+    rol: 'Super Administrador Nacional',
+    nivelAcceso: 5,
+    provincia: 'Nacional',
+    canton: 'Todas las Municipalidades',
+    fechaRegistro: '2026-01-01T00:00:00Z',
+    verificadoHacienda: true
+  }
+];
 
 export const MUNICIPALITIES_DIRECTORY: MunicipalityProfile[] = [
   {
@@ -126,48 +142,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [cargando, setCargando] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Inicializar base de datos sincronizando con /api/usuarios y localStorage
+  // Inicializar base de datos consultando a json-server o API local y sincronizando con localStorage
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('cr_db_usuarios');
-      if (!raw) {
-        localStorage.setItem('cr_db_usuarios', JSON.stringify(dbSeed.usuarios || []));
-      } else {
-        const parsed: Usuario[] = JSON.parse(raw);
-        let modificado = false;
-        for (const seed of dbSeed.usuarios || []) {
-          if (!parsed.some((u) => u.id === seed.id || u.correo.toLowerCase() === seed.correo.toLowerCase())) {
-            parsed.push(seed as Usuario);
-            modificado = true;
+    const cargarUsuarios = async () => {
+      // 1. Intentar consultar json-server en http://localhost:3001/usuarios
+      try {
+        const res = await fetch('http://localhost:3001/usuarios');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            localStorage.setItem('cr_db_usuarios', JSON.stringify(data));
+            return;
           }
         }
-        if (modificado) {
-          localStorage.setItem('cr_db_usuarios', JSON.stringify(parsed));
-        }
+      } catch (_error) {
+        // json-server no disponible en 3001, cargando de API local o localStorage
       }
-    } catch {
-      localStorage.setItem('cr_db_usuarios', JSON.stringify(dbSeed.usuarios || []));
-    }
 
-    // Cargar los usuarios actualizados desde el backend persistente (db.json)
-    obtenerUsuariosApi()
-      .then((usuariosApi) => {
+      // 2. Fallback a obtenerUsuariosApi() de Vite middleware
+      try {
+        const usuariosApi = await obtenerUsuariosApi();
         if (Array.isArray(usuariosApi) && usuariosApi.length > 0) {
           localStorage.setItem('cr_db_usuarios', JSON.stringify(usuariosApi));
-          try {
-            const mockRaw = localStorage.getItem('cru_mock_db_v2');
-            const mockDb = mockRaw ? JSON.parse(mockRaw) : { usuarios: [], sesionesActivas: [], bitacoraAccesos: [] };
-            mockDb.usuarios = usuariosApi;
-            localStorage.setItem('cru_mock_db_v2', JSON.stringify(mockDb));
-            window.dispatchEvent(new CustomEvent('cru_db_updated'));
-          } catch {
-            // Ignorar
-          }
+          return;
         }
-      })
-      .catch(() => {
-        // En caso de que no esté disponible, se mantiene la caché
-      });
+      } catch (_err) {
+        // safe fallback
+      }
+
+      // 3. Fallback a localStorage o semilla predeterminada
+      try {
+        const raw = localStorage.getItem('cr_db_usuarios');
+        if (!raw) {
+          localStorage.setItem('cr_db_usuarios', JSON.stringify(DEFAULT_SEED_USERS));
+        }
+      } catch (_e) {
+        localStorage.setItem('cr_db_usuarios', JSON.stringify(DEFAULT_SEED_USERS));
+      }
+    };
+
+    cargarUsuarios();
   }, []);
 
   const clearError = () => setError(null);
@@ -239,8 +253,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         usuarios = [];
       }
 
-      // Asegurar que siempre contenga los usuarios oficiales de db.json
-      for (const seed of dbSeed.usuarios || []) {
+      // Asegurar que siempre contenga los usuarios oficiales
+      for (const seed of DEFAULT_SEED_USERS) {
         const sClean = (seed.cedula || '').replace(/[^0-9]/g, '');
         if (!usuarios.some((u) => (u.cedula || '').replace(/[^0-9]/g, '') === sClean || u.id === seed.id)) {
           usuarios.push(seed as Usuario);
