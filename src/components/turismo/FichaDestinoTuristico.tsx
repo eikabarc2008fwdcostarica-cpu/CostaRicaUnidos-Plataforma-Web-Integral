@@ -24,7 +24,11 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
   const [fotoActivaIndex, setFotoActivaIndex] = useState(0);
   const [modalLightboxAbierto, setModalLightboxAbierto] = useState(false);
 
-  const totalFotos = destino.imagenes.length;
+  const imagenes = Array.isArray(destino?.imagenes) && destino.imagenes.length > 0
+    ? destino.imagenes
+    : ['https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?auto=format&fit=crop&w=1200&q=80'];
+  const totalFotos = imagenes.length;
+  const badges = Array.isArray(destino?.badgesAccesibilidad) ? destino.badgesAccesibilidad : [];
 
   const anteriorFoto = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,11 +41,15 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
   };
 
   const abrirWaze = () => {
-    window.open(`https://waze.com/ul?ll=${destino.lat},${destino.lng}&navigate=yes`, '_blank');
+    const lat = destino?.lat ?? 9.7489;
+    const lng = destino?.lng ?? -83.7534;
+    window.open(`https://waze.com/ul?ll=${lat},${lng}&navigate=yes`, '_blank');
   };
 
   const abrirGoogleMaps = () => {
-    window.open(`https://www.google.com/maps/search/?api=1&query=${destino.lat},${destino.lng}`, '_blank');
+    const lat = destino?.lat ?? 9.7489;
+    const lng = destino?.lng ?? -83.7534;
+    window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
   };
 
   return (
@@ -55,8 +63,8 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
         {/* Galería de Alto Rendimiento Visual */}
         <div className="relative w-full h-56 bg-slate-900 overflow-hidden group select-none">
           <img
-            src={destino.imagenes[fotoActivaIndex]}
-            alt={`${destino.nombre} - Foto ${fotoActivaIndex + 1}`}
+            src={imagenes[fotoActivaIndex] || imagenes[0]}
+            alt={`${destino?.nombre || 'Destino Turístico'} - Foto ${fotoActivaIndex + 1}`}
             loading="lazy"
             decoding="async"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -98,7 +106,7 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
                 <ChevronRight size={18} />
               </button>
               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                {destino.imagenes.map((_, i) => (
+                {imagenes.map((_, i) => (
                   <span
                     key={i}
                     className={`w-2 h-2 rounded-full transition-all ${
@@ -113,7 +121,7 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
           {/* Elevación y Topografía */}
           <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1 px-2.5 py-1 rounded-md bg-black/75 text-xs text-amber-300 font-mono border border-amber-500/30 backdrop-blur-sm">
             <Mountain size={13} />
-            <span>{destino.elevacionMsnm} msnm</span>
+            <span>{destino?.elevacionMsnm ?? 500} msnm</span>
           </div>
         </div>
 
@@ -122,21 +130,21 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
           <div>
             <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
               <MapPin size={13} className="text-cyan-400" />
-              <span>{destino.distrito}, {destino.canton}, {destino.provincia}</span>
+              <span>{destino?.distrito || 'Distrito'}, {destino?.canton || 'Cantón'}, {destino?.provincia || 'Costa Rica'}</span>
             </div>
 
             <h3 className="text-lg font-bold text-white leading-snug group-hover:text-cyan-200 transition-colors">
-              {destino.nombre}
+              {destino?.nombre || 'Destino Turístico'}
             </h3>
 
             <p className="mt-2 text-sm text-slate-300 line-clamp-3 leading-relaxed">
-              {destino.descripcion}
+              {destino?.descripcion || 'Destino turístico oficial verificado de Costa Rica.'}
             </p>
           </div>
 
           {/* Badges de Accesibilidad y Logística */}
           <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
-            {destino.badgesAccesibilidad.map((badgeType) => (
+            {badges.map((badgeType) => (
               <AccessibilityBadge key={badgeType} type={badgeType} size="sm" />
             ))}
           </div>

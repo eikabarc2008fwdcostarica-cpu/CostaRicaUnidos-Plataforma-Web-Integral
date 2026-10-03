@@ -30,6 +30,95 @@ export const MASTER_SEED_DATA = {
       "canton": "Puntarenas",
       "fechaRegistro": "2026-02-15T08:30:00Z",
       "verificadoHacienda": true
+<<<<<<< HEAD:src/data/seedData.ts
+=======
+    },
+    {
+      "id": "USR-CIUD-001",
+      "cedula": "1-1823-0456",
+      "nombre": "Eiker Manuel Abarca Murillo",
+      "correo": "eiker.abarca@gmail.com",
+      "password": "Ciudadano2026*",
+      "rol": "Ciudadano/Turista",
+      "nivelAcceso": 2,
+      "provincia": "San José",
+      "canton": "San José",
+      "distrito": "Carmen",
+      "fechaRegistro": "2026-05-10T14:20:00Z",
+      "verificadoHacienda": true
+    },
+    {
+      "id": "USR-CIUD-8909",
+      "cedula": "1-1999-0777",
+      "nombre": "GUADALUPE RUIZ CHINCHILLA VALENTINA DE",
+      "correo": "mariana.solis@costarica.cr",
+      "password": "Ciudadano2026*",
+      "rol": "Ciudadano/Turista",
+      "nivelAcceso": 2,
+      "provincia": "San José",
+      "canton": "San José",
+      "distrito": "Carmen",
+      "fechaRegistro": "2026-10-01T16:17:28.909Z",
+      "verificadoHacienda": true
+    },
+    {
+      "id": "USR-CIUD-9238",
+      "cedula": "605090727",
+      "nombre": "EIKER MANUEL ABARCA MURILLO",
+      "correo": "aquiangquiros2025fwd@gmail.com",
+      "password": "1234",
+      "rol": "Ciudadano/Turista",
+      "nivelAcceso": 2,
+      "provincia": "Guanacaste",
+      "canton": "La Cruz",
+      "distrito": "Santa Cecilia",
+      "fechaRegistro": "2026-10-01T16:41:19.238Z",
+      "verificadoHacienda": true
+    },
+    {
+      "id": "USR-CIUD-2783",
+      "cedula": "605040857",
+      "nombre": "ALANIE MARISA CASTILLO RUIZ CASTILLO RUIZ",
+      "correo": "alanie@gmail.com",
+      "password": "123456",
+      "rol": "CIUDADANO",
+      "nivelAcceso": 2,
+      "provincia": "Puntarenas",
+      "canton": "Puntarenas",
+      "distrito": "Puntarenas",
+      "fechaRegistro": "2026-10-02T19:31:52.783Z",
+      "verificadoHacienda": true
+    },
+    {
+      "id": "USR-CIUD-7415",
+      "cedula": "1-0111-0222",
+      "nombre": "María Elena Rodríguez Vargas Rodríguez Vargas",
+      "correo": "maria.elena.rodriguez@gmail.com",
+      "password": "Ciudadano2026*",
+      "rol": "CIUDADANO",
+      "nivelAcceso": 2,
+      "provincia": "Puntarenas",
+      "canton": "Puntarenas",
+      "distrito": "Puntarenas",
+      "fechaRegistro": "2026-10-02T20:22:27.416Z",
+      "verificadoHacienda": false
+    },
+    {
+      "id": "USR-EMP-002",
+      "cedula": "3-102-456123",
+      "nombre": "Valeria Chaves Monge",
+      "correo": "valeria.chaves@ujarras.cr",
+      "password": "Empresa2026*",
+      "rol": "Ciudadano/Turista",
+      "nivelAcceso": 2,
+      "provincia": "Cartago",
+      "canton": "Cartago",
+      "distrito": "Ujarrás",
+      "fechaRegistro": "2026-09-22T14:30:00Z",
+      "verificadoHacienda": true,
+      "empresaAprobada": true,
+      "nombreComercio": "Hortalizas del Valle de Ujarrás"
+>>>>>>> origin/main:src/data/db.json
     }
   ],
   "solicitudesComercio": [
@@ -407,6 +496,7 @@ export const MASTER_SEED_DATA = {
       "timestamp": "2026-10-01T16:41:19.238Z"
     },
     {
+<<<<<<< HEAD:src/data/seedData.ts
       "id": "LOG-3416",
       "usuarioId": "USR-CIUD-9238",
       "accion": "BAJA_DEFINITIVA_USUARIO",
@@ -426,6 +516,24 @@ export const MASTER_SEED_DATA = {
       "accion": "BAJA_DEFINITIVA_USUARIO",
       "detalles": "Eliminación física del usuario USR-CIUD-8909 de db.json bajo Ley N° 8292.",
       "timestamp": "2026-10-02T19:52:43.109Z"
+=======
+      "id": "LOG-2783",
+      "usuarioId": "USR-CIUD-2783",
+      "usuarioNombre": "ALANIE MARISA CASTILLO RUIZ CASTILLO RUIZ",
+      "rol": "CIUDADANO",
+      "accion": "REGISTRO_USUARIO",
+      "detalles": "Registro exitoso para ALANIE MARISA CASTILLO RUIZ CASTILLO RUIZ en cantón Puntarenas.",
+      "timestamp": "2026-10-02T19:31:52.783Z"
+    },
+    {
+      "id": "LOG-7416",
+      "usuarioId": "USR-CIUD-7415",
+      "usuarioNombre": "María Elena Rodríguez Vargas Rodríguez Vargas",
+      "rol": "CIUDADANO",
+      "accion": "REGISTRO_USUARIO",
+      "detalles": "Registro exitoso para María Elena Rodríguez Vargas Rodríguez Vargas en cantón Puntarenas.",
+      "timestamp": "2026-10-02T20:22:27.416Z"
+>>>>>>> origin/main:src/data/db.json
     }
   ],
   "foro_posts": [
@@ -1004,6 +1112,20 @@ export const MASTER_SEED_DATA = {
     }
   ],
   "solicitudes_emprendedor": [
+    {
+      "id": "SOL-COM-002",
+      "cedula": "3-102-456123",
+      "nombreCompleto": "Valeria Chaves Monge",
+      "correoPersonal": "valeria.chaves@ujarras.cr",
+      "correoComercial": "ventas@hortalizasdelvalle.cr",
+      "nombreEmprendimiento": "Hortalizas del Valle de Ujarrás",
+      "categoriaComercial": "Agricultura y Feria del Agricultor",
+      "canton": "Cartago",
+      "provincia": "Cartago",
+      "justificacion": "Patente cantonal y régimen simplificado al día. Producción agrícola y venta al por menor.",
+      "estado": "aprobado",
+      "fechaSolicitud": "2026-09-22T14:30:00Z"
+    },
     {
       "id": "SOL-EMP-1790954594154-217",
       "cedula": "1-1823-0456",

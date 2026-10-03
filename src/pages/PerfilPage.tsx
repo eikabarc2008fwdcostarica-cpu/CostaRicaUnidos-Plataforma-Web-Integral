@@ -380,15 +380,15 @@ export default function PerfilPage() {
                     padding: '1.5rem',
                     borderRadius: '16px',
                     backgroundColor:
-                      solicitudExistente.estado === 'aprobado'
+                      solicitudExistente.estado?.toLowerCase() === 'aprobado'
                         ? 'rgba(16, 185, 129, 0.12)'
-                        : solicitudExistente.estado === 'rechazado'
+                        : solicitudExistente.estado?.toLowerCase() === 'rechazado'
                         ? 'rgba(239, 68, 68, 0.12)'
                         : 'rgba(251, 191, 36, 0.12)',
                     border: `1px solid ${
-                      solicitudExistente.estado === 'aprobado'
+                      solicitudExistente.estado?.toLowerCase() === 'aprobado'
                         ? 'rgba(52, 211, 153, 0.35)'
-                        : solicitudExistente.estado === 'rechazado'
+                        : solicitudExistente.estado?.toLowerCase() === 'rechazado'
                         ? 'rgba(248, 113, 113, 0.35)'
                         : 'rgba(251, 191, 36, 0.35)'
                     }`
@@ -396,16 +396,20 @@ export default function PerfilPage() {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <Clock className="w-5 h-5 text-amber-400" />
+                      {solicitudExistente.estado?.toLowerCase() === 'aprobado' ? (
+                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                      ) : (
+                        <Clock className="w-5 h-5 text-amber-400" />
+                      )}
                       <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF' }}>
                         Estado de Solicitud:{' '}
                         <strong
                           style={{
                             textTransform: 'uppercase',
                             color:
-                              solicitudExistente.estado === 'aprobado'
+                              solicitudExistente.estado?.toLowerCase() === 'aprobado'
                                 ? '#34D399'
-                                : solicitudExistente.estado === 'rechazado'
+                                : solicitudExistente.estado?.toLowerCase() === 'rechazado'
                                 ? '#F87171'
                                 : '#FBBF24'
                           }}
@@ -439,7 +443,29 @@ export default function PerfilPage() {
                     </div>
                   </div>
 
-                  {solicitudExistente.estado === 'pendiente' && (
+                  {solicitudExistente.estado?.toLowerCase() === 'aprobado' && (
+                    <div
+                      style={{
+                        marginTop: '1rem',
+                        padding: '0.85rem 1rem',
+                        borderRadius: '10px',
+                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                        border: '1px solid rgba(52, 211, 153, 0.35)',
+                        fontSize: '0.82rem',
+                        color: '#6EE7B7',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.6rem'
+                      }}
+                    >
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                      <span>
+                        ¡Acreditación Oficial Concedida! Su emprendimiento <strong>{solicitudExistente.nombreEmprendimiento}</strong> ha sido <strong>APROBADO</strong> por la administración territorial y certificado para operar y participar en el directorio comercial y feria cantonal.
+                      </span>
+                    </div>
+                  )}
+
+                  {solicitudExistente.estado?.toLowerCase() === 'pendiente' && (
                     <div
                       style={{
                         marginTop: '1rem',

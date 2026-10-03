@@ -1,13 +1,16 @@
 /**
- * ============================================================================
- * COSTA RICA UNIDOS — CONTEXTO GLOBAL DE AUTENTICACIÓN CÍVICA Y RBAC (SRS v2.1)
- * Blindado contra pantallas en blanco, carga reactiva inmediata (cargando: false)
- * y persistencia en localStorage ('cr_db_usuarios' y 'cr_sesion_activa')
- * ============================================================================
+ * COSTA RICA UNIDOS — Bridge de Autenticación Cívica y Control RBAC (TypeScript)
+ * Unifica el contexto con AuthContext.jsx para garantizar una única instancia de React Context.
  */
+<<<<<<< HEAD
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { registrarUsuarioApi, obtenerUsuariosApi } from '../services/userService';
 import {
+=======
+export * from './AuthContext.jsx';
+export { default } from './AuthContext.jsx';
+export type {
+>>>>>>> origin/main
   Usuario,
   CredencialesLogin,
   RegistroUsuarioDTO,
@@ -19,6 +22,7 @@ import {
   RegisterUserData,
   AuthContextType
 } from '../types/auth';
+<<<<<<< HEAD
 
 const DEFAULT_SEED_USERS: Usuario[] = [
   {
@@ -516,3 +520,5 @@ export function useAuth(): AuthContextType {
   }
   return context;
 }
+=======
+>>>>>>> origin/main
