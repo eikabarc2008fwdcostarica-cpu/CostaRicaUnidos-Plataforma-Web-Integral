@@ -1,4 +1,8 @@
-{
+/**
+ * DATOS SEMILLA ESTÁTICOS (TypeScript)
+ * Desacoplado de db.json en disco para evitar recargas no deseadas de Vite.
+ */
+export const MASTER_SEED_DATA = {
   "usuarios": [
     {
       "id": "USR-NAC-001",
@@ -26,6 +30,8 @@
       "canton": "Puntarenas",
       "fechaRegistro": "2026-02-15T08:30:00Z",
       "verificadoHacienda": true
+<<<<<<< HEAD:src/data/seedData.ts
+=======
     },
     {
       "id": "USR-CIUD-001",
@@ -112,6 +118,7 @@
       "verificadoHacienda": true,
       "empresaAprobada": true,
       "nombreComercio": "Hortalizas del Valle de Ujarrás"
+>>>>>>> origin/main:src/data/db.json
     }
   ],
   "solicitudesComercio": [
@@ -489,6 +496,27 @@
       "timestamp": "2026-10-01T16:41:19.238Z"
     },
     {
+<<<<<<< HEAD:src/data/seedData.ts
+      "id": "LOG-3416",
+      "usuarioId": "USR-CIUD-9238",
+      "accion": "BAJA_DEFINITIVA_USUARIO",
+      "detalles": "Eliminación física del usuario USR-CIUD-9238 de db.json bajo Ley N° 8292.",
+      "timestamp": "2026-10-02T19:44:43.416Z"
+    },
+    {
+      "id": "LOG-7866",
+      "usuarioId": "USR-CIUD-001",
+      "accion": "BAJA_DEFINITIVA_USUARIO",
+      "detalles": "Eliminación física del usuario USR-CIUD-001 de db.json bajo Ley N° 8292.",
+      "timestamp": "2026-10-02T19:51:07.866Z"
+    },
+    {
+      "id": "LOG-3109",
+      "usuarioId": "USR-CIUD-8909",
+      "accion": "BAJA_DEFINITIVA_USUARIO",
+      "detalles": "Eliminación física del usuario USR-CIUD-8909 de db.json bajo Ley N° 8292.",
+      "timestamp": "2026-10-02T19:52:43.109Z"
+=======
       "id": "LOG-2783",
       "usuarioId": "USR-CIUD-2783",
       "usuarioNombre": "ALANIE MARISA CASTILLO RUIZ CASTILLO RUIZ",
@@ -505,6 +533,7 @@
       "accion": "REGISTRO_USUARIO",
       "detalles": "Registro exitoso para María Elena Rodríguez Vargas Rodríguez Vargas en cantón Puntarenas.",
       "timestamp": "2026-10-02T20:22:27.416Z"
+>>>>>>> origin/main:src/data/db.json
     }
   ],
   "foro_posts": [
@@ -1112,4 +1141,7 @@
       "fechaSolicitud": "2026-10-02T15:23:14.154Z"
     }
   ]
-}
+} as const;
+
+export const SEED_DB_DATA = MASTER_SEED_DATA;
+export default MASTER_SEED_DATA;

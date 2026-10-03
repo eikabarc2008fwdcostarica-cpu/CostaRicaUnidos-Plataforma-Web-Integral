@@ -13,11 +13,27 @@
  * { id, nombre, email, rol, provinciaId (1-7), provinciaNombre, nivelAcceso, token }
  */
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import dbSeed from '../services/db.json';
 import { registrarUsuarioApi, obtenerUsuariosApi } from '../services/userService';
 import { ROLES_SISTEMA, ROLES_CONFIG, normalizarRolOficial } from '../config/roles';
 
 export { ROLES_SISTEMA, ROLES_CONFIG, normalizarRolOficial };
+
+const DEFAULT_SEED_USERS = [
+  {
+    id: 'USR-NAC-001',
+    cedula: '1-0000-0001',
+    nombre: 'Superintendencia Nacional de Gobierno Digital',
+    correo: 'admin.nacional@gob.cr',
+    email: 'admin.nacional@gob.cr',
+    password: 'Admin123*',
+    rol: 'Super Administrador Nacional',
+    nivelAcceso: 5,
+    provincia: 'Nacional',
+    canton: 'Todas las Municipalidades',
+    fechaRegistro: '2026-01-01T00:00:00Z',
+    verificadoHacienda: true
+  }
+];
 
 // Catálogo Oficial de las 7 Provincias de la República de Costa Rica (MIDEPLAN / INEC)
 export const PROVINCIAS_COSTA_RICA = [
@@ -170,38 +186,46 @@ export function AuthProvider({ children }) {
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState(null);
 
-  // Sincronizar catálogo de usuarios en localStorage
+  // Sincronizar catálogo de usuarios consultando a json-server o API local
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('cr_db_usuarios');
-      if (!raw) {
-        localStorage.setItem('cr_db_usuarios', JSON.stringify(dbSeed.usuarios || []));
-      } else {
-        const parsed = JSON.parse(raw);
-        let modificado = false;
-        for (const seed of dbSeed.usuarios || []) {
-          if (!parsed.some((u) => u.id === seed.id || (u.correo && u.correo.toLowerCase() === (seed.correo || '').toLowerCase()))) {
-            parsed.push(seed);
-            modificado = true;
+    const cargarUsuarios = async () => {
+      // 1. Intentar consultar json-server en http://localhost:3001/usuarios
+      try {
+        const res = await fetch('http://localhost:3001/usuarios');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            localStorage.setItem('cr_db_usuarios', JSON.stringify(data));
+            return;
           }
         }
-        if (modificado) {
-          localStorage.setItem('cr_db_usuarios', JSON.stringify(parsed));
-        }
+      } catch (_error) {
+        // json-server no disponible en 3001
       }
-    } catch {
-      localStorage.setItem('cr_db_usuarios', JSON.stringify(dbSeed.usuarios || []));
-    }
 
-    obtenerUsuariosApi()
-      .then((usuariosApi) => {
+      // 2. Fallback a obtenerUsuariosApi() de Vite middleware
+      try {
+        const usuariosApi = await obtenerUsuariosApi();
         if (Array.isArray(usuariosApi) && usuariosApi.length > 0) {
           localStorage.setItem('cr_db_usuarios', JSON.stringify(usuariosApi));
+          return;
         }
-      })
-      .catch(() => {
-        // En caso de que no esté disponible, se mantiene la memoria local
-      });
+      } catch (_err) {
+        // safe fallback
+      }
+
+      // 3. Fallback a localStorage o semilla predeterminada
+      try {
+        const raw = localStorage.getItem('cr_db_usuarios');
+        if (!raw) {
+          localStorage.setItem('cr_db_usuarios', JSON.stringify(DEFAULT_SEED_USERS));
+        }
+      } catch (_e) {
+        localStorage.setItem('cr_db_usuarios', JSON.stringify(DEFAULT_SEED_USERS));
+      }
+    };
+
+    cargarUsuarios();
   }, []);
 
   const clearError = () => setError(null);
@@ -268,8 +292,8 @@ export function AuthProvider({ children }) {
       if (typeof arg1 === 'object' && arg1 !== null && arg1.id && arg1.rol) {
         usuarioEncontrado = arg1;
       } else {
-        // 2. Buscar directamente en los registros oficiales de db.json y memoria local
-        const usuariosDb = Array.isArray(dbSeed?.usuarios) ? [...dbSeed.usuarios] : [];
+        // 2. Buscar directamente en los registros oficiales y memoria local
+        const usuariosDb = [...DEFAULT_SEED_USERS];
         try {
           const rawDb = localStorage.getItem('cr_db_usuarios');
           if (rawDb) {

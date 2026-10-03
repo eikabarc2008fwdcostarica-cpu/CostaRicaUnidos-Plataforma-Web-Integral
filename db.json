@@ -14,55 +14,21 @@
       "verificadoHacienda": true
     },
     {
-      "id": "USR-TERR-001",
-      "cedula": "6-0123-0456",
-      "nombre": "Coordinación Territorial",
-      "correo": "gobierno.territorial@gob.cr",
-      "password": "Territorial2026*",
-      "rol": "Gestor Territorial y Municipal",
-      "nivelAcceso": 4,
-      "provincia": "Puntarenas",
-      "provinciaId": 6,
-      "canton": "Puntarenas",
-      "fechaRegistro": "2026-02-15T08:30:00Z",
-      "verificadoHacienda": true
-    },
-    {
-      "id": "USR-CIUD-001",
-      "cedula": "1-1823-0456",
-      "nombre": "Eiker Manuel Abarca Murillo",
-      "correo": "eiker.abarca@gmail.com",
-      "password": "Ciudadano2026*",
-      "rol": "Ciudadano/Turista",
-      "nivelAcceso": 2,
-      "provincia": "San José",
-      "canton": "San José",
-      "distrito": "Carmen",
-      "fechaRegistro": "2026-05-10T14:20:00Z",
-      "verificadoHacienda": true
-    },
-    {
-      "id": "USR-CIUD-8909",
-      "cedula": "1-1999-0777",
-      "nombre": "GUADALUPE RUIZ CHINCHILLA VALENTINA DE",
-      "correo": "mariana.solis@costarica.cr",
-      "password": "Ciudadano2026*",
-      "rol": "Ciudadano/Turista",
-      "nivelAcceso": 2,
-      "provincia": "San José",
-      "canton": "San José",
-      "distrito": "Carmen",
-      "fechaRegistro": "2026-10-01T16:17:28.909Z",
-      "verificadoHacienda": true
-    },
-    {
-      "id": "USR-CIUD-9238",
+      "id": "VuM2sRah80w",
       "cedula": "605090727",
       "nombre": "EIKER MANUEL ABARCA MURILLO",
-      "correo": "aquiangquiros2025fwd@gmail.com",
-      "password": "1234",
-      "rol": "Ciudadano/Turista",
+      "correo": "eik@gmail.com",
+      "email": "eik@gmail.com",
+      "password": "12345678",
+      "rol": "Ciudadano Residente",
       "nivelAcceso": 2,
+<<<<<<< HEAD:db.json
+      "provincia": "Puntarenas",
+      "canton": "Puntarenas",
+      "fechaRegistro": "2026-10-03T08:28:38.464Z",
+      "verificadoHacienda": true,
+      "estado": "ACTIVO"
+=======
       "provincia": "Guanacaste",
       "canton": "La Cruz",
       "distrito": "Santa Cecilia",
@@ -112,6 +78,7 @@
       "verificadoHacienda": true,
       "empresaAprobada": true,
       "nombreComercio": "Hortalizas del Valle de Ujarrás"
+>>>>>>> origin/main:src/services/db.json
     }
   ],
   "solicitudesComercio": [
@@ -489,6 +456,27 @@
       "timestamp": "2026-10-01T16:41:19.238Z"
     },
     {
+<<<<<<< HEAD:db.json
+      "id": "LOG-3416",
+      "usuarioId": "USR-CIUD-9238",
+      "accion": "BAJA_DEFINITIVA_USUARIO",
+      "detalles": "Eliminación física del usuario USR-CIUD-9238 de db.json bajo Ley N° 8292.",
+      "timestamp": "2026-10-02T19:44:43.416Z"
+    },
+    {
+      "id": "LOG-7866",
+      "usuarioId": "USR-CIUD-001",
+      "accion": "BAJA_DEFINITIVA_USUARIO",
+      "detalles": "Eliminación física del usuario USR-CIUD-001 de db.json bajo Ley N° 8292.",
+      "timestamp": "2026-10-02T19:51:07.866Z"
+    },
+    {
+      "id": "LOG-3109",
+      "usuarioId": "USR-CIUD-8909",
+      "accion": "BAJA_DEFINITIVA_USUARIO",
+      "detalles": "Eliminación física del usuario USR-CIUD-8909 de db.json bajo Ley N° 8292.",
+      "timestamp": "2026-10-02T19:52:43.109Z"
+=======
       "id": "LOG-2783",
       "usuarioId": "USR-CIUD-2783",
       "usuarioNombre": "ALANIE MARISA CASTILLO RUIZ CASTILLO RUIZ",
@@ -505,6 +493,7 @@
       "accion": "REGISTRO_USUARIO",
       "detalles": "Registro exitoso para María Elena Rodríguez Vargas Rodríguez Vargas en cantón Puntarenas.",
       "timestamp": "2026-10-02T20:22:27.416Z"
+>>>>>>> origin/main:src/services/db.json
     }
   ],
   "foro_posts": [
@@ -1111,5 +1100,6 @@
       "estado": "pendiente",
       "fechaSolicitud": "2026-10-02T15:23:14.154Z"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

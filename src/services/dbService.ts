@@ -6,7 +6,7 @@
  * ============================================================================
  */
 
-import seedDbData from '../data/db.json';
+import seedDbData from '../data/seedData';
 import {
   DbSchema,
   DbUser,

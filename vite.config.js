@@ -14,17 +14,13 @@ function jsonDbServerPlugin() {
       server.middlewares.use((req, res, next) => {
         const url = req.url ? req.url.split('?')[0] : '';
 
-        const servicesDbPath = path.resolve(__dirname, 'src/services/db.json');
-        const dataDbPath = path.resolve(__dirname, 'src/data/db.json');
+        const rootDbPath = path.resolve(__dirname, 'db.json');
 
-        // Helper para leer db.json
+        // Helper para leer db.json exclusivamente desde la raíz (fuera de src/)
         const readDb = () => {
           try {
-            if (fs.existsSync(servicesDbPath)) {
-              return JSON.parse(fs.readFileSync(servicesDbPath, 'utf-8'));
-            }
-            if (fs.existsSync(dataDbPath)) {
-              return JSON.parse(fs.readFileSync(dataDbPath, 'utf-8'));
+            if (fs.existsSync(rootDbPath)) {
+              return JSON.parse(fs.readFileSync(rootDbPath, 'utf-8'));
             }
           } catch (err) {
             console.error('[jsonDbServer] Error leyendo db.json:', err);
@@ -32,13 +28,10 @@ function jsonDbServerPlugin() {
           return { usuarios: [], sesionesActivas: [], bitacoraAccesos: [], foro_posts: [], noticias: [], solicitudes_emprendedor: [] };
         };
 
-        // Helper para escribir db.json en ambos archivos físicos
+        // Helper para escribir db.json únicamente en la raíz desacoplada de Vite
         const writeDb = (dbData) => {
           const jsonStr = JSON.stringify(dbData, null, 2);
-          fs.writeFileSync(servicesDbPath, jsonStr, 'utf-8');
-          if (fs.existsSync(path.dirname(dataDbPath))) {
-            fs.writeFileSync(dataDbPath, jsonStr, 'utf-8');
-          }
+          fs.writeFileSync(rootDbPath, jsonStr, 'utf-8');
         };
 
         // =====================================================================
@@ -222,18 +215,76 @@ function jsonDbServerPlugin() {
         // =====================================================================
         // RUTA 1: /api/usuarios y /usuarios (Gestión de usuarios y registros)
         // =====================================================================
-        if (url === '/api/usuarios' || url === '/usuarios') {
+        if (
+          url === '/api/usuarios' ||
+          url === '/usuarios' ||
+          url.startsWith('/api/usuarios/') ||
+          url.startsWith('/usuarios/')
+        ) {
           // 1. Manejo de OPTIONS (Preflight)
           if (req.method === 'OPTIONS') {
             res.statusCode = 204;
             res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
             res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
             res.end();
             return;
           }
 
-          // 2. Manejo de GET (Listar usuarios)
+          // 2. Manejo de DELETE (Eliminar físicamente de db.json en disco)
+          if (req.method === 'DELETE') {
+            const cleanPath = url.replace(/^\/api/, '');
+            const segments = cleanPath.split('/').filter(Boolean);
+            const idToDelete = segments.length > 1 ? decodeURIComponent(segments[1]) : null;
+
+            if (!idToDelete) {
+              res.statusCode = 400;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(JSON.stringify({ success: false, message: 'ID de usuario no proporcionado.' }));
+              return;
+            }
+
+            const db = readDb();
+            if (!Array.isArray(db.usuarios)) db.usuarios = [];
+
+            const initialLength = db.usuarios.length;
+            db.usuarios = db.usuarios.filter(
+              (u) => String(u.id) !== String(idToDelete) && String(u.cedula) !== String(idToDelete)
+            );
+
+            if (db.usuarios.length < initialLength) {
+              if (Array.isArray(db.sesionesActivas)) {
+                db.sesionesActivas = db.sesionesActivas.filter((s) => String(s.usuarioId) !== String(idToDelete));
+              }
+              if (Array.isArray(db.bitacoraAccesos)) {
+                db.bitacoraAccesos.push({
+                  id: `LOG-${Date.now().toString().slice(-4)}`,
+                  usuarioId: idToDelete,
+                  accion: 'BAJA_DEFINITIVA_USUARIO',
+                  detalles: `Eliminación física del usuario ${idToDelete} de db.json bajo Ley N° 8292.`,
+                  timestamp: new Date().toISOString()
+                });
+              }
+
+              writeDb(db);
+              console.log(`[jsonDbServer] Usuario ${idToDelete} eliminado físicamente de db.json`);
+
+              res.statusCode = 200;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(JSON.stringify({ success: true, message: `Usuario ${idToDelete} eliminado físicamente.` }));
+              return;
+            }
+
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify({ success: true, message: 'El usuario ya no se encuentra en db.json.' }));
+            return;
+          }
+
+          // 3. Manejo de GET (Listar usuarios)
           if (req.method === 'GET') {
             const db = readDb();
             res.statusCode = 200;
@@ -1031,6 +1082,9 @@ export default defineConfig({
   plugins: [react(), jsonDbServerPlugin()],
   server: {
     port: 5173,
-    open: false
+    open: false,
+    watch: {
+      ignored: ['**/db.json', '**/src/data/db.json', '**/src/services/db.json']
+    }
   }
 });
