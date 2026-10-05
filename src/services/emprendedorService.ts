@@ -9,6 +9,7 @@ import { dbClient } from './dbClient';
 
 export interface SolicitudEmprendedor {
   id: string;
+  usuarioId?: string; // Vínculo inequívoco con el usuario
   cedula: string; // Inmutable, read-only
   nombreCompleto: string;
   correoPersonal: string;
@@ -31,6 +32,7 @@ const API_SOLICITUDES_URL = '/api/solicitudes_emprendedor';
  * Persiste inmediatamente en /api/solicitudes_emprendedor (db.json) y localStorage.
  */
 export async function enviarSolicitudEmprendedorApi(datos: {
+  usuarioId?: string;
   cedula: string;
   nombreCompleto: string;
   correoPersonal: string;
@@ -44,6 +46,7 @@ export async function enviarSolicitudEmprendedorApi(datos: {
   try {
     const nuevaSolicitud: SolicitudEmprendedor = {
       id: `SOL-EMP-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+      usuarioId: datos.usuarioId,
       cedula: String(datos.cedula).trim(),
       nombreCompleto: String(datos.nombreCompleto).trim(),
       correoPersonal: String(datos.correoPersonal).toLowerCase().trim(),
@@ -57,12 +60,44 @@ export async function enviarSolicitudEmprendedorApi(datos: {
       fechaSolicitud: new Date().toISOString()
     };
 
-    // 1. Guardar en localStorage vía dbClient para resiliencia instantánea
+    // 1. Guardar en json-server puerto 3001 si está disponible
+    try {
+      await fetch('http://localhost:3001/solicitudes_emprendedor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevaSolicitud)
+      });
+      await fetch('http://localhost:3001/solicitudesComercio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: nuevaSolicitud.id,
+          usuarioId: nuevaSolicitud.usuarioId,
+          cedulaJuridica: nuevaSolicitud.cedula,
+          cedula: nuevaSolicitud.cedula,
+          nombreComercio: nuevaSolicitud.nombreEmprendimiento,
+          nombreNegocio: nuevaSolicitud.nombreEmprendimiento,
+          nombreSolicitante: nuevaSolicitud.nombreCompleto,
+          actividadHacienda: nuevaSolicitud.justificacion,
+          actividadEconomicaHacienda: nuevaSolicitud.justificacion,
+          canton: nuevaSolicitud.canton,
+          provincia: nuevaSolicitud.provincia || 'San José',
+          fechaSolicitud: nuevaSolicitud.fechaSolicitud,
+          estado: 'PENDIENTE',
+          justificacion: nuevaSolicitud.justificacion,
+          notas: `Nuevo correo comercial: ${nuevaSolicitud.correoComercial}`,
+          verificadoHacienda: true
+        })
+      });
+    } catch (_jsErr) {}
+
+    // 2. Guardar en localStorage vía dbClient para resiliencia instantánea
     try {
       dbClient.insert('solicitudes_emprendedor' as any, nuevaSolicitud as any);
       // Sincronizar también con solicitudesComercio para visibilidad en panel de control
       dbClient.insert('solicitudesComercio', {
         id: nuevaSolicitud.id,
+        usuarioId: nuevaSolicitud.usuarioId,
         cedulaJuridica: nuevaSolicitud.cedula,
         cedula: nuevaSolicitud.cedula,
         nombreComercio: nuevaSolicitud.nombreEmprendimiento,
@@ -82,7 +117,7 @@ export async function enviarSolicitudEmprendedorApi(datos: {
       console.warn('[emprendedorService] dbClient fallback:', _e);
     }
 
-    // 2. Enviar petición HTTP al servidor de desarrollo Vite (db.json)
+    // 3. Enviar petición HTTP al servidor de desarrollo Vite (db.json)
     try {
       const res = await fetch(API_SOLICITUDES_URL, {
         method: 'POST',
@@ -98,7 +133,7 @@ export async function enviarSolicitudEmprendedorApi(datos: {
         return {
           success: true,
           data: body.data || nuevaSolicitud,
-          message: 'Solicitud enviada correctamente. Se encuentra pendiente de revisión administrativa.'
+          message: 'Solicitud enviada correctamente al Gobierno Local. Se encuentra pendiente de revisión administrativa.'
         };
       }
     } catch (_httpErr) {
@@ -120,34 +155,62 @@ export async function enviarSolicitudEmprendedorApi(datos: {
 }
 
 /**
- * Consulta las solicitudes de un usuario por su número de cédula.
+ * Consulta las solicitudes pertenecientes estrictamente al usuario en sesión.
  */
-export async function consultarSolicitudCiudadano(cedula: string): Promise<SolicitudEmprendedor | null> {
-  const cleanCed = String(cedula).replace(/[^0-9]/g, '');
+export async function consultarSolicitudCiudadano(
+  identificador: string | { id?: string; cedula?: string; correo?: string; email?: string }
+): Promise<SolicitudEmprendedor | null> {
+  const userObj = typeof identificador === 'object' && identificador !== null 
+    ? identificador 
+    : { cedula: identificador };
 
-  // 1. Intentar por API
+  const userId = userObj.id;
+  const userCorreo = (userObj.correo || (userObj as any).email || '').toLowerCase().trim();
+
+  let lista: SolicitudEmprendedor[] = [];
+
+  // 1. Intentar por json-server
   try {
-    const res = await fetch(`${API_SOLICITUDES_URL}?cedula=${encodeURIComponent(cedula)}`);
+    const res = await fetch('http://localhost:3001/solicitudes_emprendedor');
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
-        return data[0];
-      }
+      if (Array.isArray(data)) lista = data;
     }
-  } catch (_e) {
-    // Continuar con localStorage
-  }
-
-  // 2. Buscar en dbClient / localStorage
-  try {
-    const lista = dbClient.getCollection<SolicitudEmprendedor>('solicitudes_emprendedor' as any);
-    const match = lista.find(
-      (s) =>
-        s.cedula === cedula ||
-        s.cedula.replace(/[^0-9]/g, '') === cleanCed
-    );
-    if (match) return match;
   } catch (_e) {}
 
-  return null;
+  // 2. Intentar por API Vite
+  if (lista.length === 0) {
+    try {
+      const res = await fetch(API_SOLICITUDES_URL);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) lista = data;
+        else if (Array.isArray(data?.data)) lista = data.data;
+      }
+    } catch (_e) {}
+  }
+
+  // 3. Fallback a dbClient (localStorage)
+  try {
+    const local = dbClient.getCollection<SolicitudEmprendedor>('solicitudes_emprendedor' as any);
+    if (Array.isArray(local)) {
+      for (const item of local) {
+        if (!lista.some((s) => s.id === item.id)) {
+          lista.push(item);
+        }
+      }
+    }
+  } catch (_e) {}
+
+  // Filtrar estrictamente las solicitudes que pertenezcan al usuario autenticado:
+  const miSolicitud = lista.find((s) => {
+    const coincideId = Boolean(s.usuarioId && userId && s.usuarioId === userId);
+    const coincideCorreo = Boolean(
+      s.correoPersonal && userCorreo && s.correoPersonal.toLowerCase().trim() === userCorreo
+    );
+
+    return coincideId || coincideCorreo;
+  });
+
+  return miSolicitud || null;
 }

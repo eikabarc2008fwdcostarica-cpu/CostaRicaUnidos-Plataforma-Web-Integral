@@ -53,39 +53,51 @@ function DashboardDispatcher() {
     return <Navigate to="/login" replace />;
   }
 
-  // Redirección unívoca según el rol oficial o nivel de acceso:
-  const rolNormalizado = (user.rol || "").toUpperCase();
+  const rol = (user.rol || "").toUpperCase();
+  const nivel = user.nivelAcceso || 0;
 
-  if (user.nivelAcceso === 5 || rolNormalizado.includes("SUPER") || rolNormalizado.includes("NACIONAL")) {
+  if (nivel === 5 || rol.includes("SUPER") || rol.includes("NACIONAL")) {
     return <Navigate to="/admin/super" replace />;
   }
 
-  if (user.nivelAcceso === 4 || rolNormalizado.includes("TERRITORIAL") || rolNormalizado.includes("PROVINCIAL")) {
+  if (nivel === 4 || rol.includes("TERRITORIAL") || rol.includes("PROVINCIAL")) {
     return <Navigate to="/admin/territorial" replace />;
   }
 
-  // Nivel 2 o Ciudadano:
+  // Nivel 3 (Comerciante) y Nivel 2 (Ciudadano):
   return <Navigate to="/portal-ciudadano" replace />;
 }
 
 function AdminDispatcher() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, usuarioActual } = useAuth();
+  const activeUser = user || usuarioActual;
 
-  if (!isAuthenticated || !user) {
-    return <Navigate to="/login" replace />;
+  if (!isAuthenticated || !activeUser) {
+    return (
+      <AccessDenied
+        requiredRoles={["GESTOR_TERRITORIAL", "SUPER_ADMIN_NACIONAL"]}
+        userRole="Visitante No Autenticado (Sin Sesión)"
+      />
+    );
   }
 
-  const rolNormalizado = (user.rol || "").toUpperCase();
+  const rolNormalizado = (activeUser.rol || "").toUpperCase();
+  const nivel = Number(activeUser.nivelAcceso || 0);
 
-  if (user.nivelAcceso === 5 || rolNormalizado.includes("SUPER") || rolNormalizado.includes("NACIONAL")) {
+  if (nivel === 5 || rolNormalizado.includes("SUPER") || rolNormalizado.includes("NACIONAL")) {
     return <Navigate to="/admin/super" replace />;
   }
 
-  if (user.nivelAcceso === 4 || rolNormalizado.includes("TERRITORIAL") || rolNormalizado.includes("PROVINCIAL")) {
+  if (nivel === 4 || rolNormalizado.includes("TERRITORIAL") || rolNormalizado.includes("PROVINCIAL")) {
     return <Navigate to="/admin/territorial" replace />;
   }
 
-  return <Navigate to="/portal-ciudadano" replace />;
+  return (
+    <AccessDenied
+      requiredRoles={["GESTOR_TERRITORIAL", "SUPER_ADMIN_NACIONAL"]}
+      userRole={activeUser.rol || `Nivel ${nivel}`}
+    />
+  );
 }
 
 /**
@@ -120,7 +132,6 @@ export default function Routing() {
         <Route path="/cultura" element={<CulturaPage />} />
         <Route path="/deportes" element={<DeportesPage />} />
         <Route path="/educacion" element={<EducacionPage />} />
-        <Route path="/comercio" element={<ComercioPage />} />
         <Route path="/feria-agricultor" element={<FeriaPage />} />
         <Route path="/feria" element={<FeriaPage />} />
         <Route path="/turismo" element={<GlobalErrorBoundary><TurismoPage /></GlobalErrorBoundary>} />
@@ -136,18 +147,27 @@ export default function Routing() {
         {/* Perfil Público (Ley N° 8968) */}
         <Route path="/perfil/:usuarioId" element={<PerfilPage />} />
 
-        {/* Rutas Privadas del Portal Ciudadano y Trámites */}
-        <Route element={<PrivateRoutes allowedRoles={["CIUDADANO", "GESTOR_TERRITORIAL", "SUPER_ADMIN_NACIONAL"]} />}>
+        {/* Rutas Privadas Ciudadanas y de Comercio (Nivel 2 y Nivel 3) */}
+        <Route element={<PrivateRoutes allowedRoles={[
+          "CIUDADANO", 
+          "COMERCIANTE", 
+          "Comerciante y Emprendedor",
+          "GESTOR_TERRITORIAL", 
+          "SUPER_ADMIN_NACIONAL"
+        ]} />}>
           <Route path="/portal-ciudadano" element={<PortalCiudadanoPage />} />
           <Route path="/portal" element={<Navigate to="/portal-ciudadano" replace />} />
+          <Route path="/comercio" element={<ComercioPage />} />
           <Route path="/perfil" element={<PerfilPage />} />
           <Route path="/participacion/votar" element={<ParticipacionPage />} />
           <Route path="/gobernanza/audiencia" element={<ParticipacionPage />} />
         </Route>
 
         {/* Despachador de Consola Administrativa Central */}
-        <Route element={<RoleRoute minLevel={3} />}>
+        <Route element={<RoleRoute minLevel={4} rolesPermitidos={["GESTOR_TERRITORIAL", "SUPER_ADMIN_NACIONAL"]} />}>
           <Route path="/admin" element={<AdminDispatcher />} />
+        </Route>
+        <Route element={<RoleRoute minLevel={3} />}>
           <Route path="/gobernanza/municipalidad-dashboard" element={<GobernanzaPage />} />
         </Route>
 
@@ -163,7 +183,13 @@ export default function Routing() {
         </Route>
 
         {/* 3. Despachador Inteligente de Dashboard segregado por rol */}
-        <Route element={<PrivateRoutes allowedRoles={["SUPER_ADMIN_NACIONAL", "GESTOR_TERRITORIAL", "CIUDADANO"]} />}>
+        <Route element={<PrivateRoutes allowedRoles={[
+          "SUPER_ADMIN_NACIONAL",
+          "GESTOR_TERRITORIAL",
+          "COMERCIANTE",
+          "Comerciante y Emprendedor",
+          "CIUDADANO"
+        ]} />}>
           <Route path="/dashboard" element={<DashboardDispatcher />} />
         </Route>
 

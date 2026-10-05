@@ -18,20 +18,60 @@ function jsonDbServerPlugin() {
 
         // Helper para leer db.json exclusivamente desde la raíz (fuera de src/)
         const readDb = () => {
+          let data = {
+            usuarios: [],
+            sesionesActivas: [],
+            bitacoraAccesos: [],
+            foro_posts: [],
+            noticias: [],
+            solicitudes_emprendedor: [],
+            sanciones_foro: [],
+            moderacionContenido: []
+          };
           try {
             if (fs.existsSync(rootDbPath)) {
-              return JSON.parse(fs.readFileSync(rootDbPath, 'utf-8'));
+              data = JSON.parse(fs.readFileSync(rootDbPath, 'utf-8'));
             }
           } catch (err) {
             console.error('[jsonDbServer] Error leyendo db.json:', err);
           }
-          return { usuarios: [], sesionesActivas: [], bitacoraAccesos: [], foro_posts: [], noticias: [], solicitudes_emprendedor: [] };
+          if (!Array.isArray(data.usuarios)) data.usuarios = [];
+          if (!Array.isArray(data.foro_posts)) data.foro_posts = [];
+          if (!Array.isArray(data.sanciones_foro)) data.sanciones_foro = [];
+          if (!Array.isArray(data.moderacionContenido)) data.moderacionContenido = [];
+          return data;
         };
 
         // Helper para escribir db.json únicamente en la raíz desacoplada de Vite
         const writeDb = (dbData) => {
           const jsonStr = JSON.stringify(dbData, null, 2);
           fs.writeFileSync(rootDbPath, jsonStr, 'utf-8');
+        };
+
+        // Helper para verificar en el servidor si una cédula presenta sanción activa no vencida
+        const tieneSancionVigente = (db, cedula) => {
+          if (!cedula) return null;
+          const cleanCed = String(cedula).replace(/[^0-9]/g, '');
+          if (!Array.isArray(db.usuarios)) return null;
+
+          const u = db.usuarios.find((user) => {
+            const uCed = String(user.cedula || '').replace(/[^0-9]/g, '');
+            return user.cedula === cedula || (cleanCed && uCed === cleanCed);
+          });
+
+          if (!u || !u.sancion || !u.sancion.activa) return null;
+
+          // Si la suspensión tiene fecha de fin y ya expiró, auto-levantar en db.json
+          if (!u.sancion.indefinida && u.sancion.fin) {
+            const finTime = new Date(u.sancion.fin).getTime();
+            if (!isNaN(finTime) && finTime <= Date.now()) {
+              u.sancion.activa = false;
+              writeDb(db);
+              return null;
+            }
+          }
+
+          return { usuario: u, sancion: u.sancion };
         };
 
         // =====================================================================
@@ -98,6 +138,7 @@ function jsonDbServerPlugin() {
 
                 const nuevaSolicitud = {
                   id: data.id || `SOL-EMP-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+                  usuarioId: data.usuarioId || undefined,
                   cedula: String(data.cedula).trim(),
                   nombreCompleto: String(data.nombreCompleto || 'Ciudadano Solicitante').trim(),
                   correoPersonal: String(data.correoPersonal || '').trim(),
@@ -117,6 +158,7 @@ function jsonDbServerPlugin() {
                 // También reflejar en solicitudesComercio para el panel de administración
                 const solComercioItem = {
                   id: nuevaSolicitud.id,
+                  usuarioId: nuevaSolicitud.usuarioId,
                   cedulaJuridica: nuevaSolicitud.cedula,
                   cedula: nuevaSolicitud.cedula,
                   nombreComercio: nuevaSolicitud.nombreEmprendimiento,
@@ -584,6 +626,25 @@ function jsonDbServerPlugin() {
                 const db = readDb();
                 if (!Array.isArray(db.foro_posts)) db.foro_posts = [];
 
+                // =====================================================================
+                // VALIDACIÓN EN SERVIDOR: RECHAZAR CON 403 SI EL AUTOR TIENE SANCIÓN
+                // =====================================================================
+                const sancionAutor = tieneSancionVigente(db, data.autorCedula);
+                if (sancionAutor) {
+                  res.statusCode = 403;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(
+                    JSON.stringify({
+                      success: false,
+                      error: 'USUARIO_SANCIONADO',
+                      message: `Acción rechazada por el servidor (403): Su cuenta presenta una suspensión activa (${sancionAutor.sancion.nivel || 'Baneo'}). Motivo: ${sancionAutor.sancion.motivo || 'Infracción a las Reglas de Convivencia Cívica'}.`,
+                      sancion: sancionAutor.sancion
+                    })
+                  );
+                  return;
+                }
+
                 const provId = String(data.provinciaId || 'nacional').toLowerCase().trim();
                 const provNombres = {
                   'nacional': 'Nacional (Todo el País)',
@@ -669,6 +730,24 @@ function jsonDbServerPlugin() {
                 if (updatePayload.action === 'votar') {
                   const { tipoVoto, cedula } = updatePayload;
                   const cleanCedula = String(cedula || '1-1823-0456');
+
+                  // Validación 403 en servidor para votantes sancionados
+                  const sancionVotante = tieneSancionVigente(db, cleanCedula);
+                  if (sancionVotante) {
+                    res.statusCode = 403;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    res.end(
+                      JSON.stringify({
+                        success: false,
+                        error: 'USUARIO_SANCIONADO',
+                        message: 'Acción bloqueada (403): Su cuenta ciudadana presenta una sanción vigente y no puede emitir votos.',
+                        sancion: sancionVotante.sancion
+                      })
+                    );
+                    return;
+                  }
+
                   const usuariosVotaron = { ...(post.usuariosVotaron || {}) };
                   let likes = Number(post.likes || 0);
                   let dislikes = Number(post.dislikes || 0);
@@ -712,6 +791,23 @@ function jsonDbServerPlugin() {
                     res.setHeader('Content-Type', 'application/json');
                     res.setHeader('Access-Control-Allow-Origin', '*');
                     res.end(JSON.stringify({ success: false, message: 'El comentario no puede estar vacío.' }));
+                    return;
+                  }
+
+                  // Validación 403 en servidor para comentarios de autores sancionados
+                  const sancionComentador = tieneSancionVigente(db, c.autorCedula);
+                  if (sancionComentador) {
+                    res.statusCode = 403;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    res.end(
+                      JSON.stringify({
+                        success: false,
+                        error: 'USUARIO_SANCIONADO',
+                        message: `Acción bloqueada por el servidor (403): Su cuenta presenta una suspensión activa (${sancionComentador.sancion.nivel || 'Baneo'}). Motivo: ${sancionComentador.sancion.motivo || 'Infracción a las Reglas de Convivencia Cívica'}.`,
+                        sancion: sancionComentador.sancion
+                      })
+                    );
                     return;
                   }
 
@@ -761,6 +857,167 @@ function jsonDbServerPlugin() {
             res.setHeader('Content-Type', 'application/json');
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.end(JSON.stringify({ success: true, message: 'Publicación eliminada correctamente.' }));
+            return;
+          }
+        }
+
+        // =====================================================================
+        // RUTA 2.1: /api/sanciones_foro (Historial de Sanciones Graduales del Foro)
+        // =====================================================================
+        if (
+          url === '/api/sanciones_foro' ||
+          url === '/sanciones_foro' ||
+          url.startsWith('/api/sanciones_foro/') ||
+          url.startsWith('/sanciones_foro/')
+        ) {
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 204;
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+            res.end();
+            return;
+          }
+
+          if (req.method === 'GET') {
+            const db = readDb();
+            if (!Array.isArray(db.sanciones_foro)) db.sanciones_foro = [];
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify(db.sanciones_foro));
+            return;
+          }
+
+          if (req.method === 'POST') {
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const nuevaSancion = JSON.parse(bodyStr || '{}');
+                const db = readDb();
+                if (!Array.isArray(db.sanciones_foro)) db.sanciones_foro = [];
+                nuevaSancion.id = nuevaSancion.id || `SANC-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+                nuevaSancion.fecha = nuevaSancion.fecha || new Date().toISOString();
+                db.sanciones_foro.unshift(nuevaSancion);
+                writeDb(db);
+                res.statusCode = 201;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: true, data: nuevaSancion }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error registrando sanción.' }));
+              }
+            });
+            return;
+          }
+        }
+
+        // =====================================================================
+        // RUTA 2.2: /api/moderacionContenido y /api/moderacion_contenido (Cola de incidentes IA)
+        // =====================================================================
+        if (
+          url === '/api/moderacionContenido' ||
+          url === '/moderacionContenido' ||
+          url === '/api/moderacion_contenido' ||
+          url === '/moderacion_contenido' ||
+          url.startsWith('/api/moderacionContenido/') ||
+          url.startsWith('/moderacionContenido/') ||
+          url.startsWith('/api/moderacion_contenido/') ||
+          url.startsWith('/moderacion_contenido/')
+        ) {
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 204;
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+            res.end();
+            return;
+          }
+
+          if (req.method === 'GET') {
+            const db = readDb();
+            if (!Array.isArray(db.moderacionContenido)) db.moderacionContenido = [];
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify(db.moderacionContenido));
+            return;
+          }
+
+          if (req.method === 'POST') {
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const nuevoItem = JSON.parse(bodyStr || '{}');
+                const db = readDb();
+                if (!Array.isArray(db.moderacionContenido)) db.moderacionContenido = [];
+                nuevoItem.id = nuevoItem.id || `MOD-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+                nuevoItem.fechaReporte = nuevoItem.fechaReporte || new Date().toISOString();
+                db.moderacionContenido.unshift(nuevoItem);
+                writeDb(db);
+                res.statusCode = 201;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: true, data: nuevoItem }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error registrando ítem de moderación.' }));
+              }
+            });
+            return;
+          }
+
+          if (req.method === 'PATCH' || req.method === 'PUT') {
+            const cleanPath = url.replace(/^\/api/, '');
+            const segments = cleanPath.split('/').filter(Boolean);
+            const idFromPath = segments.length > 1 ? decodeURIComponent(segments[1]) : null;
+
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const updatePayload = JSON.parse(bodyStr || '{}');
+                const targetId = idFromPath || updatePayload.id;
+
+                const db = readDb();
+                if (!Array.isArray(db.moderacionContenido)) db.moderacionContenido = [];
+                const idx = db.moderacionContenido.findIndex((m) => String(m.id) === String(targetId));
+
+                if (idx !== -1) {
+                  db.moderacionContenido[idx] = {
+                    ...db.moderacionContenido[idx],
+                    ...updatePayload,
+                    fechaResolucion: new Date().toISOString()
+                  };
+                  writeDb(db);
+                  res.statusCode = 200;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: true, data: db.moderacionContenido[idx] }));
+                  return;
+                }
+
+                res.statusCode = 404;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Ítem de moderación no encontrado.' }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error actualizando ítem de moderación.' }));
+              }
+            });
             return;
           }
         }
@@ -1151,7 +1408,15 @@ export default defineConfig({
     port: 5173,
     open: false,
     watch: {
-      ignored: ['**/db.json', '**/src/data/db.json', '**/src/services/db.json']
+      ignored: ['**/src/data/db.json', '**/db.json', '**/src/services/db.json']
+    },
+    proxy: {
+      '/api/hacienda': {
+        target: 'https://api.hacienda.go.cr/fe/ae',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api\/hacienda/, '')
+      }
     }
   }
 });

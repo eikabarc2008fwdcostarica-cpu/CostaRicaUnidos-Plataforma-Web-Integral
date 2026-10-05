@@ -169,22 +169,102 @@ function normalizarUsuario(rawUser, token = null) {
     distrito: rawUser.distrito || '',
     fechaRegistro: rawUser.fechaRegistro || new Date().toISOString(),
     verificadoHacienda: rawUser.verificadoHacienda ?? true,
-    token: token || rawUser.token || `cru-token-${Date.now()}`
+    token: token || rawUser.token || `cru-token-${Date.now()}`,
+    sancion: rawUser.sancion || null,
+    reglasAceptadas: rawUser.reglasAceptadas || null
+  };
+}
+
+/**
+ * Evalúa si un usuario tiene una suspensión activa en el sistema.
+ * Si la suspensión ha vencido (fecha fin superada y no indefinida), se auto-levanta de forma transparente.
+ * Si está activa, devuelve { bloqueado: true, mensaje, sancion }.
+ */
+export function verificarEstadoSancion(usuario) {
+  if (!usuario || !usuario.sancion || !usuario.sancion.activa) {
+    return { bloqueado: false, sancion: null };
+  }
+
+  const sancion = usuario.sancion;
+
+  // Auto-levantar baneo vencido si la fecha fin ya expiró y no es indefinida
+  if (!sancion.indefinida && sancion.fin) {
+    const finTime = new Date(sancion.fin).getTime();
+    if (!isNaN(finTime) && finTime <= Date.now()) {
+      usuario.sancion.activa = false;
+      try {
+        const rawDb = localStorage.getItem('cr_db_usuarios');
+        if (rawDb) {
+          const list = JSON.parse(rawDb);
+          const idx = list.findIndex((u) => u.id === usuario.id || u.cedula === usuario.cedula);
+          if (idx !== -1) {
+            list[idx].sancion = { ...list[idx].sancion, activa: false };
+            localStorage.setItem('cr_db_usuarios', JSON.stringify(list));
+          }
+        }
+        if (usuario.id) {
+          fetch(`/api/usuarios/${encodeURIComponent(usuario.id)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sancion: { ...sancion, activa: false } })
+          }).catch(() => {});
+        }
+      } catch (_e) {}
+      return { bloqueado: false, sancion: null };
+    }
+  }
+
+  // Sanción vigente no vencida
+  const fechaFinTexto = sancion.indefinida
+    ? 'Suspensión Indefinida (sujeta a revisión administrativa)'
+    : `Vigente hasta el ${new Date(sancion.fin).toLocaleString('es-CR')}`;
+
+  const mensaje = `Acceso restringido: Su cuenta ciudadana se encuentra temporalmente suspendida debido a: "${sancion.motivo || 'Infracción a las Reglas de Convivencia Cívica'}". ${fechaFinTexto}.`;
+
+  return {
+    bloqueado: true,
+    mensaje,
+    sancion,
+    fechaFinTexto
   };
 }
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // Estado reactivo del usuario autenticado: null por defecto si no hay sesión válida
+  // CAMINO 3: Restauración de sesión desde localStorage con verificación de baneo activo
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("cru_user_session");
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem("cru_user_session") || localStorage.getItem("cr_sesion_activa");
+      if (!saved) return null;
+      const parsed = JSON.parse(saved);
+      const resSancion = verificarEstadoSancion(parsed);
+      if (resSancion.bloqueado) {
+        localStorage.removeItem("cru_user_session");
+        localStorage.removeItem("cr_sesion_activa");
+        localStorage.setItem("cr_sesion_cerrada", "true");
+        return null;
+      }
+      return parsed;
+    } catch {
+      return null;
+    }
   });
 
   const [citizenMode, setCitizenMode] = useState('CIUDADANO');
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState(null);
+
+  // Verificación reactiva inicial de baneo en sesión restaurada
+  useEffect(() => {
+    if (user) {
+      const resSancion = verificarEstadoSancion(user);
+      if (resSancion.bloqueado) {
+        setError(resSancion.mensaje);
+        logout();
+      }
+    }
+  }, []);
 
   // Sincronizar catálogo de usuarios consultando a json-server o API local
   useEffect(() => {
@@ -287,10 +367,22 @@ export function AuthProvider({ children }) {
 
       const cedulaDigits = cedulaInput ? cedulaInput.replace(/[^0-9]/g, '') : '';
 
-      // 1. Si arg1 ya es un objeto de usuario completo de db.json
+      // 1. CAMINO 2: Si arg1 ya es un objeto de usuario completo de db.json
       let usuarioEncontrado = null;
       if (typeof arg1 === 'object' && arg1 !== null && arg1.id && arg1.rol) {
         usuarioEncontrado = arg1;
+        const resSancion = verificarEstadoSancion(usuarioEncontrado);
+        if (resSancion.bloqueado) {
+          setError(resSancion.mensaje);
+          setCargando(false);
+          return {
+            success: false,
+            bloqueado: true,
+            mensaje: resSancion.mensaje,
+            message: resSancion.mensaje,
+            sancion: resSancion.sancion
+          };
+        }
       } else {
         // 2. Buscar directamente en los registros oficiales y memoria local
         const usuariosDb = [...DEFAULT_SEED_USERS];
@@ -330,6 +422,20 @@ export function AuthProvider({ children }) {
         setError(msg);
         setCargando(false);
         return { success: false, mensaje: msg, message: msg };
+      }
+
+      // CAMINO 1: Validación estricta de baneo para login por credenciales
+      const resSancion = verificarEstadoSancion(usuarioEncontrado);
+      if (resSancion.bloqueado) {
+        setError(resSancion.mensaje);
+        setCargando(false);
+        return {
+          success: false,
+          bloqueado: true,
+          mensaje: resSancion.mensaje,
+          message: resSancion.mensaje,
+          sancion: resSancion.sancion
+        };
       }
 
       // 4. Éxito: Normalización y almacenamiento seguro de sesión
@@ -513,12 +619,23 @@ export function AuthProvider({ children }) {
       ) || null;
   }
 
+  const actualizarUsuario = (cambios) => {
+    setUser((prev) => {
+      if (!prev) return null;
+      const updated = { ...prev, ...cambios };
+      localStorage.setItem("cru_user_session", JSON.stringify(updated));
+      localStorage.setItem("cr_sesion_activa", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   const contextValue = {
     // Requerimientos primordiales
     user,
     login,
     logout,
     hasPermission,
+    actualizarUsuario,
 
     // Compatibilidad total de interfaz
     usuarioActual: user,

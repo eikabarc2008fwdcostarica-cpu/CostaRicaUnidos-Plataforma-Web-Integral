@@ -214,8 +214,8 @@ export default function ReportarIncidencia() {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#00040D',
-        color: '#FFFFFF',
+        backgroundColor: 'var(--theme-bg, #00040D)',
+        color: 'var(--theme-text-primary, #FFFFFF)',
         fontFamily: 'var(--font-body, system-ui, sans-serif)'
       }}
     >

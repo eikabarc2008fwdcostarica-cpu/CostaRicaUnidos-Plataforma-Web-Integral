@@ -120,7 +120,7 @@ export interface BitacoraAuditoria {
 export interface ConfiguracionIA {
   killSwitch: boolean;
   killSwitchActivo?: boolean;
-  sensibilidadModeracion: 'ESTRICTA' | 'MEDIA' | 'PERMISIVA' | string;
+  sensibilidadModeracion: 'ESTRICTA' | 'MODERADA' | 'FLEXIBLE';
   coleccionesAutorizadas: string[];
   modeloActivo?: string;
   temperatura?: number;

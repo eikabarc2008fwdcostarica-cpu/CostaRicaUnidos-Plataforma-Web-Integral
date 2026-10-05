@@ -15,7 +15,10 @@ import {
   Droplets,
   Package,
   Layers,
-  ArrowUpRight
+  ArrowUpRight,
+  Send,
+  Loader2,
+  X
 } from 'lucide-react';
 import { PROVINCIAL_THEMES } from '../../config/provincialThemes';
 
@@ -222,8 +225,167 @@ export default function EmergenciasCNEModule({
 
   const [filtroCanton, setFiltroCanton] = useState(cantonInicial);
   const [alertaActiva, setAlertaActiva] = useState('amarilla');
+  const [comunicadoTexto, setComunicadoTexto] = useState(
+    'Precaución general en el Valle Central y Vertiente del Pacífico por ondas tropicales e incremento en saturación de suelos.'
+  );
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
+  const [toastExito, setToastExito] = useState(null); // { titulo: string, mensaje: string } | null
   const [albergues, setAlbergues] = useState(ALBERGUES_BASE);
   const [horaCST, setHoraCST] = useState('12:00:00');
+
+  // Cierre automático del toast institucional tras 5 segundos
+  useEffect(() => {
+    if (!toastExito) return;
+    const timer = setTimeout(() => {
+      setToastExito(null);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [toastExito]);
+
+  // Cargar alerta activa desde json-server o caché local
+  useEffect(() => {
+    const fetchAlertaActual = async () => {
+      try {
+        const res = await fetch("http://localhost:3001/alertaCNE");
+        if (res.ok) {
+          const data = await res.json();
+          if (data) {
+            if (data.activa === false) {
+              setAlertaActiva("verde");
+              setComunicadoTexto("");
+            } else {
+              if (data.nivel) setAlertaActiva(String(data.nivel).toLowerCase());
+              if (data.mensaje) setComunicadoTexto(data.mensaje);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("No se pudo conectar con /alertaCNE inicialmente:", err);
+      }
+    };
+    fetchAlertaActual();
+  }, []);
+
+  const handleDesactivarAlerta = async () => {
+    setIsDeactivating(true);
+
+    const alertaInactiva = {
+      id: "ALERTA-CNE-ACTIVA",
+      nivel: "verde",
+      tituloNivel: "ALERTA VERDE (INFORMATIVA)",
+      mensaje: "",
+      fechaEmision: new Date().toISOString(),
+      activa: false // DESACTIVADA
+    };
+
+    try {
+      // 1. Guardar estado inactivo físicamente en db.json mediante json-server
+      let response = await fetch("http://localhost:3001/alertaCNE", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(alertaInactiva)
+      });
+
+      if (!response.ok) {
+        response = await fetch("http://localhost:3001/alertaCNE", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(alertaInactiva)
+        });
+      }
+
+      // 2. Disparar evento global para que la marquesina se oculte al instante en toda la web
+      window.dispatchEvent(new CustomEvent("cru_alerta_cne_actualizada", { detail: null }));
+      try {
+        localStorage.removeItem("cru_alerta_cne_cache");
+      } catch (e) {
+        // ignore
+      }
+
+      // 3. Limpiar el formulario local
+      setComunicadoTexto("");
+      setAlertaActiva("verde");
+
+      // 4. Mostrar confirmación en modal de vidrio
+      setToastExito({
+        titulo: "Alerta Retirada con Éxito",
+        mensaje: "El comunicado de emergencia ha sido desactivado y la marquesina ha sido retirada de toda la plataforma a nivel nacional."
+      });
+    } catch (error) {
+      console.error("Error al desactivar la alerta en db.json:", error);
+      // Fallback local en caso de desconexión del servidor
+      window.dispatchEvent(new CustomEvent("cru_alerta_cne_actualizada", { detail: null }));
+      try {
+        localStorage.removeItem("cru_alerta_cne_cache");
+      } catch (e) {}
+      setComunicadoTexto("");
+      setAlertaActiva("verde");
+      setToastExito({
+        titulo: "Alerta Retirada con Éxito",
+        mensaje: "El comunicado de emergencia ha sido desactivado y la marquesina ha sido retirada de toda la plataforma a nivel nacional."
+      });
+    } finally {
+      setIsDeactivating(false);
+    }
+  };
+
+  const handlePublicarAlerta = async (e) => {
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    setIsPublishing(true);
+
+    const nivelAlertaSeleccionado = String(alertaActiva || 'amarilla').toLowerCase();
+    const tituloNivel =
+      nivelAlertaSeleccionado === "roja" ? "ALERTA ROJA (EVACUACIÓN)" :
+      nivelAlertaSeleccionado === "naranja" ? "ALERTA NARANJA (PELIGRO)" :
+      nivelAlertaSeleccionado === "amarilla" ? "ALERTA AMARILLA (PRECAUCIÓN)" : "ALERTA VERDE (INFORMATIVA)";
+
+    const nuevaAlerta = {
+      id: "ALERTA-CNE-ACTIVA",
+      nivel: nivelAlertaSeleccionado, // "verde" | "amarilla" | "naranja" | "roja"
+      tituloNivel: tituloNivel,
+      mensaje: comunicadoTexto.trim(),
+      fechaEmision: new Date().toISOString(),
+      activa: true
+    };
+
+    try {
+      // Guardar físicamente en db.json mediante json-server (colección 'alertaCNE' o endpoint correspondiente)
+      let response = await fetch("http://localhost:3001/alertaCNE", {
+        method: "PUT", // o PATCH
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevaAlerta)
+      });
+
+      if (!response.ok) {
+        response = await fetch("http://localhost:3001/alertaCNE", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevaAlerta)
+        });
+      }
+
+      if (response.ok) {
+        // Disparar evento personalizado en el navegador para que todos los componentes se enteren al instante sin recargar
+        window.dispatchEvent(new CustomEvent("cru_alerta_cne_actualizada", { detail: nuevaAlerta }));
+        localStorage.setItem("cru_alerta_cne_cache", JSON.stringify(nuevaAlerta));
+        setToastExito({
+          titulo: "EMISIÓN DE ALERTA CNE TRANSMITIDA",
+          mensaje: "Alerta oficial publicada con éxito en el sistema central y transmitida a la marquesina nacional en vivo."
+        });
+      }
+    } catch (error) {
+      console.error("Error al emitir alerta CNE:", error);
+      window.dispatchEvent(new CustomEvent("cru_alerta_cne_actualizada", { detail: nuevaAlerta }));
+      localStorage.setItem("cru_alerta_cne_cache", JSON.stringify(nuevaAlerta));
+      setToastExito({
+        titulo: "EMISIÓN DE ALERTA LOCAL TRANSMITIDA",
+        mensaje: "Alerta oficial proyectada en la marquesina nacional en tiempo real."
+      });
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   // Reloj institucional CST
   useEffect(() => {
@@ -513,6 +675,94 @@ export default function EmergenciasCNEModule({
                 </button>
               );
             })}
+          </div>
+        </div>
+
+        {/* Redactor del Comunicado Oficial y Publicación */}
+        <div style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: '#E2E8F0', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+            Comunicado Oficial de la Presidencia de la República y CNE:
+          </label>
+          <textarea
+            rows={3}
+            value={comunicadoTexto}
+            onChange={(e) => setComunicadoTexto(e.target.value)}
+            placeholder="Redactar aviso oficial de emergencia para difusión en toda la plataforma..."
+            style={{
+              width: '100%',
+              padding: '0.85rem 1rem',
+              fontSize: '0.82rem',
+              borderRadius: '12px',
+              backgroundColor: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              color: '#FFFFFF',
+              outline: 'none',
+              lineHeight: 1.5,
+              resize: 'vertical',
+              boxSizing: 'border-box',
+              marginBottom: '0.75rem',
+              fontFamily: 'inherit'
+            }}
+          />
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+            {/* Botón Existente de Publicar */}
+            <button
+              type="button"
+              onClick={handlePublicarAlerta}
+              disabled={isPublishing}
+              className="btn-publicar-alerta"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 20px',
+                borderRadius: '10px',
+                backgroundColor: isPublishing ? '#991B1B' : '#DC2626',
+                border: '1px solid #EF4444',
+                color: '#FFFFFF',
+                fontWeight: 600,
+                fontSize: '0.85rem',
+                cursor: isPublishing ? 'not-allowed' : 'pointer',
+                boxShadow: '0 0 20px rgba(220, 38, 38, 0.4)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {/* Icono SVG Enviar / Transmitir */}
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+              <span>{isPublishing ? 'Transmitiendo Alerta Nacional...' : 'Publicar y Actualizar Nivel de Alerta'}</span>
+            </button>
+
+            {/* NUEVO: Botón para Retirar / Apagar la Alerta en toda la web */}
+            <button
+              type="button"
+              onClick={handleDesactivarAlerta}
+              disabled={isDeactivating}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 18px',
+                borderRadius: '10px',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                color: '#CBD5E1',
+                fontWeight: 600,
+                fontSize: '0.85rem',
+                cursor: isDeactivating ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              title="Quitar la alerta activa de toda la plataforma web"
+            >
+              {/* Icono SVG Escudo Apagado / Checkmark Seguro */}
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+              <span>{isDeactivating ? 'Retirando Alerta...' : 'Desactivar / Retirar Alerta Nacional'}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -866,6 +1116,110 @@ export default function EmergenciasCNEModule({
           ))}
         </div>
       </div>
+
+      {/* Notificación Institucional de Vidrio (Sovereign Civic Glass v2.1) */}
+      {toastExito && (
+        <div
+          role="alert"
+          aria-live="assertive"
+          style={{
+            position: 'fixed',
+            top: '1.5rem',
+            right: '1.5rem',
+            zIndex: 9999,
+            maxWidth: '440px',
+            width: 'calc(100vw - 3rem)',
+            backgroundColor: 'rgba(5, 12, 28, 0.95)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(16, 185, 129, 0.4)',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(16, 185, 129, 0.2)',
+            borderRadius: '16px',
+            padding: '1rem 1.25rem',
+            color: '#FFFFFF',
+            animation: 'fadeIn 0.25s ease'
+          }}
+        >
+          {/* Cinta tricolor nacional decorativa */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '3px',
+              borderRadius: '16px 16px 0 0',
+              background: 'linear-gradient(90deg, #001489 0%, #001489 16.6%, #FFFFFF 16.6%, #FFFFFF 33.3%, #DA291C 33.3%, #DA291C 66.6%, #FFFFFF 66.6%, #FFFFFF 83.3%, #001489 83.3%, #001489 100%)'
+            }}
+          />
+
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#10B981',
+                  flexShrink: 0
+                }}
+              >
+                <CheckCircle2 size={18} strokeWidth={2} />
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.04em',
+                    color: '#34D399',
+                    marginBottom: '0.2rem'
+                  }}
+                >
+                  {toastExito.titulo}
+                </div>
+                <div
+                  style={{
+                    fontSize: '0.82rem',
+                    color: '#E2E8F0',
+                    lineHeight: 1.45,
+                    fontWeight: 500
+                  }}
+                >
+                  {toastExito.mensaje}
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setToastExito(null)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#94A3B8',
+                cursor: 'pointer',
+                padding: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '6px',
+                transition: 'color 0.15s ease'
+              }}
+              title="Cerrar notificación"
+              aria-label="Cerrar notificación"
+            >
+              <X size={16} strokeWidth={2} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

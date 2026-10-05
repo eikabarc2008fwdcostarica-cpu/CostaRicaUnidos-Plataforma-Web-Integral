@@ -50,6 +50,13 @@ export interface ItemModeracion {
   moduloOrigen: string;
   fechaReporte: string;
   scoreToxicidadIA?: number;
+  categorias?: string[];
+  gravedad?: 'LEVE' | 'MEDIA' | 'GRAVE' | 'NINGUNA' | string;
+  palabrasDetectadas?: string[];
+  razonIA?: string;
+  sancionAplicada?: string;
+  sancionFin?: string | null;
+  esFalsoPositivo?: boolean;
   estado: EstadoModeracion;
   justificacionResolucion?: string;
   fechaResolucion?: string;
@@ -65,6 +72,10 @@ export type AccionAuditoria =
   | 'CONFIGURAR_IA'
   | 'DESCARGAR_RESPALDO'
   | 'RESTAURAR_SEMILLA'
+  | 'SANCIONAR_USUARIO'
+  | 'LEVANTAR_SANCION'
+  | 'MARCAR_FALSO_POSITIVO'
+  | 'MODIFICAR_SANCION_FORO'
   | string;
 
 export interface RegistroAuditoria {

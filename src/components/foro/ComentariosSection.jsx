@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { MessageSquare, Send, User, Clock, CheckCircle2, AlertCircle, ShieldCheck } from 'lucide-react';
+import { MessageSquare, Send, User, Clock, CheckCircle2, AlertCircle, ShieldCheck, Scale, BookOpen } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { agregarComentario } from '../../services/foroService';
 import { obtenerNombrePublico } from '../../utils/privacyUtils';
+import { VERSION_REGLAS_FORO, haAceptadoReglas, registrarAceptacionReglas } from '../../config/reglasForo';
+import { inspeccionarContenidoForo } from '../../services/moderacionForoService';
+import ReglasComunidadModal from './ReglasComunidadModal';
+import IncidenteModeracionModal from './IncidenteModeracionModal';
 import PerfilPublicoModal from '../perfil/PerfilPublicoModal';
 
 /**
@@ -35,11 +40,16 @@ function formatearFechaComentario(fechaIso) {
 
 export default function ComentariosSection({ post, onPostActualizado }) {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [contenido, setContenido] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [exitoMsg, setExitoMsg] = useState(false);
   const [perfilModalAutor, setPerfilModalAutor] = useState(null);
+  const [modalReglasAbierto, setModalReglasAbierto] = useState(false);
+  const [aceptoReglas, setAceptoReglas] = useState(() => haAceptadoReglas(user));
+  const [modalIncidenteAbierto, setModalIncidenteAbierto] = useState(false);
+  const [incidenteData, setIncidenteData] = useState(null);
 
   // Datos del autor (Ley N° 8968: Se sanitiza el nombre público a Primer Nombre y Primer Apellido)
   const autorNombre = user?.nombre || 'Ciudadano Activo';
@@ -55,9 +65,36 @@ export default function ComentariosSection({ post, onPostActualizado }) {
       return;
     }
 
+    if (!aceptoReglas) {
+      setErrorMsg(t('foro.errorAceptarReglasComentario', 'Debe leer y aceptar las Reglas de la Comunidad antes de participar en los comentarios.'));
+      return;
+    }
+
     try {
       setEnviando(true);
       setErrorMsg('');
+
+      // Registrar aceptación formal en el usuario si aún no estaba persistida
+      if (!haAceptadoReglas(user)) {
+        await registrarAceptacionReglas(user);
+      }
+
+      // =====================================================================
+      // SUPERVISOR IA DEL FORO TICO: INSPECCIÓN PRE-PUBLICACIÓN (M04)
+      // =====================================================================
+      const resultadoInsp = await inspeccionarContenidoForo({
+        titulo: '',
+        contenido: contenido.trim(),
+        autor: user,
+        tipo: 'comentario'
+      });
+
+      if (resultadoInsp.bloqueado) {
+        setIncidenteData(resultadoInsp);
+        setModalIncidenteAbierto(true);
+        setEnviando(false);
+        return;
+      }
 
       const comentarioData = {
         autorNombre: nombrePublicoAutor,
@@ -223,6 +260,88 @@ export default function ComentariosSection({ post, onPostActualizado }) {
           />
         </div>
 
+        {/* Aceptación y enlace a Reglas de la Comunidad */}
+        <div style={{ marginTop: '0.45rem' }}>
+          {!haAceptadoReglas(user) ? (
+            <label
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '0.5rem',
+                cursor: 'pointer',
+                fontSize: '0.78rem',
+                color: '#CBD5E1',
+                padding: '0.5rem 0.75rem',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(56, 189, 248, 0.05)',
+                border: '1px solid rgba(56, 189, 248, 0.2)'
+              }}
+            >
+              <input
+                type="checkbox"
+                id="chk-acepto-reglas-comentario"
+                checked={aceptoReglas}
+                onChange={(e) => setAceptoReglas(e.target.checked)}
+                style={{
+                  width: '15px',
+                  height: '15px',
+                  marginTop: '1px',
+                  accentColor: '#0284C7',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+                required
+              />
+              <span>
+                He leído y acepto las{' '}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setModalReglasAbierto(true);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    color: '#38BDF8',
+                    fontWeight: 700,
+                    textDecoration: 'underline',
+                    cursor: 'pointer'
+                  }}
+                  className="hover:text-sky-300"
+                >
+                  Reglas de la Comunidad
+                </button>{' '}
+                (crítica constructiva permitida, cero insultos o acoso).
+              </span>
+            </label>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.35rem' }}>
+              <button
+                type="button"
+                onClick={() => setModalReglasAbierto(true)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  color: '#94A3B8',
+                  fontSize: '0.72rem',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}
+                className="hover:text-sky-400"
+              >
+                <BookOpen className="w-3 h-3" />
+                <span>Ver Reglas de la Comunidad</span>
+              </button>
+            </div>
+          )}
+        </div>
+
         {errorMsg && (
           <div
             style={{
@@ -302,6 +421,33 @@ export default function ComentariosSection({ post, onPostActualizado }) {
           autorNombre={perfilModalAutor}
         />
       )}
+
+      {/* Modal de Reglas de la Comunidad */}
+      <ReglasComunidadModal
+        isOpen={modalReglasAbierto}
+        onClose={() => setModalReglasAbierto(false)}
+        onAceptar={() => {
+          setAceptoReglas(true);
+          setModalReglasAbierto(false);
+        }}
+      />
+
+      {/* Modal Informativo de Incidente de Moderación */}
+      <IncidenteModeracionModal
+        isOpen={modalIncidenteAbierto}
+        onClose={() => {
+          setModalIncidenteAbierto(false);
+          setIncidenteData(null);
+        }}
+        resultadoModeracion={incidenteData?.resultadoModeracion}
+        sancion={incidenteData?.sancion}
+        incidenteId={incidenteData?.incidenteId}
+        esPersonalExento={incidenteData?.esPersonalExento}
+        onVerReglas={() => {
+          setModalIncidenteAbierto(false);
+          setModalReglasAbierto(true);
+        }}
+      />
     </div>
   );
 }

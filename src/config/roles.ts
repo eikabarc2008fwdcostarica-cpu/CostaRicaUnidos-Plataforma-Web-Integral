@@ -1,18 +1,8 @@
 /**
  * ============================================================================
- * COSTA RICA UNIDOS — MATRIZ OFICIAL DE ROLES DEL SISTEMA (3 ROLES ÚNICOS)
+ * COSTA RICA UNIDOS — MATRIZ OFICIAL DE ROLES DEL SISTEMA (4 ROLES RBAC)
  * Jerarquía y Control de Acceso Basado en Roles (RBAC)
  * ============================================================================
- * 
- * 1. SUPER_ADMIN_NACIONAL (Nivel 5):
- *    Gobernanza de IA (Kill-Switch), auditoría inmutable, configuración global del sistema.
- * 
- * 2. GESTOR_TERRITORIAL (Nivel 4) [Rol Unificado Municipal y Provincial]:
- *    Gestión integral de contenidos municipales, supervisión provincial de concejos,
- *    triaje de obras y averías viales (M07) y centro de mando CNE (M10).
- * 
- * 3. CIUDADANO (Nivel 2):
- *    Portal cívico, consulta de gacetas, trámites, votos soberanos y reportes ciudadanos.
  */
 
 export const ROLES_SISTEMA = {
@@ -20,9 +10,20 @@ export const ROLES_SISTEMA = {
   GESTOR_TERRITORIAL: 'GESTOR_TERRITORIAL',
   COMERCIANTE: 'COMERCIANTE',
   CIUDADANO: 'CIUDADANO'
-};
+} as const;
 
-export const ROLES_CONFIG = {
+export type RolSistemaKey = keyof typeof ROLES_SISTEMA;
+export type RolSistemaValue = typeof ROLES_SISTEMA[RolSistemaKey];
+
+export interface RolConfigItem {
+  id: RolSistemaValue;
+  nivel: number;
+  nombre: string;
+  badge: string;
+  descripcion: string;
+}
+
+export const ROLES_CONFIG: Record<RolSistemaValue, RolConfigItem> = {
   SUPER_ADMIN_NACIONAL: {
     id: 'SUPER_ADMIN_NACIONAL',
     nivel: 5,
@@ -53,16 +54,10 @@ export const ROLES_CONFIG = {
   }
 };
 
-/**
- * Normaliza cualquier rol legacy al nuevo esquema de roles oficiales
- * @param {string} rawRole 
- * @returns {'SUPER_ADMIN_NACIONAL' | 'GESTOR_TERRITORIAL' | 'COMERCIANTE' | 'CIUDADANO'}
- */
-export function normalizarRolOficial(rawRole) {
+export function normalizarRolOficial(rawRole?: string | null): RolSistemaValue {
   if (!rawRole) return ROLES_SISTEMA.CIUDADANO;
   const r = String(rawRole).toUpperCase().trim();
 
-  // 1. Super Admin
   if (
     r === 'SUPER_ADMIN_NACIONAL' ||
     r === 'SUPERADMIN_NACIONAL' ||
@@ -73,7 +68,6 @@ export function normalizarRolOficial(rawRole) {
     return ROLES_SISTEMA.SUPER_ADMIN_NACIONAL;
   }
 
-  // 2. Gestor Territorial (Fusión de Administrador Provincial + Editor Municipal)
   if (
     r === 'GESTOR_TERRITORIAL' ||
     r.includes('TERRITORIAL') ||
@@ -87,7 +81,6 @@ export function normalizarRolOficial(rawRole) {
     return ROLES_SISTEMA.GESTOR_TERRITORIAL;
   }
 
-  // 3. Comerciante y Emprendedor
   if (
     r === 'COMERCIANTE' ||
     r.includes('COMERCIANTE') ||
@@ -97,7 +90,6 @@ export function normalizarRolOficial(rawRole) {
     return ROLES_SISTEMA.COMERCIANTE;
   }
 
-  // 4. Ciudadano por defecto
   return ROLES_SISTEMA.CIUDADANO;
 }
 
