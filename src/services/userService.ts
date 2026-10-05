@@ -132,3 +132,58 @@ export const eliminarUsuarioApi = async (idUsuario: string): Promise<boolean> =>
   }
 };
 
+/**
+ * Actualiza físicamente los datos de un usuario en db.json usando HTTP PATCH.
+ * Intenta primero el endpoint local de json-server (http://localhost:3001/usuarios/:id)
+ * y utiliza como fallback defensivo el servidor Vite (/api/usuarios/:id).
+ */
+export const actualizarUsuarioApi = async (
+  idUsuario: string,
+  cambios: Partial<{
+    rol: string;
+    nivelAcceso: number;
+    provincia: string;
+    canton: string;
+    distrito: string;
+    estado: string;
+    nombre: string;
+    correo: string;
+    forzarCambioPassword: boolean;
+    verificadoHacienda: boolean;
+  }>
+): Promise<boolean> => {
+  try {
+    // 1. Intento primario: json-server en http://localhost:3001/usuarios/:id
+    try {
+      const response = await fetch(`${JSON_SERVER_URL}/${idUsuario}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cambios)
+      });
+      if (response.ok) {
+        return true;
+      }
+    } catch (_jsonServerErr) {
+      // json-server no activo en 3001, probar endpoint de middleware Vite
+    }
+
+    // 2. Fallback: Servidor de desarrollo Vite (/api/usuarios/:id)
+    const viteResponse = await fetch(`${API_USUARIOS_URL}/${idUsuario}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify(cambios)
+    });
+
+    return viteResponse.ok;
+  } catch (error) {
+    console.error('Error al actualizar usuario en db.json:', error);
+    return false;
+  }
+};
+
+

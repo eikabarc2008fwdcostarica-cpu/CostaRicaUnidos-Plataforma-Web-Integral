@@ -47,7 +47,7 @@ export default function AccessDenied({ requiredRoles = [], userRole }) {
     if (!isAuthenticated && !user) return '/login';
     if (rolNormalizado === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL) return '/admin/super';
     if (rolNormalizado === ROLES_SISTEMA.GESTOR_TERRITORIAL) return '/admin/territorial';
-    return '/dashboard';
+    return '/portal-ciudadano';
   };
 
   const getPanelEtiqueta = () => {

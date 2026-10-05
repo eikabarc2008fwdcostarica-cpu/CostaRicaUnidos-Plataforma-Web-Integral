@@ -67,6 +67,8 @@ export default function ProvincialSidebar({
   setActiveModule,
   isSidebarCollapsed = false,
   setIsSidebarCollapsed,
+  isMobileOpen = false,
+  setIsMobileOpen,
   setIsLogoutModalOpen,
   activeTheme = null
 }) {
@@ -84,56 +86,84 @@ export default function ProvincialSidebar({
     'Puntarenas';
 
   return (
-    <aside
-      id="provincial-unified-sidebar"
-      aria-label="Navegación Gestión Territorial y Municipal"
-      className={`provincial-sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}
-      style={{
-        width: isSidebarCollapsed ? '78px' : '280px',
-        minWidth: isSidebarCollapsed ? '78px' : '280px',
-        maxWidth: isSidebarCollapsed ? '78px' : '280px',
-        transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1), min-width 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
-      }}
-    >
-      {/* ===================================================================
-          1. ENCABEZADO: Emblema, Título y Botón de Colapso [<] / [>]
-          =================================================================== */}
-      <div className="provincial-sidebar-header">
-        <div className="provincial-sidebar-brand">
-          <div className="provincial-sidebar-emblem" aria-hidden="true">
-            <ShieldCheck size={20} color={activeTheme?.primary || '#F36717'} />
+    <>
+      {/* Backdrop para Drawer en Móvil */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/75 backdrop-blur-sm z-[999] md:hidden transition-opacity duration-300"
+          onClick={() => setIsMobileOpen && setIsMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside
+        id="provincial-unified-sidebar"
+        aria-label="Navegación Gestión Territorial y Municipal"
+        className={`provincial-sidebar admin-sidebar admin-sidebar-fixed ${isSidebarCollapsed ? 'collapsed sidebar-collapsed' : 'sidebar-expanded'} ${isMobileOpen ? 'mobile-open' : ''}`}
+        style={{
+          width: isSidebarCollapsed ? '72px' : '260px',
+          minWidth: isSidebarCollapsed ? '72px' : '260px',
+          maxWidth: isSidebarCollapsed ? '72px' : '260px',
+          transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1), min-width 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+        }}
+      >
+        {/* ===================================================================
+            1. ENCABEZADO: Emblema, Título y Botón de Colapso [<] / [>]
+            =================================================================== */}
+        <div className="provincial-sidebar-header">
+          <div className="provincial-sidebar-brand">
+            <div className="provincial-sidebar-emblem" aria-hidden="true">
+              <ShieldCheck size={20} color={activeTheme?.primary || '#F36717'} />
+            </div>
+
+            {!isSidebarCollapsed && (
+              <div className="provincial-sidebar-title-group">
+                <h2 className="provincial-sidebar-title">Gestión Territorial y Municipal</h2>
+                <span className="provincial-sidebar-jurisdiction">
+                  JURISDICCIÓN: {provinciaNombre.toUpperCase()}
+                </span>
+              </div>
+            )}
           </div>
 
-          {!isSidebarCollapsed && (
-            <div className="provincial-sidebar-title-group">
-              <h2 className="provincial-sidebar-title">Gestión Territorial y Municipal</h2>
-              <span className="provincial-sidebar-jurisdiction">
-                JURISDICCIÓN: {provinciaNombre.toUpperCase()}
-              </span>
-            </div>
-          )}
-        </div>
+          <div className="flex items-center gap-1 shrink-0">
+            {/* Botón de Colapsar [<] / [>] en Desktop */}
+            <button
+              type="button"
+              onClick={() => {
+                if (setIsSidebarCollapsed) {
+                  setIsSidebarCollapsed(!isSidebarCollapsed);
+                }
+              }}
+              className="sidebar-collapse-btn hidden md:flex"
+              aria-label={isSidebarCollapsed ? 'Expandir menú lateral' : 'Colapsar menú lateral'}
+              title={isSidebarCollapsed ? 'Expandir menú [>]' : 'Colapsar menú [<]'}
+            >
+              {isSidebarCollapsed ? <ChevronRight size={17} /> : <ChevronLeft size={17} />}
+            </button>
 
-        {/* Botón de Colapsar [<] / [>] */}
-        <button
-          type="button"
-          onClick={() => {
-            if (setIsSidebarCollapsed) {
-              setIsSidebarCollapsed(!isSidebarCollapsed);
-            }
-          }}
-          className="sidebar-collapse-btn"
-          aria-label={isSidebarCollapsed ? 'Expandir menú lateral' : 'Colapsar menú lateral'}
-          title={isSidebarCollapsed ? 'Expandir menú [>]' : 'Colapsar menú [<]'}
-        >
-          {isSidebarCollapsed ? <ChevronRight size={17} /> : <ChevronLeft size={17} />}
-        </button>
-      </div>
+            {/* Botón para cerrar drawer en móvil */}
+            {isMobileOpen && setIsMobileOpen && (
+              <button
+                type="button"
+                onClick={() => setIsMobileOpen(false)}
+                className="sidebar-collapse-btn md:hidden"
+                aria-label="Cerrar menú lateral"
+                title="Cerrar menú"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
 
       {/* ===================================================================
           2. CUERPO: Lista Dinámica de los 6 Módulos Territoriales
           =================================================================== */}
-      <div className="provincial-sidebar-body">
+      <div className="provincial-sidebar-body admin-sidebar-nav">
         {!isSidebarCollapsed && (
           <div className="provincial-sidebar-section-title">
             <span>Gobernanza Territorial (Nivel 4)</span>
@@ -152,6 +182,9 @@ export default function ProvincialSidebar({
                 onClick={() => {
                   if (setActiveModule) {
                     setActiveModule(item.id);
+                  }
+                  if (setIsMobileOpen) {
+                    setIsMobileOpen(false);
                   }
                 }}
                 className={`nav-button provincial-nav-item ${isActive ? 'active is-active' : ''}`}
@@ -201,7 +234,7 @@ export default function ProvincialSidebar({
       {/* ===================================================================
           3. PIE DEL MENÚ (STICKY FOOTER): Usuario y Cerrar Sesión
           =================================================================== */}
-      <div className="provincial-sidebar-footer">
+      <div className="provincial-sidebar-footer admin-sidebar-footer">
         {/* Identificador de Usuario */}
         <div
           className="provincial-user-pill"
@@ -242,5 +275,6 @@ export default function ProvincialSidebar({
         </button>
       </div>
     </aside>
+    </>
   );
 }

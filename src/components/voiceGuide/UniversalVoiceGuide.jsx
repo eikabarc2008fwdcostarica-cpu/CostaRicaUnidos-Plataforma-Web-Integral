@@ -42,6 +42,7 @@ import {
 import { askGeminiAboutSection } from '../../services/geminiService';
 import { useAccessibility } from '../accessibility/AccessibilityContext';
 import { useLanguage } from '../../context/LanguageContext';
+import VoiceGuideWidget from './VoiceGuideWidget';
 
 export default function UniversalVoiceGuide() {
   let location;
@@ -184,6 +185,16 @@ export default function UniversalVoiceGuide() {
     }
   }, [isOnboardingOpen, isTourActive, handleStartUniversalTour, closeOnboarding]);
 
+  useEffect(() => {
+    const handleVoiceTourEvent = () => {
+      if (!isTourActive) {
+        handleStartUniversalTour();
+      }
+    };
+    window.addEventListener('startUniversalVoiceTour', handleVoiceTourEvent);
+    return () => window.removeEventListener('startUniversalVoiceTour', handleVoiceTourEvent);
+  }, [isTourActive, handleStartUniversalTour]);
+
   // Manejo de atajos de teclado accesibles (Escape, Flechas, Barra Espaciadora)
   useEffect(() => {
     if (!isTourActive) return;
@@ -247,76 +258,11 @@ export default function UniversalVoiceGuide() {
           Visible en cualquier ruta cuando el tour no está activo
           ===================================================================== */}
       {!isTourActive && (
-        <aside
-          aria-label="Asistente de Recorrido por Voz"
-          style={{
-            position: 'fixed',
-            bottom: '24px',
-            right: '24px',
-            zIndex: 9000,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}
-        >
-          <button
-            type="button"
-            onClick={handleStartUniversalTour}
-            disabled={isAnalyzing}
-            title="Iniciar Recorrido Asistido por Voz con Gemini 3.6 Flash"
-            aria-label="Explicar esta pantalla por voz con Inteligencia Artificial"
-            style={{
-              height: '52px',
-              padding: '0 1.25rem',
-              borderRadius: '9999px',
-              backgroundColor: 'rgba(7, 13, 27, 0.92)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '2px solid rgba(56, 189, 248, 0.5)',
-              boxShadow: '0 8px 30px rgba(0, 4, 13, 0.7), 0 0 20px rgba(56, 189, 248, 0.35)',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.65rem',
-              cursor: isAnalyzing ? 'wait' : 'pointer',
-              transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-          >
-            {isAnalyzing ? (
-              <>
-                <Loader2 size={18} className="animate-spin text-sky-400" />
-                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#38BDF8' }}>
-                  Analizando pantalla con Gemini 3.6 Flash...
-                </span>
-              </>
-            ) : (
-              <>
-                <div
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(56, 189, 248, 0.2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#38BDF8'
-                  }}
-                >
-                  <Sparkles size={16} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.02em' }}>
-                    Guía por Voz
-                  </span>
-                  <span style={{ fontSize: '0.65rem', color: '#94A3B8', fontWeight: 600 }}>
-                    Gemini 3.6 Flash &bull; {activeCanton}
-                  </span>
-                </div>
-              </>
-            )}
-          </button>
-        </aside>
+        <VoiceGuideWidget
+          selectedCanton={activeCanton}
+          isAnalyzing={isAnalyzing}
+          handleStartTour={handleStartUniversalTour}
+        />
       )}
 
       {/* =====================================================================

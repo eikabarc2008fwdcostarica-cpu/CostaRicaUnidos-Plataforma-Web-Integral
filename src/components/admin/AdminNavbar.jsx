@@ -28,7 +28,8 @@ export default function AdminNavbar({
   selectedProvId,
   setSelectedProvId,
   currentTime,
-  formatHoraCST
+  formatHoraCST,
+  onToggleMobileSidebar
 }) {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -65,6 +66,23 @@ export default function AdminNavbar({
       >
         {/* LADO IZQUIERDO: Marca Institucional */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+          {/* Botón Hamburguesa Móvil (< 768px) */}
+          {onToggleMobileSidebar && (
+            <button
+              type="button"
+              onClick={onToggleMobileSidebar}
+              className="admin-mobile-menu-btn md:hidden p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors flex items-center justify-center shrink-0 cursor-pointer"
+              title="Abrir menú de navegación"
+              aria-label="Abrir menú de navegación"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+          )}
+
           {/* Logotipo Oficial */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <Logo showText={false} size="32px" />
@@ -125,57 +143,83 @@ export default function AdminNavbar({
 
         {/* LADO DERECHO: Selector de Provincia (Theming) + Accesos Directos */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
-          {/* Selector de Theming Provincial */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              backgroundColor: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              padding: '0.3rem 0.55rem',
-              borderRadius: '8px'
-            }}
-          >
-            <label
-              htmlFor="provincia-theming-select"
+          {/* Control de Jurisdicción Territorial (Bloqueado para Gestor con Pastilla Fija) */}
+          {!isSuperAdmin ? (
+            <div
+              className="jurisdiccion-asignada-pill"
               style={{
-                fontSize: '0.68rem',
-                color: '#94A3B8',
-                fontWeight: 600,
-                fontFamily: "'JetBrains Mono', monospace"
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                backgroundColor: 'rgba(56, 189, 248, 0.10)',
+                border: `1px solid ${activeTheme?.primary || '#38BDF8'}`,
+                padding: '0.35rem 0.85rem',
+                borderRadius: '8px',
+                fontSize: '0.72rem',
+                fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                fontWeight: 800,
+                color: activeTheme?.primary || '#38BDF8',
+                letterSpacing: '0.04em',
+                boxShadow: `0 0 14px ${activeTheme?.glow || 'rgba(56, 189, 248, 0.22)'}`
               }}
             >
-              Theming:
-            </label>
-            <select
-              id="provincia-theming-select"
-              value={selectedProvId}
-              onChange={(e) => setSelectedProvId(e.target.value)}
+              <Compass size={14} color={activeTheme?.primary || '#38BDF8'} />
+              <span>
+                JURISDICCIÓN ASIGNADA: {(activeTheme?.nombre || user?.provinciaNombre || user?.provincia || 'SAN JOSÉ').toUpperCase()} • {activeTheme?.cantonesCount || 20} CANTONES
+              </span>
+            </div>
+          ) : (
+            <div
               style={{
-                backgroundColor: '#00040D',
-                color: '#F8FAFC',
-                border: `1px solid ${activeTheme?.primary || '#F36717'}`,
-                borderRadius: '6px',
-                padding: '0.2rem 0.5rem',
-                fontSize: '0.74rem',
-                fontWeight: 700,
-                outline: 'none',
-                cursor: 'pointer'
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                padding: '0.3rem 0.55rem',
+                borderRadius: '8px'
               }}
             >
-              {PROVINCIAS_COSTA_RICA.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.id}. {p.nombre} ({p.cantonesCount} cantones)
-                </option>
-              ))}
-            </select>
-          </div>
+              <label
+                htmlFor="provincia-theming-select"
+                style={{
+                  fontSize: '0.68rem',
+                  color: '#94A3B8',
+                  fontWeight: 600,
+                  fontFamily: "'JetBrains Mono', monospace"
+                }}
+              >
+                Theming:
+              </label>
+              <select
+                id="provincia-theming-select"
+                value={selectedProvId}
+                onChange={(e) => setSelectedProvId(e.target.value)}
+                style={{
+                  backgroundColor: '#00040D',
+                  color: '#F8FAFC',
+                  border: `1px solid ${activeTheme?.primary || '#F36717'}`,
+                  borderRadius: '6px',
+                  padding: '0.2rem 0.5rem',
+                  fontSize: '0.74rem',
+                  fontWeight: 700,
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                {PROVINCIAS_COSTA_RICA.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.id}. {p.nombre} ({p.cantonesCount} cantones)
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-          {/* Botón hacia Dashboard General / Portal */}
+          {/* Botón hacia Portal Ciudadano */}
           <button
             type="button"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/portal-ciudadano')}
             style={{
               display: 'inline-flex',
               alignItems: 'center',

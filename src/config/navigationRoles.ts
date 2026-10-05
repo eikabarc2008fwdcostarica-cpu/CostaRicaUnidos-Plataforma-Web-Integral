@@ -5,6 +5,14 @@
  * ============================================================================
  */
 
+export interface ModuloInfo {
+  id: string;
+  label: string;
+  icon: string;
+  badge?: number | null;
+  exclusivoSuperAdmin?: boolean;
+}
+
 export const MODULOS_POR_ROL = {
   SUPER_ADMIN_NACIONAL: [
     { id: "dashboard", label: "Dashboard Analítico Nacional", icon: "dashboard" },
@@ -28,16 +36,14 @@ export const MODULOS_POR_ROL = {
     { id: "mis_tramites", label: "Mis Trámites", icon: "documento" },
     { id: "reportes", label: "Reportes Viales (M07)", icon: "obras" }
   ]
-};
+} as const;
 
 export const NAVIGATION_BY_ROLE = MODULOS_POR_ROL;
 
 /**
  * Obtiene los módulos autorizados para un rol específico
- * @param {string} rol
- * @returns {Array<{id: string, label: string, icon: string, badge?: number}>}
  */
-export function getModulosPorRol(rol) {
+export function getModulosPorRol(rol: string | null | undefined): readonly ModuloInfo[] {
   if (!rol) return MODULOS_POR_ROL.CIUDADANO;
   const r = String(rol).toUpperCase().trim();
 
@@ -52,11 +58,8 @@ export function getModulosPorRol(rol) {
 
 /**
  * Verifica si un rol tiene autorización para un módulo dado
- * @param {string} rol
- * @param {string} moduloId
- * @returns {boolean}
  */
-export function tienePermisoModulo(rol, moduloId) {
+export function tienePermisoModulo(rol: string | null | undefined, moduloId: string): boolean {
   // El módulo de usuarios y auditoría es EXCLUSIVO para Super Administrador Nacional (Nivel 5)
   if (moduloId === 'usuarios' || moduloId === 'ia_governance' || moduloId === 'ia') {
     const r = String(rol || '').toUpperCase().trim();

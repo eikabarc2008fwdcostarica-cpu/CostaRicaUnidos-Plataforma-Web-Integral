@@ -59,7 +59,8 @@ export const ENTIDADES_DERIVACION = [
 // Helper para anonimizar datos según Ley N° 8968
 export function anonimizarNombre(nombre = '') {
   if (!nombre) return 'Ciudadano Anónimo';
-  const partes = nombre.trim().split(/\s+/);
+  const cleanNombre = typeof nombre === 'string' ? nombre : String(nombre || '');
+  const partes = (cleanNombre.trim() || 'Ciudadano').split(/\s+/);
   return partes
     .map((p) => {
       if (p.length <= 2) return p.charAt(0) + '*';
@@ -70,11 +71,12 @@ export function anonimizarNombre(nombre = '') {
 
 export function anonimizarCedula(cedula = '') {
   if (!cedula) return '*-****-****';
-  const clean = cedula.replace(/[^0-9]/g, '');
+  const cleanStr = typeof cedula === 'string' ? cedula : String(cedula || '');
+  const clean = cleanStr.replace(/[^0-9]/g, '');
   if (clean.length >= 9) {
     return `${clean.charAt(0)}-****-${clean.slice(-4)}`;
   }
-  return cedula.slice(0, 2) + '****' + cedula.slice(-2);
+  return cleanStr.slice(0, 2) + '****' + cleanStr.slice(-2);
 }
 
 // 6 Tickets iniciales realistas para la provincia activa (Puntarenas)
@@ -1023,27 +1025,39 @@ export default function IncidentTriageTable({
                       color: '#94A3B8'
                     }}
                   >
-                    <span>
-                      Lat: <strong style={{ color: '#F8FAFC' }}>{ticketSeleccionado.coordenadas.lat}° N</strong>
-                    </span>
-                    <span>
-                      Lng: <strong style={{ color: '#F8FAFC' }}>{ticketSeleccionado.coordenadas.lng}° W</strong>
-                    </span>
-                    <a
-                      href={`https://www.google.com/maps?q=${ticketSeleccionado.coordenadas.lat},${ticketSeleccionado.coordenadas.lng}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: '#38BDF8',
-                        textDecoration: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem'
-                      }}
-                    >
-                      <ExternalLink size={12} />
-                      <span>Mapa</span>
-                    </a>
+                    {(() => {
+                      const coords = ticketSeleccionado?.coordenadas;
+                      const [cLat, cLng] = typeof coords === 'string'
+                        ? (coords || ticketSeleccionado?.lat_lng || '9.9763,-84.8384').split(',')
+                        : Array.isArray(coords)
+                        ? [coords[0], coords[1]]
+                        : [coords?.lat || 9.9763, coords?.lng || -84.8384];
+                      return (
+                        <>
+                          <span>
+                            Lat: <strong style={{ color: '#F8FAFC' }}>{cLat}° N</strong>
+                          </span>
+                          <span>
+                            Lng: <strong style={{ color: '#F8FAFC' }}>{cLng}° W</strong>
+                          </span>
+                          <a
+                            href={`https://www.google.com/maps?q=${cLat},${cLng}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              color: '#38BDF8',
+                              textDecoration: 'none',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.25rem'
+                            }}
+                          >
+                            <ExternalLink size={12} />
+                            <span>Mapa</span>
+                          </a>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>

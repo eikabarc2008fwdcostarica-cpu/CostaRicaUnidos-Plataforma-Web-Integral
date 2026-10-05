@@ -9,31 +9,44 @@ import {
   ShieldAlert,
   ShieldCheck,
   User,
-  UserPlus,
   LogOut,
   LogIn,
-  Menu
+  Menu,
+  X
 } from 'lucide-react';
 import Logo from './common/Logo';
 import MegaMenu, { CATEGORIAS_CIVICAS } from './navigation/MegaMenu';
-import CivicDrawer from './navigation/CivicDrawer';
 import { useAuth, PROVINCIAS_COSTA_RICA, normalizarRolOficial } from '../context/AuthContext';
-import { useCivicModal } from '../context/CivicModalContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
+import { useAccessibility } from './accessibility/AccessibilityContext';
+import DaltonismoSvgFilters from './accessibility/DaltonismoSvgFilters';
 
 /**
- * NAVBAR SOBERANO — ARQUITECTURA HÍBRIDA GOVTECH (MEGA MENÚ + CIVIC DRAWER)
- * Cumple con estándares de diseño institucional cívico:
- * 1. Mega Menú en Desktop (>= 1024px) con 4 categorías y paneles translúcidos.
- * 2. Cajón Lateral Deslizante (Civic Drawer): navegación en móvil y Centro de Utilidades en Desktop.
- * 3. Acciones de sesión y registro directo en el menú principal.
- * 4. Cero emojis — Exclusivamente iconos vectoriales de lucide-react (strokeWidth={1.75}).
+ * NAVBAR SOBERANO — ARQUITECTURA HÍBRIDA GOVTECH
+ * Utilidades esenciales integradas directamente en el Topbar:
+ * 1. Botón Minimalista de Modo Oscuro / Claro (Sol / Luna SVG).
+ * 2. Menú Compacto de Accesibilidad Universal (Ley N° 7600):
+ *    - Escala Tipográfica (A- 90%, A 100%, A+ 115%, A++ 130%).
+ *    - Adaptación para Daltonismo (Normal, Protanopía, Deuteranopía, Tritanopía, Alto Contraste).
+ *    - Idiomas Oficiales de la República (ES, EN, Bribri).
+ * 3. Mega Menú en Desktop (>= 1024px) con 4 categorías y paneles translúcidos.
+ * 4. Navegación móvil compacta desplegable (sin cajones laterales ni overlays oscuros).
+ * 5. Cero emojis — Exclusivamente SVG vectorial en línea con trazo fino.
  */
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
-  const { t } = useLanguage();
+  const { t, cambiarIdioma } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
+  const {
+    textPhase,
+    setTextPhase,
+    daltonismoMode,
+    setDaltonismoMode,
+    MODOS_DALTONISMO
+  } = useAccessibility();
 
   // Detección estricta de vista administrativa:
   const isAdminPath = location.pathname.startsWith('/admin');
@@ -46,22 +59,38 @@ export default function Navbar() {
   const isPublicVisitor = (!isAuthenticated || !user) && (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/registro');
   const isVistaAdministrativa = isAdminPath || (isAuthenticated && isAdminRole && !isPublicVisitor);
 
-  // Nombre de la jurisdicción institucional para la pastilla central
-  const provinciaObj = PROVINCIAS_COSTA_RICA?.find((p) => String(p.id) === String(user?.provinciaId));
-  const jurisdiccionLabel = (user?.provincia || user?.provinciaNombre || provinciaObj?.nombre || 'Puntarenas').toUpperCase();
-
-  const confirmarSalida = () => {
-    logout();
-    navigate('/');
-  };
-
   // Estado del Mega Menú en Desktop
   const [categoriaActiva, setCategoriaActiva] = useState(null);
   const hoverTimeoutRef = useRef(null);
 
-  // Estado del Cajón Lateral (Civic Drawer)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [drawerTab, setDrawerTab] = useState('utilidades');
+  // Estado del Popover de Accesibilidad
+  const [isA11yOpen, setIsA11yOpen] = useState(false);
+  const a11yPopoverRef = useRef(null);
+  const a11yButtonRef = useRef(null);
+
+  // Estado del Menú Móvil Desplegable
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Escala Tipográfica Actual
+  const [currentScalePercent, setCurrentScalePercent] = useState(() => {
+    try {
+      return localStorage.getItem('cr_font_scale') || '100%';
+    } catch {
+      return '100%';
+    }
+  });
+
+  // Idioma Activo
+  const [activeLangCode, setActiveLangCode] = useState(() => {
+    try {
+      if (localStorage.getItem('cr_lang_special') === 'bribri') return 'bribri';
+      const saved = localStorage.getItem('idioma_preferido') || localStorage.getItem('app_language');
+      if (saved === 'US' || saved === 'en') return 'US';
+      return 'CR';
+    } catch {
+      return 'CR';
+    }
+  });
 
   // Estado del cantón activo para el indicador institucional
   const [activeCanton, setActiveCanton] = useState(() => {
@@ -75,7 +104,8 @@ export default function Navbar() {
   // Cerrar menús al cambiar de ruta
   useEffect(() => {
     setCategoriaActiva(null);
-    setIsDrawerOpen(false);
+    setIsA11yOpen(false);
+    setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
   // Escuchar cambios de cantón
@@ -88,6 +118,32 @@ export default function Navbar() {
     window.addEventListener('cantonChanged', handleCantonChange);
     return () => window.removeEventListener('cantonChanged', handleCantonChange);
   }, []);
+
+  // Cierre accesible del popover al hacer clic afuera o pulsar Escape
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (
+        a11yPopoverRef.current &&
+        !a11yPopoverRef.current.contains(e.target) &&
+        !a11yButtonRef.current?.contains(e.target)
+      ) {
+        setIsA11yOpen(false);
+      }
+    }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && isA11yOpen) {
+        setIsA11yOpen(false);
+      }
+    }
+    if (isA11yOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isA11yOpen]);
 
   // Manejo de Hover seguro con debounce para el Mega Menú
   const handleMouseEnterCategoria = (catId) => {
@@ -107,20 +163,70 @@ export default function Navbar() {
     setCategoriaActiva((prev) => (prev === catId ? null : catId));
   };
 
-  const handleOpenDrawer = (tab = 'utilidades') => {
-    setCategoriaActiva(null);
-    setDrawerTab(tab);
-    setIsDrawerOpen(true);
-  };
-
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
+  // Manejador de Escala de Tipografía
+  const handleApplyScale = (percent, scale) => {
+    setCurrentScalePercent(percent);
+    document.documentElement.style.fontSize = percent;
+    document.documentElement.style.setProperty('--font-scale', scale);
+    document.documentElement.style.setProperty('--text-scale', scale);
+    try {
+      localStorage.setItem('cr_font_scale', percent);
+    } catch {}
+  };
+
+  // Manejador de Daltonismo
+  const handleDaltonismoChange = (mode) => {
+    if (setDaltonismoMode) {
+      setDaltonismoMode(mode);
+    }
+    if (typeof document !== 'undefined') {
+      if (mode && mode !== 'normal') {
+        document.documentElement.setAttribute('data-colorblind', mode);
+        document.body.setAttribute('data-colorblind', mode);
+        if (mode === 'achromatopsia') {
+          document.body.style.filter = 'contrast(1.5) grayscale(1)';
+          document.documentElement.style.filter = 'contrast(1.5) grayscale(1)';
+        } else {
+          document.body.style.filter = `url(#${mode})`;
+          document.documentElement.style.filter = `url(#${mode})`;
+        }
+      } else {
+        document.documentElement.removeAttribute('data-colorblind');
+        document.body.removeAttribute('data-colorblind');
+        document.body.style.filter = '';
+        document.documentElement.style.filter = '';
+      }
+    }
+  };
+
+  // Manejador de Idioma
+  const handleLanguageSelect = (code) => {
+    if (code === 'bribri') {
+      setActiveLangCode('bribri');
+      try {
+        localStorage.setItem('cr_lang_special', 'bribri');
+      } catch {}
+      cambiarIdioma('CR');
+      return;
+    }
+    setActiveLangCode(code);
+    try {
+      localStorage.removeItem('cr_lang_special');
+    } catch {}
+    cambiarIdioma(code);
+  };
+
+  const currentDaltonismoLabel =
+    MODOS_DALTONISMO?.find((m) => m.id === daltonismoMode)?.nombre ||
+    (daltonismoMode === 'achromatopsia' ? 'Alto Contraste' : 'Normal');
+
   // ==========================================================================
   // RENDERIZADO EXCLUSIVO: HEADER ADMINISTRATIVO MINIMALISTA
-  // Estética Sovereign Civic Glass v2.1
   // ==========================================================================
   if (isVistaAdministrativa) {
     return (
@@ -128,20 +234,20 @@ export default function Navbar() {
         <header
           className="sticky top-0 left-0 right-0 z-50 transition-all"
           style={{
-            backgroundColor: 'rgba(5, 12, 28, 0.75)',
+            backgroundColor: theme === 'dark' ? 'rgba(5, 12, 28, 0.85)' : 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.45)'
           }}
         >
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-[64px] flex items-center justify-between gap-3">
-            {/* 1. EXTREMO IZQUIERDO: Isotipo y Texto Oficial (Sin Botón Hamburguesa) */}
+            {/* 1. EXTREMO IZQUIERDO: Isotipo y Texto Oficial */}
             <div className="flex items-center gap-3 flex-shrink-0">
               <div className="flex items-center gap-2.5">
                 <Logo showText={false} size="32px" />
                 <div className="flex flex-col">
-                  <span className="text-white font-bold text-[13px] sm:text-sm tracking-wider uppercase leading-none">
+                  <span className={`font-bold text-[13px] sm:text-sm tracking-wider uppercase leading-none ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                     COSTA RICA UNIDOS
                   </span>
                   <span className="text-[10px] text-slate-400 font-mono tracking-widest uppercase mt-0.5">
@@ -151,80 +257,136 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* 2. CENTRO: Pastilla Institucional Translúcida en JetBrains Mono */}
+            {/* 2. CENTRO: Pastilla Institucional Dinámica según Rol y Nivel */}
             <div className="hidden md:flex items-center justify-center flex-1 mx-2">
-              <div
-                style={{
-                  fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-                  backgroundColor: 'rgba(245, 158, 11, 0.08)',
-                  border: '1px solid rgba(245, 158, 11, 0.25)',
-                  color: '#F59E0B',
-                  boxShadow: '0 0 14px rgba(245, 158, 11, 0.12)'
-                }}
-                className="px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase flex items-center gap-2"
-              >
-                <ShieldCheck size={14} className="text-amber-400" />
-                <span>[NIVEL 4] GESTOR TERRITORIAL Y MUNICIPAL | COSTA RICA UNIDOS</span>
-              </div>
+              {(() => {
+                const esSuperAdmin = user?.nivelAcceso === 5 || 
+                  (user?.rol && (user.rol.toUpperCase().includes("SUPER") || user.rol.toUpperCase().includes("NACIONAL")));
+                
+                if (esSuperAdmin) {
+                  return (
+                    <div
+                      className="badge-admin-nacional px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase flex items-center gap-2"
+                      style={{
+                        fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        border: '1px solid rgba(220, 38, 38, 0.3)',
+                        boxShadow: '0 0 14px rgba(220, 38, 38, 0.15)'
+                      }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DA291C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      </svg>
+                      <span style={{ color: "#EF4444", fontWeight: 600 }}>
+                        [NIVEL 5] SUPER ADMIN NACIONAL | COSTA RICA UNIDOS
+                      </span>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div
+                    className="badge-gestor-territorial px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase flex items-center gap-2"
+                    style={{
+                      fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                      backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                      border: '1px solid rgba(245, 158, 11, 0.25)',
+                      boxShadow: '0 0 14px rgba(245, 158, 11, 0.12)'
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    <span style={{ color: "#F59E0B", fontWeight: 600 }}>
+                      [NIVEL 4] GESTOR TERRITORIAL Y MUNICIPAL | COSTA RICA UNIDOS
+                    </span>
+                  </div>
+                );
+              })()}
             </div>
 
-            {/* 3. EXTREMO DERECHO: Badge Estado En Línea + Identificador del Usuario Activo */}
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              {/* Badge de estado del sistema (punto verde con pulso luminoso "EN LÍNEA") */}
-              <div
+            {/* 3. EXTREMO DERECHO: Controles de Tema, Accesibilidad e Identificación */}
+            <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
+              {/* Botón Minimalista de Modo Oscuro / Claro */}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="btn-theme-toggle"
+                title={theme === 'dark' ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
                 style={{
-                  fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                  border: '1px solid rgba(16, 185, 129, 0.25)',
-                  color: '#34D399'
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                  border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(0, 0, 0, 0.12)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
                 }}
-                className="px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5"
               >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_#34d399]" />
-                </span>
-                <span className="hidden sm:inline">EN LÍNEA</span>
-              </div>
+                {theme === 'dark' ? (
+                  /* SVG Sol */
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="5" />
+                    <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                  </svg>
+                ) : (
+                  /* SVG Luna */
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                )}
+              </button>
 
-              {/* Identificador del usuario: avatar o inicial con nombre del administrador activo */}
-              <div className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-slate-200">
-                <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-300 font-mono font-bold flex items-center justify-center text-[10px] border border-amber-500/30">
-                  {user?.nombre ? user.nombre.charAt(0).toUpperCase() : 'G'}
-                </div>
-                <div className="hidden lg:flex flex-col text-left">
-                  <span className="text-[11px] font-semibold text-white leading-tight">
-                    {user?.nombre || 'Coordinación Territorial'}
-                  </span>
-                  <span className="text-[9px] text-amber-400 font-mono">
-                    {user?.id || 'USR-TERR-001'} • GESTOR_TERRITORIAL
-                  </span>
-                </div>
-              </div>
+              {/* Botón Cerrar Sesión Directo */}
+              <button
+                type="button"
+                onClick={handleLogout}
+                aria-label="Cerrar sesión"
+                title="Cerrar sesión"
+                className="w-[34px] h-[34px] rounded-full flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 hover:text-red-300 transition-all"
+              >
+                <LogOut className="w-4 h-4" strokeWidth={1.75} />
+              </button>
             </div>
           </div>
         </header>
+        <DaltonismoSvgFilters />
       </>
     );
   }
 
+  // ==========================================================================
+  // RENDERIZADO PRINCIPAL (CIUDADANÍA Y VISITANTES PÚBLICOS)
+  // ==========================================================================
   return (
     <>
       <header
-        className="sticky top-0 left-0 right-0 z-50 bg-[#070D1B] border-b border-slate-800 transition-colors"
+        className="sticky top-0 left-0 right-0 z-50 transition-colors"
         onMouseLeave={handleMouseLeaveNav}
         style={{
-          backgroundColor: '#070D1B',
-          opacity: 1,
-          boxShadow: '0 10px 30px rgba(0, 4, 13, 0.95)'
+          backgroundColor: theme === 'dark' ? '#070D1B' : '#FFFFFF',
+          borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)',
+          boxShadow: theme === 'dark' ? '0 10px 30px rgba(0, 4, 13, 0.95)' : '0 4px 20px rgba(0, 0, 0, 0.05)'
         }}
       >
         {/* ======================================================================
             1. CINTILLO SUPERIOR DE ESTADO (TOP BAR - 28px)
-            Pabellón tricolor patrio sutil y leyenda de soberanía republicana
             ====================================================================== */}
-        <div className="h-7 bg-[#000818] border-b border-white/[0.08] relative flex items-center justify-between px-4 md:px-8 text-[11px] text-slate-400 font-semibold tracking-wider uppercase overflow-hidden">
-          {/* Sub-cinta tricolor oficial (Azul, Blanco, Rojo, Blanco, Azul) */}
+        <div
+          className="cintillo-superior-container h-7 relative flex items-center justify-between px-3 sm:px-4 md:px-8 text-[11px] font-semibold tracking-wider uppercase overflow-hidden whitespace-nowrap"
+          style={{
+            backgroundColor: theme === 'dark' ? '#000818' : '#001489',
+            color: theme === 'dark' ? '#94A3B8' : '#FFFFFF',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.10)'
+          }}
+        >
+          {/* Sub-cinta tricolor oficial */}
           <div
             className="absolute top-0 left-0 right-0 h-[2px]"
             style={{
@@ -234,29 +396,28 @@ export default function Navbar() {
           />
 
           {/* Leyenda institucional */}
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
-            <span className="text-slate-200 font-bold">{t('republicaCostaRica', 'REPÚBLICA DE COSTA RICA')}</span>
-            <span className="text-slate-600 hidden sm:inline">·</span>
-            <span className="text-slate-400 hidden sm:inline">
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] shrink-0" />
+            <span className="font-bold text-white whitespace-nowrap">{t('republicaCostaRica', 'REPÚBLICA DE COSTA RICA')}</span>
+            <span className="cintillo-superior-item-secundario opacity-50 hidden lg:inline">·</span>
+            <span className="cintillo-superior-item-secundario opacity-80 hidden lg:inline whitespace-nowrap">
               {t('sistemaGobiernosLocales', 'SISTEMA NACIONAL DE GOBIERNOS LOCALES')}
             </span>
           </div>
 
           {/* Indicador de Transparencia & Cantón Activo */}
-          <div className="flex items-center gap-3 text-[10px] text-slate-400">
-            <button
-              type="button"
-              onClick={() => handleOpenDrawer('utilidades')}
-              data-tour="selector-canton"
-              className="hover:text-sky-300 transition-colors flex items-center gap-1 focus:outline-none ring-offset-2 focus:ring-1 focus:ring-sky-400 rounded-md px-1"
-              title="Abrir selector de los 84 cantones"
+          <div className="flex items-center gap-2 sm:gap-3 text-[10px] shrink-0">
+            <div
+              className="flex items-center gap-1 px-1 whitespace-nowrap"
+              title={`Cantón activo: ${activeCanton}`}
             >
-              <MapPin className="w-3 h-3 text-sky-400" strokeWidth={1.75} />
+              <MapPin className="w-3 h-3 text-sky-400 shrink-0" strokeWidth={1.75} />
               <span>{t('cantonLabel', 'Cantón:')} <strong className="text-white">{activeCanton}</strong></span>
-            </button>
-            <span className="text-slate-600 hidden md:inline">•</span>
-            <span className="text-sky-400 font-bold hidden md:inline">{t('cantonesAutonomos', '84 CANTONES AUTÓNOMOS')}</span>
+            </div>
+            <span className="cintillo-superior-item-secundario opacity-40 hidden lg:inline">•</span>
+            <span className="cintillo-superior-item-secundario text-sky-300 font-bold hidden lg:inline whitespace-nowrap">
+              {t('cantonesAutonomos', '84 CANTONES AUTÓNOMOS')}
+            </span>
           </div>
         </div>
 
@@ -290,12 +451,14 @@ export default function Navbar() {
                   className={`px-2 xl:px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold transition-all duration-200 flex items-center gap-1 xl:gap-1.5 focus:outline-none focus:ring-2 focus:ring-sky-500 ${
                     isActivo
                       ? 'bg-red-500/15 text-white border border-red-500/40 shadow-lg shadow-red-500/10'
-                      : 'text-slate-300 hover:text-white hover:bg-white/[0.05] border border-transparent'
+                      : theme === 'dark'
+                      ? 'text-slate-300 hover:text-white hover:bg-white/[0.05] border border-transparent'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-transparent'
                   }`}
                 >
                   <IconoCat
                     className={`w-3.5 h-3.5 xl:w-4 xl:h-4 transition-colors ${
-                      isActivo ? 'text-red-500' : 'text-slate-400'
+                      isActivo ? 'text-red-500' : theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
                     }`}
                     strokeWidth={1.75}
                   />
@@ -310,7 +473,7 @@ export default function Navbar() {
                   </span>
                   <ChevronDown
                     className={`w-3 h-3 xl:w-3.5 xl:h-3.5 transition-transform duration-200 ${
-                      isActivo ? 'rotate-180 text-red-500' : 'text-slate-500'
+                      isActivo ? 'rotate-180 text-red-500' : 'text-slate-400'
                     }`}
                     strokeWidth={1.75}
                   />
@@ -319,29 +482,317 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* LADO DERECHO: ACCIONES CÍVICAS (PANEL CÍVICO + MI PERFIL / CERRAR SESIÓN / REGISTRARSE / INICIAR SESIÓN) */}
+          {/* LADO DERECHO: UTILIDADES ESENCIALES (TEMA + ACCESIBILIDAD) + ACCESO CÍVICO */}
           <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 flex-shrink-0">
-
-            {/* EN DESKTOP (>= 1024px): BOTÓN VIDRIO ESMERILADO [ Panel Cívico ] */}
+            {/* 1. Botón Minimalista de Modo Oscuro / Claro */}
             <button
               type="button"
-              onClick={() => handleOpenDrawer('utilidades')}
-              data-tour="panel-civico-btn"
-              aria-label="Abrir centro de utilidades y panel cívico"
-              className="hidden lg:inline-flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full bg-white/[0.05] hover:bg-sky-500/20 border border-white/15 hover:border-sky-500/50 text-slate-200 hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              onClick={toggleTheme}
+              className="btn-theme-toggle"
+              title={theme === 'dark' ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              style={{
+                width: '34px',
+                height: '34px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(0, 0, 0, 0.12)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
             >
-              <User className="w-3.5 h-3.5 xl:w-4 xl:h-4 text-sky-400" strokeWidth={1.75} />
-              <span>{t('navPanelCivico', 'Panel Cívico')}</span>
-              {isAuthenticated && user && (
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+              {theme === 'dark' ? (
+                /* SVG Sol */
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              ) : (
+                /* SVG Luna */
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
               )}
             </button>
 
-            {/* BLOQUE DE IDENTIFICACIÓN Y ACCESO CÍVICO (INICIAR SESIÓN / CERRAR SESIÓN) */}
+            {/* 2. Menú Flotante de Accesibilidad Universal en el Topbar (Ley N° 7600) */}
+            <div className="relative" data-tour="panel-civico-btn">
+              <button
+                type="button"
+                ref={a11yButtonRef}
+                onClick={() => setIsA11yOpen(!isA11yOpen)}
+                className="btn-a11y-toggle"
+                aria-label="Opciones de accesibilidad universal"
+                aria-expanded={isA11yOpen}
+                title="Accesibilidad Universal (Ley N° 7600)"
+                style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: isA11yOpen
+                    ? 'rgba(56, 189, 248, 0.20)'
+                    : theme === 'dark'
+                    ? 'rgba(255, 255, 255, 0.05)'
+                    : 'rgba(0, 0, 0, 0.05)',
+                  border: isA11yOpen
+                    ? '1px solid rgba(56, 189, 248, 0.50)'
+                    : theme === 'dark'
+                    ? '1px solid rgba(255, 255, 255, 0.12)'
+                    : '1px solid rgba(0, 0, 0, 0.12)',
+                  color: '#38BDF8',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {/* Icono universal de accesibilidad (persona/figura humana dentro de un círculo) */}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="7" r="1.5" />
+                  <path d="M7 11.5h10" />
+                  <path d="M12 9v6" />
+                  <path d="m9.5 19 2.5-4 2.5 4" />
+                </svg>
+              </button>
+
+              {/* Popover Desplegable de Accesibilidad */}
+              {isA11yOpen && (
+                <div
+                  ref={a11yPopoverRef}
+                  role="dialog"
+                  aria-label="Ajustes de accesibilidad universal"
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 10px)',
+                    right: 0,
+                    zIndex: 100,
+                    width: '320px',
+                    backgroundColor: theme === 'dark' ? 'rgba(5, 12, 28, 0.96)' : 'rgba(255, 255, 255, 0.98)',
+                    backdropFilter: 'blur(24px)',
+                    WebkitBackdropFilter: 'blur(24px)',
+                    border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(0, 0, 0, 0.12)',
+                    borderRadius: '16px',
+                    padding: '16px',
+                    boxShadow: '0 16px 40px rgba(0, 4, 13, 0.65)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '14px',
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  {/* Cabecera del Popover */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)', paddingBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="7" r="1.5" />
+                        <path d="M7 11.5h10" />
+                        <path d="M12 9v6" />
+                        <path d="m9.5 19 2.5-4 2.5 4" />
+                      </svg>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: theme === 'dark' ? '#F8FAFC' : '#0F172A' }}>
+                        Accesibilidad (Ley N° 7600)
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsA11yOpen(false)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#94A3B8',
+                        cursor: 'pointer',
+                        padding: '2px',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                      aria-label="Cerrar opciones de accesibilidad"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* A. Escala de Tipografía: [ A- ] [ 100% ] [ A+ ] */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: theme === 'dark' ? '#94A3B8' : '#64748B' }}>
+                        Escala de Tipografía
+                      </span>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#38BDF8' }}>
+                        {currentScalePercent}
+                      </span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+                      {[
+                        { label: 'A-', percent: '90%', scale: '0.90', desc: 'Reducir' },
+                        { label: '100%', percent: '100%', scale: '1.0', desc: 'Estándar' },
+                        { label: 'A+', percent: '115%', scale: '1.15', desc: 'Ampliar' }
+                      ].map((btn) => {
+                        const isSelected = currentScalePercent === btn.percent;
+                        return (
+                          <button
+                            key={btn.percent}
+                            type="button"
+                            onClick={() => handleApplyScale(btn.percent, btn.scale)}
+                            style={{
+                              padding: '7px 4px',
+                              borderRadius: '8px',
+                              border: isSelected
+                                ? '1px solid #38BDF8'
+                                : theme === 'dark'
+                                ? '1px solid rgba(255, 255, 255, 0.10)'
+                                : '1px solid rgba(0, 0, 0, 0.12)',
+                              backgroundColor: isSelected
+                                ? 'rgba(56, 189, 248, 0.18)'
+                                : theme === 'dark'
+                                ? 'rgba(255, 255, 255, 0.04)'
+                                : 'rgba(0, 0, 0, 0.04)',
+                              color: isSelected
+                                ? '#38BDF8'
+                                : theme === 'dark'
+                                ? '#F8FAFC'
+                                : '#0F172A',
+                              fontWeight: 700,
+                              fontSize: '0.78rem',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              gap: '2px',
+                              transition: 'all 0.15s ease'
+                            }}
+                            title={`Escala tipográfica: ${btn.percent}`}
+                          >
+                            <span>[ {btn.label} ]</span>
+                            <span style={{ fontSize: '0.62rem', fontWeight: 500, opacity: 0.75 }}>{btn.desc}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* B. Adaptación de Daltonismo */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: theme === 'dark' ? '#94A3B8' : '#64748B' }}>
+                        Adaptación de Daltonismo
+                      </span>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#34D399' }}>
+                        {currentDaltonismoLabel}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                      {[
+                        { id: 'normal', label: 'Estándar' },
+                        { id: 'protanopia', label: 'Protanopía' },
+                        { id: 'deuteranopia', label: 'Deuteranopía' },
+                        { id: 'tritanopia', label: 'Tritanopía' },
+                        { id: 'achromatopsia', label: 'Alto Contraste' }
+                      ].map((opt) => {
+                        const isSelected = (daltonismoMode || 'normal') === opt.id;
+                        return (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => handleDaltonismoChange(opt.id)}
+                            style={{
+                              padding: '4px 10px',
+                              borderRadius: '9999px',
+                              fontSize: '0.72rem',
+                              fontWeight: 600,
+                              border: isSelected
+                                ? '1px solid #10B981'
+                                : theme === 'dark'
+                                ? '1px solid rgba(255, 255, 255, 0.10)'
+                                : '1px solid rgba(0, 0, 0, 0.12)',
+                              backgroundColor: isSelected
+                                ? 'rgba(16, 185, 129, 0.20)'
+                                : theme === 'dark'
+                                ? 'rgba(255, 255, 255, 0.04)'
+                                : 'rgba(0, 0, 0, 0.04)',
+                              color: isSelected ? '#34D399' : theme === 'dark' ? '#E2E8F0' : '#334155',
+                              cursor: 'pointer',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            {opt.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* C. Idiomas Oficiales */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: theme === 'dark' ? '#94A3B8' : '#64748B' }}>
+                      Idiomas Oficiales
+                    </span>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
+                      {[
+                        { code: 'CR', label: 'Español', desc: 'Castellano' },
+                        { code: 'bribri', label: 'Bribri', desc: 'Bribri ã' },
+                        { code: 'cabecar', label: 'Cabécar', desc: 'Cabécar' },
+                        { code: 'US', label: 'English', desc: 'English' }
+                      ].map((lang) => {
+                        const isSelected = activeLangCode === lang.code;
+                        return (
+                          <button
+                            key={lang.code}
+                            type="button"
+                            onClick={() => handleLanguageSelect(lang.code)}
+                            style={{
+                              padding: '6px 4px',
+                              borderRadius: '8px',
+                              border: isSelected
+                                ? '1px solid #38BDF8'
+                                : theme === 'dark'
+                                ? '1px solid rgba(255, 255, 255, 0.10)'
+                                : '1px solid rgba(0, 0, 0, 0.12)',
+                              backgroundColor: isSelected
+                                ? 'rgba(56, 189, 248, 0.18)'
+                                : theme === 'dark'
+                                ? 'rgba(255, 255, 255, 0.04)'
+                                : 'rgba(0, 0, 0, 0.04)',
+                              color: isSelected
+                                ? '#38BDF8'
+                                : theme === 'dark'
+                                ? '#F8FAFC'
+                                : '#0F172A',
+                              fontWeight: 700,
+                              fontSize: '0.72rem',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              gap: '2px',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <span>{lang.label}</span>
+                            <span style={{ fontSize: '0.6rem', fontWeight: 500, opacity: 0.75 }}>{lang.desc}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 3. Bloque de Identificación y Acceso Cívico */}
             <div className="flex items-center gap-1 sm:gap-1.5" data-tour="registro-login-btn">
               {isAuthenticated && user ? (
                 <div className="flex items-center gap-1.5 sm:gap-2">
-                  {/* Pastilla Ciudadana con Nombre Oficial */}
                   <Link
                     to="/portal-ciudadano"
                     aria-label={`Perfil cívico de ${user.nombre || 'Ciudadano'}`}
@@ -355,7 +806,6 @@ export default function Navbar() {
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
                   </Link>
 
-                  {/* Botón Cerrar Sesión */}
                   <button
                     type="button"
                     onClick={handleLogout}
@@ -368,7 +818,6 @@ export default function Navbar() {
                   </button>
                 </div>
               ) : (
-                /* ÚNICO BOTÓN DE ACCESO: APUNTA DIRECTAMENTE A /login */
                 <Link
                   to="/login"
                   aria-label="Iniciar sesión en la plataforma cívica institucional"
@@ -381,17 +830,60 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* EN MÓVILES (< 1024px): BOTÓN HAMBURGUESA QUE ABRE EL CIVIC DRAWER */}
+            {/* EN MÓVILES (< 1024px): BOTÓN HAMBURGUESA QUE DESPLIEGA MENÚ COMPACTO */}
             <button
               type="button"
-              onClick={() => handleOpenDrawer('navegacion')}
-              aria-label="Abrir menú de navegación y panel cívico"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={isMobileMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+              aria-expanded={isMobileMenuOpen}
               className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500"
             >
-              <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-slate-200" strokeWidth={1.75} />
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5 text-slate-200" strokeWidth={1.75} />
+              ) : (
+                <Menu className="w-5 h-5 text-slate-200" strokeWidth={1.75} />
+              )}
             </button>
           </div>
         </div>
+
+        {/* NAVEGACIÓN MÓVIL DESPLEGABLE COMPACTA (SIN CAJONES LATERALES NI OVERLAYS OSCUROS) */}
+        {isMobileMenuOpen && (
+          <nav
+            aria-label="Navegación Móvil Compacta"
+            className={`lg:hidden border-t px-4 py-3 space-y-3 transition-all ${
+              theme === 'dark' ? 'bg-[#070D1B]/98 border-white/10' : 'bg-white/98 border-slate-200'
+            }`}
+          >
+            {CATEGORIAS_CIVICAS.map((cat) => {
+              const IconoCat = cat.icon;
+              return (
+                <div key={cat.id} className="space-y-1">
+                  <div className="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider">
+                    <IconoCat className="w-3.5 h-3.5" strokeWidth={1.75} />
+                    <span>{cat.label}</span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-1 pl-5">
+                    {cat.modulos.map((mod) => (
+                      <Link
+                        key={mod.path}
+                        to={mod.path}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`py-1 text-xs transition-colors block ${
+                          theme === 'dark'
+                            ? 'text-slate-300 hover:text-white'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        {mod.titulo}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </nav>
+        )}
 
         {/* ======================================================================
             3. MEGA MENÚ DESPLEGABLE EN DESKTOP (SUB-PANEL TRANSLÚCIDO)
@@ -402,14 +894,8 @@ export default function Navbar() {
         />
       </header>
 
-      {/* ======================================================================
-          4. CAJÓN LATERAL DESLIZANTE (CIVIC DRAWER)
-          ====================================================================== */}
-      <CivicDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        initialTab={drawerTab}
-      />
+      {/* Inyección de Filtros SVG para Daltonismo (Ley N° 7600) */}
+      <DaltonismoSvgFilters />
     </>
   );
 }

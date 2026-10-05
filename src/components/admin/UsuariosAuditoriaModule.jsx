@@ -10,7 +10,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { logAction, getDb, saveDb } from '../../services/dbService';
 import { useAuth } from '../../context/AuthContext';
-import { eliminarUsuarioApi, registrarUsuarioApi } from '../../services/userService';
+import { eliminarUsuarioApi, registrarUsuarioApi, actualizarUsuarioApi } from '../../services/userService';
 import { validateCedula } from '../../services/haciendaService';
 
 // ============================================================================
@@ -531,6 +531,38 @@ export default function UsuariosAuditoriaModule({
   }
   const user = authContext?.user || currentUser;
 
+  // --------------------------------------------------------------------------
+  // SEGREGACIÓN ESTRICTA RBAC (Principio de Menor Privilegio - Ley N° 8292)
+  // El módulo de Padrón y Auditoría es de uso EXCLUSIVO de Nivel 5 (Super Administrador Nacional).
+  // Los Gestores Territoriales (Nivel 4) y Ciudadanos (Nivel 2) tienen denegado el acceso de raíz.
+  // --------------------------------------------------------------------------
+  const rolNormalizado = String(user?.rol || '').toUpperCase().trim();
+  const nivelUsuario = Number(user?.nivelAcceso ?? 0);
+  const esSuperAdminNacional =
+    nivelUsuario >= 5 ||
+    rolNormalizado.includes('SUPER') ||
+    rolNormalizado === 'SUPER_ADMIN_NACIONAL' ||
+    rolNormalizado === 'SUPER_ADMIN';
+
+  if (!esSuperAdminNacional) {
+    return (
+      <div className="p-8 rounded-3xl bg-[#050C1C] border border-rose-500/30 text-center space-y-4 max-w-2xl mx-auto my-8 shadow-2xl animate-fadeIn">
+        <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 mx-auto">
+          <AlertTriangleIcon width={28} height={28} />
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-lg font-bold text-white">Módulo Reservado Exclusivamente a Nivel 5</h3>
+          <p className="text-xs text-rose-300 font-mono">
+            [SEGURIDAD RBAC] ACCESO DENEGADO • SUPERINTENDENCIA NACIONAL
+          </p>
+        </div>
+        <p className="text-xs text-slate-300 leading-relaxed max-w-lg mx-auto">
+          El módulo de <strong>Usuarios & Auditoría Inmutable</strong> del Padrón Nacional contiene datos protegidos bajo la Ley N° 8968 y Ley N° 8292. Los Gestores Territoriales (Nivel 4) tienen jurisdicción limitada a Gobiernos Locales, Obras Cantonales, Gaceta y Emergencias CNE.
+        </p>
+      </div>
+    );
+  }
+
   // 1. Estado reactivo del padrón cívico
   const [usuarios, setUsuarios] = useState(() => {
     if (Array.isArray(usuariosProp) && usuariosProp.length > 0) {
@@ -562,6 +594,7 @@ export default function UsuariosAuditoriaModule({
 
   // 3. Estados para Modales de Doble Verificación
   const [usuarioAEditar, setUsuarioAEditar] = useState(null);
+  const [isSavingEdicion, setIsSavingEdicion] = useState(false);
   const [formularioEdicion, setFormularioEdicion] = useState({
     rol: 'CIUDADANO',
     provincia: 'San José',
@@ -859,62 +892,98 @@ export default function UsuariosAuditoriaModule({
     setUsuarioAEditar(usuario);
   };
 
-  // Guardar Cambios Oficiales de Edición
-  const guardarCambiosEdicion = (e) => {
+  // Guardar Cambios Oficiales de Edición (Conectado a json-server vía HTTP PATCH)
+  const guardarCambiosEdicion = async (e) => {
     e.preventDefault();
     if (!usuarioAEditar) return;
 
-    const rolSeleccionado = formularioEdicion.rol;
-    let rolTextoOficial = 'Ciudadano Residente';
-    let nivelAcceso = 2;
+    setIsSavingEdicion(true);
 
-    if (rolSeleccionado === 'SUPER_ADMIN_NACIONAL') {
-      rolTextoOficial = 'Super Administrador Nacional';
-      nivelAcceso = 5;
-    } else if (rolSeleccionado === 'GESTOR_TERRITORIAL') {
-      rolTextoOficial = 'Gestor Territorial y Municipal';
-      nivelAcceso = 4;
-    }
+    // 1. Determinar el nivel de acceso exacto según el rol asignado
+    const rolSeleccionado = formularioEdicion.rol;
+    const nuevoNivelAcceso =
+      rolSeleccionado === 'Super Administrador Nacional' || rolSeleccionado === 'SUPER_ADMIN_NACIONAL'
+        ? 5
+        : rolSeleccionado === 'Gestor Territorial' || rolSeleccionado === 'GESTOR_TERRITORIAL'
+        ? 4
+        : 2;
+
+    const nombreRolOficial =
+      nuevoNivelAcceso === 5
+        ? 'Super Administrador Nacional'
+        : nuevoNivelAcceso === 4
+        ? 'Gestor Territorial'
+        : 'Ciudadano Residente';
 
     const provinciaFinal =
-      rolSeleccionado === 'SUPER_ADMIN_NACIONAL' ? 'Nacional' : formularioEdicion.provincia;
+      nuevoNivelAcceso === 5 ? 'Nacional' : formularioEdicion.provincia;
     const cantonFinal =
-      rolSeleccionado === 'SUPER_ADMIN_NACIONAL'
+      nuevoNivelAcceso === 5
         ? 'Todas las Municipalidades'
         : formularioEdicion.canton;
 
-    const listaActualizada = usuarios.map((u) => {
-      if (u.id === usuarioAEditar.id || u.cedula === usuarioAEditar.cedula) {
-        return {
-          ...u,
-          rol: rolTextoOficial,
-          nivelAcceso,
-          provincia: provinciaFinal,
-          canton: cantonFinal,
-          forzarCambioPassword: formularioEdicion.forzarCambioPassword,
-          verificadoHacienda: formularioEdicion.verificadoHacienda
-        };
+    const payloadCambios = {
+      rol: nombreRolOficial,
+      nivelAcceso: nuevoNivelAcceso,
+      provincia: provinciaFinal,
+      canton: cantonFinal,
+      forzarCambioPassword: Boolean(formularioEdicion.forzarCambioPassword),
+      verificadoHacienda: Boolean(formularioEdicion.verificadoHacienda)
+    };
+
+    // 2. Enviar actualización física a db.json vía json-server / API
+    const exitoApi = await actualizarUsuarioApi(usuarioAEditar.id, payloadCambios);
+
+    if (exitoApi) {
+      // 3. Si json-server confirmó el guardado, actualizar el estado visual de la tabla
+      const listaActualizada = usuarios.map((u) => {
+        if (u.id === usuarioAEditar.id || u.cedula === usuarioAEditar.cedula) {
+          return {
+            ...u,
+            ...payloadCambios
+          };
+        }
+        return u;
+      });
+
+      setUsuarios(listaActualizada);
+      persistirPadronUsuarios(listaActualizada);
+      if (onUsuariosChange) onUsuariosChange(listaActualizada);
+
+      // 4. Sincronizar localStorage si se usa como respaldo
+      const cacheLocal = localStorage.getItem('cr_db_usuarios');
+      if (cacheLocal) {
+        try {
+          const parsed = JSON.parse(cacheLocal);
+          const actualizados = parsed.map((u) =>
+            u.id === usuarioAEditar.id || u.cedula === usuarioAEditar.cedula
+              ? { ...u, ...payloadCambios }
+              : u
+          );
+          localStorage.setItem('cr_db_usuarios', JSON.stringify(actualizados));
+        } catch (_err) {
+          // ignore
+        }
       }
-      return u;
-    });
 
-    setUsuarios(listaActualizada);
-    persistirPadronUsuarios(listaActualizada);
-    if (onUsuariosChange) onUsuariosChange(listaActualizada);
+      // Registro inmutable en bitácora de auditoría
+      const adminEjecutor = currentUser?.nombre || 'Super Administrador Nacional';
+      const adminCedula = currentUser?.cedula || '1-0000-0001';
+      logAction(
+        adminCedula,
+        adminEjecutor,
+        'Super Administrador Nacional',
+        'ACTUALIZACION_EXPEDIENTE',
+        `Actualización de credenciales para ${usuarioAEditar.nombre}: Rol ${nombreRolOficial}, Jurisdicción ${cantonFinal}, ${provinciaFinal}.`
+      );
 
-    // Registro inmutable en bitácora de auditoría
-    const adminEjecutor = currentUser?.nombre || 'Super Administrador Nacional';
-    const adminCedula = currentUser?.cedula || '1-0000-0001';
-    logAction(
-      adminCedula,
-      adminEjecutor,
-      'Super Administrador Nacional',
-      'ACTUALIZACION_EXPEDIENTE',
-      `Actualización de credenciales para ${usuarioAEditar.nombre}: Rol ${rolTextoOficial}, Jurisdicción ${cantonFinal}, ${provinciaFinal}.`
-    );
+      setUsuarioAEditar(null);
+      mostrarToast(`Expediente cívico de ${usuarioAEditar.nombre} actualizado satisfactoriamente en db.json.`);
+    } else {
+      mostrarToast('No se pudo guardar el cambio en db.json. Verifique que json-server esté corriendo.');
+    }
 
-    setUsuarioAEditar(null);
-    mostrarToast(`Expediente cívico de ${usuarioAEditar.nombre} actualizado satisfactoriamente.`);
+    setIsSavingEdicion(false);
   };
 
   // 10. Control de Acciones: Iniciar Modal de Eliminación Definitiva
@@ -1854,17 +1923,30 @@ export default function UsuariosAuditoriaModule({
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
                 <button
                   type="button"
+                  disabled={isSavingEdicion}
                   onClick={() => setUsuarioAEditar(null)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-semibold transition-colors"
+                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancelar Operación
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-[0.98] text-slate-950 font-bold inline-flex items-center gap-2 transition-all shadow-lg shadow-sky-500/25"
+                  disabled={isSavingEdicion}
+                  className="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-[0.98] text-slate-950 font-bold inline-flex items-center gap-2 transition-all shadow-lg shadow-sky-500/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  <DiskSaveIcon width={16} height={16} />
-                  <span>Guardar Cambios Oficiales</span>
+                  {isSavingEdicion ? (
+                    <>
+                      <svg className="animate-spin w-4 h-4 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="12" />
+                      </svg>
+                      <span>Guardando en db.json...</span>
+                    </>
+                  ) : (
+                    <>
+                      <DiskSaveIcon width={16} height={16} />
+                      <span>Guardar Cambios Oficiales</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>

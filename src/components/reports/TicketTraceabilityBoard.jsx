@@ -1,21 +1,149 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Copy, Check, MapPin, Building2, Construction, Lightbulb, Droplets, Trash2, AlertTriangle, ArrowRight, Circle } from 'lucide-react';
+import {
+  Search,
+  Copy,
+  Check,
+  MapPin,
+  Building2,
+  Construction,
+  Lightbulb,
+  Droplets,
+  Trash2,
+  AlertTriangle,
+  ArrowRight,
+  Circle
+} from 'lucide-react';
 import { getTickets, buscarTicketPorId, ESTADOS_TICKET } from './ticketService';
 import { useCivicModal } from '../../context/CivicModalContext';
 
-function getCategoryIcon(categoria, size = 18) {
-  switch (categoria) {
-    case 'hueco_vial':
-      return <Construction size={size} color="#FF6B6B" />;
-    case 'luminaria':
-      return <Lightbulb size={size} color="#FBBF24" />;
-    case 'fuga_agua':
-      return <Droplets size={size} color="#38BDF8" />;
-    case 'basurero':
-      return <Trash2 size={size} color="#34D399" />;
-    default:
-      return <AlertTriangle size={size} color="#F59E0B" />;
+/**
+ * Normalizador defensivo de tickets cívicos
+ * Garantiza encadenamiento opcional, fallbacks de cadena y propiedades requeridas
+ * para prevenir excepciones de tipo TypeError (reading 'split').
+ */
+export function normalizarTicketSeguro(t) {
+  if (!t || typeof t !== 'object') {
+    return null;
   }
+
+  // ERROR COMÚN 3 (Código o IDs) — Corrección segura
+  const rawId = t?.id || t?.reportId || t?.codigo || 'EXP-MUNI-2026-0001';
+  const partesId = String(rawId || '').split('-');
+  const numeroTicket = partesId.length > 1 ? partesId[1] : (rawId || 'S/N');
+
+  // ERROR COMÚN 2 (Fechas ISO) — Corrección segura
+  const rawFecha = t?.fecha || t?.fechaRegistro || t?.fechaRadicado || t?.fechaReporte || new Date().toISOString();
+  const rawFechaStr = String(rawFecha || '');
+  const fechaFormateada = rawFechaStr.includes('T')
+    ? (rawFechaStr.split('T')[0] || 'Fecha N/D')
+    : (rawFechaStr.split(' ')[0] || 'Fecha N/D');
+
+  // ERROR COMÚN 1 (Coordenadas) — Corrección segura
+  let coordStr = '9.9281,-84.0907';
+  if (typeof t?.coordenadas === 'string') {
+    coordStr = t.coordenadas;
+  } else if (typeof t?.lat_lng === 'string') {
+    coordStr = t.lat_lng;
+  } else if (Array.isArray(t?.coordenadas) && t.coordenadas.length >= 2) {
+    coordStr = `${t.coordenadas[0]},${t.coordenadas[1]}`;
+  } else if (t?.coordenadas && typeof t.coordenadas === 'object') {
+    coordStr = `${t.coordenadas.lat || 9.9281},${t.coordenadas.lng || -84.0907}`;
+  } else if (t?.lat !== undefined && t?.lng !== undefined) {
+    coordStr = `${t.lat},${t.lng}`;
+  }
+  const [lat, lng] = (coordStr || t?.lat_lng || '0,0').split(',');
+  const latNum = parseFloat(lat) || 9.9281;
+  const lngNum = parseFloat(lng) || -84.0907;
+
+  // ERROR COMÚN 4 (Nombres o Categorías) — Corrección segura
+  const rawCiudadano = t?.ciudadano || t?.nombre || t?.reportadoPor || 'Ciudadano';
+  const primerNombre = String(rawCiudadano || 'Ciudadano').split(' ')[0];
+
+  // Normalización de Estado
+  let estadoKey = 'recibido';
+  const rawEstado = String(t?.estado || '').toLowerCase();
+  if (rawEstado.includes('subsanado') || rawEstado.includes('resuelto') || rawEstado.includes('solucionado')) {
+    estadoKey = 'solucionado';
+  } else if (rawEstado.includes('tramite') || rawEstado.includes('proceso') || rawEstado.includes('ejecucion')) {
+    estadoKey = 'en_tramite';
+  } else if (rawEstado.includes('inspeccion') || rawEstado.includes('revision')) {
+    estadoKey = 'en_inspeccion';
+  } else if (rawEstado.includes('recibido') || rawEstado.includes('radicado') || rawEstado.includes('reportado')) {
+    estadoKey = 'recibido';
+  } else if (ESTADOS_TICKET[rawEstado]) {
+    estadoKey = rawEstado;
+  }
+
+  // Título y categoría defensivos
+  const categoriaSegura = t?.categoria || 'INFRAESTRUCTURA_VIAL_HUECO';
+  const categoriaTituloSegura = t?.categoriaTitulo || t?.titulo || 'Incidencia Vial Reportada';
+  const direccionSegura = t?.direccionExacta || t?.direccion || t?.descripcion || 'Ubicación comunal registrada';
+
+  // Historial seguro con fechas formateadas
+  const historialSeguro = (Array.isArray(t?.historial) && t.historial.length > 0 ? t.historial : [
+    {
+      estado: 'recibido',
+      fecha: fechaFormateada,
+      nota: 'Reporte ingresado por ciudadano con georreferenciación GPS verificada.'
+    },
+    {
+      estado: estadoKey !== 'recibido' ? estadoKey : 'en_inspeccion',
+      fecha: fechaFormateada,
+      nota: `Unidad municipal asignada: ${t?.cuadrillaAsignada || t?.entidadResponsable || 'Obras Públicas y Gestión Vial'}.`
+    }
+  ]).map((h) => {
+    const hFechaRaw = h?.fecha || fechaFormateada;
+    const hFechaFormateada = String(hFechaRaw || '').split('T')[0] || 'Fecha N/D';
+    return {
+      estado: h?.estado || 'recibido',
+      fecha: hFechaFormateada,
+      nota: h?.nota || h?.descripcion || 'Actualización de fiscalización técnica registrada.'
+    };
+  });
+
+  return {
+    ...t,
+    id: rawId,
+    reportId: rawId,
+    numeroTicket,
+    titulo: t?.titulo || categoriaTituloSegura,
+    categoria: categoriaSegura,
+    categoriaTitulo: categoriaTituloSegura,
+    estado: estadoKey,
+    provincia: t?.provincia || 'San José',
+    canton: t?.canton || 'San José',
+    distrito: t?.distrito || 'Central',
+    direccionExacta: direccionSegura,
+    fecha: rawFecha,
+    fechaRegistro: rawFecha,
+    fechaRadicado: t?.fechaRadicado || rawFecha,
+    fechaReporte: t?.fechaReporte || rawFecha,
+    fechaFormateada,
+    coordenadas: { lat: latNum, lng: lngNum },
+    coordenadasTexto: `${latNum.toFixed(5)}, ${lngNum.toFixed(5)}`,
+    lat_lng: `${latNum},${lngNum}`,
+    ciudadano: rawCiudadano,
+    primerNombre,
+    entidadResponsable: t?.entidadResponsable || 'Unidad Técnica de Gestión Vial',
+    historial: historialSeguro
+  };
+}
+
+function getCategoryIcon(categoria, size = 18) {
+  const cat = String(categoria || '').toLowerCase();
+  if (cat.includes('hueco') || cat.includes('vial') || cat.includes('calzada') || cat.includes('asfalto')) {
+    return <Construction size={size} color="#FF6B6B" />;
+  }
+  if (cat.includes('luminaria') || cat.includes('luz') || cat.includes('alumbrado')) {
+    return <Lightbulb size={size} color="#FBBF24" />;
+  }
+  if (cat.includes('agua') || cat.includes('fuga') || cat.includes('alcantarilla')) {
+    return <Droplets size={size} color="#38BDF8" />;
+  }
+  if (cat.includes('basura') || cat.includes('residuo') || cat.includes('vertedero')) {
+    return <Trash2 size={size} color="#34D399" />;
+  }
+  return <AlertTriangle size={size} color="#F59E0B" />;
 }
 
 export default function TicketTraceabilityBoard({
@@ -29,46 +157,106 @@ export default function TicketTraceabilityBoard({
   const [filterStatus, setFilterStatus] = useState('todos');
   const [copiedId, setCopiedId] = useState(false);
 
-  // Cargar tickets de almacenamiento local al montar
+  // Cargar tickets de almacenamiento local al montar con normalización segura
   useEffect(() => {
-    const todos = getTickets();
-    setTicketsList(todos);
+    const rawTickets = getTickets() || [];
+
+    // Normalización de Datos de Tickets garantizando valores por defecto
+    const ticketsSeguros = (rawTickets || [])
+      .map((t) => {
+        const tBase = {
+          id: t?.id || t?.reportId || 'CRU-000',
+          titulo: t?.titulo || t?.categoriaTitulo || 'Incidencia sin título',
+          categoria: t?.categoria || 'General',
+          estado: t?.estado || 'Recibido',
+          canton: t?.canton || 'San José',
+          fecha: t?.fecha || t?.fechaRegistro || t?.fechaRadicado || new Date().toISOString(),
+          coordenadas: t?.coordenadas || '9.9281,-84.0907',
+          ...t
+        };
+        return normalizarTicketSeguro(tBase);
+      })
+      .filter(Boolean);
+
+    setTicketsList(ticketsSeguros);
 
     if (initialTicketId) {
       const match = buscarTicketPorId(initialTicketId);
-      if (match) setActiveTicket(match);
-    } else if (todos.length > 0) {
-      setActiveTicket(todos[0]);
+      if (match) {
+        setActiveTicket(normalizarTicketSeguro(match));
+      } else {
+        const localMatch = ticketsSeguros.find(
+          (t) => String(t.id).toUpperCase() === String(initialTicketId).trim().toUpperCase() ||
+                 String(t.reportId).toUpperCase() === String(initialTicketId).trim().toUpperCase()
+        );
+        if (localMatch) {
+          setActiveTicket(localMatch);
+        } else if (ticketsSeguros.length > 0) {
+          setActiveTicket(ticketsSeguros[0]);
+        }
+      }
+    } else if (ticketsSeguros.length > 0) {
+      setActiveTicket(ticketsSeguros[0]);
     }
   }, [initialTicketId]);
 
-  // Manejar búsqueda por ID de ticket
+  // Manejar búsqueda por ID de ticket con blindaje defensivo
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!searchTerm.trim()) return;
-    const found = buscarTicketPorId(searchTerm.trim());
+    const query = searchTerm.trim();
+    if (!query) return;
+
+    const found = buscarTicketPorId(query);
     if (found) {
-      setActiveTicket(found);
+      setActiveTicket(normalizarTicketSeguro(found));
     } else {
-      mostrarAlerta({
-        titulo: 'Reporte No Encontrado',
-        mensaje: `No se encontró ningún reporte cívico registrado con el identificador: ${searchTerm}. Verifique el código ingresado e intente nuevamente.`,
-        icono: 'advertencia'
-      });
+      const localMatch = ticketsList.find(
+        (t) => String(t?.id || '').toUpperCase() === query.toUpperCase() ||
+               String(t?.reportId || '').toUpperCase() === query.toUpperCase() ||
+               String(t?.numeroTicket || '').toUpperCase() === query.toUpperCase()
+      );
+      if (localMatch) {
+        setActiveTicket(localMatch);
+      } else {
+        mostrarAlerta({
+          titulo: 'Reporte No Encontrado',
+          mensaje: `No se encontró ningún reporte cívico registrado con el identificador: ${query}. Verifique el código ingresado e intente nuevamente.`,
+          icono: 'advertencia'
+        });
+      }
     }
   };
 
   const handleCopyId = (id) => {
-    navigator.clipboard.writeText(id);
+    if (!id) return;
+    navigator.clipboard.writeText(String(id));
     setCopiedId(true);
     setTimeout(() => setCopiedId(false), 2000);
   };
 
-  // Filtrado de la lista pública
+  // Filtrado seguro de la lista pública
   const ticketsFiltrados = ticketsList.filter((t) => {
     if (filterStatus === 'todos') return true;
     return t.estado === filterStatus;
   });
+
+  // Configuración de estado para el ticket activo
+  const estadoActivoCfg = (activeTicket && ESTADOS_TICKET[activeTicket.estado]) || ESTADOS_TICKET.recibido;
+  const currentStep = estadoActivoCfg?.step || 1;
+  const progressPercent = Math.min(Math.max(((currentStep - 1) / 3) * 100, 0), 100);
+
+  // Fecha blindada para visualización
+  const fechaDisplay = (activeTicket?.fechaFormateada) ||
+    ((activeTicket?.fecha || activeTicket?.fechaRegistro || '').split('T')[0]) ||
+    'Fecha N/D';
+
+  // Coordenadas blindadas para visualización
+  const latCoord = typeof activeTicket?.coordenadas?.lat === 'number'
+    ? activeTicket.coordenadas.lat.toFixed(5)
+    : (parseFloat(activeTicket?.coordenadas?.lat) || 9.9281).toFixed(5);
+  const lngCoord = typeof activeTicket?.coordenadas?.lng === 'number'
+    ? activeTicket.coordenadas.lng.toFixed(5)
+    : (parseFloat(activeTicket?.coordenadas?.lng) || -84.0907).toFixed(5);
 
   return (
     <div style={{ animation: 'fadeIn 0.3s ease' }}>
@@ -110,7 +298,7 @@ export default function TicketTraceabilityBoard({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar por código de ticket: REP-PUN-ESP-2026-0042..."
+              placeholder="Buscar por código de ticket: EXP-MUNI-2026-0042..."
               aria-label="Buscar reporte por código"
               style={{
                 width: '100%',
@@ -190,12 +378,12 @@ export default function TicketTraceabilityBoard({
                   color: '#FFFFFF',
                   letterSpacing: '0.02em'
                 }}>
-                  {activeTicket.reportId}
+                  {activeTicket.reportId || activeTicket.id}
                 </h4>
 
                 <button
                   type="button"
-                  onClick={() => handleCopyId(activeTicket.reportId)}
+                  onClick={() => handleCopyId(activeTicket.reportId || activeTicket.id)}
                   className="btn-glass-secondary"
                   style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                 >
@@ -213,17 +401,17 @@ export default function TicketTraceabilityBoard({
               <span
                 className="telemetry-badge"
                 style={{
-                  backgroundColor: ESTADOS_TICKET[activeTicket.estado]?.badgeBg || 'rgba(0, 43, 127, 0.5)',
-                  borderColor: ESTADOS_TICKET[activeTicket.estado]?.color || '#79a6ff',
-                  color: ESTADOS_TICKET[activeTicket.estado]?.color || '#79a6ff',
+                  backgroundColor: estadoActivoCfg.badgeBg || 'rgba(0, 43, 127, 0.5)',
+                  borderColor: estadoActivoCfg.color || '#79a6ff',
+                  color: estadoActivoCfg.color || '#79a6ff',
                   fontSize: '0.85rem',
                   fontWeight: 700
                 }}
               >
-                ESTADO: {ESTADOS_TICKET[activeTicket.estado]?.label.toUpperCase()}
+                ESTADO: {(estadoActivoCfg.label || activeTicket.estado || 'RECIBIDO').toUpperCase()}
               </span>
               <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.4rem', fontFamily: 'var(--font-telemetry)' }}>
-                Registrado: {activeTicket.fechaRegistro.split('T')[0]}
+                Registrado: {fechaDisplay}
               </div>
             </div>
           </div>
@@ -260,7 +448,7 @@ export default function TicketTraceabilityBoard({
                   position: 'absolute',
                   top: '22px',
                   left: '40px',
-                  width: `${((ESTADOS_TICKET[activeTicket.estado]?.step - 1) / 3) * 100}%`,
+                  width: `${progressPercent}%`,
                   height: '4px',
                   background: 'linear-gradient(90deg, #3B82F6 0%, #00D166 100%)',
                   boxShadow: '0 0 12px #00D166',
@@ -271,7 +459,6 @@ export default function TicketTraceabilityBoard({
 
               {/* Los 4 Pasos de Trazabilidad */}
               {Object.values(ESTADOS_TICKET).map((st) => {
-                const currentStep = ESTADOS_TICKET[activeTicket.estado]?.step || 1;
                 const isPassed = st.step <= currentStep;
                 const isCurrent = st.step === currentStep;
 
@@ -366,7 +553,7 @@ export default function TicketTraceabilityBoard({
                 marginBottom: '1rem'
               }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><MapPin size={13} /> COORDENADAS:</span>
-                <span>{activeTicket.coordenadas?.lat.toFixed(5)}, {activeTicket.coordenadas?.lng.toFixed(5)}</span>
+                <span>{latCoord}, {lngCoord}</span>
               </div>
 
               {activeTicket.imagen?.url && (
@@ -403,27 +590,33 @@ export default function TicketTraceabilityBoard({
                 overflowY: 'auto',
                 paddingRight: '0.5rem'
               }}>
-                {(activeTicket.historial || []).map((h, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      padding: '0.75rem',
-                      borderRadius: '10px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                      borderLeft: `3px solid ${ESTADOS_TICKET[h.estado]?.color || '#79a6ff'}`
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: '#94A3B8', fontFamily: 'var(--font-telemetry)', marginBottom: '0.2rem' }}>
-                      <span style={{ color: ESTADOS_TICKET[h.estado]?.color || '#79a6ff', fontWeight: 700 }}>
-                        {ESTADOS_TICKET[h.estado]?.label.toUpperCase()}
-                      </span>
-                      <span>{h.fecha}</span>
+                {(activeTicket.historial || []).map((h, i) => {
+                  const hEstadoCfg = ESTADOS_TICKET[h?.estado] || ESTADOS_TICKET.recibido;
+                  const hFechaRaw = h?.fecha || '';
+                  const hFechaFormateada = String(hFechaRaw || '').split('T')[0] || 'Fecha N/D';
+
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        padding: '0.75rem',
+                        borderRadius: '10px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                        borderLeft: `3px solid ${hEstadoCfg.color || '#79a6ff'}`
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: '#94A3B8', fontFamily: 'var(--font-telemetry)', marginBottom: '0.2rem' }}>
+                        <span style={{ color: hEstadoCfg.color || '#79a6ff', fontWeight: 700 }}>
+                          {(hEstadoCfg.label || h?.estado || 'PROCESO').toUpperCase()}
+                        </span>
+                        <span>{hFechaFormateada}</span>
+                      </div>
+                      <p style={{ fontSize: '0.84rem', color: '#E2E8F0', lineHeight: 1.4 }}>
+                        {h?.nota || h?.descripcion || 'Actualización registrada en el expediente municipal.'}
+                      </p>
                     </div>
-                    <p style={{ fontSize: '0.84rem', color: '#E2E8F0', lineHeight: 1.4 }}>
-                      {h.nota || h.descripcion}
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {activeTicket.entidadResponsable && (
@@ -489,10 +682,12 @@ export default function TicketTraceabilityBoard({
           {ticketsFiltrados.map((ticket) => {
             const estadoCfg = ESTADOS_TICKET[ticket.estado] || ESTADOS_TICKET.recibido;
             const isSelected = activeTicket?.reportId === ticket.reportId;
+            const dirTexto = ticket.direccionExacta || ticket.direccion || ticket.descripcion || 'Ubicación registrada';
+            const dirCorta = dirTexto.length > 70 ? dirTexto.substring(0, 70) + '...' : dirTexto;
 
             return (
               <div
-                key={ticket.reportId}
+                key={ticket.reportId || ticket.id}
                 role="button"
                 tabIndex={0}
                 onClick={() => {
@@ -511,7 +706,7 @@ export default function TicketTraceabilityBoard({
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.6rem' }}>
                   <span className="telemetry-badge" style={{ fontSize: '0.75rem' }}>
-                    {ticket.reportId}
+                    {ticket.reportId || ticket.id}
                   </span>
                   <span
                     style={{
@@ -524,7 +719,7 @@ export default function TicketTraceabilityBoard({
                       borderRadius: '4px'
                     }}
                   >
-                    {estadoCfg.label.toUpperCase()}
+                    {(estadoCfg.label || ticket.estado || 'RECIBIDO').toUpperCase()}
                   </span>
                 </div>
 
@@ -536,9 +731,7 @@ export default function TicketTraceabilityBoard({
                 </div>
 
                 <p style={{ fontSize: '0.82rem', color: '#CBD5E1', marginBottom: '0.75rem', lineHeight: 1.4 }}>
-                  {ticket.direccionExacta.length > 70
-                    ? ticket.direccionExacta.substring(0, 70) + '...'
-                    : ticket.direccionExacta}
+                  {dirCorta}
                 </p>
 
                 <div style={{

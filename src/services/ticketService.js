@@ -139,26 +139,40 @@ export function getEntidadResponsable(categoriaId) {
   }
 }
 
-/**
- * Normaliza un ticket de incidencias viales para visualización uniforme en el tablero.
- */
 function normalizarIncidencia(t) {
+  if (!t || typeof t !== 'object') {
+    return null;
+  }
+
   const idOficial = t.id || t.reportId || 'EXP-MUNI-2026-0001';
   let estadoUI = 'en_inspeccion';
 
-  if (t.estado === 'RESUELTO' || t.estado === 'solucionado') {
+  const estadoStr = String(t.estado || '').toLowerCase();
+  if (estadoStr === 'resuelto' || estadoStr === 'solucionado') {
     estadoUI = 'solucionado';
-  } else if (t.estado === 'EN_PROCESO' || t.estado === 'en_tramite') {
+  } else if (estadoStr === 'en_proceso' || estadoStr === 'en_tramite') {
     estadoUI = 'en_tramite';
-  } else if (t.estado === 'REPORTADO' || t.estado === 'recibido') {
+  } else if (estadoStr === 'reportado' || estadoStr === 'recibido') {
     estadoUI = 'recibido';
   } else {
     estadoUI = 'en_inspeccion';
   }
 
-  const coords = Array.isArray(t.coordenadas)
-    ? { lat: t.coordenadas[0], lng: t.coordenadas[1] }
-    : (t.coordenadas || (t.lat ? { lat: t.lat, lng: t.lng } : { lat: 9.935, lng: -84.086 }));
+  // Blindaje defensivo de coordenadas
+  let coords = { lat: 9.935, lng: -84.086 };
+  if (Array.isArray(t.coordenadas) && t.coordenadas.length >= 2) {
+    coords = { lat: parseFloat(t.coordenadas[0]) || 9.935, lng: parseFloat(t.coordenadas[1]) || -84.086 };
+  } else if (typeof t.coordenadas === 'string') {
+    const [cLat, cLng] = (t.coordenadas || t.lat_lng || "9.935,-84.086").split(",");
+    coords = { lat: parseFloat(cLat) || 9.935, lng: parseFloat(cLng) || -84.086 };
+  } else if (t.coordenadas && typeof t.coordenadas === 'object') {
+    coords = { lat: parseFloat(t.coordenadas.lat) || 9.935, lng: parseFloat(t.coordenadas.lng) || -84.086 };
+  } else if (t.lat !== undefined && t.lng !== undefined) {
+    coords = { lat: parseFloat(t.lat) || 9.935, lng: parseFloat(t.lng) || -84.086 };
+  }
+
+  // Blindaje defensivo de fechas ISO
+  const fechaOficial = t.fechaRegistro || t.fechaRadicado || t.fechaReporte || t.fecha || new Date().toISOString();
 
   return {
     ...t,
@@ -171,16 +185,20 @@ function normalizarIncidencia(t) {
     distrito: t.distrito || 'Carmen',
     direccionExacta: t.direccionExacta || t.descripcion || 'Dirección cantonal registrada',
     coordenadas: coords,
+    lat_lng: `${coords.lat},${coords.lng}`,
     estado: estadoUI,
     estadoOficial: t.estado || 'EN_INSPECCION',
     cuadrillaAsignada: t.cuadrillaAsignada || 'Cuadrilla Asignada por la Administración',
-    fechaRadicado: t.fechaRadicado || t.fechaReporte || t.fechaRegistro || new Date().toISOString(),
+    fecha: fechaOficial,
+    fechaRegistro: fechaOficial,
+    fechaRadicado: fechaOficial,
+    fechaReporte: fechaOficial,
     entidadResponsable: t.entidadResponsable || getEntidadResponsable(t.categoria),
     historial: Array.isArray(t.historial) && t.historial.length > 0
       ? t.historial
       : [
-          { estado: 'recibido', fecha: t.fechaRadicado || new Date().toISOString(), nota: 'Reporte ingresado por ciudadano con georreferenciación GPS verificada.' },
-          { estado: 'en_inspeccion', fecha: t.fechaRadicado || new Date().toISOString(), nota: `Unidad municipal asignada: ${t.cuadrillaAsignada || 'Obras Viales'}.` }
+          { estado: 'recibido', fecha: fechaOficial, nota: 'Reporte ingresado por ciudadano con georreferenciación GPS verificada.' },
+          { estado: 'en_inspeccion', fecha: fechaOficial, nota: `Unidad municipal asignada: ${t.cuadrillaAsignada || 'Obras Viales'}.` }
         ]
   };
 }

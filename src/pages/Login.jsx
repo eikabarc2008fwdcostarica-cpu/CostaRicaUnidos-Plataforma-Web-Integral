@@ -12,6 +12,7 @@ import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-do
 import Navbar from '../components/Navbar';
 import Logo from '../components/common/Logo';
 import { useAuth } from '../context/AuthContext';
+import dbSeed from '../data/seedData';
 
 // ----------------------------------------------------------------------------
 // Constantes y Roles Oficiales Integrados
@@ -33,8 +34,6 @@ const normalizarRolOficial = (rol) => {
   }
   return 'CIUDADANO';
 };
-
-import dbSeed from '../services/db.json';
 
 // ----------------------------------------------------------------------------
 // Registros Oficiales de db.json integrados de forma segura e inmutable
