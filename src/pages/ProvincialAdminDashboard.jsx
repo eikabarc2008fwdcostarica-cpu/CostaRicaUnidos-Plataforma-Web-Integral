@@ -156,8 +156,8 @@ export default function ProvincialAdminDashboard() {
         maxHeight: '100vh',
         width: '100vw',
         overflow: 'hidden',
-        backgroundColor: '#00040D', // Obsidiana Soberana
-        color: '#E2E8F0',
+        backgroundColor: 'var(--theme-bg, #00040D)',
+        color: 'var(--theme-text-primary, #E2E8F0)',
         fontFamily: "'Paloseco', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
         position: 'relative',
         // Inyección dinámica de tokens CSS según la provincia activa
@@ -238,7 +238,8 @@ export default function ProvincialAdminDashboard() {
             borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
             padding: '0.85rem 1.5rem',
             backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)'
+            WebkitBackdropFilter: 'blur(12px)',
+            flexShrink: 0
           }}
         >
           <div

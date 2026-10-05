@@ -126,8 +126,8 @@ export default function SeguridadEmergencias() {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#00040D',
-        color: '#FFFFFF',
+        backgroundColor: 'var(--theme-bg, #00040D)',
+        color: 'var(--theme-text-primary, #FFFFFF)',
         display: 'flex',
         flexDirection: 'column',
         fontFamily: 'var(--font-body, system-ui, sans-serif)'

@@ -43,22 +43,41 @@
       "fechaRegistro": "2026-10-04T05:42:54.982Z",
       "verificadoHacienda": true,
       "estado": "ACTIVO"
+    },
+    {
+      "id": "USR-COM-001",
+      "cedula": "1-1456-0789",
+      "nombre": "CARLOS HERNANDEZ ROJAS",
+      "correo": "comercio.sanjose@crviva.cr",
+      "email": "comercio.sanjose@crviva.cr",
+      "password": "Password123*",
+      "rol": "Comerciante y Emprendedor",
+      "nivelAcceso": 3,
+      "provincia": "San José",
+      "canton": "San José",
+      "fechaRegistro": "2026-10-05T08:00:00.000Z",
+      "verificadoHacienda": true,
+      "estado": "ACTIVO",
+      "forzarCambioPassword": false
     }
   ],
   "solicitudesComercio": [
     {
       "id": "SOL-EMP-1790954594154-217",
+      "usuarioId": "VuM2sRah80w",
       "cedulaJuridica": "1-1823-0456",
       "cedula": "1-1823-0456",
       "nombreComercio": "kk",
       "nombreNegocio": "kk",
       "nombreSolicitante": "Eiker Manuel Abarca Murillo",
+      "correoPersonal": "eiker.abarca@gmail.com",
+      "correoComercial": "alanie@gmail.com",
       "actividadHacienda": "oubbiubio",
       "actividadEconomicaHacienda": "oubbiubio",
       "canton": "San José",
       "provincia": "San José",
-      "sectorFeriaSolicitado": "Categoría: Gastronomía y Alimentos",
-      "sectorFeria": "Categoría: Gastronomía y Alimentos",
+      "sectorFeriaSolicitado": "Sector A",
+      "sectorFeria": "Sector A",
       "fechaSolicitud": "2026-10-02T15:23:14.154Z",
       "estado": "rechazado",
       "justificacion": "porque si",
@@ -66,7 +85,9 @@
       "verificadoHacienda": true,
       "motivoRechazo": "porque si",
       "fechaResolucion": "2026-10-04T06:45:21.760Z",
-      "verificado": false
+      "verificado": false,
+      "asignacion": null,
+      "detalleAsignacion": null
     },
     {
       "id": "SOL-COM-001",
@@ -341,6 +362,14 @@
     "temperatura": 0.3,
     "ultimaModificacion": "2026-10-01T07:00:00-06:00",
     "modificadoPor": "Superintendencia Nacional de Gobierno Digital (1-0000-0001)"
+  },
+  "alertaCNE": {
+    "id": "ALERTA-CNE-ACTIVA",
+    "nivel": "verde",
+    "tituloNivel": "ALERTA VERDE (INFORMATIVA)",
+    "mensaje": "",
+    "fechaEmision": "2026-10-05T17:31:45.249Z",
+    "activa": false
   },
   "alertasCNE": {
     "alertaNacionalActiva": "AMARILLA",
@@ -1063,6 +1092,7 @@
     },
     {
       "id": "SOL-EMP-1790954594154-217",
+      "usuarioId": "VuM2sRah80w",
       "cedula": "1-1823-0456",
       "nombreCompleto": "Eiker Manuel Abarca Murillo",
       "correoPersonal": "eiker.abarca@gmail.com",
@@ -1079,5 +1109,7 @@
       "verificado": false
     }
   ],
+  "sanciones_foro": [],
+  "moderacionContenido": [],
   "$schema": "./node_modules/json-server/schema.json"
 }

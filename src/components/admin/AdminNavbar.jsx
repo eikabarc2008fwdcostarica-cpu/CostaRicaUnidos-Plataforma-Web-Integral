@@ -12,16 +12,19 @@
  * - CERO botones redundantes de "Cerrar Sesión" (el único reside en el Sidebar).
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Clock,
   Compass,
   Users,
-  ShieldCheck
+  ShieldCheck,
+  LogOut,
+  LayoutDashboard
 } from 'lucide-react';
 import Logo from '../common/Logo';
 import { useAuth, PROVINCIAS_COSTA_RICA } from '../../context/AuthContext';
+import CNEGlobalMarqueeAlert from '../common/CNEGlobalMarqueeAlert';
 
 export default function AdminNavbar({
   activeTheme,
@@ -32,10 +35,31 @@ export default function AdminNavbar({
   onToggleMobileSidebar
 }) {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const isSuperAdmin = user?.rol === 'SUPER_ADMIN_NACIONAL' || user?.nivelAcceso === 5;
 
+  const handleConfirmarLogout = () => {
+    setIsLogoutModalOpen(false);
+    if (typeof logout === 'function') {
+      logout();
+    }
+    navigate('/login');
+  };
+
+  useEffect(() => {
+    if (!isLogoutModalOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsLogoutModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLogoutModalOpen]);
+
   return (
+    <>
     <header
       className="admin-top-navbar"
       style={{
@@ -48,7 +72,8 @@ export default function AdminNavbar({
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.45)'
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.45)',
+        flexShrink: 0
       }}
     >
       {/* 1. FRANJA PRINCIPAL DE CONTROL */}
@@ -267,6 +292,60 @@ export default function AdminNavbar({
             <Compass size={14} color="#79A6FF" />
             <span>GIS 3D</span>
           </button>
+
+          {/* Botón Dinámico de Retorno al Panel Central (Super Admin) */}
+          {isSuperAdmin && (
+            <button
+              type="button"
+              onClick={() => navigate('/admin/super')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                padding: '0.45rem 0.75rem',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                color: '#EF4444',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.22)')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.12)')}
+              title="Volver a mi Interfaz (Mando Central Super Admin)"
+            >
+              <LayoutDashboard size={14} color="#EF4444" />
+              <span>Volver a Mando Nacional</span>
+            </button>
+          )}
+
+          {/* Botón Cerrar Sesión con Doble Verificación */}
+          <button
+            type="button"
+            onClick={() => setIsLogoutModalOpen(true)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              color: '#F87171',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)')}
+            title="Cerrar sesión activa"
+          >
+            <LogOut size={14} color="#F87171" />
+            <span>Salir</span>
+          </button>
         </div>
       </div>
 
@@ -328,5 +407,170 @@ export default function AdminNavbar({
         </div>
       </div>
     </header>
+
+    {/* Marquesina Global de Alertas CNE */}
+    <CNEGlobalMarqueeAlert />
+
+    {/* Modal de Doble Verificación de Cierre de Sesión */}
+    {isLogoutModalOpen && (
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="admin-modal-logout-titulo"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem',
+          backgroundColor: 'rgba(2, 6, 23, 0.85)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)'
+        }}
+        onClick={() => setIsLogoutModalOpen(false)}
+      >
+        <div
+          style={{
+            width: '100%',
+            maxWidth: '440px',
+            borderRadius: '16px',
+            backgroundColor: '#070D1B',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            padding: '1.5rem',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(220, 38, 38, 0.15)',
+            position: 'relative',
+            color: '#F8FAFC',
+            overflow: 'hidden'
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Sub-cinta tricolor */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '3px',
+              background: 'linear-gradient(90deg, #001489 0%, #001489 16.6%, #FFFFFF 16.6%, #FFFFFF 33.3%, #DA291C 33.3%, #DA291C 66.6%, #FFFFFF 66.6%, #FFFFFF 83.3%, #001489 83.3%, #001489 100%)'
+            }}
+          />
+
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem', marginBottom: '1rem' }}>
+            <div
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#EF4444',
+                flexShrink: 0
+              }}
+            >
+              <LogOut size={20} />
+            </div>
+            <div>
+              <h3 id="admin-modal-logout-titulo" style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: '#FFFFFF' }}>
+                ¿Confirmar Cierre de Sesión?
+              </h3>
+              <p style={{ fontSize: '0.75rem', color: '#94A3B8', margin: '0.25rem 0 0 0' }}>
+                Consola Administrativa • Costa Rica Unidos
+              </p>
+            </div>
+          </div>
+
+          {user && (
+            <div
+              style={{
+                marginBottom: '1rem',
+                padding: '0.75rem',
+                borderRadius: '10px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: '0.75rem'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+                <ShieldCheck size={16} color="#10B981" />
+                <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span style={{ fontWeight: 600, display: 'block', color: '#E2E8F0' }}>{user.nombre}</span>
+                  <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontFamily: 'monospace' }}>
+                    {user.correoPersonal || user.correo || user.email || 'Administrador'}
+                  </span>
+                </div>
+              </div>
+              <span
+                style={{
+                  fontSize: '0.65rem',
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  padding: '0.2rem 0.5rem',
+                  borderRadius: '4px',
+                  backgroundColor: isSuperAdmin ? 'rgba(239, 68, 68, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                  color: isSuperAdmin ? '#EF4444' : '#F59E0B',
+                  border: `1px solid ${isSuperAdmin ? 'rgba(239, 68, 68, 0.4)' : 'rgba(245, 158, 11, 0.4)'}`
+                }}
+              >
+                {isSuperAdmin ? 'SUPER ADMIN' : 'GESTOR'}
+              </span>
+            </div>
+          )}
+
+          <p style={{ fontSize: '0.78rem', color: '#CBD5E1', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+            Se finalizará su sesión en la consola territorial de mando. Sus credenciales de operador cívico y tokens de seguridad serán revocados inmediatamente.
+          </p>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.75rem' }}>
+            <button
+              type="button"
+              onClick={() => setIsLogoutModalOpen(false)}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '8px',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                color: '#CBD5E1',
+                backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                cursor: 'pointer'
+              }}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirmarLogout}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                padding: '0.5rem 1rem',
+                borderRadius: '8px',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                color: '#FFFFFF',
+                backgroundColor: '#DC2626',
+                border: '1px solid #EF4444',
+                boxShadow: '0 4px 14px rgba(220, 38, 38, 0.4)',
+                cursor: 'pointer'
+              }}
+            >
+              <LogOut size={14} />
+              <span>Confirmar Salida</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }

@@ -18,12 +18,16 @@ import {
   ChevronRight,
   ShieldCheck,
   AlertTriangle,
-  Lock
+  Lock,
+  Scale,
+  BookOpen
 } from 'lucide-react';
 import PostCard from './PostCard';
 import CrearPostModal from './CrearPostModal';
+import ReglasComunidadModal from './ReglasComunidadModal';
 import { obtenerPosts, suscribirCambiosForo } from '../../services/foroService';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 // Ámbitos territoriales oficiales
 export const AMBITOS_TERRITORIALES = [
@@ -211,6 +215,8 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
   const [posts, setPosts] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [modalCrearAbierto, setModalCrearAbierto] = useState(false);
+  const [modalReglasAbierto, setModalReglasAbierto] = useState(false);
+  const { t } = useLanguage();
 
   // Filtros de búsqueda y orden
   const [busqueda, setBusqueda] = useState('');
@@ -495,32 +501,62 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
               </p>
             </div>
 
-            {/* Botón Principal: Nueva Publicación */}
-            <button
-              type="button"
-              data-tour="btn-crear-post"
-              onClick={() => setModalCrearAbierto(true)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                padding: '0.85rem 1.75rem',
-                borderRadius: '14px',
-                backgroundColor: '#0284C7',
-                border: '1px solid rgba(56, 189, 248, 0.5)',
-                color: '#FFFFFF',
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                boxShadow: '0 10px 25px -5px rgba(2, 132, 199, 0.5)',
-                transition: 'all 0.2s ease',
-                flexShrink: 0
-              }}
-              className="hover:bg-sky-500 hover:scale-[1.02] active:scale-95"
-            >
-              <Plus className="w-5 h-5" />
-              <span>Publicar en Foro Tico</span>
-            </button>
+            {/* Acciones Principales del Foro */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                data-tour="btn-reglas-comunidad"
+                onClick={() => setModalReglasAbierto(true)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.85rem 1.35rem',
+                  borderRadius: '14px',
+                  backgroundColor: 'rgba(56, 189, 248, 0.08)',
+                  border: '1px solid rgba(56, 189, 248, 0.35)',
+                  color: '#38BDF8',
+                  fontSize: '0.92rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 15px -3px rgba(0, 0, 0, 0.5)',
+                  transition: 'all 0.2s ease',
+                  flexShrink: 0
+                }}
+                className="hover:bg-sky-500/20 hover:border-sky-400 active:scale-95"
+                title="Conoce las reglas de convivencia cívica y sanciones graduales"
+              >
+                <Scale className="w-4 h-4 text-sky-400" />
+                <span>{t('foro.reglasComunidad', 'Reglas de la Comunidad')}</span>
+              </button>
+
+              {/* Botón Principal: Nueva Publicación */}
+              <button
+                type="button"
+                data-tour="btn-crear-post"
+                onClick={() => setModalCrearAbierto(true)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.6rem',
+                  padding: '0.85rem 1.75rem',
+                  borderRadius: '14px',
+                  backgroundColor: '#0284C7',
+                  border: '1px solid rgba(56, 189, 248, 0.5)',
+                  color: '#FFFFFF',
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: '0 10px 25px -5px rgba(2, 132, 199, 0.5)',
+                  transition: 'all 0.2s ease',
+                  flexShrink: 0
+                }}
+                className="hover:bg-sky-500 hover:scale-[1.02] active:scale-95"
+              >
+                <Plus className="w-5 h-5" />
+                <span>{t('foro.publicarEnForo', 'Publicar en Foro Tico')}</span>
+              </button>
+            </div>
           </div>
 
           {/* Tarjetas de Métricas Rápidas */}
@@ -910,6 +946,31 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
             </select>
           </div>
 
+          {/* Botón Acceso Rápido Reglas */}
+          <button
+            type="button"
+            onClick={() => setModalReglasAbierto(true)}
+            title="Ver Reglas de la Comunidad"
+            style={{
+              padding: '0.65rem 0.9rem',
+              borderRadius: '10px',
+              backgroundColor: 'rgba(56, 189, 248, 0.08)',
+              border: '1px solid rgba(56, 189, 248, 0.25)',
+              color: '#38BDF8',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              transition: 'all 0.2s ease'
+            }}
+            className="hover:bg-sky-500/20 hover:text-white"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Reglas</span>
+          </button>
+
           {/* Botón Refrescar */}
           <button
             type="button"
@@ -1011,6 +1072,12 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
         onClose={() => setModalCrearAbierto(false)}
         onPostCreado={handlePostCreado}
         provinciaInicial={ambitoActivo === 'nacional' ? 'nacional' : ambitoActivo}
+      />
+
+      {/* Modal Público de Reglas de la Comunidad y Sanciones */}
+      <ReglasComunidadModal
+        isOpen={modalReglasAbierto}
+        onClose={() => setModalReglasAbierto(false)}
       />
     </section>
   );

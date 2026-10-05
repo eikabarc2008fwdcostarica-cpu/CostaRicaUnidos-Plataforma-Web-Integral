@@ -376,12 +376,13 @@ const EyeOffIcon = ({ className = 'w-4 h-4', width = 16, height = 16 }) => (
 // ============================================================================
 
 /**
- * Normaliza y clasifica cualquier rol en la tríada oficial
+ * Normaliza y clasifica cualquier rol en la estructura oficial RBAC
  * @returns {{ codigo: string, nombre: string, nivel: number, badgeClass: string, dotClass: string }}
  */
-function normalizarRolInfo(rolRaw) {
+function normalizarRolInfo(rolRaw, nivelAcceso) {
   const r = (rolRaw || '').toUpperCase();
-  if (r.includes('SUPER') || r.includes('NACIONAL')) {
+  const n = Number(nivelAcceso);
+  if (n === 5 || r.includes('SUPER') || r.includes('NACIONAL')) {
     return {
       codigo: 'SUPER_ADMIN_NACIONAL',
       nombre: 'Super Administrador Nacional',
@@ -390,13 +391,22 @@ function normalizarRolInfo(rolRaw) {
       dotClass: 'bg-rose-400'
     };
   }
-  if (r.includes('GESTOR') || r.includes('TERRITORIAL') || r.includes('MUNICIPAL') || r.includes('PROVINCIAL')) {
+  if (n === 4 || r.includes('GESTOR') || r.includes('TERRITORIAL') || r.includes('MUNICIPAL') || r.includes('PROVINCIAL')) {
     return {
       codigo: 'GESTOR_TERRITORIAL',
       nombre: 'Gestor Territorial',
       nivel: 4,
       badgeClass: 'bg-amber-500/15 border-amber-500/30 text-amber-300',
       dotClass: 'bg-amber-400'
+    };
+  }
+  if (n === 3 || r.includes('COMERCIANTE') || r.includes('EMPRENDEDOR') || r.includes('COMERCIO')) {
+    return {
+      codigo: 'COMERCIANTE',
+      nombre: 'Comerciante y Emprendedor',
+      nivel: 3,
+      badgeClass: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
+      dotClass: 'bg-emerald-400'
     };
   }
   return {
@@ -420,6 +430,20 @@ const SEED_USUARIOS_FALLBACK = [
     provincia: 'Nacional',
     canton: 'Todas las Municipalidades',
     fechaRegistro: '2026-01-01T00:00:00Z',
+    verificadoHacienda: true,
+    estado: 'ACTIVO'
+  },
+  {
+    id: 'USR-COM-001',
+    cedula: '1-1456-0789',
+    nombre: 'CARLOS HERNANDEZ ROJAS',
+    correo: 'comercio.sanjose@crviva.cr',
+    password: 'Password123*',
+    rol: 'Comerciante y Emprendedor',
+    nivelAcceso: 3,
+    provincia: 'San José',
+    canton: 'San José',
+    fechaRegistro: '2026-10-05T08:00:00.000Z',
     verificadoHacienda: true,
     estado: 'ACTIVO'
   }
@@ -706,7 +730,7 @@ export default function UsuariosAuditoriaModule({
   const metricas = useMemo(() => {
     const total = usuarios.length;
     const gestoresActivos = usuarios.filter((u) => {
-      const info = normalizarRolInfo(u.rol);
+      const info = normalizarRolInfo(u.rol, u.nivelAcceso);
       return info.codigo === 'GESTOR_TERRITORIAL' && (u.estado || 'ACTIVO') === 'ACTIVO';
     }).length;
     const verificadosHacienda = usuarios.filter((u) => Boolean(u.verificadoHacienda)).length;
@@ -742,7 +766,7 @@ export default function UsuariosAuditoriaModule({
 
       // B. Filtro por Rol
       if (filtroRol !== 'TODOS') {
-        const info = normalizarRolInfo(u.rol);
+        const info = normalizarRolInfo(u.rol, u.nivelAcceso);
         if (info.codigo !== filtroRol) {
           return false;
         }
@@ -873,7 +897,7 @@ export default function UsuariosAuditoriaModule({
 
   // 9. Control de Acciones: Iniciar Modal de Edición
   const iniciarEdicion = (usuario) => {
-    const rolInfo = normalizarRolInfo(usuario.rol);
+    const rolInfo = normalizarRolInfo(usuario.rol, usuario.nivelAcceso);
     const provValida = PROVINCIAS_OFICIALES.includes(usuario.provincia)
       ? usuario.provincia
       : 'San José';
@@ -906,6 +930,8 @@ export default function UsuariosAuditoriaModule({
         ? 5
         : rolSeleccionado === 'Gestor Territorial' || rolSeleccionado === 'GESTOR_TERRITORIAL'
         ? 4
+        : rolSeleccionado === 'Comerciante y Emprendedor' || rolSeleccionado === 'COMERCIANTE'
+        ? 3
         : 2;
 
     const nombreRolOficial =
@@ -913,6 +939,8 @@ export default function UsuariosAuditoriaModule({
         ? 'Super Administrador Nacional'
         : nuevoNivelAcceso === 4
         ? 'Gestor Territorial'
+        : nuevoNivelAcceso === 3
+        ? 'Comerciante y Emprendedor'
         : 'Ciudadano Residente';
 
     const provinciaFinal =
@@ -1215,6 +1243,8 @@ export default function UsuariosAuditoriaModule({
         ? 'USR-NAC'
         : nuevoRol === 'GESTOR_TERRITORIAL'
         ? 'USR-TER'
+        : nuevoRol === 'COMERCIANTE'
+        ? 'USR-COM'
         : 'USR-CIUD';
     const nuevoId = `${prefijoId}-${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -1228,10 +1258,18 @@ export default function UsuariosAuditoriaModule({
         ? 'Super Administrador Nacional'
         : nuevoRol === 'GESTOR_TERRITORIAL'
         ? 'Gestor Territorial'
+        : nuevoRol === 'COMERCIANTE'
+        ? 'Comerciante y Emprendedor'
         : 'Ciudadano Residente';
 
     const nivelAcceso =
-      nuevoRol === 'SUPER_ADMIN_NACIONAL' ? 5 : nuevoRol === 'GESTOR_TERRITORIAL' ? 4 : 2;
+      nuevoRol === 'SUPER_ADMIN_NACIONAL'
+        ? 5
+        : nuevoRol === 'GESTOR_TERRITORIAL'
+        ? 4
+        : nuevoRol === 'COMERCIANTE'
+        ? 3
+        : 2;
 
     const provFinal = nuevoRol === 'SUPER_ADMIN_NACIONAL' ? 'Nacional' : nuevaProvincia;
     const cantonFinal =
@@ -1523,6 +1561,7 @@ export default function UsuariosAuditoriaModule({
               <option value="TODOS">Rol: Todos</option>
               <option value="SUPER_ADMIN_NACIONAL">Super Administrador Nacional</option>
               <option value="GESTOR_TERRITORIAL">Gestor Territorial</option>
+              <option value="COMERCIANTE">Comerciante y Emprendedor</option>
               <option value="CIUDADANO">Ciudadano Residente</option>
             </select>
 
@@ -1624,7 +1663,7 @@ export default function UsuariosAuditoriaModule({
                 </tr>
               ) : (
                 usuariosFiltrados.map((u) => {
-                  const rolInfo = normalizarRolInfo(u.rol);
+                  const rolInfo = normalizarRolInfo(u.rol, u.nivelAcceso);
                   const estaActivo = (u.estado || 'ACTIVO') === 'ACTIVO';
 
                   return (
@@ -1662,15 +1701,33 @@ export default function UsuariosAuditoriaModule({
 
                       {/* ROL Y JERARQUÍA */}
                       <td className="py-3.5 px-4">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border shadow-sm tracking-wide">
-                          <span className={`w-1.5 h-1.5 rounded-full ${rolInfo.dotClass}`} />
-                          <span className={rolInfo.badgeClass.split(' ')[2] || 'text-slate-200'}>
-                            {rolInfo.nombre}
-                          </span>
-                          <span className="font-mono text-[10px] text-slate-400 pl-0.5">
-                            · Nivel {rolInfo.nivel}
-                          </span>
-                        </div>
+                        {u.nivelAcceso === 3 || (u.rol && u.rol.includes("Comerciante")) ? (
+                          <div className="badge-rol-comerciante" style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '4px 10px',
+                            borderRadius: '9999px',
+                            border: '1px solid rgba(16, 185, 129, 0.4)',
+                            background: 'rgba(16, 185, 129, 0.12)',
+                            color: '#34D399',
+                            fontSize: '0.75rem',
+                            fontWeight: 600
+                          }}>
+                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }}></span>
+                            <span>Comerciante y Emprendedor • Nivel 3</span>
+                          </div>
+                        ) : (
+                          <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border shadow-sm tracking-wide ${rolInfo.badgeClass}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${rolInfo.dotClass}`} />
+                            <span className={rolInfo.badgeClass.split(' ')[2] || 'text-slate-200'}>
+                              {rolInfo.nombre}
+                            </span>
+                            <span className="font-mono text-[10px] text-slate-400 pl-0.5">
+                              · Nivel {rolInfo.nivel}
+                            </span>
+                          </div>
+                        )}
                       </td>
 
                       {/* JURISDICCIÓN */}
@@ -1798,7 +1855,7 @@ export default function UsuariosAuditoriaModule({
               {/* Selector de Rol Jerárquico */}
               <div className="space-y-1.5">
                 <label className="font-bold text-slate-300 block">
-                  Rol Institucional y Jerarquía RBAC:
+                  Nivel Jerárquico y Rol (RBAC):
                 </label>
                 <select
                   value={formularioEdicion.rol}
@@ -1807,29 +1864,35 @@ export default function UsuariosAuditoriaModule({
                     setFormularioEdicion((prev) => ({
                       ...prev,
                       rol: nuevoRol,
-                      // Si no es gestor, restablecer provincia por defecto
-                      provincia: nuevoRol === 'GESTOR_TERRITORIAL' ? prev.provincia : 'San José',
-                      canton: nuevoRol === 'GESTOR_TERRITORIAL' ? prev.canton : 'San José'
+                      provincia: nuevoRol === 'SUPER_ADMIN_NACIONAL' ? 'Nacional' : (prev.provincia && prev.provincia !== 'Nacional' ? prev.provincia : 'San José'),
+                      canton: nuevoRol === 'SUPER_ADMIN_NACIONAL' ? 'Todas las Municipalidades' : (prev.canton && prev.canton !== 'Todas las Municipalidades' ? prev.canton : 'San José')
                     }));
                   }}
                   className="w-full py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-200 focus:border-sky-500 focus:outline-none cursor-pointer"
                 >
-                  <option value="CIUDADANO">Ciudadano Residente (Nivel 2)</option>
+                  <option value="CIUDADANO">Ciudadano Residente (Nivel de Acceso: 2)</option>
+                  <option value="COMERCIANTE">Comerciante y Emprendedor (Nivel de Acceso: 3)</option>
                   <option value="GESTOR_TERRITORIAL">
-                    Gestor Territorial y Municipal (Nivel 4)
+                    Gestor Territorial y Municipal (Nivel de Acceso: 4)
                   </option>
                   <option value="SUPER_ADMIN_NACIONAL">
-                    Super Administrador Nacional (Nivel 5)
+                    Super Administrador Nacional (Nivel de Acceso: 5)
                   </option>
                 </select>
               </div>
 
-              {/* Selector Condicional para Gestor Territorial: Provincia y Cantón */}
-              {formularioEdicion.rol === 'GESTOR_TERRITORIAL' && (
+              {/* Selector Condicional para Jurisdicción Territorial y Patente Cantonal */}
+              {formularioEdicion.rol !== 'SUPER_ADMIN_NACIONAL' && (
                 <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-3">
                   <div className="font-bold text-amber-300 text-xs flex items-center gap-1.5">
                     <ShieldStarIcon width={14} height={14} />
-                    <span>Asignación de Jurisdicción Territorial Oficial</span>
+                    <span>
+                      {formularioEdicion.rol === 'COMERCIANTE'
+                        ? 'Jurisdicción Comercial y Patente Municipal'
+                        : formularioEdicion.rol === 'GESTOR_TERRITORIAL'
+                        ? 'Asignación de Jurisdicción Territorial Oficial'
+                        : 'Jurisdicción Territorial y Residencia'}
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -2250,16 +2313,17 @@ export default function UsuariosAuditoriaModule({
                     setFormularioCrear((prev) => ({
                       ...prev,
                       nuevoRol: r,
-                      nuevaProvincia: r === 'SUPER_ADMIN_NACIONAL' ? 'Nacional' : 'San José',
+                      nuevaProvincia: r === 'SUPER_ADMIN_NACIONAL' ? 'Nacional' : (prev.nuevaProvincia !== 'Nacional' ? prev.nuevaProvincia : 'San José'),
                       nuevoCanton:
                         r === 'SUPER_ADMIN_NACIONAL'
                           ? 'Todas las Municipalidades'
-                          : CANTONES_POR_PROVINCIA['San José'][0]
+                          : (CANTONES_POR_PROVINCIA[prev.nuevaProvincia !== 'Nacional' ? prev.nuevaProvincia : 'San José']?.[0] || 'San José')
                     }));
                   }}
                   className="w-full py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-200 focus:border-sky-500 focus:outline-none cursor-pointer"
                 >
                   <option value="CIUDADANO">Ciudadano Residente (Nivel de Acceso: 2)</option>
+                  <option value="COMERCIANTE">Comerciante y Emprendedor (Nivel de Acceso: 3)</option>
                   <option value="GESTOR_TERRITORIAL">
                     Gestor Territorial y Municipal (Nivel de Acceso: 4)
                   </option>

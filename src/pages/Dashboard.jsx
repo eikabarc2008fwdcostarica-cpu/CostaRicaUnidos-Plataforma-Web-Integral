@@ -52,6 +52,8 @@ import { useAuth } from '../context/AuthContext';
 import { useCivicModal } from '../context/CivicModalContext';
 import { getDb } from '../services/dbService';
 import UsuariosAuditoriaModule from '../components/admin/UsuariosAuditoriaModule';
+import ModeracionForoPanel from '../components/admin/ModeracionForoPanel';
+import CNEGlobalMarqueeAlert from '../components/common/CNEGlobalMarqueeAlert';
 import {
   obtenerSolicitudesComercio,
   resolverSolicitudComercio,
@@ -279,6 +281,7 @@ export default function Dashboard() {
     const c = dbClient.getConfig('alertasCNE') || obtenerAlertasCNE();
     return c?.comunicadoOficial || '';
   });
+  const [isDeactivatingAlerta, setIsDeactivatingAlerta] = useState(false);
   const [albergues, setAlbergues] = useState(() => {
     return dbClient.getCollection('alberguesCNE');
   });
@@ -1020,47 +1023,99 @@ export default function Dashboard() {
     return solicitudes.filter((s) => String(s.estado || '').toUpperCase() === filtroComercio.toUpperCase());
   }, [solicitudes, filtroComercio]);
 
-  const handleAprobarSello = async (solicitudId) => {
+  const handleAsignarPuestoFeria = async (solicitudId, sector = "Sector A") => {
+    const sectorFinal = sector || "Sector A";
+    const cambios = {
+      estado: "aprobado",
+      asignacion: sectorFinal,
+      sectorFeria: sectorFinal,
+      sectorFeriaSolicitado: sectorFinal,
+      detalleAsignacion: `Puesto asignado formalmente en ${sectorFinal}.`,
+      verificado: true,
+      verificadoHacienda: true,
+      fechaResolucion: new Date().toISOString()
+    };
+
     try {
-      const guardadoExitoso = await actualizarEstadoSolicitudApi(solicitudId, 'aprobado');
+      // Ajustar endpoint a la colección exacta de db.json (solicitudesComercio)
+      const endpoint = `http://localhost:3001/solicitudesComercio/${solicitudId}`;
+      const res = await fetch(endpoint, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cambios)
+      });
 
-      if (guardadoExitoso) {
-        // 1. Actualizar el estado visual de React
+      // Sincronizar en solicitudes_emprendedor si existe en db.json
+      try {
+        await fetch(`http://localhost:3001/solicitudes_emprendedor/${solicitudId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(cambios)
+        });
+      } catch (_) {}
+
+      try {
+        dbClient.update('solicitudesComercio', solicitudId, cambios);
+      } catch (_) {}
+
+      if (res.ok) {
+        // Actualizar tabla visual en React
         setSolicitudes((prev) =>
-          prev.map((sol) =>
-            sol.id === solicitudId
-              ? { ...sol, estado: 'aprobado', verificado: true, justificacion: 'Patente y Sello Verificado aprobados conforme a revisión tributaria ante Hacienda.' }
-              : sol
-          )
+          prev.map((s) => (s.id === solicitudId ? { ...s, ...cambios } : s))
         );
-
-        // 2. Registrar en bitácora de auditoría y base local
-        resolverSolicitudComercio(
-          solicitudId,
-          'APROBADO',
-          'Patente y Sello Verificado aprobados conforme a revisión tributaria ante Hacienda.'
-        );
-
-        // 3. Sincronizar cache de respaldo en localStorage
-        const cache = localStorage.getItem('cr_solicitudes_comercio');
-        if (cache) {
-          try {
-            const actualizadas = JSON.parse(cache).map((sol) =>
-              sol.id === solicitudId ? { ...sol, estado: 'aprobado', verificado: true } : sol
-            );
-            localStorage.setItem('cr_solicitudes_comercio', JSON.stringify(actualizadas));
-          } catch (_) {}
-        }
-
-        showToast('Sello Verificado y patente municipal otorgados con éxito en db.json.');
+        showToast(`Puesto asignado formalmente en ${sectorFinal}.`);
       } else {
-        alert('No se pudo actualizar el estado en db.json. Verifique que json-server esté corriendo en el puerto 3001.');
+        showToast("Error al actualizar estado en db.json.");
       }
     } catch (error) {
-      console.error('Fallo al aprobar solicitud en json-server:', error);
-      alert('Error de conexión con json-server en el puerto 3001.');
+      console.error("Error al conectar con json-server:", error);
+      showToast("Error de conexión con json-server en el puerto 3001.");
     }
   };
+
+  const handleOtorgarSelloVerificado = async (solicitudId) => {
+    const cambios = {
+      estado: "aprobado",
+      verificado: true,
+      verificadoHacienda: true,
+      fechaResolucion: new Date().toISOString()
+    };
+
+    try {
+      const endpoint = `http://localhost:3001/solicitudesComercio/${solicitudId}`;
+      const res = await fetch(endpoint, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cambios)
+      });
+
+      try {
+        await fetch(`http://localhost:3001/solicitudes_emprendedor/${solicitudId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(cambios)
+        });
+      } catch (_) {}
+
+      try {
+        dbClient.update('solicitudesComercio', solicitudId, cambios);
+      } catch (_) {}
+
+      if (res.ok) {
+        setSolicitudes((prev) =>
+          prev.map((s) => (s.id === solicitudId ? { ...s, ...cambios } : s))
+        );
+        showToast("Sello Verificado y patente municipal otorgados con éxito en db.json.");
+      } else {
+        showToast("Error al actualizar estado en db.json.");
+      }
+    } catch (error) {
+      console.error("Error al otorgar sello en json-server:", error);
+      showToast("Error de conexión con json-server en el puerto 3001.");
+    }
+  };
+
+  const handleAprobarSello = handleOtorgarSelloVerificado;
 
   const handleRechazarSolicitud = (solicitudId) => {
     solicitarMotivo({
@@ -1100,11 +1155,11 @@ export default function Dashboard() {
             showToast('Solicitud rechazada físicamente en db.json y asentada en la bitácora legal.');
           } else {
             console.error('Fallo al rechazar en db.json');
-            alert('No se pudo actualizar el estado en db.json. Verifique el servidor local en el puerto 3001.');
+            showToast('No se pudo actualizar el estado en db.json. Verifique el servidor local en el puerto 3001.');
           }
         } catch (error) {
           console.error('Fallo de red al conectar con json-server:', error);
-          alert('Error de conexión con json-server en el puerto 3001.');
+          showToast('Error de conexión con json-server en el puerto 3001.');
         }
       }
     });
@@ -1182,8 +1237,102 @@ export default function Dashboard() {
     showToast(`Alerta CNE actualizada a nivel ${nuevoNivel} en todo el portal nacional.`);
   };
 
-  const handleGuardarAlertaCNE = () => {
+  const handleGuardarAlertaCNE = async () => {
+    const nivelLower = String(alertaNivel || 'amarilla').toLowerCase();
+    const tituloNivel =
+      nivelLower === "roja" ? "ALERTA ROJA (EVACUACIÓN)" :
+      nivelLower === "naranja" ? "ALERTA NARANJA (PELIGRO)" :
+      nivelLower === "amarilla" ? "ALERTA AMARILLA (PRECAUCIÓN)" : "ALERTA VERDE (INFORMATIVA)";
+    const mensajeAlerta = (comunicadoTexto || '').trim() || 'Aviso preventivo oficial emitido por la Presidencia de la República y la CNE.';
+
+    const nuevaAlerta = {
+      id: "ALERTA-CNE-ACTIVA",
+      nivel: nivelLower,
+      tituloNivel: tituloNivel,
+      mensaje: mensajeAlerta,
+      fechaEmision: new Date().toISOString(),
+      activa: true
+    };
+
+    try {
+      let response = await fetch("http://localhost:3001/alertaCNE", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevaAlerta)
+      });
+
+      if (!response.ok) {
+        response = await fetch("http://localhost:3001/alertaCNE", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevaAlerta)
+        });
+      }
+
+      if (response.ok) {
+        window.dispatchEvent(new CustomEvent("cru_alerta_cne_actualizada", { detail: nuevaAlerta }));
+        localStorage.setItem("cru_alerta_cne_cache", JSON.stringify(nuevaAlerta));
+        showToast("Alerta oficial CNE transmitida y publicada a nivel nacional con éxito.");
+      }
+    } catch (error) {
+      console.error("Error al emitir alerta CNE:", error);
+      window.dispatchEvent(new CustomEvent("cru_alerta_cne_actualizada", { detail: nuevaAlerta }));
+      localStorage.setItem("cru_alerta_cne_cache", JSON.stringify(nuevaAlerta));
+      showToast("Alerta oficial CNE proyectada en marquesina nacional en tiempo real.");
+    }
+
     handleCambiarAlerta(alertaNivel);
+  };
+
+  const handleDesactivarAlertaCNE = async () => {
+    setIsDeactivatingAlerta(true);
+
+    const alertaInactiva = {
+      id: "ALERTA-CNE-ACTIVA",
+      nivel: "verde",
+      tituloNivel: "ALERTA VERDE (INFORMATIVA)",
+      mensaje: "",
+      fechaEmision: new Date().toISOString(),
+      activa: false
+    };
+
+    try {
+      let response = await fetch("http://localhost:3001/alertaCNE", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(alertaInactiva)
+      });
+
+      if (!response.ok) {
+        response = await fetch("http://localhost:3001/alertaCNE", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(alertaInactiva)
+        });
+      }
+
+      window.dispatchEvent(new CustomEvent("cru_alerta_cne_actualizada", { detail: null }));
+      try { localStorage.removeItem("cru_alerta_cne_cache"); } catch (e) {}
+      setComunicadoTexto("");
+      setAlertaNivel("VERDE");
+
+      dbClient.updateConfig('alertasCNE', {
+        alertaNacionalActiva: 'VERDE',
+        comunicadoOficial: '',
+        fechaActualizacion: new Date().toISOString()
+      });
+
+      showToast("Alerta Nacional de Emergencia desactivada y retirada de la plataforma.");
+    } catch (error) {
+      console.error("Error al desactivar alerta CNE en db.json:", error);
+      window.dispatchEvent(new CustomEvent("cru_alerta_cne_actualizada", { detail: null }));
+      try { localStorage.removeItem("cru_alerta_cne_cache"); } catch (e) {}
+      setComunicadoTexto("");
+      setAlertaNivel("VERDE");
+      showToast("Alerta Nacional de Emergencia desactivada y retirada de la plataforma.");
+    } finally {
+      setIsDeactivatingAlerta(false);
+    }
   };
 
   const handleCambiarEstadoAlbergue = (id, nuevoEstado) => {
@@ -1336,6 +1485,7 @@ export default function Dashboard() {
           {[
             { id: 'dashboard', label: 'Dashboard Analítico', icon: BarChart3 },
             { id: 'usuarios', label: 'Usuarios & Auditoría', icon: Users },
+            { id: 'moderacion-foro', label: 'Moderación del Foro', icon: ShieldCheck },
             { id: 'comercio', label: 'Ventanilla Comercial', icon: Store },
             { id: 'obras', label: 'Obras & Averías', icon: AlertTriangle },
             { id: 'cne', label: 'Emergencias COE', icon: ShieldAlert },
@@ -1347,8 +1497,8 @@ export default function Dashboard() {
               currentUser?.rol === 'Super Administrador Nacional' ||
               currentUser?.nivelAcceso === 5
             );
-            // Usuarios & Auditoría, Gobernanza de IA y Ventanilla Comercial son exclusivos de Nivel 5
-            if (!isSuper && (mod.id === 'usuarios' || mod.id === 'ia' || mod.id === 'comercio')) {
+            // Usuarios & Auditoría, Gobernanza de IA, Moderación del Foro y Ventanilla Comercial son exclusivos de Nivel 5
+            if (!isSuper && (mod.id === 'usuarios' || mod.id === 'ia' || mod.id === 'comercio' || mod.id === 'moderacion-foro')) {
               return false;
             }
             return true;
@@ -1448,14 +1598,14 @@ export default function Dashboard() {
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)'
           }}
-          className="bg-[#00040D]/95 border-b border-white/10 px-6 py-3.5 transition-all shrink-0"
+          className="bg-[var(--theme-bg,#00040D)]/95 border-b border-[var(--cru-border,rgba(255,255,255,0.1))] px-6 py-3.5 transition-all shrink-0"
         >
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
             {/* Título institucional y botón hamburguesa móvil */}
             <div className="flex items-center justify-between w-full md:w-auto gap-3">
               <div className="flex items-center gap-2.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-white font-bold text-sm tracking-wide">
+                <span className="text-[var(--cru-text,#FFFFFF)] font-bold text-sm tracking-wide">
                   Soberanía Cívica Digital
                 </span>
                 <span className="text-slate-400 text-xs hidden sm:inline">
@@ -1495,6 +1645,9 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* Marquesina Global de Alerta CNE */}
+        <CNEGlobalMarqueeAlert />
 
         {/* Área Principal de Contenido */}
         <main className="flex-1 p-4 sm:p-6 md:p-10 space-y-8 min-w-0 page-content-wrapper">
@@ -2101,44 +2254,44 @@ export default function Dashboard() {
                           <span className="font-mono text-xs font-bold text-sky-400">{sol.id}</span>
                           <span
                             className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                              sol.estado === 'APROBADO'
+                              String(sol.estado || '').toUpperCase() === 'APROBADO'
                                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                                : sol.estado === 'PENDIENTE'
+                                : String(sol.estado || '').toUpperCase() === 'PENDIENTE'
                                 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                                 : 'bg-red-500/20 text-red-300 border border-red-500/30'
                             }`}
                           >
-                            {sol.estado}
+                            {String(sol.estado || '').toUpperCase()}
                           </span>
                         </div>
 
                         <div>
                           <h4 className="text-white font-bold text-base leading-tight">
-                            {sol.nombreNegocio}
+                            {sol.nombreNegocio || sol.nombreComercio}
                           </h4>
                           <p className="text-xs text-slate-400 mt-0.5">
-                            Solicitante: <strong className="text-slate-200">{sol.nombreSolicitante}</strong> • Cédula: <span className="font-mono">{sol.cedula}</span>
+                            Solicitante: <strong className="text-slate-200">{sol.nombreSolicitante || sol.nombreCompleto}</strong> • Cédula: <span className="font-mono">{sol.cedula}</span>
                           </p>
                         </div>
 
                         <div className="p-3 rounded-xl bg-black/30 border border-white/5 space-y-1 text-xs text-slate-300">
                           <div>
                             <span className="text-slate-400">Actividad Económica: </span>
-                            <span className="text-slate-200">{sol.actividadEconomicaHacienda}</span>
+                            <span className="text-slate-200">{sol.actividadEconomicaHacienda || sol.actividadHacienda || 'Comercio General'}</span>
                           </div>
                           <div>
                             <span className="text-slate-400">Ubicación: </span>
-                            <span>{sol.canton}, {sol.distrito} ({sol.provincia})</span>
+                            <span>{sol.canton}{sol.distrito ? `, ${sol.distrito}` : ''} ({sol.provincia})</span>
                           </div>
-                          {sol.sectorFeria && (
+                          {(sol.sectorFeria || sol.asignacion) && (
                             <div className="text-amber-300 font-semibold flex items-center gap-1.5 pt-1">
                               <MapPin className="w-3.5 h-3.5" />
-                              <span>Asignación: {sol.sectorFeria}</span>
+                              <span>Asignación: {sol.asignacion || sol.sectorFeria}</span>
                             </div>
                           )}
-                          {sol.notas && (
+                          {(sol.notas || sol.detalleAsignacion || sol.justificacion) && (
                             <div className="text-slate-400 text-[11px] italic pt-0.5">
-                              "{sol.notas}"
+                              "{sol.detalleAsignacion || sol.notas || sol.justificacion}"
                             </div>
                           )}
                         </div>
@@ -2148,7 +2301,7 @@ export default function Dashboard() {
                       <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-white/5">
                         <button
                           type="button"
-                          onClick={() => handleAprobarSello(sol.id)}
+                          onClick={() => handleOtorgarSelloVerificado(sol.id)}
                           className="flex-1 py-2 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} />
@@ -2157,10 +2310,7 @@ export default function Dashboard() {
 
                         <button
                           type="button"
-                          onClick={() => {
-                            setModalSectorId(sol.id);
-                            setSectorSeleccionado(sol.sectorFeria || SECTORES_FERIA[0].id);
-                          }}
+                          onClick={() => handleAsignarPuestoFeria(sol.id, sol.sectorFeria || 'Sector A')}
                           className="py-2 px-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold flex items-center gap-1.5 transition-colors"
                         >
                           <MapPin className="w-3.5 h-3.5" strokeWidth={2} />
@@ -2606,14 +2756,43 @@ export default function Dashboard() {
                   placeholder="Redactar aviso oficial de emergencia para difusión en toda la plataforma..."
                   className="w-full p-3.5 text-xs rounded-2xl bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 focus:border-red-500 focus:outline-none leading-relaxed"
                 />
-                <button
-                  type="button"
-                  onClick={handleGuardarAlertaCNE}
-                  className="py-2.5 px-5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-2 transition-colors shadow-lg shadow-red-600/30"
-                >
-                  <Send className="w-4 h-4" strokeWidth={2} />
-                  <span>Publicar y Actualizar Nivel de Alerta</span>
-                </button>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={handleGuardarAlertaCNE}
+                    className="py-2.5 px-5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-2 transition-colors shadow-lg shadow-red-600/30 cursor-pointer"
+                  >
+                    <Send className="w-4 h-4" strokeWidth={2} />
+                    <span>Publicar y Actualizar Nivel de Alerta</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleDesactivarAlertaCNE}
+                    disabled={isDeactivatingAlerta}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '10px 18px',
+                      borderRadius: '10px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: '#CBD5E1',
+                      fontWeight: 600,
+                      fontSize: '0.85rem',
+                      cursor: isDeactivatingAlerta ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    title="Quitar la alerta activa de toda la plataforma web"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
+                    <span>{isDeactivatingAlerta ? 'Retirando Alerta...' : 'Desactivar / Retirar Alerta Nacional'}</span>
+                  </button>
+                </div>
               </div>
 
               {/* Catálogo y Estado de Albergues */}
@@ -2858,6 +3037,13 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* --------------------------------------------------------------------
+            PESTAÑA: MODERACIÓN DEL FORO TICO (M04)
+            -------------------------------------------------------------------- */}
+        {activeTab === 'moderacion-foro' && (
+          <ModeracionForoPanel />
         )}
         </main>
       </div>

@@ -699,7 +699,7 @@ export default function MapaGIS() {
   };
 
   return (
-    <div style={{ backgroundColor: '#00040D', minHeight: '100vh', color: '#FFFFFF', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ backgroundColor: 'var(--theme-bg, #00040D)', minHeight: '100vh', color: 'var(--theme-text-primary, #FFFFFF)', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
 
       <main style={{ padding: '2rem 1.5rem 4rem', maxWidth: '1320px', margin: '0 auto', width: '100%', flex: 1, boxSizing: 'border-box' }}>

@@ -133,8 +133,11 @@ export const CATEGORIAS_CIVICAS = [
   }
 ];
 
+import { useTheme } from '../../context/ThemeContext';
+
 export default function MegaMenu({ categoriaActiva, alCerrar }) {
   const menuRef = useRef(null);
+  const { theme } = useTheme();
 
   // Cerrar al presionar tecla Escape
   useEffect(() => {
@@ -164,16 +167,22 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
       onMouseLeave={alCerrar}
       role="region"
       aria-label={`Mega menú: ${categoria.label}`}
-      className="absolute top-full left-0 w-full z-50 bg-[#0A0F1D] border-b border-slate-800 shadow-2xl py-8 px-6 md:px-16 transition-all duration-300 animate-fadeIn"
+      className={`absolute top-full left-0 w-full z-50 border-b shadow-2xl py-8 px-6 md:px-16 transition-all duration-300 animate-fadeIn ${
+        theme === 'dark' ? 'bg-[#0A0F1D] border-slate-800' : 'bg-white border-slate-200'
+      }`}
       style={{
-        backgroundColor: '#0A0F1D',
+        backgroundColor: theme === 'dark' ? '#0A0F1D' : '#FFFFFF',
         opacity: 1,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 0, 0, 0.85)'
+        boxShadow: theme === 'dark'
+          ? '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 0, 0, 0.85)'
+          : '0 20px 40px -10px rgba(0, 20, 137, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05)'
       }}
     >
       <div className="max-w-7xl mx-auto">
         {/* Encabezado del eje municipal */}
-        <div className="flex items-center gap-2 mb-6 text-red-500 font-semibold text-xs tracking-widest uppercase">
+        <div className={`flex items-center gap-2 mb-6 font-semibold text-xs tracking-widest uppercase ${
+          theme === 'dark' ? 'text-red-500' : 'text-red-600'
+        }`}>
           <IconoCategoria className="w-4 h-4" strokeWidth={1.75} />
           <span>Eje Municipal: {categoria.label}</span>
         </div>
@@ -187,24 +196,40 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
                 key={m.titulo}
                 to={m.path}
                 onClick={alCerrar}
-                className="group p-5 rounded-2xl bg-[#0F172A] border border-slate-800 hover:border-red-500/50 hover:bg-[#1E293B] shadow-lg transition-all duration-200 flex flex-col justify-between"
+                className={`group p-5 rounded-2xl border shadow-lg transition-all duration-200 flex flex-col justify-between ${
+                  theme === 'dark'
+                    ? 'bg-[#0F172A] border-slate-800 hover:border-red-500/50 hover:bg-[#1E293B]'
+                    : 'bg-slate-50 border-slate-200 hover:border-red-500/50 hover:bg-white hover:shadow-md'
+                }`}
                 style={{
                   minHeight: '170px',
-                  backgroundColor: '#0F172A'
+                  backgroundColor: theme === 'dark' ? '#0F172A' : '#F8FAFC'
                 }}
               >
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ${
+                    theme === 'dark'
+                      ? 'bg-red-500/10 text-red-500'
+                      : 'bg-red-50 text-red-600 border border-red-100'
+                  }`}>
                     <IconoModulo className="w-5 h-5" strokeWidth={1.75} />
                   </div>
-                  <h4 className="text-white dark:text-white font-bold text-base mb-1.5 group-hover:text-red-500 transition-colors">
+                  <h4 className={`font-bold text-base mb-1.5 transition-colors ${
+                    theme === 'dark'
+                      ? 'text-white group-hover:text-red-400'
+                      : 'text-slate-900 group-hover:text-red-600'
+                  }`}>
                     {m.titulo}
                   </h4>
-                  <p className="text-slate-400 dark:text-slate-400 text-xs leading-relaxed">
+                  <p className={`text-xs leading-relaxed ${
+                    theme === 'dark' ? 'text-slate-400' : 'text-slate-600'
+                  }`}>
                     {m.desc}
                   </p>
                 </div>
-                <div className="mt-4 flex items-center gap-1 text-xs text-sky-400 font-medium group-hover:translate-x-1 transition-transform">
+                <div className={`mt-4 flex items-center gap-1 text-xs font-medium group-hover:translate-x-1 transition-transform ${
+                  theme === 'dark' ? 'text-sky-400' : 'text-blue-700'
+                }`}>
                   <span>Acceder al módulo</span>
                   <ChevronRight className="w-3.5 h-3.5" strokeWidth={1.75} />
                 </div>

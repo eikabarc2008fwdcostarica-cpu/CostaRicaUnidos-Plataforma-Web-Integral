@@ -97,6 +97,17 @@ const REGISTROS_DB = Array.isArray(dbSeed?.usuarios) && dbSeed.usuarios.length >
         nivelAcceso: 2,
         provincia: "Cartago",
         canton: "Cartago"
+      },
+      {
+        id: "USR-COM-001",
+        cedula: "1-1456-0789",
+        nombre: "CARLOS HERNANDEZ ROJAS",
+        correo: "comercio.sanjose@crviva.cr",
+        password: "Password123*",
+        rol: "Comerciante y Emprendedor",
+        nivelAcceso: 3,
+        provincia: "San José",
+        canton: "San José"
       }
     ];
 
@@ -501,11 +512,18 @@ export default function Login() {
           console.warn('Error al persistir sesión en localStorage:', e);
         }
 
-        // Redirección automática según el rol: El ciudadano ingresa a la página principal cívica ('/')
-        if (userRolNorm === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL) {
+        // Redirección automática según el rol
+        if (userRolNorm === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL || usuarioEncontrado.nivelAcceso === 5) {
           navigate('/admin/super', { replace: true });
-        } else if (userRolNorm === ROLES_SISTEMA.GESTOR_TERRITORIAL) {
+        } else if (userRolNorm === ROLES_SISTEMA.GESTOR_TERRITORIAL || usuarioEncontrado.nivelAcceso === 4) {
           navigate('/admin/territorial', { replace: true });
+        } else if (
+          userRolNorm === ROLES_SISTEMA.COMERCIANTE ||
+          usuarioEncontrado.nivelAcceso === 3 ||
+          String(usuarioEncontrado.rol || '').toLowerCase().includes('comerciante') ||
+          String(usuarioEncontrado.rol || '').toLowerCase().includes('emprendedor')
+        ) {
+          navigate('/portal-ciudadano', { replace: true });
         } else {
           navigate('/', { replace: true });
         }
@@ -631,9 +649,9 @@ export default function Login() {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#00040D',
-        backgroundImage: 'radial-gradient(ellipse at 50% 15%, rgba(0, 43, 127, 0.22) 0%, rgba(0, 4, 13, 0.98) 75%)',
-        color: '#F8FAFC',
+        backgroundColor: 'var(--theme-bg, #00040D)',
+        backgroundImage: 'var(--theme-bg-gradient, radial-gradient(ellipse at 50% 15%, rgba(0, 43, 127, 0.22) 0%, rgba(0, 4, 13, 0.98) 75%))',
+        color: 'var(--theme-text-primary, #F8FAFC)',
         fontFamily: "var(--font-sans, 'Plus Jakarta Sans', system-ui, sans-serif)",
         position: 'relative',
         overflowX: 'hidden'
@@ -660,12 +678,12 @@ export default function Login() {
           style={{
             width: '100%',
             maxWidth: '580px',
-            backgroundColor: 'rgba(5, 12, 28, 0.88)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: 'var(--cru-surface, rgba(5, 12, 28, 0.88))',
+            border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.08))',
             borderRadius: '24px',
             backdropFilter: 'blur(28px)',
             WebkitBackdropFilter: 'blur(28px)',
-            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(0, 43, 127, 0.15)',
+            boxShadow: 'var(--cru-card-shadow-hover, 0 25px 60px rgba(0, 0, 0, 0.85))',
             padding: 'clamp(2rem, 5vw, 3.25rem) clamp(1.5rem, 4vw, 2.75rem)',
             position: 'relative',
             overflow: 'hidden',
@@ -694,7 +712,7 @@ export default function Login() {
               style={{
                 fontSize: 'clamp(1.4rem, 3.8vw, 1.85rem)',
                 fontWeight: 800,
-                color: '#FFFFFF',
+                color: 'var(--cru-text, #FFFFFF)',
                 margin: '0 0 0.35rem 0',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.25
@@ -703,7 +721,7 @@ export default function Login() {
               Acceso Soberano
             </h1>
 
-            <p style={{ color: '#94A3B8', fontSize: '0.86rem', margin: '0 0 1rem 0' }}>
+            <p style={{ color: 'var(--cru-text-soft, #94A3B8)', fontSize: '0.86rem', margin: '0 0 1rem 0' }}>
               Control de Acceso Basado en Roles (RBAC) para los Servicios Cívicos de la República
             </p>
 
@@ -735,10 +753,10 @@ export default function Login() {
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
               gap: '6px',
-              backgroundColor: 'rgba(0, 4, 13, 0.9)',
+              backgroundColor: 'var(--cru-badge-neutral-bg, rgba(0, 4, 13, 0.9))',
               padding: '5px',
               borderRadius: '12px',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.12))',
               marginBottom: '1.75rem'
             }}
           >
@@ -759,7 +777,7 @@ export default function Login() {
                   authMode === 'login'
                     ? 'linear-gradient(135deg, #002B7F 0%, #0A3282 100%)'
                     : 'transparent',
-                color: authMode === 'login' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
+                color: authMode === 'login' ? '#FFFFFF' : 'var(--cru-text-soft, rgba(255, 255, 255, 0.65))',
                 fontWeight: 700,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
@@ -793,7 +811,7 @@ export default function Login() {
                   authMode === 'register'
                     ? 'linear-gradient(135deg, #002B7F 0%, #0A3282 100%)'
                     : 'transparent',
-                color: authMode === 'register' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
+                color: authMode === 'register' ? '#FFFFFF' : 'var(--cru-text-soft, rgba(255, 255, 255, 0.65))',
                 fontWeight: 700,
                 fontSize: '0.88rem',
                 cursor: 'pointer',

@@ -117,7 +117,7 @@ export default function ParticipacionPage() {
   const totalVotos = proyectos.reduce((acc, p) => acc + p.votosAcumulados, 0);
 
   return (
-    <div className="min-h-screen bg-[#00040D] text-slate-100 selection:bg-cyan-500 selection:text-slate-950">
+    <div className="min-h-screen bg-[var(--theme-bg,#00040D)] text-[var(--theme-text-primary,#F1F5F9)] selection:bg-cyan-500 selection:text-slate-950">
       <Navbar />
       <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Banner Hero Cívico */}

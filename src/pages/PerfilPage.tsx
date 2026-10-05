@@ -39,7 +39,9 @@ export default function PerfilPage() {
   const [cargandoSolicitud, setCargandoSolicitud] = useState<boolean>(true);
 
   const [nombreEmprendimiento, setNombreEmprendimiento] = useState<string>('');
-  const [correoComercial, setCorreoComercial] = useState<string>('');
+  const [correoComercial, setCorreoComercial] = useState<string>(
+    currentUser?.correo || (currentUser as any)?.email || ''
+  );
   const [categoriaComercial, setCategoriaComercial] = useState<string>('Gastronomía y Alimentos');
   const [cantonComercial, setCantonComercial] = useState<string>(currentUser?.canton || 'San José');
   const [justificacion, setJustificacion] = useState<string>('');
@@ -48,42 +50,67 @@ export default function PerfilPage() {
   const [mensajeExito, setMensajeExito] = useState<string | null>(null);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
-  const cedulaOficial = currentUser?.cedula || '1-1823-0456';
-  const nombreTitular = currentUser?.nombre || 'Eiker Manuel Abarca Murillo';
-  const correoPersonal = currentUser?.correo || (currentUser as any)?.email || 'eiker.abarca@gmail.com';
+  const cedulaOficial = currentUser?.cedula || '';
+  const nombreTitular = currentUser?.nombre || 'Ciudadano Residente';
+  const correoPersonal = currentUser?.correo || (currentUser as any)?.email || '';
   const cantonTitular = currentUser?.canton || 'San José';
   const provinciaTitular = currentUser?.provincia || 'San José';
   const verificadoHacienda = currentUser?.verificadoHacienda ?? true;
   const fechaRegistro = (currentUser as any)?.fechaRegistro || '2026-05-10T14:20:00Z';
-  const rolActual = currentUser?.rol || 'Ciudadano/Turista';
+  const rolActual = currentUser?.rol || 'Ciudadano Residente';
+
+  // Sincronizar correo comercial pre-rellenado cuando cargue el usuario
+  useEffect(() => {
+    const userEmail = currentUser?.correo || (currentUser as any)?.email;
+    if (userEmail && !correoComercial) {
+      setCorreoComercial(userEmail);
+    }
+  }, [currentUser?.correo, (currentUser as any)?.email]);
 
   // Nombre público sanitizado según Ley N° 8968 (Primer Nombre y Primer Apellido)
   const nombrePublico = obtenerNombrePublico(nombreTitular);
 
-  // Cargar solicitud existente si la hubiera
+  // Cargar solicitud existente si la hubiera, filtrando estrictamente por el usuario autenticado
   useEffect(() => {
-    if (cedulaOficial) {
-      consultarSolicitudCiudadano(cedulaOficial)
-        .then((sol) => {
-          if (sol) setSolicitudExistente(sol);
-        })
-        .finally(() => setCargandoSolicitud(false));
-    } else {
+    if (!currentUser) {
       setCargandoSolicitud(false);
+      setSolicitudExistente(null);
+      return;
     }
-  }, [cedulaOficial]);
+
+    setCargandoSolicitud(true);
+    consultarSolicitudCiudadano({
+      id: currentUser.id,
+      cedula: currentUser.cedula,
+      correo: currentUser.correo || (currentUser as any)?.email
+    })
+      .then((sol) => {
+        setSolicitudExistente(sol || null);
+      })
+      .catch((err) => {
+        console.error('Error al consultar solicitud del usuario:', err);
+        setSolicitudExistente(null);
+      })
+      .finally(() => setCargandoSolicitud(false));
+  }, [currentUser?.id, currentUser?.cedula, currentUser?.correo, (currentUser as any)?.email]);
 
   const handleSubmitSolicitud = async (e: React.FormEvent) => {
     e.preventDefault();
     setMensajeExito(null);
     setMensajeError(null);
 
+    if (!currentUser) {
+      setMensajeError('Debe iniciar sesión para enviar una solicitud formal.');
+      return;
+    }
+
     if (!nombreEmprendimiento.trim()) {
       setMensajeError('Por favor ingrese el nombre del emprendimiento o comercio local.');
       return;
     }
 
-    if (!correoComercial.trim() || !correoComercial.includes('@')) {
+    const emailAUsar = correoComercial.trim() || correoPersonal;
+    if (!emailAUsar || !emailAUsar.includes('@')) {
       setMensajeError('Por favor ingrese un correo comercial válido para contacto comercial.');
       return;
     }
@@ -96,13 +123,14 @@ export default function PerfilPage() {
     try {
       setEnviando(true);
       const res = await enviarSolicitudEmprendedorApi({
+        usuarioId: currentUser.id, // Vínculo inequívoco
         cedula: cedulaOficial, // Inmutable, readOnly
         nombreCompleto: nombreTitular,
         correoPersonal,
-        correoComercial: correoComercial.trim(),
+        correoComercial: emailAUsar,
         nombreEmprendimiento: nombreEmprendimiento.trim(),
         categoriaComercial,
-        canton: cantonComercial,
+        canton: cantonComercial || cantonTitular,
         provincia: provinciaTitular,
         justificacion: justificacion.trim()
       });
@@ -110,7 +138,7 @@ export default function PerfilPage() {
       if (res.success && res.data) {
         setSolicitudExistente(res.data);
         setMensajeExito(
-          '¡Solicitud enviada exitosamente a la Administración! Se ha registrado en estado pendiente en db.json. Su rol permanecerá como Ciudadano hasta que sea aprobada por la administración.'
+          '¡Solicitud enviada exitosamente al Gobierno Local! Se ha registrado en estado pendiente en db.json. Su rol permanecerá como Ciudadano hasta que sea aprobada por la administración.'
         );
       } else {
         setMensajeError(res.message || 'Error al enviar la solicitud.');
@@ -126,8 +154,8 @@ export default function PerfilPage() {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#00040D',
-        color: '#FFFFFF',
+        backgroundColor: 'var(--theme-bg, #00040D)',
+        color: 'var(--theme-text-primary, #FFFFFF)',
         display: 'flex',
         flexDirection: 'column'
       }}
@@ -709,7 +737,7 @@ export default function PerfilPage() {
                     }}
                   >
                     <Send className="w-4 h-4" />
-                    <span>{enviando ? 'Enviando a db.json...' : 'Enviar Solicitud de Emprendedor'}</span>
+                    <span>{enviando ? 'Enviando al Gobierno Local...' : 'Enviar Solicitud al Gobierno Local'}</span>
                   </button>
                 </form>
               )}

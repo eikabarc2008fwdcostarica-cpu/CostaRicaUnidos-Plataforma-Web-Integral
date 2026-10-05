@@ -92,9 +92,34 @@
   --theme-header-border: rgba(255, 255, 255, 0.12);
   --theme-topbar-bg: #000818;
   --theme-topbar-text: #94A3B8;
+
+  /* Tokens Semánticos Soberanos Costa Rica Unidos (CRU Tokens) - Modo Oscuro */
+  --cru-surface: rgba(0, 15, 45, 0.65);
+  --cru-surface-hover: rgba(0, 20, 60, 0.85);
+  --cru-border: rgba(255, 255, 255, 0.12);
+  --cru-border-hover: rgba(255, 255, 255, 0.24);
+  --cru-text: #FFFFFF;
+  --cru-text-soft: #CBD5E1;
+  --cru-text-muted: #94A3B8;
+  --cru-accent-blue: #79a6ff;
+  --cru-accent-blue-bg: rgba(0, 20, 137, 0.35);
+  --cru-accent-blue-border: rgba(121, 166, 255, 0.35);
+  --cru-accent-sky: #38BDF8;
+  --cru-accent-sky-bg: rgba(56, 189, 248, 0.15);
+  --cru-accent-sky-border: rgba(56, 189, 248, 0.35);
+  --cru-accent-red: #FF6B6B;
+  --cru-accent-red-bg: rgba(218, 41, 28, 0.18);
+  --cru-accent-red-border: rgba(218, 41, 28, 0.4);
+  --cru-accent-green: #34D399;
+  --cru-accent-green-bg: rgba(52, 211, 153, 0.15);
+  --cru-accent-green-border: rgba(52, 211, 153, 0.35);
+  --cru-badge-neutral-bg: rgba(255, 255, 255, 0.05);
+  --cru-badge-neutral-text: #CBD5E1;
+  --cru-badge-neutral-border: rgba(255, 255, 255, 0.1);
+  --cru-card-shadow-hover: 0 20px 50px rgba(0, 20, 137, 0.4);
 }
 
-/* Modo Claro (Sede Electrónica Oficial) */
+/* Modo Claro (Sede Electrónica Oficial - WCAG 2.1 AA) */
 html.light {
   --color-obsidian: #F8FAFC;
   --color-obsidian-sovereign: #F8FAFC;
@@ -121,7 +146,33 @@ html.light {
   --glass-level-2-border: #CBD5E1;
   --glass-level-3-bg: #FFFFFF;
   --glass-level-3-border: #94A3B8;
-  --color-radiant-white: #0F172A;
+  /* Blanco radiante debe permanecer #FFFFFF para botones sólidos patrios (rojo y azul) */
+  --color-radiant-white: #FFFFFF;
+
+  /* Tokens Semánticos Soberanos Costa Rica Unidos (CRU Tokens) - Modo Claro */
+  --cru-surface: #FFFFFF;
+  --cru-surface-hover: #F8FAFC;
+  --cru-border: #E2E8F0;
+  --cru-border-hover: #CBD5E1;
+  --cru-text: #0F172A;
+  --cru-text-soft: #334155;
+  --cru-text-muted: #64748B;
+  --cru-accent-blue: #002B7F;
+  --cru-accent-blue-bg: rgba(0, 43, 127, 0.08);
+  --cru-accent-blue-border: rgba(0, 43, 127, 0.25);
+  --cru-accent-sky: #0284C7;
+  --cru-accent-sky-bg: rgba(2, 132, 199, 0.08);
+  --cru-accent-sky-border: rgba(2, 132, 199, 0.25);
+  --cru-accent-red: #B91C1C;
+  --cru-accent-red-bg: rgba(185, 28, 28, 0.08);
+  --cru-accent-red-border: rgba(185, 28, 28, 0.25);
+  --cru-accent-green: #047857;
+  --cru-accent-green-bg: rgba(4, 120, 87, 0.08);
+  --cru-accent-green-border: rgba(4, 120, 87, 0.25);
+  --cru-badge-neutral-bg: #F1F5F9;
+  --cru-badge-neutral-text: #475569;
+  --cru-badge-neutral-border: #CBD5E1;
+  --cru-card-shadow-hover: 0 16px 36px rgba(0, 20, 137, 0.10);
 }
 
 html.light body {
@@ -133,23 +184,23 @@ html.light body {
 html.light .civic-glass-card,
 html.light .glass-card,
 html.light .civic-card {
-  background-color: var(--theme-card-bg) !important;
-  border-color: var(--theme-card-border) !important;
-  color: var(--theme-text-primary) !important;
-  box-shadow: var(--theme-card-shadow) !important;
+  background-color: var(--cru-surface, var(--theme-card-bg));
+  border-color: var(--cru-border, var(--theme-card-border));
+  color: var(--cru-text, var(--theme-text-primary));
+  box-shadow: var(--theme-card-shadow);
 }
 
 html.light header {
-  background-color: var(--theme-header-bg) !important;
-  border-color: var(--theme-header-border) !important;
+  background-color: var(--theme-header-bg);
+  border-color: var(--theme-header-border);
 }
 
 html.light input,
 html.light select,
 html.light textarea {
-  background-color: var(--theme-input-bg) !important;
-  border-color: var(--theme-input-border) !important;
-  color: var(--theme-input-text) !important;
+  background-color: var(--theme-input-bg);
+  border-color: var(--theme-input-border);
+  color: var(--theme-input-text);
 }
 
 /* Soporte global de accesibilidad para menús desplegables <select> y <option> (WCAG 2.1 AA) */
@@ -173,15 +224,11 @@ html.light select option {
 
 html.light input::placeholder,
 html.light textarea::placeholder {
-  color: var(--theme-text-muted) !important;
+  color: var(--theme-text-muted);
 }
 
-html.light h1,
-html.light h2,
-html.light h3,
-html.light h4,
-html.light h5,
-html.light h6 {
+/* Reducir especificidad con :where para permitir sobreescritura natural por clases y estilos inline */
+:where(html.light) :is(h1, h2, h3, h4, h5, h6) {
   color: var(--theme-text-primary);
 }
 
@@ -1885,39 +1932,55 @@ html.light .civic-table-container::-webkit-scrollbar-thumb:hover {
   animation: fadeIn 0.2s ease-out forwards;
 }
 
-/* Soporte de Tema Claro Institucional (WCAG 2.1 AA) */
-html.light body {
-  background-color: #F8FAFC !important;
-  color: #0F172A !important;
-  background-image: 
-    radial-gradient(circle at 15% 20%, rgba(0, 43, 127, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 85% 80%, rgba(206, 17, 38, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(248, 250, 252, 0.96) 0%, rgba(241, 245, 249, 1) 100%) !important;
-}
-
+/* Soporte de Cabecera Institucional en Modo Claro (WCAG 2.1 AA) */
 html.light header {
-  background-color: rgba(255, 255, 255, 0.94) !important;
+  background-color: rgba(255, 255, 255, 0.96) !important;
   border-bottom-color: rgba(226, 232, 240, 0.9) !important;
 }
 
-html.light header .text-white {
-  color: #0F172A !important;
+/* El Cintillo Superior siempre mantiene fondo Azul Institucional y texto Blanco Radiante (#FFFFFF) con contraste AAA */
+html.light header .cintillo-superior-container,
+html.light header .cintillo-superior-container * {
+  color: #FFFFFF !important;
+}
+html.light header .cintillo-superior-container .cintillo-superior-item-secundario {
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
-html.light header .text-slate-200 {
-  color: #1E293B !important;
+/* En la barra de navegación principal (fuera del cintillo), adaptar tipografía a texto oscuro */
+html.light header :not(.cintillo-superior-container):not(.cintillo-superior-container *) > .text-white {
+  color: #0F172A;
 }
 
-html.light header .text-slate-300 {
-  color: #334155 !important;
+html.light header :not(.cintillo-superior-container):not(.cintillo-superior-container *) > .text-slate-200 {
+  color: #1E293B;
 }
 
-html.light header .text-slate-400 {
-  color: #64748B !important;
+html.light header :not(.cintillo-superior-container):not(.cintillo-superior-container *) > .text-slate-300 {
+  color: #334155;
+}
+
+html.light header :not(.cintillo-superior-container):not(.cintillo-superior-container *) > .text-slate-400 {
+  color: #64748B;
 }
 
 html.light header button:hover {
-  color: #0F172A !important;
+  color: #0F172A;
+}
+
+/* Adaptación del Entorno Administrativo (Dashboard) en Modo Claro */
+html.light .admin-viewport-wrapper {
+  background-color: var(--theme-bg);
+}
+
+html.light .admin-sidebar-fixed {
+  background: #FFFFFF;
+  border-right-color: var(--theme-card-border);
+}
+
+html.light .admin-sidebar-nav-footer {
+  background: #F8FAFC;
+  border-top-color: var(--theme-card-border);
 }
 
 /* ==========================================================================
@@ -2289,5 +2352,82 @@ body[data-colorblind="achromatopsia"],
     text-align: center !important;
   }
 }
+
+/* ==========================================================================
+   MARQUESINA GLOBAL DE ALERTAS TEMPRANAS CNE (CSS3 MODERNO - SIN MARQUEE)
+   ========================================================================== */
+.cne-marquee-wrapper {
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  flex-shrink: 0 !important; /* REGLA CLAVE: Prohíbe que Flexbox comprima la alerta */
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 50 !important;
+  margin: 0 !important;
+}
+
+/* Badge del Nivel de Alerta a la Izquierda (Nivel Roja, Amarilla, etc.) */
+.cne-marquee-badge-fixed {
+  height: 100% !important;
+  min-height: 38px !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0 16px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  white-space: nowrap !important;
+  z-index: 2 !important;
+  box-sizing: border-box !important;
+}
+
+/* Pista del Texto Desplazable */
+.cne-marquee-track {
+  flex: 1 !important;
+  height: 100% !important;
+  min-height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+.cne-marquee-text {
+  display: inline-block !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.80rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.03em !important;
+  line-height: 38px !important;
+  /* Duración calibrada a 32s (ligeramente más pausado) */
+  animation: marqueeRightToLeft 32s linear infinite;
+  will-change: transform !important; /* Aceleración por hardware para 60 FPS fluidos */
+}
+
+/* Desplazamiento continuo oficial de Derecha a Izquierda */
+@keyframes marqueeRightToLeft {
+  0% {
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Al pasar el mouse, pausar para facilitar la lectura */
+.cne-marquee-wrapper:hover .cne-marquee-text {
+  animation-play-state: paused;
+  cursor: default;
+}
+
 
 

@@ -8,12 +8,15 @@
 export type OfficialRoleName =
   | 'Super Administrador Nacional'
   | 'Gestor Territorial y Municipal'
+  | 'Comerciante y Emprendedor'
+  | 'Ciudadano Residente'
   | 'Ciudadano/Turista';
 
 export type UserRole =
   | OfficialRoleName
   | 'SUPER_ADMIN_NACIONAL'
   | 'GESTOR_TERRITORIAL'
+  | 'COMERCIANTE'
   | 'CIUDADANO'
   | 'CIUDADANO_TURISTA';
 

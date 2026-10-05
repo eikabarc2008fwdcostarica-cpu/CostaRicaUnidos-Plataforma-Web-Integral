@@ -10,11 +10,19 @@ import {
   CheckCircle2,
   Sparkles,
   Info,
-  Lock
+  Lock,
+  Scale,
+  BookOpen,
+  ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { crearPost } from '../../services/foroService';
 import { obtenerNombrePublico } from '../../utils/privacyUtils';
+import { VERSION_REGLAS_FORO, haAceptadoReglas, registrarAceptacionReglas } from '../../config/reglasForo';
+import { inspeccionarContenidoForo } from '../../services/moderacionForoService';
+import ReglasComunidadModal from './ReglasComunidadModal';
+import IncidenteModeracionModal from './IncidenteModeracionModal';
 
 const PROVINCIAS_OPCIONES = [
   { id: 'nacional', nombre: 'Nacional (Todo el País)' },
@@ -130,8 +138,15 @@ export default function CrearPostModal({
       setAutorCedula(activeUser?.cedula || '1-1823-0456');
       setErrorMsg('');
       setExito(false);
+      setAceptoReglas(haAceptadoReglas(activeUser));
     }
   }, [isOpen, provinciaInicial, activeUser, opcionesPermitidas]);
+
+  const { t } = useLanguage();
+  const [modalReglasAbierto, setModalReglasAbierto] = useState(false);
+  const [aceptoReglas, setAceptoReglas] = useState(() => haAceptadoReglas(activeUser));
+  const [modalIncidenteAbierto, setModalIncidenteAbierto] = useState(false);
+  const [incidenteData, setIncidenteData] = useState(null);
 
   // Manejar tecla Escape para cerrar
   useEffect(() => {
@@ -162,6 +177,11 @@ export default function CrearPostModal({
       return;
     }
 
+    if (!aceptoReglas) {
+      setErrorMsg(t('foro.errorAceptarReglas', 'Debe leer y aceptar las Reglas de la Comunidad antes de publicar en el foro.'));
+      return;
+    }
+
     // Blindaje RBAC: Validar que el usuario no envíe un provinciaId fuera de sus opciones autorizadas
     if (!opcionesPermitidas.some((p) => p.id === provinciaId)) {
       setErrorMsg(
@@ -173,6 +193,29 @@ export default function CrearPostModal({
     try {
       setEnviando(true);
       setErrorMsg('');
+
+      // Registrar aceptación formal en el usuario si aún no estaba persistida
+      if (!haAceptadoReglas(activeUser)) {
+        await registrarAceptacionReglas(activeUser);
+      }
+
+      // =====================================================================
+      // SUPERVISOR IA DEL FORO TICO: INSPECCIÓN PRE-PUBLICACIÓN (M04)
+      // Capa 1 (Local determinista) + Capa 2 (Gemini con contexto y tolerancia a fallos)
+      // =====================================================================
+      const resultadoInsp = await inspeccionarContenidoForo({
+        titulo: titulo.trim(),
+        contenido: contenido.trim(),
+        autor: activeUser,
+        tipo: 'publicacion'
+      });
+
+      if (resultadoInsp.bloqueado) {
+        setIncidenteData(resultadoInsp);
+        setModalIncidenteAbierto(true);
+        setEnviando(false);
+        return;
+      }
 
       const provObj = PROVINCIAS_OPCIONES.find((p) => p.id === provinciaId);
       const provinciaNombre = provObj ? provObj.nombre : 'Nacional';
@@ -614,6 +657,105 @@ export default function CrearPostModal({
             </div>
           </div>
 
+          {/* Sección de Reglas de la Comunidad y Aceptación */}
+          <div
+            style={{
+              padding: '0.85rem 1rem',
+              borderRadius: '12px',
+              backgroundColor: 'rgba(56, 189, 248, 0.05)',
+              border: '1px solid rgba(56, 189, 248, 0.2)',
+              marginTop: '0.25rem'
+            }}
+          >
+            {!haAceptadoReglas(activeUser) ? (
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '0.65rem',
+                  cursor: 'pointer',
+                  fontSize: '0.825rem',
+                  color: '#E2E8F0',
+                  lineHeight: 1.45
+                }}
+              >
+                <input
+                  type="checkbox"
+                  id="chk-acepto-reglas-crear-post"
+                  checked={aceptoReglas}
+                  onChange={(e) => setAceptoReglas(e.target.checked)}
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    marginTop: '2px',
+                    accentColor: '#0284C7',
+                    cursor: 'pointer',
+                    flexShrink: 0
+                  }}
+                  required
+                />
+                <span>
+                  He leído y acepto expresamente las{' '}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setModalReglasAbierto(true);
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      color: '#38BDF8',
+                      fontWeight: 700,
+                      textDecoration: 'underline',
+                      cursor: 'pointer'
+                    }}
+                    className="hover:text-sky-300"
+                  >
+                    Reglas de la Comunidad del Foro Tico
+                  </button>{' '}
+                  y su régimen de sanciones graduales.
+                </span>
+              </label>
+            ) : (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '0.5rem',
+                  fontSize: '0.78rem',
+                  color: '#94A3B8'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>
+                    Has aceptado las{' '}
+                    <strong style={{ color: '#E2E8F0' }}>Reglas de Convivencia Cívica</strong>.
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setModalReglasAbierto(true)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    color: '#38BDF8',
+                    cursor: 'pointer',
+                    fontSize: '0.78rem',
+                    textDecoration: 'underline'
+                  }}
+                  className="hover:text-sky-300"
+                >
+                  Consultar reglas
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Botonera de Envío y Cancelación */}
           <div
             style={{
@@ -671,6 +813,33 @@ export default function CrearPostModal({
           </div>
         </form>
       </div>
+
+      {/* Modal de Consulta de Reglas de la Comunidad */}
+      <ReglasComunidadModal
+        isOpen={modalReglasAbierto}
+        onClose={() => setModalReglasAbierto(false)}
+        onAceptar={() => {
+          setAceptoReglas(true);
+          setModalReglasAbierto(false);
+        }}
+      />
+
+      {/* Modal Informativo de Incidente de Moderación */}
+      <IncidenteModeracionModal
+        isOpen={modalIncidenteAbierto}
+        onClose={() => {
+          setModalIncidenteAbierto(false);
+          setIncidenteData(null);
+        }}
+        resultadoModeracion={incidenteData?.resultadoModeracion}
+        sancion={incidenteData?.sancion}
+        incidenteId={incidenteData?.incidenteId}
+        esPersonalExento={incidenteData?.esPersonalExento}
+        onVerReglas={() => {
+          setModalIncidenteAbierto(false);
+          setModalReglasAbierto(true);
+        }}
+      />
     </div>
   );
 }

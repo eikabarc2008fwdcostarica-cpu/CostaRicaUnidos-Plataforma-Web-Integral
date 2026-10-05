@@ -8,6 +8,64 @@ El formato de este registro se basa estrictamente en [Keep a Changelog](https://
 
 ## [Unreleased]
 
+### Added
+- **Supervisor IA del Foro Tico (Módulo M04)**:
+  - Sistema de moderación pre-publicación en dos capas:
+    - **Capa 1 (Filtro local determinista)**: Normalización profunda (minúsculas, des-tildes, decodificación leetspeak `@/3/0`, reducción de repeticiones y eliminación de separadores de ofuscación), léxico ofensivo costarricense y lista blanca cívica soberana (`LISTA_BLANCA_CIVICA` con términos como "computadora", "Puntarenas", "disputa", "hueco vial", "bacheo", "incompetencia").
+    - **Capa 2 (Gemini con contexto y tolerancia a fallos)**: Clasificación de matices con Gemini 2.0 / 1.5 Flash reutilizando `getGeminiApiKey`, timeout estricto de 5 s vía `AbortController`, respuesta JSON forzada (`responseMimeType: "application/json"`), blindaje contra inyección de prompts declarando el texto como dato XML no ejecutable, y protección estricta de privacidad (Ley N° 8968, sin envío de PII del autor).
+    - **Garantía del Derecho a la Crítica Política**: La denuncia ciudadana sobre negligencia municipal, vías en mal estado, falta de presupuesto o fiscalización de regidores y alcaldes queda protegida como debate cívico legítimo sin infracción.
+  - **Matriz Soberana de Sanciones Graduales (`src/config/reglasForo.js`)**:
+    - Escalafón gradual según gravedad (`LEVE`, `MEDIA`, `GRAVE`) y reincidencias (Advertencia formativa, Baneo 24 h, 3 días, 7 días, 30 días e Indefinido).
+    - Caducidad automática de strikes leves a los 90 días.
+    - Exención de baneo automático para roles de gobernanza (`Super Administrador Nacional` y `Gestor Territorial`), generando un registro de supervisión para auditoría manual.
+  - **Sección Pública de "Reglas de la Comunidad"**:
+    - Modal accesible (`ReglasComunidadModal.jsx`) con diseño "Sovereign Civic Glass", enlace en la cabecera y barra de herramientas de `ForoTico.jsx`.
+    - Enlace y casilla obligatoria de primer uso ("He leído y acepto las reglas") integrada en `CrearPostModal.jsx` y `ComentariosSection.jsx` con persistencia de `reglasAceptadas` en el perfil del usuario.
+    - Modal respetuoso y no acusatorio para contenidos infractores (`IncidenteModeracionModal.jsx`), detallando términos observados, motivo, sanción y formulario de apelación ante la administración.
+  - **Validación del Servidor y Persistencia en `db.json` (`vite.config.js`)**:
+    - Rechazo con código HTTP 403 en `POST /api/foro_posts` y `PATCH /api/foro_posts` (acciones `comentar`, `votar`, `reaccionar`) si la cédula del autor presenta una suspensión activa.
+    - Incorporación de colecciones `sanciones_foro` y `moderacionContenido` en `db.json` con endpoints RESTful dedicados.
+  - **Blindaje de los 3 Caminos de Autenticación (`AuthContext.jsx`)**:
+    - Verificación estricta de baneo en login con credenciales, login con usuario ya resuelto y restauración de sesión en localStorage (`cru_user_session` / `cr_sesion_activa`).
+    - Auto-levantamiento transparente de suspensiones vencidas en el momento del inicio de sesión.
+  - **Panel de Supervisión y Gobernanza para Super Administrador (`ModeracionForoPanel.jsx`)**:
+    - Nueva pestaña "Moderación del Foro" en `Dashboard.jsx` exclusiva para Nivel 5.
+    - Tarjetas de métricas: Bloqueados hoy, Baneos activos, Reincidentes y Falsos positivos.
+    - Cola de incidentes con filtros por gravedad y estado, y acciones auditadas: confirmar sanción, marcar falso positivo (revoca baneo y retira strike), ampliar o reducir duración de sanción.
+    - Tabla de baneos activos con temporizador en vivo y botón "Levantar baneo" inmediato con justificación obligatoria.
+    - Registro legal inmutable en `bitacoraAuditoria` con nuevas acciones normadas (`SANCIONAR_USUARIO`, `LEVANTAR_SANCION`, `MARCAR_FALSO_POSITIVO`, `MODIFICAR_SANCION_FORO`).
+  - **Unificación de Sensibilidad**: Estandarización del tipo de sensibilidad a `'ESTRICTA' | 'MODERADA' | 'FLEXIBLE'` a través de `src/types/admin.ts`, `src/services/crudService.ts`, `Dashboard.jsx` y `moderacionForoService.js`.
+
+### Fixed
+- **Arquitectura de Theming Sistémico y Corrección Integral del Modo Claro (WCAG 2.1 AA & Sovereign Civic Glass)**:
+  - **Sistema de Tokens Semánticos**: Definición en `:root` (modo oscuro original) y `html.light` (modo claro) de las variables semánticas `--cru-surface`, `--cru-surface-hover`, `--cru-border`, `--cru-border-hover`, `--cru-text`, `--cru-text-soft`, `--cru-text-muted`, `--cru-accent-blue`, `--cru-accent-red`, `--cru-accent-green`, `--cru-accent-sky`, `--cru-badge-neutral-bg`, `--cru-badge-neutral-text` y `--cru-card-shadow-hover`.
+  - **Eliminación de Choque de Especificidad y Reglas Destructivas**:
+    - Disminución de especificidad en encabezados claros con `:where(html.light) :is(h1, h2, h3, h4, h5, h6)` permitiendo que clases utilitarias y estilos inline específicos tomen precedencia sin conflictos.
+    - Remoción de `!important` en `.glass-card`, `.civic-card` y `.civic-glass-card` en `index.css`.
+    - Eliminación de la definición duplicada de `html.light body` en línea 1889.
+    - Preservación de `--color-radiant-white: #FFFFFF` en `html.light` garantizando que botones soberanos (`.btn-sovereign`, `.btn-sovereign-blue`) mantengan texto blanco legible sobre fondos azul y rojo institucionales.
+    - Aislamiento del cintillo superior institucional (`.cintillo-superior-container`) con fondo `#001489` y texto `#FFFFFF !important` para evitar que la regla `html.light header .text-white` oscurezca el membrete de Estado.
+  - **MegaMenu Dinámico y Accesible (`MegaMenu.jsx`)**:
+    - Integración de `useTheme()` con adaptación cromática completa: contenedor blanco/slate-50, borde slate-200, tarjetas de módulo en blanco con títulos slate-900 y descripciones slate-600, manteniendo contraste WCAG AAA (>10:1) y modo oscuro 100% idéntico.
+  - **Controles del Topbar y Botón "Iniciar Sesión" (`Navbar.jsx`)**:
+    - Botón "Iniciar Sesión" rediseñado en modo claro con azul institucional profundo (`#002B7F`) y texto blanco puro (`#FFFFFF`) alcanzando un contraste de 13.6:1 (AAA).
+    - Botones de tema y accesibilidad estilizados con `#F1F5F9` y borde `#CBD5E1` en modo claro para máxima legibilidad.
+  - **Página de Inicio (`Inicio.jsx`) y Sección 4 Ejes**:
+    - Hero fotográfico preservado con contraste idóneo y transición de degradado inferior conectada con `var(--theme-bg, #00040D)` para erradicar cortes abruptos.
+    - Sustitución de colores inline hardcodeados por tokens semánticos en las tarjetas de los 4 Ejes (Seguridad 911, Participación, Transparencia e Inteligencia Territorial), badges, números de paso, bordes, fondos y enlaces.
+    - Pie de página institucional adaptado con tokens `--cru-surface`, `--cru-border` y `--cru-text`.
+  - **Erradicación de Fondos Oscuros Residuales en Módulos Cívicos**:
+    - Reemplazo de fondos oscuros hardcodeados (`#00040D`) por tokens en: `Login.jsx`, `NoticiasPage.jsx`, `ForoPage.jsx`, `MapaGIS.jsx`, `SeguridadEmergencias.jsx`, `ReportarIncidencia.jsx`, `ParticipacionPage.tsx`, `PortalCiudadanoPage.tsx`, `PerfilPage.tsx`, `GobernanzaPage.tsx`, `TurismoPage.tsx`, `ItinerarioIAPage.tsx`, `ProvincialAdminDashboard.jsx` y barra superior de `Dashboard.jsx`.
+  - **Tema Inicial Seguro (`ThemeContext.jsx`)**:
+    - Inicialización predeterminada a `'dark'` comentada defensivamente para garantizar estabilidad durante la homologación de nuevos módulos.
+- **Motor de Internacionalización Reactiva y Conmutación de Idioma (`src/context/LanguageContext.jsx`)**:
+  - Resuelto el bug crítico de cambio de idioma donde al seleccionar "Español / Latinoamérica" (`es-419`) tras iniciar o recargar en japonés (`ja`), el hero y textos del DOM permanecían en japonés.
+  - Incorporado el helper oficial `esEspanolBase(code)` que unifica el reconocimiento de variantes de español (`es-latam`, `es-419`, `es`, `es-CR`, `es-ES`, `es-es`, `CR`, `ES`) en la función síncrona `t()` y en los efectos del DOM.
+  - Integrado el seguimiento de modificaciones del motor mediante `node.__cru_written` y `data-cru-written-ph`: si React escribe un valor en el nodo (`nodeValue !== __cru_written && nodeValue !== __cru_original`), el motor no lo pisa y actualiza `__cru_original` con el español en curso.
+  - En la rama de restauración al español base, únicamente se restauran aquellos nodos modificados explícitamente por el motor (`nodeValue === __cru_written`), protegiendo el renderizado legítimo de React.
+  - Para `es-ES`, se implementó la restauración previa de los textos originales en español antes de superponer las traducciones específicas (`PANEL DE CONTROL`).
+  - Pasadas extras de sincronización programada (50ms, 150ms, 350ms, 700ms) para evitar condiciones de carrera entre `t()` y las mutaciones del DOM.
+
 ### Planned
 - **Backend API Persistente**: Reemplazo de mocks en memoria y `localStorage` por API RESTful institucional autenticada con JWT/OAuth2.
 - **Integración SICOP y ATV**: Enlace con expedientes de contratación administrativa y declaraciones tributarias.

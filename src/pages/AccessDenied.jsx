@@ -1,76 +1,67 @@
-/**
- * ============================================================================
- * COSTA RICA UNIDOS — PANTALLA OFICIAL ERROR 403 (ACCESO PROHIBIDO / RESTRINGIDO)
- * Arquitectura Sovereign Civic Glass v2.1 • Obsidiana Soberana (#00040D)
- * Control de Acceso Basado en Roles (RBAC) • Ley General de Control Interno N° 8292
- * ============================================================================
- * 
- * Jerarquía de Privilegios:
- * - Nivel 5: SUPER_ADMIN_NACIONAL (Gobernanza de IA, Auditoría Inmutable, Configuración Global)
- * - Nivel 4: GESTOR_TERRITORIAL (Gestión Municipal Unificada, Obras M07 y Emergencias M10)
- * - Nivel 2: CIUDADANO (Portal Cívico, Trámites, Consultas y Reportes)
- */
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
-  ShieldAlert,
   LayoutDashboard,
   LogOut,
-  Lock,
-  FileKey2,
-  AlertTriangle,
-  UserCheck,
-  ChevronRight,
-  ShieldCheck,
+  FileText,
+  Vote,
+  MapPin,
+  PhoneCall,
   ArrowRight
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Logo from '../components/common/Logo';
+import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
-import { ROLES_SISTEMA, ROLES_CONFIG, normalizarRolOficial } from '../config/roles';
 
+/**
+ * PANTALLA OFICIAL ERROR 403 — ACCESO RESTRINGIDO RBAC
+ * Arquitectura Sovereign Civic Glass v2.1 • República de Costa Rica
+ * Adaptación total a Modo Claro (Sede Electrónica) y Modo Oscuro (Obsidiana)
+ * Estructura y proporciones idénticas a NotFound.jsx (Error 404)
+ */
 export default function AccessDenied({ requiredRoles = [], userRole }) {
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
 
-  // Resolución del rol activo
-  const rawRole = userRole || user?.rol || (isAuthenticated ? 'CIUDADANO' : 'NO_AUTENTICADO');
-  const rolNormalizado = normalizarRolOficial(rawRole);
-  const infoRol = ROLES_CONFIG[rolNormalizado] || {
-    nombre: rawRole || 'Ciudadano',
-    nivel: user?.nivelAcceso || 2,
-    badge: `[ROL] ${rawRole || 'CIUDADANO'}`
-  };
+  const isLight = theme === 'light';
 
-  // Cálculo de destino del botón "Volver a mi panel"
-  const getPanelDestino = () => {
-    if (!isAuthenticated && !user) return '/login';
-    if (rolNormalizado === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL) return '/admin/super';
-    if (rolNormalizado === ROLES_SISTEMA.GESTOR_TERRITORIAL) return '/admin/territorial';
-    return '/portal-ciudadano';
-  };
+  // Catálogo cívico de rutas y trámites frecuentes
+  const catalogoCivico = [
+    { titulo: 'Trámites y Sede Electrónica', ruta: '/portal-ciudadano', icon: FileText },
+    { titulo: 'Gobernanza y Actas del Concejo', ruta: '/gobernanza', icon: Vote },
+    { titulo: 'Territorio 3D & Cartografía GIS', ruta: '/mapa-gis', icon: MapPin },
+    { titulo: 'Emergencias 911 y Albergues CNE', ruta: '/seguridad-emergencias', icon: PhoneCall }
+  ];
 
-  const getPanelEtiqueta = () => {
-    if (!isAuthenticated && !user) return 'Ir a Iniciar Sesión';
-    if (rolNormalizado === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL) return 'Volver al Panel Nacional';
-    if (rolNormalizado === ROLES_SISTEMA.GESTOR_TERRITORIAL) return 'Volver al Panel Territorial';
-    return 'Volver a Mi Panel Ciudadano';
-  };
-
+  // Redirección inteligente al panel correspondiente según rol y nivel RBAC
   const handleVolverPanel = () => {
-    navigate(getPanelDestino());
+    if (!isAuthenticated || !user) {
+      navigate('/');
+      return;
+    }
+    const rolNorm = (user.rol || '').toUpperCase();
+    const nivel = Number(user.nivelAcceso || 0);
+
+    if (nivel === 5 || rolNorm.includes('SUPER') || rolNorm.includes('NACIONAL')) {
+      navigate('/admin/super');
+    } else if (nivel === 4 || rolNorm.includes('TERRITORIAL') || rolNorm.includes('PROVINCIAL')) {
+      navigate('/admin/territorial');
+    } else {
+      navigate('/portal-ciudadano');
+    }
   };
 
-  const handleLogout = () => {
-    if (logout) logout();
+  // Cierre de sesión y navegación al login
+  const handleCambiarCuenta = () => {
+    if (typeof logout === 'function') {
+      logout();
+    }
     navigate('/login');
   };
 
-  // Nombres legibles de roles requeridos si existen
-  const nombresRequeridos = requiredRoles.map((r) => {
-    const norm = normalizarRolOficial(r);
-    return ROLES_CONFIG[norm]?.nombre || r;
-  });
+  const perfilMostrado = userRole || user?.rol || (isAuthenticated ? 'Ciudadano' : 'Visitante');
 
   return (
     <div
@@ -78,255 +69,135 @@ export default function AccessDenied({ requiredRoles = [], userRole }) {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#00040D',
-        color: '#F8FAFC',
-        fontFamily: "var(--font-sans, 'Plus Jakarta Sans', system-ui, sans-serif)",
-        position: 'relative',
+        backgroundColor: 'var(--theme-bg, #00040D)',
+        color: 'var(--theme-text-primary, #FFFFFF)',
+        fontFamily: 'var(--font-main, system-ui, sans-serif)',
         overflowX: 'hidden'
       }}
     >
-      {/* Luz ambiental sutil (Aura carmesí / obsidiana) */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'fixed',
-          top: '-10%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '850px',
-          height: '450px',
-          background: 'radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.05) 45%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-          filter: 'blur(50px)'
-        }}
-      />
-
       <Navbar />
 
       <main
+        className="civic-container"
         style={{
           flex: 1,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '3rem 1.25rem',
-          position: 'relative',
-          zIndex: 1,
+          padding: '2.5rem 1rem',
+          width: '100%',
           boxSizing: 'border-box'
         }}
       >
         <div
+          className="civic-glass-card"
           style={{
-            maxWidth: '720px',
+            maxWidth: '680px',
             width: '100%',
-            backgroundColor: 'rgba(0, 8, 20, 0.82)',
-            backdropFilter: 'blur(28px)',
-            WebkitBackdropFilter: 'blur(28px)',
-            border: '1px solid rgba(239, 68, 68, 0.25)',
-            borderRadius: '24px',
-            padding: 'clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem)',
+            padding: 'clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 2.75rem)',
             textAlign: 'center',
             position: 'relative',
             overflow: 'hidden',
-            boxShadow: '0 25px 70px rgba(0, 0, 0, 0.95), 0 0 50px rgba(239, 68, 68, 0.16)'
+            boxSizing: 'border-box',
+            borderRadius: '24px',
+            backgroundColor: isLight ? '#FFFFFF' : 'rgba(5, 12, 28, 0.85)',
+            backdropFilter: 'blur(28px)',
+            WebkitBackdropFilter: 'blur(28px)',
+            border: isLight ? '1px solid #CBD5E1' : '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: isLight
+              ? '0 12px 40px rgba(0, 20, 137, 0.08), 0 2px 8px rgba(0,0,0,0.04)'
+              : '0 25px 60px rgba(0, 4, 13, 0.85), 0 0 40px rgba(220, 38, 38, 0.15)'
           }}
         >
-          {/* Cinta superior tricolor soberana con acento de seguridad */}
+          {/* 1. Sub-cinta tricolor oficial institucional superior */}
           <div
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
-              height: '4px',
-              background: 'linear-gradient(90deg, #DA291C 0%, #DA291C 35%, #FFFFFF 35%, #FFFFFF 50%, #001489 50%, #001489 100%)'
+              height: '3px',
+              background:
+                'linear-gradient(90deg, #001489 0%, #001489 20%, #FFFFFF 20%, #FFFFFF 30%, #DA291C 30%, #DA291C 70%, #FFFFFF 70%, #FFFFFF 80%, #001489 80%, #001489 100%)'
             }}
           />
 
-          {/* Logotipo Oficial */}
+          {/* 2. Logotipo Oficial Centrado */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
             <Logo showText={true} />
           </div>
 
-          {/* Emblema Vectorial con Resplandor Carmesí */}
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '88px',
-              height: '88px',
-              borderRadius: '24px',
-              backgroundColor: 'rgba(239, 68, 68, 0.08)',
-              border: '1px solid rgba(239, 68, 68, 0.35)',
-              marginBottom: '1.5rem',
-              boxShadow: '0 0 30px rgba(239, 68, 68, 0.25)'
-            }}
-          >
-            <ShieldAlert
-              style={{
-                width: '46px',
-                height: '46px',
-                color: '#EF4444',
-                filter: 'drop-shadow(0 0 12px rgba(239, 68, 68, 0.6))'
-              }}
-              strokeWidth={1.75}
-            />
-          </div>
-
-          {/* Código de Estado en JetBrains Mono Gigante */}
-          <div style={{ marginBottom: '0.85rem' }}>
+          {/* 3. Pastilla Superior en JetBrains Mono */}
+          <div style={{ display: 'inline-flex', marginBottom: '1.25rem' }}>
             <span
+              className="telemetry-badge"
               style={{
-                fontFamily: "var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace)",
-                fontSize: 'clamp(1.1rem, 3.2vw, 1.45rem)',
-                fontWeight: 800,
-                letterSpacing: '0.18em',
-                color: '#EF4444',
+                fontFamily: "'JetBrains Mono', monospace",
+                backgroundColor: isLight ? 'rgba(0, 43, 127, 0.08)' : 'rgba(0, 16, 102, 0.55)',
+                color: isLight ? '#002B7F' : '#79A6FF',
+                border: isLight ? '1px solid rgba(0, 43, 127, 0.25)' : '1px solid rgba(121, 166, 255, 0.35)',
+                fontWeight: 700,
+                fontSize: '0.74rem',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
-                textShadow: '0 0 18px rgba(239, 68, 68, 0.45)',
-                display: 'inline-block'
+                padding: '0.35rem 0.85rem',
+                borderRadius: '9999px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem'
               }}
             >
-              403 • ACCESO PROHIBIDO
+              CÓDIGO DE RESPUESTA HTTP 403 • ACCESO RESTRINGIDO RBAC
             </span>
           </div>
 
-          {/* Título Institucional */}
+          {/* 4. Número Arquitectónico Gigante "403" con brillo tenue */}
+          <div
+            style={{
+              fontSize: 'clamp(4.5rem, 14vw, 7.5rem)',
+              fontWeight: 900,
+              letterSpacing: '-0.04em',
+              lineHeight: 1,
+              fontFamily: 'var(--font-headline, "Plus Jakarta Sans", serif)',
+              color: isLight ? '#DA291C' : '#FFFFFF',
+              textShadow: isLight
+                ? '0 4px 20px rgba(218, 41, 28, 0.2)'
+                : '0 0 35px rgba(239, 68, 68, 0.35), 0 0 70px rgba(220, 38, 38, 0.25)',
+              marginBottom: '0.75rem',
+              userSelect: 'none'
+            }}
+          >
+            403
+          </div>
+
+          {/* 5. Titular Formal */}
           <h1
             style={{
-              fontSize: 'clamp(1.5rem, 3.8vw, 2.1rem)',
+              fontSize: 'clamp(1.35rem, 3.6vw, 1.85rem)',
               fontWeight: 800,
-              lineHeight: 1.2,
-              letterSpacing: '-0.02em',
-              color: '#FFFFFF',
-              margin: '0 0 1rem 0'
+              lineHeight: 1.25,
+              color: 'var(--theme-text-primary, #FFFFFF)',
+              marginBottom: '0.85rem',
+              letterSpacing: '-0.01em'
             }}
           >
-            Restricción de Jurisdicción y Privilegios
+            Acceso Prohibido o Nivel No Autorizado
           </h1>
 
-          {/* Mensaje Dinámico Explicativo */}
+          {/* 6. Mensaje Cívico Institucional */}
           <p
             style={{
-              fontSize: '1rem',
+              color: 'var(--theme-text-secondary, #94A3B8)',
+              fontSize: '0.98rem',
               lineHeight: 1.65,
-              color: '#94A3B8',
-              maxWidth: '580px',
-              margin: '0 auto 1.5rem auto'
+              maxWidth: '520px',
+              margin: '0 auto 2rem auto'
             }}
           >
-            Su perfil actual con rol <strong style={{ color: '#F87171' }}>[{rawRole || user?.rol || 'NO AUTENTICADO'}]</strong> no
-            cuenta con los permisos necesarios para acceder a este nodo del sistema.
+            El nodo, consola o expediente que intenta consultar requiere credenciales de mayor jerarquía. Su perfil actual ({perfilMostrado}) no tiene autorización para operar esta sección conforme a la Ley N° 8292.
           </p>
 
-          {/* Pastilla de Código de Seguridad Normativa */}
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.55rem 1.15rem',
-              backgroundColor: 'rgba(239, 68, 68, 0.08)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              borderRadius: '9999px',
-              marginBottom: '2rem',
-              maxWidth: '100%',
-              boxSizing: 'border-box'
-            }}
-          >
-            <Lock size={14} color="#EF4444" style={{ flexShrink: 0 }} />
-            <span
-              style={{
-                fontFamily: "var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace)",
-                fontSize: 'clamp(0.72rem, 2vw, 0.82rem)',
-                color: '#FCA5A5',
-                letterSpacing: '0.04em',
-                fontWeight: 600,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              [SEGURIDAD] Intento registrado bajo Ley N° 8292 • Nivel requerido no alcanzado
-            </span>
-          </div>
-
-          {/* Ficha de Contraste de Matriz de Acceso */}
-          <div
-            style={{
-              backgroundColor: 'rgba(0, 15, 35, 0.65)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: '16px',
-              padding: '1.25rem 1.5rem',
-              marginBottom: '2.25rem',
-              textAlign: 'left'
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingBottom: '0.75rem',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
-                marginBottom: '0.85rem'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <UserCheck size={16} color="#60A5FA" />
-                <span style={{ fontSize: '0.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#CBD5E1' }}>
-                  Acreditación del Usuario
-                </span>
-              </div>
-              <span
-                style={{
-                  fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-                  fontSize: '0.72rem',
-                  color: '#60A5FA',
-                  backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                  padding: '0.2rem 0.6rem',
-                  borderRadius: '6px',
-                  fontWeight: 600
-                }}
-              >
-                Nivel {infoRol.nivel}
-              </span>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                gap: '0.85rem',
-                fontSize: '0.85rem'
-              }}
-            >
-              <div>
-                <div style={{ color: '#64748B', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.2rem' }}>
-                  Perfil Asignado
-                </div>
-                <div style={{ color: '#F1F5F9', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <span>{infoRol.nombre}</span>
-                  <span style={{ color: '#EF4444', fontSize: '0.75rem' }}>({rawRole})</span>
-                </div>
-              </div>
-
-              {nombresRequeridos.length > 0 && (
-                <div>
-                  <div style={{ color: '#64748B', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.2rem' }}>
-                    Acreditación Requerida
-                  </div>
-                  <div style={{ color: '#FCA5A5', fontWeight: 600 }}>
-                    {nombresRequeridos.join(' o ')}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Botones de Acción */}
+          {/* 7. Botones de Acción Oficiales (Fila de 2 botones) */}
           <div
             style={{
               display: 'flex',
@@ -336,101 +207,148 @@ export default function AccessDenied({ requiredRoles = [], userRole }) {
               flexWrap: 'wrap'
             }}
           >
-            {/* Botón Principal: Volver a mi panel */}
+            {/* Botón Primario: Regresar a Mi Panel Autorizado */}
             <button
               type="button"
-              id="btn-access-denied-volver"
               onClick={handleVolverPanel}
+              className="btn-sovereign-blue"
               style={{
                 minHeight: '48px',
-                padding: '0.85rem 1.75rem',
-                backgroundColor: '#EF4444',
-                backgroundImage: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-                color: '#FFFFFF',
-                borderRadius: '12px',
-                border: 'none',
-                fontWeight: 700,
+                padding: '0.75rem 1.5rem',
                 fontSize: '0.92rem',
+                fontWeight: 700,
+                flex: '1 1 220px',
+                maxWidth: '280px',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.6rem',
                 cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 4px 18px rgba(239, 68, 68, 0.4)',
-                flex: '1 1 230px',
-                maxWidth: '300px'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 6px 24px rgba(239, 68, 68, 0.55)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 18px rgba(239, 68, 68, 0.4)';
+                border: 'none',
+                borderRadius: '12px'
               }}
             >
-              <LayoutDashboard size={18} />
-              <span>{getPanelEtiqueta()}</span>
+              <LayoutDashboard className="w-4 h-4 mr-2" strokeWidth={1.75} />
+              <span>Regresar a Mi Panel Autorizado</span>
             </button>
 
-            {/* Botón Secundario: Cerrar Sesión / Cambiar de Usuario */}
+            {/* Botón Secundario: Iniciar Sesión con Otra Cuenta */}
             <button
               type="button"
-              id="btn-access-denied-logout"
-              onClick={handleLogout}
+              onClick={handleCambiarCuenta}
+              className="btn-glass-secondary"
               style={{
                 minHeight: '48px',
-                padding: '0.85rem 1.75rem',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                color: '#E2E8F0',
-                borderRadius: '12px',
-                fontWeight: 700,
+                padding: '0.75rem 1.5rem',
                 fontSize: '0.92rem',
+                fontWeight: 700,
+                flex: '1 1 220px',
+                maxWidth: '280px',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.6rem',
                 cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                flex: '1 1 230px',
-                maxWidth: '300px'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                e.currentTarget.style.color = '#FFFFFF';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-                e.currentTarget.style.color = '#E2E8F0';
+                borderRadius: '12px',
+                color: isLight ? '#0F172A' : '#FFFFFF',
+                backgroundColor: isLight ? 'rgba(0, 20, 137, 0.06)' : 'rgba(255, 255, 255, 0.08)',
+                border: isLight ? '1px solid rgba(0, 20, 137, 0.2)' : '1px solid rgba(255, 255, 255, 0.2)'
               }}
             >
-              <LogOut size={18} />
-              <span>Cerrar Sesión / Cambiar de Usuario</span>
+              <LogOut className="w-4 h-4 mr-2" strokeWidth={1.75} />
+              <span>Iniciar Sesión con Otra Cuenta</span>
             </button>
           </div>
 
-          {/* Pie Institucional con Respaldo Normativo */}
+          {/* 8. Cuadrícula 2x2 de Rutas y Trámites Frecuentes */}
           <div
             style={{
               marginTop: '2.5rem',
-              paddingTop: '1.25rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-              fontSize: '0.72rem',
-              color: '#64748B',
-              letterSpacing: '0.04em',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.35rem'
+              paddingTop: '1.75rem',
+              borderTop: isLight ? '1px solid #E2E8F0' : '1px solid rgba(255, 255, 255, 0.1)',
+              textAlign: 'left'
             }}
           >
-            <span>SISTEMA NACIONAL DE SOBERANÍA DIGITAL • REPÚBLICA DE COSTA RICA</span>
-            <span style={{ fontSize: '0.68rem', color: '#475569' }}>
-              Fiscalización y Trazabilidad conforme a la Ley N° 8292 y Ley de Protección de Datos Personales N° 8968
+            <span
+              style={{
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: isLight ? '#64748B' : '#94A3B8',
+                display: 'block',
+                marginBottom: '0.85rem',
+                textAlign: 'center'
+              }}
+            >
+              Rutas y Trámites Frecuentes
             </span>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
+                gap: '0.65rem'
+              }}
+            >
+              {catalogoCivico.map((item) => {
+                const ItemIcon = item.icon;
+                return (
+                  <Link
+                    key={item.ruta}
+                    to={item.ruta}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.65rem 0.95rem',
+                      borderRadius: '10px',
+                      textDecoration: 'none',
+                      backgroundColor: isLight ? '#F8FAFC' : 'rgba(255, 255, 255, 0.04)',
+                      border: isLight ? '1px solid #E2E8F0' : '1px solid rgba(255, 255, 255, 0.08)',
+                      color: isLight ? '#0F172A' : '#FFFFFF',
+                      fontSize: '0.84rem',
+                      fontWeight: 600,
+                      minHeight: '44px',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = isLight
+                        ? 'rgba(0, 20, 137, 0.08)'
+                        : 'rgba(0, 20, 137, 0.35)';
+                      e.currentTarget.style.borderColor = '#79A6FF';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = isLight
+                        ? '#F8FAFC'
+                        : 'rgba(255, 255, 255, 0.04)';
+                      e.currentTarget.style.borderColor = isLight ? '#E2E8F0' : 'rgba(255, 255, 255, 0.08)';
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <ItemIcon size={16} strokeWidth={1.75} color={isLight ? '#002B7F' : '#79A6FF'} />
+                      <span>{item.titulo}</span>
+                    </div>
+                    <ArrowRight size={14} strokeWidth={1.75} color={isLight ? '#64748B' : '#94A3B8'} />
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 9. Pie de Página Institucional */}
+          <div
+            style={{
+              marginTop: '1.75rem',
+              paddingTop: '1rem',
+              borderTop: isLight ? '1px solid #E2E8F0' : '1px solid rgba(255, 255, 255, 0.06)',
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: '0.68rem',
+              color: isLight ? '#64748B' : '#64748B',
+              letterSpacing: '0.04em',
+              lineHeight: 1.6
+            }}
+          >
+            <div>SISTEMA NACIONAL DE SOBERANÍA DIGITAL • REPÚBLICA DE COSTA RICA</div>
+            <div>Fiscalización y Trazabilidad bajo Ley N° 8292 y Ley N° 8968</div>
           </div>
         </div>
       </main>

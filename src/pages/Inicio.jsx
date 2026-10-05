@@ -40,9 +40,9 @@ export default function Inicio() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeCantonName, setActiveCantonName] = useState(() => {
     try {
-      return localStorage.getItem('cr_canton_activo') || 'San José';
+      return localStorage.getItem('cr_canton_activo') || 'Puntarenas';
     } catch {
-      return 'San José';
+      return 'Puntarenas';
     }
   });
 
@@ -148,8 +148,8 @@ export default function Inicio() {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#00040D',
-        color: '#FFFFFF',
+        backgroundColor: 'var(--theme-bg, #00040D)',
+        color: 'var(--theme-text-primary, #FFFFFF)',
         display: 'flex',
         flexDirection: 'column',
         fontFamily: 'var(--font-body, system-ui, sans-serif)'
@@ -182,7 +182,7 @@ export default function Inicio() {
             style={{
               position: 'absolute',
               inset: 0,
-              backgroundImage: `linear-gradient(180deg, rgba(0, 4, 13, 0.80) 0%, rgba(0, 4, 13, 0.65) 50%, #00040D 100%), url('/costa-rica-hero.jpg')`,
+              backgroundImage: `linear-gradient(180deg, rgba(0, 4, 13, 0.80) 0%, rgba(0, 4, 13, 0.65) 50%, var(--theme-bg, #00040D) 100%), url('/costa-rica-hero.jpg')`,
               backgroundPosition: 'center 35%',
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
@@ -200,7 +200,7 @@ export default function Inicio() {
             }}
           />
 
-          {/* Gradiente Inferior de Fusión Suave con el Resto de la Página */}
+          {/* Gradiente Inferior de Fusión Suave con el Resto de la Página sin corte abrupto */}
           <div
             style={{
               position: 'absolute',
@@ -208,7 +208,7 @@ export default function Inicio() {
               left: 0,
               right: 0,
               height: '140px',
-              background: 'linear-gradient(to top, #00040D 0%, transparent 100%)',
+              background: 'linear-gradient(to top, var(--theme-bg, #00040D) 0%, transparent 100%)',
               pointerEvents: 'none'
             }}
           />
@@ -568,7 +568,7 @@ export default function Inicio() {
                 fontWeight: 800,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                color: '#79a6ff',
+                color: 'var(--cru-accent-blue, #79a6ff)',
                 display: 'block',
                 marginBottom: '0.75rem'
               }}
@@ -581,13 +581,13 @@ export default function Inicio() {
                 fontWeight: 900,
                 letterSpacing: '-0.02em',
                 margin: '0 0 1rem',
-                color: '#FFFFFF',
+                color: 'var(--cru-text, #FFFFFF)',
                 fontFamily: 'var(--font-headline, sans-serif)'
               }}
             >
               {t('ejesRectoresTitle', 'Los 4 Ejes Rectores de la Gestión Municipal')}
             </h2>
-            <p style={{ fontSize: '1.02rem', color: '#94A3B8', lineHeight: 1.65 }}>
+            <p style={{ fontSize: '1.02rem', color: 'var(--cru-text-muted, #94A3B8)', lineHeight: 1.65 }}>
               {t('ejesRectoresDesc', 'Servicios cívicos soberanos organizados para garantizar la transparencia institucional, la resolución comunal de averías y el desarrollo participativo en cada uno de los 84 cantones.')}
             </p>
           </div>
@@ -604,10 +604,10 @@ export default function Inicio() {
             <div
               className="glass-card"
               style={{
-                backgroundColor: 'rgba(0, 15, 45, 0.65)',
+                backgroundColor: 'var(--cru-surface, rgba(0, 15, 45, 0.65))',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.12))',
                 borderRadius: '24px',
                 padding: '2.5rem 2rem',
                 display: 'flex',
@@ -617,13 +617,13 @@ export default function Inicio() {
                 transition: 'all 0.35s ease'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.5)';
-                e.currentTarget.style.backgroundColor = 'rgba(0, 20, 60, 0.85)';
-                e.currentTarget.style.boxShadow = '0 20px 50px rgba(0, 20, 137, 0.4)';
+                e.currentTarget.style.borderColor = 'var(--cru-accent-blue-border, rgba(121, 166, 255, 0.5))';
+                e.currentTarget.style.backgroundColor = 'var(--cru-surface-hover, rgba(0, 20, 60, 0.85))';
+                e.currentTarget.style.boxShadow = 'var(--cru-card-shadow-hover, 0 20px 50px rgba(0, 20, 137, 0.4))';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.backgroundColor = 'rgba(0, 15, 45, 0.65)';
+                e.currentTarget.style.borderColor = 'var(--cru-border, rgba(255, 255, 255, 0.12))';
+                e.currentTarget.style.backgroundColor = 'var(--cru-surface, rgba(0, 15, 45, 0.65))';
                 e.currentTarget.style.boxShadow = 'none';
               }}
             >
@@ -636,7 +636,7 @@ export default function Inicio() {
                       fontWeight: 900,
                       lineHeight: 1,
                       letterSpacing: '-0.04em',
-                      color: 'rgba(121, 166, 255, 0.4)',
+                      color: 'var(--cru-accent-blue, rgba(121, 166, 255, 0.4))',
                       fontFamily: 'var(--font-headline, sans-serif)'
                     }}
                   >
@@ -647,14 +647,14 @@ export default function Inicio() {
                       width: '48px',
                       height: '48px',
                       borderRadius: '14px',
-                      backgroundColor: 'rgba(0, 20, 137, 0.35)',
-                      border: '1px solid rgba(121, 166, 255, 0.3)',
+                      backgroundColor: 'var(--cru-accent-blue-bg)',
+                      border: '1px solid var(--cru-accent-blue-border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <FileText size={22} color="#79a6ff" />
+                    <FileText size={22} color="var(--cru-accent-blue, #79a6ff)" />
                   </div>
                 </div>
 
@@ -666,9 +666,9 @@ export default function Inicio() {
                       fontWeight: 700,
                       padding: '0.2rem 0.65rem',
                       borderRadius: '9999px',
-                      backgroundColor: 'rgba(0, 20, 137, 0.35)',
-                      color: '#79a6ff',
-                      border: '1px solid rgba(121, 166, 255, 0.25)',
+                      backgroundColor: 'var(--cru-accent-blue-bg)',
+                      color: 'var(--cru-accent-blue, #79a6ff)',
+                      border: '1px solid var(--cru-accent-blue-border)',
                       textTransform: 'uppercase'
                     }}
                   >
@@ -680,9 +680,9 @@ export default function Inicio() {
                       fontWeight: 700,
                       padding: '0.2rem 0.65rem',
                       borderRadius: '9999px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      color: '#CBD5E1',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      backgroundColor: 'var(--cru-badge-neutral-bg)',
+                      color: 'var(--cru-badge-neutral-text)',
+                      border: '1px solid var(--cru-badge-neutral-border)',
                       textTransform: 'uppercase'
                     }}
                   >
@@ -691,10 +691,10 @@ export default function Inicio() {
                 </div>
 
                 {/* Título y Descripción Formal */}
-                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: 'var(--cru-text, #FFFFFF)' }}>
                   {t('eje1Titulo', 'Ventanilla Única & Trámites')}
                 </h3>
-                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
+                <p style={{ color: 'var(--cru-text-muted, #94A3B8)', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
                   {t('eje1Desc', 'Validación de cédula física y jurídica sincronizada con el Ministerio de Hacienda (ATV). Consulta y pago seguro de patentes comerciales, tasas de recolección y certificaciones tributarias.')}
                 </p>
               </div>
@@ -704,9 +704,9 @@ export default function Inicio() {
                 to="/portal-ciudadano"
                 style={{
                   textDecoration: 'none',
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(0, 20, 137, 0.35)',
-                  border: '1px solid rgba(121, 166, 255, 0.35)',
+                  color: 'var(--cru-accent-blue)',
+                  backgroundColor: 'var(--cru-accent-blue-bg)',
+                  border: '1px solid var(--cru-accent-blue-border)',
                   padding: '0.75rem 1.25rem',
                   borderRadius: '12px',
                   fontSize: '0.86rem',
@@ -717,16 +717,16 @@ export default function Inicio() {
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#002B7F';
-                  e.currentTarget.style.borderColor = '#79a6ff';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-accent-blue)';
+                  e.currentTarget.style.color = '#FFFFFF';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.35)';
-                  e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.35)';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-accent-blue-bg)';
+                  e.currentTarget.style.color = 'var(--cru-accent-blue)';
                 }}
               >
                 <span>{t('abrirModulo', 'Acceder a Ventanilla')}</span>
-                <ArrowRight size={16} color="#79a6ff" />
+                <ArrowRight size={16} color="currentColor" />
               </Link>
             </div>
 
@@ -734,10 +734,10 @@ export default function Inicio() {
             <div
               className="glass-card"
               style={{
-                backgroundColor: 'rgba(0, 15, 45, 0.65)',
+                backgroundColor: 'var(--cru-surface, rgba(0, 15, 45, 0.65))',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.12))',
                 borderRadius: '24px',
                 padding: '2.5rem 2rem',
                 display: 'flex',
@@ -747,13 +747,13 @@ export default function Inicio() {
                 transition: 'all 0.35s ease'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.5)';
-                e.currentTarget.style.backgroundColor = 'rgba(0, 20, 60, 0.85)';
-                e.currentTarget.style.boxShadow = '0 20px 50px rgba(56, 189, 248, 0.3)';
+                e.currentTarget.style.borderColor = 'var(--cru-accent-sky-border, rgba(56, 189, 248, 0.5))';
+                e.currentTarget.style.backgroundColor = 'var(--cru-surface-hover, rgba(0, 20, 60, 0.85))';
+                e.currentTarget.style.boxShadow = 'var(--cru-card-shadow-hover, 0 20px 50px rgba(56, 189, 248, 0.3))';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.backgroundColor = 'rgba(0, 15, 45, 0.65)';
+                e.currentTarget.style.borderColor = 'var(--cru-border, rgba(255, 255, 255, 0.12))';
+                e.currentTarget.style.backgroundColor = 'var(--cru-surface, rgba(0, 15, 45, 0.65))';
                 e.currentTarget.style.boxShadow = 'none';
               }}
             >
@@ -765,7 +765,7 @@ export default function Inicio() {
                       fontWeight: 900,
                       lineHeight: 1,
                       letterSpacing: '-0.04em',
-                      color: 'rgba(56, 189, 248, 0.4)',
+                      color: 'var(--cru-accent-sky, rgba(56, 189, 248, 0.4))',
                       fontFamily: 'var(--font-headline, sans-serif)'
                     }}
                   >
@@ -776,14 +776,14 @@ export default function Inicio() {
                       width: '48px',
                       height: '48px',
                       borderRadius: '14px',
-                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                      border: '1px solid rgba(56, 189, 248, 0.3)',
+                      backgroundColor: 'var(--cru-accent-sky-bg)',
+                      border: '1px solid var(--cru-accent-sky-border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <Vote size={22} color="#38BDF8" />
+                    <Vote size={22} color="var(--cru-accent-sky, #38BDF8)" />
                   </div>
                 </div>
 
@@ -794,9 +794,9 @@ export default function Inicio() {
                       fontWeight: 700,
                       padding: '0.2rem 0.65rem',
                       borderRadius: '9999px',
-                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                      color: '#38BDF8',
-                      border: '1px solid rgba(56, 189, 248, 0.3)',
+                      backgroundColor: 'var(--cru-accent-sky-bg)',
+                      color: 'var(--cru-accent-sky, #38BDF8)',
+                      border: '1px solid var(--cru-accent-sky-border)',
                       textTransform: 'uppercase'
                     }}
                   >
@@ -808,9 +808,9 @@ export default function Inicio() {
                       fontWeight: 700,
                       padding: '0.2rem 0.65rem',
                       borderRadius: '9999px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      color: '#CBD5E1',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      backgroundColor: 'var(--cru-badge-neutral-bg)',
+                      color: 'var(--cru-badge-neutral-text)',
+                      border: '1px solid var(--cru-badge-neutral-border)',
                       textTransform: 'uppercase'
                     }}
                   >
@@ -818,10 +818,10 @@ export default function Inicio() {
                   </span>
                 </div>
 
-                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: 'var(--cru-text, #FFFFFF)' }}>
                   {t('eje2Titulo', 'Gobernanza & Concejo Municipal')}
                 </h3>
-                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
+                <p style={{ color: 'var(--cru-text-muted, #94A3B8)', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
                   {t('eje2Desc', 'Fiscalización activa de la Alcaldía, regidores y síndicos. Visor de actas de sesiones ordinarias y extraordinarias en formato PDF, acuerdos vinculantes y presupuestos participativos.')}
                 </p>
               </div>
@@ -830,9 +830,9 @@ export default function Inicio() {
                 to="/gobernanza"
                 style={{
                   textDecoration: 'none',
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                  border: '1px solid rgba(56, 189, 248, 0.35)',
+                  color: 'var(--cru-accent-sky)',
+                  backgroundColor: 'var(--cru-accent-sky-bg)',
+                  border: '1px solid var(--cru-accent-sky-border)',
                   padding: '0.75rem 1.25rem',
                   borderRadius: '12px',
                   fontSize: '0.86rem',
@@ -843,16 +843,16 @@ export default function Inicio() {
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.3)';
-                  e.currentTarget.style.borderColor = '#38BDF8';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-accent-sky)';
+                  e.currentTarget.style.color = '#FFFFFF';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.15)';
-                  e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.35)';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-accent-sky-bg)';
+                  e.currentTarget.style.color = 'var(--cru-accent-sky)';
                 }}
               >
                 <span>{t('abrirModulo', 'Consultar Actas y Concejo')}</span>
-                <ArrowRight size={16} color="#38BDF8" />
+                <ArrowRight size={16} color="currentColor" />
               </Link>
             </div>
 
@@ -860,10 +860,10 @@ export default function Inicio() {
             <div
               className="glass-card"
               style={{
-                backgroundColor: 'rgba(0, 15, 45, 0.65)',
+                backgroundColor: 'var(--cru-surface, rgba(0, 15, 45, 0.65))',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.12))',
                 borderRadius: '24px',
                 padding: '2.5rem 2rem',
                 display: 'flex',
@@ -873,13 +873,13 @@ export default function Inicio() {
                 transition: 'all 0.35s ease'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(218, 41, 28, 0.5)';
-                e.currentTarget.style.backgroundColor = 'rgba(40, 10, 15, 0.85)';
-                e.currentTarget.style.boxShadow = '0 20px 50px rgba(218, 41, 28, 0.3)';
+                e.currentTarget.style.borderColor = 'var(--cru-accent-red-border, rgba(218, 41, 28, 0.5))';
+                e.currentTarget.style.backgroundColor = 'var(--cru-surface-hover, rgba(40, 10, 15, 0.85))';
+                e.currentTarget.style.boxShadow = 'var(--cru-card-shadow-hover, 0 20px 50px rgba(218, 41, 28, 0.3))';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.backgroundColor = 'rgba(0, 15, 45, 0.65)';
+                e.currentTarget.style.borderColor = 'var(--cru-border, rgba(255, 255, 255, 0.12))';
+                e.currentTarget.style.backgroundColor = 'var(--cru-surface, rgba(0, 15, 45, 0.65))';
                 e.currentTarget.style.boxShadow = 'none';
               }}
             >
@@ -891,7 +891,7 @@ export default function Inicio() {
                       fontWeight: 900,
                       lineHeight: 1,
                       letterSpacing: '-0.04em',
-                      color: 'rgba(218, 41, 28, 0.4)',
+                      color: 'var(--cru-accent-red, rgba(218, 41, 28, 0.4))',
                       fontFamily: 'var(--font-headline, sans-serif)'
                     }}
                   >
@@ -902,14 +902,14 @@ export default function Inicio() {
                       width: '48px',
                       height: '48px',
                       borderRadius: '14px',
-                      backgroundColor: 'rgba(218, 41, 28, 0.18)',
-                      border: '1px solid rgba(218, 41, 28, 0.4)',
+                      backgroundColor: 'var(--cru-accent-red-bg)',
+                      border: '1px solid var(--cru-accent-red-border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <ClipboardEdit size={22} color="#FF6B6B" />
+                    <ClipboardEdit size={22} color="var(--cru-accent-red, #FF6B6B)" />
                   </div>
                 </div>
 
@@ -920,9 +920,9 @@ export default function Inicio() {
                       fontWeight: 700,
                       padding: '0.2rem 0.65rem',
                       borderRadius: '9999px',
-                      backgroundColor: 'rgba(218, 41, 28, 0.18)',
-                      color: '#FF6B6B',
-                      border: '1px solid rgba(218, 41, 28, 0.35)',
+                      backgroundColor: 'var(--cru-accent-red-bg)',
+                      color: 'var(--cru-accent-red, #FF6B6B)',
+                      border: '1px solid var(--cru-accent-red-border)',
                       textTransform: 'uppercase'
                     }}
                   >
@@ -934,9 +934,9 @@ export default function Inicio() {
                       fontWeight: 700,
                       padding: '0.2rem 0.65rem',
                       borderRadius: '9999px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      color: '#CBD5E1',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      backgroundColor: 'var(--cru-badge-neutral-bg)',
+                      color: 'var(--cru-badge-neutral-text)',
+                      border: '1px solid var(--cru-badge-neutral-border)',
                       textTransform: 'uppercase'
                     }}
                   >
@@ -944,10 +944,10 @@ export default function Inicio() {
                   </span>
                 </div>
 
-                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: 'var(--cru-text, #FFFFFF)' }}>
                   {t('eje3Titulo', 'Obras Públicas & Fiscalización')}
                 </h3>
-                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
+                <p style={{ color: 'var(--cru-text-muted, #94A3B8)', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
                   {t('eje3Desc', 'Reporte georreferenciado de bacheo vial, fallas de alumbrado público y fugas de agua. Adjunte evidencia fotográfica WebP y fiscalice el avance y plazos de solución con la Municipalidad.')}
                 </p>
               </div>
@@ -956,9 +956,9 @@ export default function Inicio() {
                 to="/reportar-incidencia"
                 style={{
                   textDecoration: 'none',
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(218, 41, 28, 0.2)',
-                  border: '1px solid rgba(218, 41, 28, 0.45)',
+                  color: 'var(--cru-accent-red)',
+                  backgroundColor: 'var(--cru-accent-red-bg)',
+                  border: '1px solid var(--cru-accent-red-border)',
                   padding: '0.75rem 1.25rem',
                   borderRadius: '12px',
                   fontSize: '0.86rem',
@@ -969,16 +969,16 @@ export default function Inicio() {
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(218, 41, 28, 0.35)';
-                  e.currentTarget.style.borderColor = '#DA291C';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-accent-red)';
+                  e.currentTarget.style.color = '#FFFFFF';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(218, 41, 28, 0.2)';
-                  e.currentTarget.style.borderColor = 'rgba(218, 41, 28, 0.45)';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-accent-red-bg)';
+                  e.currentTarget.style.color = 'var(--cru-accent-red)';
                 }}
               >
                 <span>{t('abrirModulo', 'Reportar Avería Vial')}</span>
-                <ArrowRight size={16} color="#FF6B6B" />
+                <ArrowRight size={16} color="currentColor" />
               </Link>
             </div>
 
@@ -986,10 +986,10 @@ export default function Inicio() {
             <div
               className="glass-card"
               style={{
-                backgroundColor: 'rgba(0, 15, 45, 0.65)',
+                backgroundColor: 'var(--cru-surface, rgba(0, 15, 45, 0.65))',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.12))',
                 borderRadius: '24px',
                 padding: '2.5rem 2rem',
                 display: 'flex',
@@ -999,13 +999,13 @@ export default function Inicio() {
                 transition: 'all 0.35s ease'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.5)';
-                e.currentTarget.style.backgroundColor = 'rgba(10, 35, 25, 0.85)';
-                e.currentTarget.style.boxShadow = '0 20px 50px rgba(52, 211, 153, 0.3)';
+                e.currentTarget.style.borderColor = 'var(--cru-accent-green-border, rgba(52, 211, 153, 0.5))';
+                e.currentTarget.style.backgroundColor = 'var(--cru-surface-hover, rgba(10, 35, 25, 0.85))';
+                e.currentTarget.style.boxShadow = 'var(--cru-card-shadow-hover, 0 20px 50px rgba(52, 211, 153, 0.3))';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.backgroundColor = 'rgba(0, 15, 45, 0.65)';
+                e.currentTarget.style.borderColor = 'var(--cru-border, rgba(255, 255, 255, 0.12))';
+                e.currentTarget.style.backgroundColor = 'var(--cru-surface, rgba(0, 15, 45, 0.65))';
                 e.currentTarget.style.boxShadow = 'none';
               }}
             >
@@ -1017,7 +1017,7 @@ export default function Inicio() {
                       fontWeight: 900,
                       lineHeight: 1,
                       letterSpacing: '-0.04em',
-                      color: 'rgba(52, 211, 153, 0.4)',
+                      color: 'var(--cru-accent-green, rgba(52, 211, 153, 0.4))',
                       fontFamily: 'var(--font-headline, sans-serif)'
                     }}
                   >
@@ -1028,14 +1028,14 @@ export default function Inicio() {
                       width: '48px',
                       height: '48px',
                       borderRadius: '14px',
-                      backgroundColor: 'rgba(52, 211, 153, 0.15)',
-                      border: '1px solid rgba(52, 211, 153, 0.3)',
+                      backgroundColor: 'var(--cru-accent-green-bg)',
+                      border: '1px solid var(--cru-accent-green-border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <Trophy size={22} color="#34D399" />
+                    <Trophy size={22} color="var(--cru-accent-green, #34D399)" />
                   </div>
                 </div>
 
@@ -1046,9 +1046,9 @@ export default function Inicio() {
                       fontWeight: 700,
                       padding: '0.2rem 0.65rem',
                       borderRadius: '9999px',
-                      backgroundColor: 'rgba(52, 211, 153, 0.15)',
-                      color: '#34D399',
-                      border: '1px solid rgba(52, 211, 153, 0.3)',
+                      backgroundColor: 'var(--cru-accent-green-bg)',
+                      color: 'var(--cru-accent-green, #34D399)',
+                      border: '1px solid var(--cru-accent-green-border)',
                       textTransform: 'uppercase'
                     }}
                   >
@@ -1060,9 +1060,9 @@ export default function Inicio() {
                       fontWeight: 700,
                       padding: '0.2rem 0.65rem',
                       borderRadius: '9999px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      color: '#CBD5E1',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      backgroundColor: 'var(--cru-badge-neutral-bg)',
+                      color: 'var(--cru-badge-neutral-text)',
+                      border: '1px solid var(--cru-badge-neutral-border)',
                       textTransform: 'uppercase'
                     }}
                   >
@@ -1070,10 +1070,10 @@ export default function Inicio() {
                   </span>
                 </div>
 
-                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: '#FFFFFF' }}>
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 0.85rem', color: 'var(--cru-text, #FFFFFF)' }}>
                   {t('eje4Titulo', 'Desarrollo Cantonal & CCDR')}
                 </h3>
-                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
+                <p style={{ color: 'var(--cru-text-muted, #94A3B8)', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 2rem' }}>
                   {t('eje4Desc', 'Comités Cantonales de Deportes y Recreación (CCDR), rutas de las Ferias del Agricultor comunitarias, escuelas deportivas infantiles y directorio comercial de PYMES cantonales certificadas.')}
                 </p>
               </div>
@@ -1082,9 +1082,9 @@ export default function Inicio() {
                 to="/deportes"
                 style={{
                   textDecoration: 'none',
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(52, 211, 153, 0.15)',
-                  border: '1px solid rgba(52, 211, 153, 0.35)',
+                  color: 'var(--cru-accent-green)',
+                  backgroundColor: 'var(--cru-accent-green-bg)',
+                  border: '1px solid var(--cru-accent-green-border)',
                   padding: '0.75rem 1.25rem',
                   borderRadius: '12px',
                   fontSize: '0.86rem',
@@ -1095,16 +1095,16 @@ export default function Inicio() {
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(52, 211, 153, 0.28)';
-                  e.currentTarget.style.borderColor = '#34D399';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-accent-green)';
+                  e.currentTarget.style.color = '#FFFFFF';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(52, 211, 153, 0.15)';
-                  e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.35)';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-accent-green-bg)';
+                  e.currentTarget.style.color = 'var(--cru-accent-green)';
                 }}
               >
                 <span>{t('abrirModulo', 'Explorar CCDR y Ferias')}</span>
-                <ArrowRight size={16} color="#34D399" />
+                <ArrowRight size={16} color="currentColor" />
               </Link>
             </div>
           </div>
@@ -1116,9 +1116,9 @@ export default function Inicio() {
             ========================================================================== */}
         <section
           style={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-            backgroundColor: 'rgba(0, 4, 13, 0.85)',
+            borderTop: '1px solid var(--cru-border, rgba(255, 255, 255, 0.1))',
+            borderBottom: '1px solid var(--cru-border, rgba(255, 255, 255, 0.1))',
+            backgroundColor: 'var(--theme-card-bg, rgba(0, 4, 13, 0.85))',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             padding: '4.5rem 2rem'
@@ -1141,16 +1141,16 @@ export default function Inicio() {
                   fontWeight: 300,
                   lineHeight: 1,
                   letterSpacing: '-0.04em',
-                  color: '#FFFFFF',
+                  color: 'var(--cru-text, #FFFFFF)',
                   fontFamily: 'var(--font-headline, sans-serif)'
                 }}
               >
                 07
               </span>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--cru-text, #F1F5F9)' }}>
                 {t('provinciasTexto', 'Provincias Soberanas')}
               </h3>
-              <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-muted, #94A3B8)', lineHeight: 1.6, margin: 0 }}>
                 San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas y Limón unificadas en un único estándar digital.
               </p>
             </div>
@@ -1161,7 +1161,7 @@ export default function Inicio() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.6rem',
-                borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+                borderLeft: '1px solid var(--cru-border, rgba(255, 255, 255, 0.1))',
                 paddingLeft: '2rem'
               }}
             >
@@ -1171,16 +1171,16 @@ export default function Inicio() {
                   fontWeight: 300,
                   lineHeight: 1,
                   letterSpacing: '-0.04em',
-                  color: '#38BDF8',
+                  color: 'var(--cru-accent-sky, #38BDF8)',
                   fontFamily: 'var(--font-headline, sans-serif)'
                 }}
               >
                 84
               </span>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--cru-text, #F1F5F9)' }}>
                 {t('cantonesTexto', 'Gobiernos Locales Autónomos')}
               </h3>
-              <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-muted, #94A3B8)', lineHeight: 1.6, margin: 0 }}>
                 Municipalidades cantonales con autonomía constitucional, Concejos deliberantes y competencias tributarias propias.
               </p>
             </div>
@@ -1191,7 +1191,7 @@ export default function Inicio() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.6rem',
-                borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+                borderLeft: '1px solid var(--cru-border, rgba(255, 255, 255, 0.1))',
                 paddingLeft: '2rem'
               }}
             >
@@ -1201,16 +1201,16 @@ export default function Inicio() {
                   fontWeight: 300,
                   lineHeight: 1,
                   letterSpacing: '-0.04em',
-                  color: '#FFFFFF',
+                  color: 'var(--cru-text, #FFFFFF)',
                   fontFamily: 'var(--font-headline, sans-serif)'
                 }}
               >
                 492
               </span>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--cru-text, #F1F5F9)' }}>
                 {t('distritosTexto', 'Distritos Fiscalizados')}
               </h3>
-              <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-muted, #94A3B8)', lineHeight: 1.6, margin: 0 }}>
                 Descentralización comunal de costa a costa y frontera a frontera, cubriendo zonas rurales y metropolitana.
               </p>
             </div>
@@ -1221,7 +1221,7 @@ export default function Inicio() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.6rem',
-                borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+                borderLeft: '1px solid var(--cru-border, rgba(255, 255, 255, 0.1))',
                 paddingLeft: '2rem'
               }}
             >
@@ -1231,16 +1231,16 @@ export default function Inicio() {
                   fontWeight: 300,
                   lineHeight: 1,
                   letterSpacing: '-0.04em',
-                  color: '#34D399',
+                  color: 'var(--cru-accent-green, #34D399)',
                   fontFamily: 'var(--font-headline, sans-serif)'
                 }}
               >
                 100%
               </span>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#F1F5F9' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--cru-text, #F1F5F9)' }}>
                 Transparencia Ley N° 8968
               </h3>
-              <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-muted, #94A3B8)', lineHeight: 1.6, margin: 0 }}>
                 Protección estricta de datos personales de los ciudadanos y accesibilidad universal conforme a la Ley N° 7600.
               </p>
             </div>
@@ -1265,7 +1265,7 @@ export default function Inicio() {
                 fontWeight: 800,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                color: '#38BDF8',
+                color: 'var(--cru-accent-sky, #38BDF8)',
                 display: 'block',
                 marginBottom: '0.75rem'
               }}
@@ -1278,13 +1278,13 @@ export default function Inicio() {
                 fontWeight: 900,
                 letterSpacing: '-0.02em',
                 margin: '0 0 1rem',
-                color: '#FFFFFF',
+                color: 'var(--cru-text, #FFFFFF)',
                 fontFamily: 'var(--font-headline, sans-serif)'
               }}
             >
               Módulos Complementarios de Soberanía Cívica
             </h2>
-            <p style={{ fontSize: '0.98rem', color: '#94A3B8', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '0.98rem', color: 'var(--cru-text-muted, #94A3B8)', lineHeight: 1.6 }}>
               Herramientas geoespaciales, educativas y de auxilio inmediato sincronizadas en la plataforma.
             </p>
           </div>
@@ -1368,10 +1368,10 @@ export default function Inicio() {
               >
                 <div
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                    backgroundColor: 'var(--cru-surface, rgba(255, 255, 255, 0.03))',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255, 255, 255, 0.09)',
+                    border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.09))',
                     borderRadius: '18px',
                     padding: '1.75rem',
                     height: '100%',
@@ -1383,12 +1383,12 @@ export default function Inicio() {
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = mod.color;
-                    e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.25)';
+                    e.currentTarget.style.backgroundColor = 'var(--cru-surface-hover, rgba(0, 20, 137, 0.25))';
                     e.currentTarget.style.transform = 'translateY(-3px)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.09)';
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
+                    e.currentTarget.style.borderColor = 'var(--cru-border, rgba(255, 255, 255, 0.09))';
+                    e.currentTarget.style.backgroundColor = 'var(--cru-surface, rgba(255, 255, 255, 0.03))';
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
@@ -1424,10 +1424,10 @@ export default function Inicio() {
                       </span>
                     </div>
 
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '0 0 0.5rem', color: '#FFFFFF' }}>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '0 0 0.5rem', color: 'var(--cru-text, #FFFFFF)' }}>
                       {mod.titulo}
                     </h3>
-                    <p style={{ fontSize: '0.86rem', color: '#94A3B8', lineHeight: 1.55, margin: 0 }}>
+                    <p style={{ fontSize: '0.86rem', color: 'var(--cru-text-muted, #94A3B8)', lineHeight: 1.55, margin: 0 }}>
                       {mod.desc}
                     </p>
                   </div>
@@ -1465,10 +1465,10 @@ export default function Inicio() {
           ========================================================================== */}
       <footer
         style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          backgroundColor: '#00040D',
+          borderTop: '1px solid var(--cru-border, rgba(255, 255, 255, 0.1))',
+          backgroundColor: 'var(--theme-bg, #00040D)',
           padding: '4.5rem 2rem 3.5rem',
-          color: '#64748B',
+          color: 'var(--cru-text-muted, #64748B)',
           fontSize: '0.85rem'
         }}
       >
@@ -1508,13 +1508,13 @@ export default function Inicio() {
                     fontWeight: 900,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
-                    color: '#FFFFFF'
+                    color: 'var(--cru-text, #FFFFFF)'
                   }}
                 >
                   Costa Rica Unidos
                 </span>
               </div>
-              <p style={{ color: '#94A3B8', fontSize: '0.88rem', lineHeight: 1.65, margin: '0 0 1.25rem' }}>
+              <p style={{ color: 'var(--cru-text-soft, #94A3B8)', fontSize: '0.88rem', lineHeight: 1.65, margin: '0 0 1.25rem' }}>
                 Sede electrónica oficial de los Gobiernos Locales de la República de Costa Rica. Plataforma de soberanía tecnológica diseñada para la fiscalización ciudadana, trámites municipales y cohesión territorial cantonal.
               </p>
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -1523,9 +1523,9 @@ export default function Inicio() {
                     fontSize: '0.72rem',
                     padding: '0.2rem 0.6rem',
                     borderRadius: '6px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    color: '#CBD5E1',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                    backgroundColor: 'var(--cru-badge-neutral-bg, rgba(255, 255, 255, 0.05))',
+                    color: 'var(--cru-badge-neutral-text, #CBD5E1)',
+                    border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.1))'
                   }}
                 >
                   Código Municipal Ley N° 7794
@@ -1535,9 +1535,9 @@ export default function Inicio() {
                     fontSize: '0.72rem',
                     padding: '0.2rem 0.6rem',
                     borderRadius: '6px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    color: '#CBD5E1',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                    backgroundColor: 'var(--cru-badge-neutral-bg, rgba(255, 255, 255, 0.05))',
+                    color: 'var(--cru-badge-neutral-text, #CBD5E1)',
+                    border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.1))'
                   }}
                 >
                   Ley N° 8968 Protección de Datos
@@ -1554,7 +1554,7 @@ export default function Inicio() {
                     fontWeight: 800,
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
-                    color: '#CBD5E1',
+                    color: 'var(--cru-text, #CBD5E1)',
                     display: 'block',
                     marginBottom: '1rem'
                   }}
@@ -1562,11 +1562,11 @@ export default function Inicio() {
                   Servicios Cantonales
                 </span>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                  <li><Link to="/portal-ciudadano" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Ventanilla Única & Cédula</Link></li>
-                  <li><Link to="/gobernanza" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Concejo Municipal & Actas</Link></li>
-                  <li><Link to="/reportar-incidencia" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Reporte de Averías Viales</Link></li>
-                  <li><Link to="/participacion" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Presupuestos Participativos</Link></li>
-                  <li><Link to="/deportes" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Comités Cantonales CCDR</Link></li>
+                  <li><Link to="/portal-ciudadano" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Ventanilla Única & Cédula</Link></li>
+                  <li><Link to="/gobernanza" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Concejo Municipal & Actas</Link></li>
+                  <li><Link to="/reportar-incidencia" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Reporte de Averías Viales</Link></li>
+                  <li><Link to="/participacion" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Presupuestos Participativos</Link></li>
+                  <li><Link to="/deportes" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Comités Cantonales CCDR</Link></li>
                 </ul>
               </div>
 
@@ -1577,7 +1577,7 @@ export default function Inicio() {
                     fontWeight: 800,
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
-                    color: '#CBD5E1',
+                    color: 'var(--cru-text, #CBD5E1)',
                     display: 'block',
                     marginBottom: '1rem'
                   }}
@@ -1585,11 +1585,11 @@ export default function Inicio() {
                   Nación & Marco Legal
                 </span>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                  <li><Link to="/mapa-gis" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Visor Cartográfico 3D</Link></li>
-                  <li><Link to="/seguridad-emergencias" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Red Nacional 911 / CNE</Link></li>
-                  <li><Link to="/login" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Acceso Funcionario / Firma Digital</Link></li>
-                  <li><a href="#ley-7600" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Accesibilidad Universal Ley N° 7600</a></li>
-                  <li><a href="#ley-8968" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Privacidad Ciudadana Ley N° 8968</a></li>
+                  <li><Link to="/mapa-gis" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Visor Cartográfico 3D</Link></li>
+                  <li><Link to="/seguridad-emergencias" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Red Nacional 911 / CNE</Link></li>
+                  <li><Link to="/login" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Acceso Funcionario / Firma Digital</Link></li>
+                  <li><a href="#ley-7600" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Accesibilidad Universal Ley N° 7600</a></li>
+                  <li><a href="#ley-8968" style={{ color: 'var(--cru-text-soft, #94A3B8)', textDecoration: 'none', transition: 'color 0.2s' }}>Privacidad Ciudadana Ley N° 8968</a></li>
                 </ul>
               </div>
             </div>
@@ -1599,7 +1599,7 @@ export default function Inicio() {
           <div
             style={{
               paddingTop: '2rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              borderTop: '1px solid var(--cru-border, rgba(255, 255, 255, 0.08))',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -1610,11 +1610,11 @@ export default function Inicio() {
           >
             <span>&copy; 2026 República de Costa Rica. Sistema Nacional de Gobiernos Locales.</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <span style={{ color: '#CBD5E1', fontWeight: 700 }}>7 Provincias</span>
-              <span style={{ color: '#475569' }}>•</span>
-              <span style={{ color: '#38BDF8', fontWeight: 700 }}>84 Cantones</span>
-              <span style={{ color: '#475569' }}>•</span>
-              <span style={{ color: '#CBD5E1', fontWeight: 700 }}>492 Distritos</span>
+              <span style={{ color: 'var(--cru-text-soft, #CBD5E1)', fontWeight: 700 }}>7 Provincias</span>
+              <span style={{ color: 'var(--cru-text-muted, #475569)' }}>•</span>
+              <span style={{ color: 'var(--cru-accent-sky, #38BDF8)', fontWeight: 700 }}>84 Cantones</span>
+              <span style={{ color: 'var(--cru-text-muted, #475569)' }}>•</span>
+              <span style={{ color: 'var(--cru-text-soft, #CBD5E1)', fontWeight: 700 }}>492 Distritos</span>
             </div>
           </div>
         </div>

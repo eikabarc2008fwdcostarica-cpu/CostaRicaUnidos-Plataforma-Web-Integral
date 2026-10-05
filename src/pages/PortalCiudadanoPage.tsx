@@ -33,8 +33,8 @@ export default function PortalCiudadanoPage() {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#00040D',
-        color: '#FFFFFF',
+        backgroundColor: 'var(--theme-bg, #00040D)',
+        color: 'var(--theme-text-primary, #FFFFFF)',
         display: 'flex',
         flexDirection: 'column'
       }}
