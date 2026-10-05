@@ -941,132 +941,664 @@ html.light .civic-table-container::-webkit-scrollbar-thumb:hover {
 /* ==========================================================================
    WIDGET FLOTANTE DE ACCESIBILIDAD Y LECTURA EN VOZ ALTA (SOVEREIGN CIVIC GLASS)
    ========================================================================== */
-.voice-reader-widget {
+/* ==========================================================================
+   VOICE GUIDE WIDGET - SOVEREIGN CIVIC GLASS v2.1
+   Cápsula unificada, Flexbox puro, control de desbordamiento, cero desfases
+   ========================================================================== */
+
+/* 1. Contenedor de Posicionamiento Flotante */
+.voice-floating-wrapper {
   position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 999;
-  max-width: calc(100vw - 3rem);
+  bottom: 24px;
+  right: 24px;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: auto;
   box-sizing: border-box;
+  font-family: var(--font-body, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+/* 2. Cápsula Unificada Sovereign Civic Glass */
+.voice-pill-container {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.35rem;
-  background-color: rgba(0, 4, 13, 0.80);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.20);
+  gap: 6px;
+  padding: 4px 6px;
   border-radius: 9999px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: rgba(5, 12, 28, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 10px 30px rgba(0, 4, 13, 0.75), 0 0 20px rgba(56, 189, 248, 0.15);
+  box-sizing: border-box;
+  margin: 0;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease;
 }
 
-.voice-reader-widget:hover {
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(0, 43, 127, 0.35);
+.voice-pill-container:hover {
+  border-color: rgba(56, 189, 248, 0.28);
+  box-shadow: 0 14px 36px rgba(0, 4, 13, 0.85), 0 0 24px rgba(56, 189, 248, 0.25);
 }
 
-.voice-reader-btn-settings {
-  width: 42px;
-  height: 42px;
+/* Estado activo cuando la voz está reproduciendo */
+.voice-pill-container.is-active-playback {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 12px 36px rgba(0, 4, 13, 0.90), 0 0 25px rgba(56, 189, 248, 0.35);
+}
+
+/* 3. Botón de Ajustes (Engranaje) */
+.voice-gear-btn {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94A3B8;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  padding: 0;
+  margin: 0;
   flex-shrink: 0;
   box-sizing: border-box;
+  transition: background-color 0.2s ease, 
+              border-color 0.2s ease, 
+              color 0.2s ease, 
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.voice-reader-btn-settings:hover {
-  background-color: rgba(255, 255, 255, 0.20);
-  border-color: rgba(121, 166, 255, 0.5);
+.voice-gear-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #38BDF8;
+  border-color: rgba(56, 189, 248, 0.45);
+  transform: rotate(45deg);
+}
+
+.voice-gear-btn:focus-visible {
+  outline: 2px solid #38BDF8;
+  outline-offset: 2px;
+}
+
+.voice-gear-btn.is-active {
+  background: rgba(56, 189, 248, 0.20);
+  color: #38BDF8;
+  border-color: rgba(56, 189, 248, 0.60);
+  transform: rotate(45deg);
+}
+
+/* 4. Cuerpo Principal de Voz (Pastilla Activa) */
+.voice-main-pill {
+  background: rgba(30, 136, 229, 0.20);
+  border: 1px solid rgba(56, 189, 248, 0.40);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 6px;
+  color: #FFFFFF;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: 0;
+  transition: background-color 0.2s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.voice-main-pill:hover {
+  background: rgba(30, 136, 229, 0.35);
+  border-color: rgba(56, 189, 248, 0.70);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+  transform: translateY(-1px);
+}
+
+.voice-main-pill:active {
+  transform: scale(0.98);
+}
+
+.voice-main-pill:focus-visible {
+  outline: 2px solid #38BDF8;
+  outline-offset: 2px;
+}
+
+.voice-main-pill:disabled {
+  cursor: wait;
+  opacity: 0.85;
+}
+
+.voice-main-pill.is-speaking {
+  background: rgba(14, 116, 144, 0.30);
+  border-color: rgba(56, 189, 248, 0.65);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.30);
+}
+
+/* Círculo de icono */
+.voice-icon-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38BDF8;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.voice-main-pill:hover .voice-icon-circle {
+  background: rgba(56, 189, 248, 0.35);
+  color: #E0F2FE;
   transform: scale(1.05);
 }
 
-.voice-reader-btn-settings.is-open {
-  background-color: rgba(0, 43, 127, 0.9);
-  border-color: #79a6ff;
-  box-shadow: 0 0 15px rgba(121, 166, 255, 0.4);
+.voice-icon-circle.is-speaking-circle {
+  background: rgba(56, 189, 248, 0.28);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.40);
 }
 
-.voice-reader-btn-main {
-  background-color: rgba(0, 43, 127, 0.88);
-  border: 1px solid rgba(121, 166, 255, 0.4);
-  border-radius: 9999px;
-  padding: 0.6rem 1.2rem;
+/* ==========================================================================
+   2. ESTADO VISUAL DE AUDIO ACTIVO (ONDAS SONORAS ANIMADAS)
+   Animación requerida: @keyframes soundWave { 0%, 100% { height: 4px; } 50% { height: 16px; } }
+   ========================================================================== */
+@keyframes soundWave {
+  0%, 100% {
+    height: 4px;
+    y: 10px;
+  }
+  50% {
+    height: 16px;
+    y: 4px;
+  }
+}
+
+.voice-audio-bars {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  color: #FFFFFF;
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.sound-wave-bar {
+  fill: #38BDF8;
+  transform-origin: center;
+}
+
+.sound-wave-bar.bar-1 {
+  animation: soundWave 0.8s ease-in-out infinite;
+}
+
+.sound-wave-bar.bar-2 {
+  animation: soundWave 0.8s ease-in-out 0.2s infinite;
+}
+
+.sound-wave-bar.bar-3 {
+  animation: soundWave 0.8s ease-in-out 0.4s infinite;
+}
+
+/* Tipografía de la pastilla */
+.voice-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  line-height: 1.15;
   white-space: nowrap;
-  box-sizing: border-box;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 15px rgba(0, 20, 137, 0.4);
 }
 
-.voice-reader-btn-main:hover {
-  background-color: #0036a1;
-  border-color: #79a6ff;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(0, 43, 127, 0.5);
+.voice-title {
+  font-size: 0.80rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.01em;
 }
 
-.voice-reader-btn-main.is-speaking {
-  background-color: #DC2626;
-  border-color: #EF4444;
-  box-shadow: 0 0 25px rgba(220, 38, 38, 0.7);
-  animation: pulse 1.2s infinite;
-}
-
-.voice-reader-lang-badge {
-  background-color: rgba(255, 255, 255, 0.18);
-  padding: 0.15rem 0.45rem;
-  border-radius: 9999px;
-  font-size: 0.72rem;
-  font-family: var(--font-telemetry, monospace);
+.voice-sub {
+  font-size: 0.65rem;
+  color: #94A3B8;
   letter-spacing: 0.02em;
-  display: inline-flex;
+}
+
+.voice-sub.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* 5. Botón de Minimizar */
+.voice-close-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: #64748B;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Adaptación responsive para pantallas móviles (< 640px) */
+.voice-close-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #F1F5F9;
+}
+
+.voice-close-btn:focus-visible {
+  outline: 2px solid #38BDF8;
+  outline-offset: 1px;
+}
+
+/* 6. Burbuja Flotante Minimalista cuando está colapsado */
+.voice-bubble-minimized {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(5, 12, 28, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(56, 189, 248, 0.40);
+  box-shadow: 0 8px 24px rgba(0, 4, 13, 0.80), 0 0 16px rgba(56, 189, 248, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  color: #38BDF8;
+  box-sizing: border-box;
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease;
+}
+
+.voice-bubble-minimized:hover {
+  transform: scale(1.10);
+  border-color: rgba(56, 189, 248, 0.80);
+  box-shadow: 0 12px 32px rgba(0, 4, 13, 0.90), 0 0 24px rgba(56, 189, 248, 0.45);
+}
+
+.voice-bubble-minimized:focus-visible {
+  outline: 2px solid #38BDF8;
+  outline-offset: 3px;
+}
+
+/* Punto indicador de audio activo sobre la burbuja minimizada */
+.voice-bubble-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #38BDF8;
+  box-shadow: 0 0 8px #38BDF8;
+  animation: voicePulseDot 1.2s infinite ease-in-out;
+}
+
+@keyframes voicePulseDot {
+  0%, 100% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+
+/* 7. Panel Desplegable de Ajustes Sovereign Glass */
+.voice-settings-popover {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  right: 0;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  background: rgba(5, 12, 28, 0.94);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 1.15rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.80), 0 0 25px rgba(56, 189, 248, 0.20);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  color: #FFFFFF;
+  box-sizing: border-box;
+  z-index: 9005;
+  animation: voiceSettingsFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes voiceSettingsFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.voice-settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  padding-bottom: 0.5rem;
+}
+
+.voice-settings-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #38BDF8;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.voice-settings-close-btn {
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.voice-settings-close-btn:hover {
+  color: #FFFFFF;
+}
+
+.voice-settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.voice-settings-label {
+  font-size: 0.76rem;
+  color: #94A3B8;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   3. SELECTOR DE VELOCIDAD: 0.75x | 1.0x | 1.25x | 1.5x
+   ========================================================================== */
+.voice-speed-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+
+.voice-speed-chip {
+  padding: 0.45rem 0.2rem;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94A3B8;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.voice-speed-chip:hover {
+  background-color: rgba(255, 255, 255, 0.10);
+  color: #FFFFFF;
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.voice-speed-chip.is-active {
+  background-color: rgba(30, 136, 229, 0.30);
+  border-color: #38BDF8;
+  color: #38BDF8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+/* ==========================================================================
+   4. ALTERNADOR DE SUBTÍTULOS SINCRONIZADOS (ON / OFF)
+   ========================================================================== */
+.voice-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0.2rem;
+  border-radius: 10px;
+}
+
+.voice-toggle-label-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.voice-settings-sublabel {
+  font-size: 0.68rem;
+  color: #64748B;
+}
+
+.voice-toggle-switch {
+  position: relative;
+  width: 58px;
+  height: 28px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  box-sizing: border-box;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.voice-toggle-switch.is-active {
+  background-color: rgba(30, 136, 229, 0.35);
+  border-color: #38BDF8;
+}
+
+.voice-toggle-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: #94A3B8;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+  transform: translateX(0);
+}
+
+.voice-toggle-switch.is-active .voice-toggle-thumb {
+  transform: translateX(28px);
+  background-color: #38BDF8;
+  box-shadow: 0 0 10px #38BDF8;
+}
+
+.voice-toggle-status {
+  position: absolute;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.voice-toggle-switch.is-active .voice-toggle-status {
+  left: 8px;
+  color: #38BDF8;
+}
+
+.voice-toggle-switch:not(.is-active) .voice-toggle-status {
+  right: 8px;
+  color: #64748B;
+}
+
+/* ==========================================================================
+   5. BOTÓN PARA PROBAR VOZ DEL SISTEMA
+   ========================================================================== */
+.voice-settings-action-btn {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.voice-settings-action-btn.secondary {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #E2E8F0;
+}
+
+.voice-settings-action-btn.secondary:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(56, 189, 248, 0.50);
+  color: #38BDF8;
+}
+
+.voice-settings-action-btn.primary {
+  background: linear-gradient(135deg, #0284C7, #0369A1);
+  border: 1px solid #38BDF8;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.40);
+}
+
+.voice-settings-action-btn.primary:hover {
+  background: linear-gradient(135deg, #0369A1, #075985);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.55);
+}
+
+/* ==========================================================================
+   6. SUBTÍTULOS SINCRONIZADOS EN PANTALLA (LEY N° 7600)
+   ========================================================================== */
+.voice-live-subtitles-card {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  background: rgba(5, 12, 28, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(56, 189, 248, 0.40);
+  border-radius: 16px;
+  padding: 0.85rem 1rem;
+  box-shadow: 0 16px 40px rgba(0, 4, 13, 0.85), 0 0 20px rgba(56, 189, 248, 0.25);
+  color: #FFFFFF;
+  box-sizing: border-box;
+  z-index: 8990;
+  animation: voiceSubtitleFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes voiceSubtitleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.voice-live-subtitles-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.35rem;
+}
+
+.voice-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #38BDF8;
+  box-shadow: 0 0 8px #38BDF8;
+  animation: voicePulseDot 1.2s infinite ease-in-out;
+}
+
+.voice-live-title {
+  font-size: 0.70rem;
+  font-weight: 800;
+  color: #38BDF8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.voice-live-subtitles-body {
+  font-size: 0.82rem;
+  color: #F1F5F9;
+  line-height: 1.4;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 7. Adaptación responsive */
 @media (max-width: 640px) {
-  .voice-reader-widget {
-    bottom: 1rem;
-    right: 1rem;
-    max-width: calc(100vw - 2rem);
-    padding: 0.25rem;
-    gap: 0.35rem;
+  .voice-floating-wrapper {
+    bottom: 16px;
+    right: 16px;
   }
 
-  .voice-reader-btn-settings {
-    width: 38px;
-    height: 38px;
+  .voice-pill-container {
+    gap: 4px;
+    padding: 3px 5px;
   }
 
-  .voice-reader-btn-main {
-    padding: 0.5rem 0.85rem;
-    font-size: 0.82rem;
-    gap: 0.4rem;
+  .voice-gear-btn {
+    width: 28px;
+    height: 28px;
   }
 
-  .voice-reader-label {
-    display: none;
+  .voice-main-pill {
+    padding: 3px 8px 3px 4px;
+    gap: 6px;
+  }
+
+  .voice-icon-circle {
+    width: 24px;
+    height: 24px;
+  }
+
+  .voice-title {
+    font-size: 0.74rem;
+  }
+
+  .voice-sub {
+    font-size: 0.60rem;
+  }
+
+  .voice-settings-popover,
+  .voice-live-subtitles-card {
+    width: 280px;
+    padding: 0.9rem;
+    bottom: calc(100% + 8px);
   }
 }
 
-@media (max-width: 380px) {
-  .voice-reader-lang-badge {
-    display: none;
-  }
-}
 
 /* ==========================================================================
    CÁPSULA DE BÚSQUEDA SOBERANA (SEARCH CAPSULE)
@@ -1415,4 +1947,347 @@ body[data-colorblind="achromatopsia"],
 #root[data-colorblind="achromatopsia"] {
   filter: url(#achromatopsia) !important;
 }
+
+/* ==========================================================================
+   CARRUSEL CANTONAL SOVEREIGN GLASS — SELECTOR SIN SCROLLBAR NATIVO
+   ========================================================================== */
+.cantones-carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.cantones-carousel-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  flex: 1;
+  min-width: 0;
+  padding: 4px 2px;
+}
+
+.cantones-carousel-track::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.cantones-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: rgba(5, 12, 28, 0.70);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #CBD5E1;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.cantones-nav-btn:hover {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: rgba(56, 189, 248, 0.45);
+  color: #38BDF8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+  transform: scale(1.06);
+}
+
+.cantones-nav-btn:active {
+  transform: scale(0.96);
+}
+
+/* ==========================================================================
+   ARQUITECTURA DE LAYOUT FIJO A PANTALLA COMPLETA (100VH CERO RECORTES)
+   ========================================================================== */
+
+/* El contenedor raíz ocupa exactamente el 100% de la pantalla sin scroll global */
+.admin-viewport-wrapper {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #00040D;
+}
+
+/* La barra lateral queda permanentemente anclada al 100% de altura */
+.admin-sidebar-fixed {
+  height: 100vh;
+  max-height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(5, 12, 28, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-x: hidden;
+  z-index: 50;
+  box-sizing: border-box;
+}
+
+/* Anchos de expansión y colapso */
+.sidebar-expanded {
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+}
+.sidebar-collapsed {
+  width: 72px;
+  min-width: 72px;
+  max-width: 72px;
+}
+
+/* Ocultamiento estricto de textos al colapsar para evitar cualquier desbordamiento */
+.sidebar-collapsed .nav-label-text,
+.sidebar-collapsed .admin-sidebar-title-text,
+.sidebar-collapsed .admin-sidebar-footer-text,
+.sidebar-collapsed .admin-sidebar-badge,
+.sidebar-collapsed .admin-hide-on-collapse {
+  display: none !important;
+}
+
+.nav-icon-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* El área de navegación interna tiene su propio scroll si hay muchos módulos */
+.admin-sidebar-nav-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.75rem 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.admin-sidebar-nav-body::-webkit-scrollbar {
+  width: 4px;
+}
+.admin-sidebar-nav-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* El pie del menú siempre visible al fondo */
+.admin-sidebar-nav-footer {
+  flex-shrink: 0;
+  padding: 0.75rem 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(5, 12, 28, 0.98);
+}
+
+/* El área de contenido central es la ÚNICA que tiene scroll vertical */
+.admin-main-scrollable {
+  flex: 1;
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.admin-main-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+.admin-main-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* Clases de compatibilidad */
+.admin-layout-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #00040D;
+}
+.admin-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  max-height: 100vh;
+  flex-shrink: 0;
+}
+.admin-sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+}
+.admin-sidebar-footer {
+  flex-shrink: 0;
+}
+.admin-main-viewport {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+/* ==========================================================================
+   ADAPTACIONES RESPONSIVAS MOBILE-FIRST (iPhone 16 / < 768px y Tabletas)
+   ========================================================================== */
+
+/* 1. Cintillo Superior Oficial (< 1024px y < 768px) */
+@media (max-width: 1024px) {
+  .cintillo-superior-item-secundario {
+    display: none !important;
+  }
+  .cintillo-superior-container {
+    justify-content: space-between !important;
+    padding: 0.25rem 0.75rem !important;
+    font-size: 0.70rem !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .cintillo-superior-item-secundario {
+    display: none !important;
+  }
+  .cintillo-superior-container {
+    justify-content: space-between !important;
+    padding: 0.25rem 0.65rem !important;
+    font-size: 0.68rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* 2. Sidebar Administrativo Adaptativo */
+  .admin-viewport-wrapper,
+  .admin-layout-container {
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+  }
+
+  /* En móvil, el sidebar se convierte en drawer flotante que inicia oculto */
+  .admin-sidebar-fixed,
+  .provincial-sidebar,
+  .admin-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    z-index: 1000 !important;
+    transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 10px 0 30px rgba(0, 4, 13, 0.8) !important;
+  }
+
+  .admin-sidebar-fixed.mobile-open,
+  .provincial-sidebar.mobile-open,
+  .admin-sidebar.mobile-open {
+    left: 0 !important;
+  }
+
+  /* Mostrar textos cuando el sidebar drawer esté abierto en móvil */
+  .admin-sidebar-fixed.mobile-open .nav-label-text,
+  .admin-sidebar-fixed.mobile-open .admin-sidebar-title-text,
+  .admin-sidebar-fixed.mobile-open .admin-hide-on-collapse,
+  .provincial-sidebar.mobile-open .provincial-sidebar-title-group,
+  .provincial-sidebar.mobile-open .provincial-nav-label,
+  .provincial-sidebar.mobile-open .provincial-sidebar-section-title,
+  .provincial-sidebar.mobile-open .provincial-footer-info {
+    display: inline-block !important;
+    opacity: 1 !important;
+    max-width: 200px !important;
+    visibility: visible !important;
+  }
+
+  /* El contenido principal toma el 100% de la pantalla del teléfono */
+  .admin-main-scrollable,
+  .admin-main-viewport {
+    width: 100% !important;
+    flex: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 1rem 0.75rem 6rem 0.75rem !important; /* El padding inferior previene que el widget de voz tape el contenido */
+    overflow-x: hidden !important;
+  }
+
+  /* 3. Tarjeta de Usuario y Cabeceras Administrativas en Móvil */
+  .admin-user-card,
+  .consola-banner-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  .admin-user-card .badge-rol {
+    align-self: flex-start !important;
+    white-space: normal !important; /* Permite salto de línea si el texto es largo */
+    max-width: 100% !important;
+    word-break: break-word !important;
+  }
+
+  /* 4. Evitar Colisión con el Widget Flotante Inferior */
+  main,
+  .page-content-wrapper {
+    padding-bottom: 6rem !important;
+  }
+
+  .hero-section-container {
+    padding-bottom: 6.5rem !important;
+  }
+}
+
+/* 5. Buscador del Hero en Móvil (< 640px) */
+@media (max-width: 640px) {
+  .hero-search-bar-container {
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 6px !important;
+    border-radius: 16px !important;
+  }
+
+  .hero-search-input-wrapper {
+    width: 100% !important;
+  }
+
+  .hero-search-input {
+    width: 100% !important;
+    font-size: 0.85rem !important;
+  }
+
+  .hero-search-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+    padding: 0.65rem 1rem !important;
+  }
+
+  .hero-canton-indicator {
+    flex-direction: column !important;
+    gap: 0.35rem !important;
+    margin-bottom: 3.5rem !important;
+    padding: 0 0.5rem !important;
+    text-align: center !important;
+  }
+}
+
 

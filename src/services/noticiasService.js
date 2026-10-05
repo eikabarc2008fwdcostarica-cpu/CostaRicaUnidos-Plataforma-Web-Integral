@@ -27,20 +27,29 @@ function notificarCambios(noticias) {
 }
 
 /**
- * Validador helper para rol de Editor Municipal (RBAC)
+ * Validador helper para rol de Gestión Territorial y Municipal (RBAC)
  */
-export function esEditorMunicipal(user) {
+export const esEditorMunicipal = (user) => {
   if (!user) return false;
-  const rol = String(user.rol || user.role || '').toLowerCase().trim();
-  return (
-    rol.includes('editor municipal') ||
-    rol === 'editor_muni' ||
-    rol === 'editormunicipal' ||
-    rol.includes('super administrador') ||
-    rol.includes('administrador provincial') ||
-    (user.nivelAcceso >= 3 && rol.includes('editor'))
-  );
-}
+  
+  const rolNormalizado = (user.rol || user.role || "").toLowerCase();
+  const nivel = user.nivelAcceso || 0;
+
+  // Tienen permiso tanto el Gestor Territorial (Nivel 4) como el Super Admin (Nivel 5)
+  const tieneRolAutorizado = 
+    rolNormalizado.includes("gestor territorial") ||
+    rolNormalizado.includes("gestor_territorial") ||
+    rolNormalizado.includes("territorial") ||
+    rolNormalizado.includes("editor municipal") ||
+    rolNormalizado.includes("editor_muni") ||
+    rolNormalizado.includes("super administrador") ||
+    rolNormalizado.includes("super_admin") ||
+    rolNormalizado.includes("administrador provincial");
+
+  const tieneNivelSuficiente = nivel >= 4;
+
+  return tieneRolAutorizado || tieneNivelSuficiente;
+};
 
 /**
  * Obtener lista de noticias con filtros opcionales y paginación

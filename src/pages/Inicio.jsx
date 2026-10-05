@@ -62,9 +62,9 @@ export default function Inicio() {
     {
       categoria: t('sugTramites', 'Trámites & Hacienda'),
       items: [
-        { label: t('sugItem1', 'Validación de Cédula y Situación Tributaria (ATV)'), path: '/dashboard' },
-        { label: t('sugItem2', 'Consulta de Patentes Comerciales y Pago Municipal'), path: '/dashboard' },
-        { label: t('sugItem3', 'Declaración de Bienes Inmuebles y Tasas'), path: '/dashboard' }
+        { label: t('sugItem1', 'Validación de Cédula y Situación Tributaria (ATV)'), path: '/portal-ciudadano' },
+        { label: t('sugItem2', 'Consulta de Patentes Comerciales y Pago Municipal'), path: '/portal-ciudadano' },
+        { label: t('sugItem3', 'Declaración de Bienes Inmuebles y Tasas'), path: '/portal-ciudadano' }
       ]
     },
     {
@@ -80,7 +80,7 @@ export default function Inicio() {
       items: [
         { label: t('sugItem7', 'Reportar hueco vial o bacheo prioritario'), path: '/reportar-incidencia' },
         { label: t('sugItem8', 'Reporte de alumbrado público o luminaria dañada'), path: '/reportar-incidencia' },
-        { label: t('sugItem9', 'Fiscalización comunal de contratos MOPT/SICOP'), path: '/dashboard' }
+        { label: t('sugItem9', 'Fiscalización comunal de contratos MOPT/SICOP'), path: '/portal-ciudadano' }
       ]
     },
     {
@@ -106,7 +106,7 @@ export default function Inicio() {
 
     const queryLower = searchQuery.toLowerCase();
     if (queryLower.includes('tramit') || queryLower.includes('cedula') || queryLower.includes('hacienda') || queryLower.includes('patente') || queryLower.includes('tributo')) {
-      navigate('/dashboard');
+      navigate('/portal-ciudadano');
     } else if (queryLower.includes('acta') || queryLower.includes('concejo') || queryLower.includes('alcald') || queryLower.includes('regidor') || queryLower.includes('gobernan')) {
       navigate('/gobernanza');
     } else if (queryLower.includes('voto') || queryLower.includes('presupuesto') || queryLower.includes('participa')) {
@@ -139,7 +139,7 @@ export default function Inicio() {
         }
         navigate('/gobernanza');
       } else {
-        navigate('/dashboard');
+        navigate('/portal-ciudadano');
       }
     }
   };
@@ -158,13 +158,14 @@ export default function Inicio() {
       {/* Header Municipal Soberano Fijo */}
       <Navbar />
 
-      <main style={{ flex: 1 }}>
+      <main className="page-content-wrapper" style={{ flex: 1 }}>
         {/* ==========================================================================
             1. HERO CÍVICO FORMAL Y MODERNO
             Fondo: Cordillera Soberana de Costa Rica tratada con degradado de Obsidiana
             Emblema Solemne · Titular de Estado · Barra de Búsqueda Cívica Flotante
             ========================================================================== */}
         <section
+          className="hero-section-container"
           style={{
             position: 'relative',
             minHeight: '88vh',
@@ -343,6 +344,7 @@ export default function Inicio() {
             >
               <form
                 onSubmit={handleSearchSubmit}
+                className="hero-search-bar-container"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -356,30 +358,35 @@ export default function Inicio() {
                   transition: 'all 0.3s ease'
                 }}
               >
-                <Search size={20} color="#79a6ff" style={{ flexShrink: 0, marginRight: '0.75rem' }} />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setShowSuggestions(true);
-                  }}
-                  onFocus={() => setShowSuggestions(true)}
-                  placeholder={t('buscarPlaceholder', 'Buscar trámite municipal, acta de concejo, cantón o reporte vial...')}
-                  aria-label={t('buscarPlaceholder', 'Buscar trámite municipal, acta de concejo, cantón o reporte vial')}
-                  style={{
-                    flex: 1,
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#FFFFFF',
-                    fontSize: '0.98rem',
-                    outline: 'none',
-                    fontFamily: 'inherit'
-                  }}
-                />
+                <div className="hero-search-input-wrapper flex-1 flex items-center w-full min-w-0">
+                  <Search size={20} color="#79a6ff" style={{ flexShrink: 0, marginRight: '0.75rem' }} />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    onFocus={() => setShowSuggestions(true)}
+                    placeholder={t('buscarPlaceholder', 'Buscar trámite municipal, acta de concejo, cantón o reporte vial...')}
+                    aria-label={t('buscarPlaceholder', 'Buscar trámite municipal, acta de concejo, cantón o reporte vial')}
+                    className="hero-search-input"
+                    style={{
+                      flex: 1,
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#FFFFFF',
+                      fontSize: '0.98rem',
+                      outline: 'none',
+                      fontFamily: 'inherit',
+                      minWidth: 0
+                    }}
+                  />
+                </div>
                 <button
                   type="submit"
                   aria-label={t('botonBuscar', 'Consultar')}
+                  className="hero-search-btn"
                   style={{
                     backgroundColor: '#002B7F',
                     backgroundImage: 'linear-gradient(135deg, #002B7F 0%, #001489 100%)',
@@ -502,19 +509,25 @@ export default function Inicio() {
 
             {/* Indicador del Cantón Actualmente Activo en el Hero */}
             <div
+              className="hero-canton-indicator"
               style={{
                 marginTop: '1.75rem',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
                 color: '#94A3B8',
-                fontSize: '0.82rem'
+                fontSize: '0.82rem',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                padding: '0 0.5rem'
               }}
             >
-              <Building2 size={15} color="#38BDF8" />
-              <span>{t('gobiernoActivo', 'Gobierno Local activo en consulta:')}</span>
-              <span style={{ color: '#FFFFFF', fontWeight: 800 }}>{t('municipalidadDe', 'Municipalidad de')} {activeCantonName}</span>
-              <span style={{ color: '#475569' }}>•</span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <Building2 size={15} color="#38BDF8" />
+                <span>{t('gobiernoActivo', 'Gobierno Local activo en consulta:')}</span>
+                <span style={{ color: '#FFFFFF', fontWeight: 800 }}>{t('municipalidadDe', 'Municipalidad de')} {activeCantonName}</span>
+              </div>
+              <span style={{ color: '#475569' }} className="hidden sm:inline">•</span>
               <Link
                 to="/gobernanza"
                 style={{
@@ -688,7 +701,7 @@ export default function Inicio() {
 
               {/* Enlace Directo al Módulo */}
               <Link
-                to="/dashboard"
+                to="/portal-ciudadano"
                 style={{
                   textDecoration: 'none',
                   color: '#FFFFFF',
@@ -1549,7 +1562,7 @@ export default function Inicio() {
                   Servicios Cantonales
                 </span>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                  <li><Link to="/dashboard" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Ventanilla Única & Cédula</Link></li>
+                  <li><Link to="/portal-ciudadano" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Ventanilla Única & Cédula</Link></li>
                   <li><Link to="/gobernanza" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Concejo Municipal & Actas</Link></li>
                   <li><Link to="/reportar-incidencia" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Reporte de Averías Viales</Link></li>
                   <li><Link to="/participacion" style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s' }}>Presupuestos Participativos</Link></li>

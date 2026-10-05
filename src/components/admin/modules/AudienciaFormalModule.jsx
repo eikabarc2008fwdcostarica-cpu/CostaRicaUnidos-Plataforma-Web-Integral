@@ -6,7 +6,7 @@
  * Derecho de Petición: Artículo 27 de la Constitución Política
  * ============================================================================
  */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Calendar,
   Landmark,
@@ -28,6 +28,7 @@ import { CANTONES_OFICIALES, PROVINCIAS_DATA } from '../../../data/costaRicaTerr
 
 export default function AudienciaFormalModule({
   provincia = 'Puntarenas',
+  canton = null,
   onNavigateModule = null
 }) {
   // Resolver provincia activa
@@ -37,7 +38,7 @@ export default function AudienciaFormalModule({
     return (
       PROVINCIAS_DATA.find(
         (p) => p.nombre.toLowerCase() === str || String(p.id) === str || p.codigo.toLowerCase() === str
-      ) || PROVINCIAS_DATA[5]
+      ) || PROVINCIAS_DATA[0]
     );
   }, [provincia]);
 
@@ -46,10 +47,58 @@ export default function AudienciaFormalModule({
     return CANTONES_OFICIALES.filter((c) => c.provinciaId === provinciaObj.id);
   }, [provinciaObj.id]);
 
-  // Cantón seleccionado
-  const [selectedCantonId, setSelectedCantonId] = useState(() => {
+  // Cantón seleccionado sincronizado con la sesión
+  const resolveCantonId = () => {
+    try {
+      const target = canton || localStorage.getItem('cr_canton_activo');
+      if (target) {
+        const found = cantones.find((c) => c.nombre.toLowerCase() === String(target).toLowerCase());
+        if (found) return found.id;
+      }
+    } catch {}
     return cantones.length > 0 ? cantones[0].id : 1;
-  });
+  };
+
+  const [selectedCantonId, setSelectedCantonId] = useState(resolveCantonId);
+
+  useEffect(() => {
+    setSelectedCantonId(resolveCantonId());
+  }, [cantones, canton]);
+
+  useEffect(() => {
+    const handleCantonChange = (e) => {
+      const nombre = e.detail?.nombre;
+      if (nombre) {
+        const match = cantones.find((c) => c.nombre.toLowerCase() === nombre.toLowerCase());
+        if (match && match.id !== selectedCantonId) {
+          setSelectedCantonId(match.id);
+        }
+      }
+    };
+    window.addEventListener('cantonChanged', handleCantonChange);
+    return () => window.removeEventListener('cantonChanged', handleCantonChange);
+  }, [cantones, selectedCantonId]);
+
+  const handleSelectCanton = (cId) => {
+    setSelectedCantonId(cId);
+    const c = cantones.find((item) => item.id === cId);
+    if (c) {
+      try {
+        localStorage.setItem('cr_canton_activo', c.nombre);
+      } catch {}
+      window.dispatchEvent(
+        new CustomEvent('cantonChanged', {
+          detail: {
+            nombre: c.nombre,
+            id: c.id,
+            provinciaId: c.provinciaId,
+            codigoDta: c.codigoDta,
+            cabecera: c.cabecera
+          }
+        })
+      );
+    }
+  };
 
   const cantonActual = useMemo(() => {
     return cantones.find((c) => c.id === selectedCantonId) || cantones[0] || {
@@ -58,7 +107,7 @@ export default function AudienciaFormalModule({
       codigoDta: `${provinciaObj.id}01`,
       cabecera: provinciaObj.cabecera
     };
-  }, [cantones, selectedCantonId]);
+  }, [cantones, selectedCantonId, provinciaObj]);
 
   // Estado del formulario
   const [formulario, setFormulario] = useState({
@@ -338,7 +387,7 @@ export default function AudienciaFormalModule({
             <select
               id="canton-audiencia-select"
               value={selectedCantonId}
-              onChange={(e) => setSelectedCantonId(Number(e.target.value))}
+              onChange={(e) => handleSelectCanton(Number(e.target.value))}
               style={{
                 width: '100%',
                 backgroundColor: 'rgba(5, 12, 28, 0.95)',

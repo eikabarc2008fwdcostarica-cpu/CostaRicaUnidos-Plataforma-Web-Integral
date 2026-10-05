@@ -70,6 +70,7 @@ import {
   obtenerMetricasGestionMunicipal
 } from '../services/adminService';
 import * as adminService from '../services/adminService';
+import { actualizarEstadoSolicitudApi } from '../services/comercioService';
 
 // Sectores normados para asignación de puestos de feria
 const SECTORES_FERIA = [
@@ -188,33 +189,40 @@ export default function Dashboard() {
 
   const activeUser = usuarioActual || user;
 
-  // SEGREGACIÓN ESTRICTA RBAC (Ley N° 8968):
-  // Un usuario con rol CIUDADANO/TURISTA nunca debe poder ingresar ni visualizar la
-  // Consola de Mando Cívico y Administración Territorial. Redirección automática a /portal-ciudadano.
+  // SEGREGACIÓN ESTRICTA RBAC (Principio de Menor Privilegio - Ley N° 8292):
+  // La Consola Nacional (Dashboard.jsx) es exclusiva para el Super Administrador Nacional (Nivel 5).
+  // - Gestor Territorial (Nivel 4) -> Redirección automática a /admin/territorial
+  // - Ciudadano (Nivel 2) -> Redirección automática a /portal-ciudadano
   useEffect(() => {
     if (activeUser) {
-      const rolNorm = String(activeUser.rol || '').toLowerCase();
+      const rolNorm = String(activeUser.rol || '').toUpperCase();
       const level = Number(activeUser.nivelAcceso ?? 2);
       if (
-        rolNorm.includes('ciudadan') ||
-        rolNorm.includes('turista') ||
-        rolNorm.includes('emprendedor') ||
-        level < 3
+        rolNorm.includes('GESTOR') ||
+        rolNorm.includes('TERRITORIAL') ||
+        rolNorm.includes('MUNICIPAL') ||
+        rolNorm.includes('PROVINCIAL') ||
+        level === 4
       ) {
-        navigate('/', { replace: true });
+        navigate('/admin/territorial', { replace: true });
+        return;
+      }
+      if (
+        rolNorm.includes('CIUDADAN') ||
+        rolNorm.includes('TURISTA') ||
+        rolNorm.includes('EMPRENDEDOR') ||
+        level < 4
+      ) {
+        navigate('/portal-ciudadano', { replace: true });
+        return;
       }
     }
   }, [activeUser, navigate]);
 
   if (activeUser) {
-    const rolNorm = String(activeUser.rol || '').toLowerCase();
+    const rolNorm = String(activeUser.rol || '').toUpperCase();
     const level = Number(activeUser.nivelAcceso ?? 2);
-    if (
-      rolNorm.includes('ciudadan') ||
-      rolNorm.includes('turista') ||
-      rolNorm.includes('emprendedor') ||
-      level < 3
-    ) {
+    if (!rolNorm.includes('SUPER') && level < 5) {
       return null;
     }
   }
@@ -254,6 +262,7 @@ export default function Dashboard() {
 
   // Estados de control para Navegación y Barra Lateral
   const [sidebarColapsado, setSidebarColapsado] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Estados de control para Pestaña 1 (Usuarios y Auditoría)
   const [busquedaUsuario, setBusquedaUsuario] = useState('');
@@ -310,6 +319,22 @@ export default function Dashboard() {
   useEffect(() => {
     window.addEventListener('cru_db_updated', reloadData);
     window.addEventListener('cru_admin_updated', reloadData);
+
+    // Sincronización inicial directa con json-server (db.json)
+    fetch('http://localhost:3001/solicitudesComercio')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSolicitudes(data);
+          try {
+            localStorage.setItem('cr_solicitudes_comercio', JSON.stringify(data));
+          } catch (_) {}
+        }
+      })
+      .catch((err) => {
+        console.warn('[Dashboard] json-server no disponible en :3001, usando dbClient local:', err);
+      });
+
     return () => {
       window.removeEventListener('cru_db_updated', reloadData);
       window.removeEventListener('cru_admin_updated', reloadData);
@@ -992,31 +1017,115 @@ export default function Dashboard() {
   // ==========================================================================
   const solicitudesFiltradas = useMemo(() => {
     if (filtroComercio === 'TODAS') return solicitudes;
-    return solicitudes.filter((s) => s.estado === filtroComercio);
+    return solicitudes.filter((s) => String(s.estado || '').toUpperCase() === filtroComercio.toUpperCase());
   }, [solicitudes, filtroComercio]);
 
-  const handleAprobarSello = (id) => {
-    resolverSolicitudComercio(id, 'APROBADO', 'Patente y Sello Verificado aprobados conforme a revisión tributaria ante Hacienda.');
-    reloadData();
-    showToast('Sello Verificado y patente municipal otorgados con éxito.');
+  const handleAprobarSello = async (solicitudId) => {
+    try {
+      const guardadoExitoso = await actualizarEstadoSolicitudApi(solicitudId, 'aprobado');
+
+      if (guardadoExitoso) {
+        // 1. Actualizar el estado visual de React
+        setSolicitudes((prev) =>
+          prev.map((sol) =>
+            sol.id === solicitudId
+              ? { ...sol, estado: 'aprobado', verificado: true, justificacion: 'Patente y Sello Verificado aprobados conforme a revisión tributaria ante Hacienda.' }
+              : sol
+          )
+        );
+
+        // 2. Registrar en bitácora de auditoría y base local
+        resolverSolicitudComercio(
+          solicitudId,
+          'APROBADO',
+          'Patente y Sello Verificado aprobados conforme a revisión tributaria ante Hacienda.'
+        );
+
+        // 3. Sincronizar cache de respaldo en localStorage
+        const cache = localStorage.getItem('cr_solicitudes_comercio');
+        if (cache) {
+          try {
+            const actualizadas = JSON.parse(cache).map((sol) =>
+              sol.id === solicitudId ? { ...sol, estado: 'aprobado', verificado: true } : sol
+            );
+            localStorage.setItem('cr_solicitudes_comercio', JSON.stringify(actualizadas));
+          } catch (_) {}
+        }
+
+        showToast('Sello Verificado y patente municipal otorgados con éxito en db.json.');
+      } else {
+        alert('No se pudo actualizar el estado en db.json. Verifique que json-server esté corriendo en el puerto 3001.');
+      }
+    } catch (error) {
+      console.error('Fallo al aprobar solicitud en json-server:', error);
+      alert('Error de conexión con json-server en el puerto 3001.');
+    }
   };
 
-  const handleRechazarSolicitud = (id) => {
+  const handleRechazarSolicitud = (solicitudId) => {
     solicitarMotivo({
       titulo: 'Rechazo Legal de Solicitud Comercial',
       mensaje: 'Indique el fundamento técnico o legal para rechazar la solicitud de patente municipal:',
       placeholder: 'Ej: Incumplimiento de requisitos sanitarios, falta de documentación ante Hacienda...',
       textoBotonAceptar: 'Rechazar Solicitud',
       textoBotonCancelar: 'Cancelar',
-      onAceptar: (justificacion) => {
-        resolverSolicitudComercio(id, 'RECHAZADO', justificacion);
-        reloadData();
-        showToast('Solicitud rechazada y asentada en la bitácora legal.');
+      onAceptar: async (motivo) => {
+        try {
+          // 1. Ejecutar actualización física en db.json mediante actualizarEstadoSolicitudApi
+          const guardadoExitoso = await actualizarEstadoSolicitudApi(solicitudId, 'rechazado', motivo);
+
+          if (guardadoExitoso) {
+            // 2. Actualizar el estado visual de React de inmediato
+            setSolicitudes((prev) =>
+              prev.map((sol) =>
+                sol.id === solicitudId
+                  ? { ...sol, estado: 'rechazado', motivoRechazo: motivo, justificacion: motivo, notas: motivo }
+                  : sol
+              )
+            );
+
+            // 3. Sincronizar en bitácora legal
+            resolverSolicitudComercio(solicitudId, 'RECHAZADO', motivo);
+
+            const cache = localStorage.getItem('cr_solicitudes_comercio');
+            if (cache) {
+              try {
+                const actualizadas = JSON.parse(cache).map((sol) =>
+                  sol.id === solicitudId ? { ...sol, estado: 'rechazado', motivoRechazo: motivo } : sol
+                );
+                localStorage.setItem('cr_solicitudes_comercio', JSON.stringify(actualizadas));
+              } catch (_) {}
+            }
+
+            showToast('Solicitud rechazada físicamente en db.json y asentada en la bitácora legal.');
+          } else {
+            console.error('Fallo al rechazar en db.json');
+            alert('No se pudo actualizar el estado en db.json. Verifique el servidor local en el puerto 3001.');
+          }
+        } catch (error) {
+          console.error('Fallo de red al conectar con json-server:', error);
+          alert('Error de conexión con json-server en el puerto 3001.');
+        }
       }
     });
   };
 
-  const handleGuardarSectorFeria = (id) => {
+  const handleGuardarSectorFeria = async (id) => {
+    try {
+      const fechaNow = new Date().toISOString();
+      await fetch(`http://localhost:3001/solicitudesComercio/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sectorFeria: sectorSeleccionado,
+          sectorFeriaSolicitado: sectorSeleccionado,
+          estado: 'aprobado',
+          verificado: true,
+          fechaResolucion: fechaNow
+        })
+      }).catch(() => {});
+    } catch (_) {}
+
     resolverSolicitudComercio(id, 'APROBADO', `Puesto asignado formalmente en ${sectorSeleccionado}.`, sectorSeleccionado);
     setModalSectorId(null);
     reloadData();
@@ -1129,10 +1238,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#00040D] text-slate-100 flex flex-col selection:bg-sky-500 selection:text-slate-950 font-sans">
-      {/* Si el usuario es administrador, NO renderices <Navbar /> */}
-      {/* La vista del Admin comienza directamente con su Consola de Mando y Sidebar lateral */}
-
+    <div className="admin-viewport-wrapper">
       {/* Notificación Toast Flotante */}
       {toastMessage && (
         <div 
@@ -1151,7 +1257,7 @@ export default function Dashboard() {
           {/* Notificación con diseño Sovereign Civic Glass */}
           <div 
             style={{ pointerEvents: 'auto' }}
-            className="flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-[#00040D]/95 dark:bg-[#00040D]/95 light:bg-white text-white dark:text-white light:text-slate-900 border border-white/20 dark:border-white/20 light:border-slate-300 shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-4 duration-200"
+            className="flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-[#00040D]/95 text-white border border-white/20 shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-4 duration-200"
           >
             <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" strokeWidth={2} />
             <span className="text-xs font-bold tracking-wide">{toastMessage}</span>
@@ -1159,176 +1265,239 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Barra Institucional Soberanía Cívica Digital - Anclada en la parte superior de la Consola */}
-      <div 
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 30,
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)'
-        }}
-        className="bg-[#00040D]/95 dark:bg-[#00040D]/95 light:bg-slate-50/95 border-b border-white/10 dark:border-white/10 light:border-slate-200 px-6 py-3.5 transition-all"
+      {/* ====================================================================
+          COLUMNA 1: BARRA LATERAL FIJA PERMANENTE (100VH SIN SCROLL GLOBAL)
+          ==================================================================== */}
+      {/* Backdrop para Drawer en Móvil */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/75 backdrop-blur-sm z-[999] md:hidden transition-opacity duration-300"
+          onClick={() => setMobileSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside
+        className={`admin-sidebar-fixed ${
+          sidebarColapsado ? 'sidebar-collapsed' : 'sidebar-expanded'
+        } ${mobileSidebarOpen ? 'mobile-open' : ''}`}
       >
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-          {/* Título institucional */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-white dark:text-white light:text-slate-900 font-bold text-sm tracking-wide">
-              Soberanía Cívica Digital
-            </span>
-            <span className="text-slate-400 dark:text-slate-400 light:text-slate-500 text-xs hidden sm:inline">
-              | Consola de Mando y Auditoría Territorial · Costa Rica Unidos
-            </span>
-          </div>
-
-          {/* Badges de Estado (SYS, VERIF, ESTADO, AUDIT) */}
-          <div className="flex items-center gap-2 flex-wrap text-xs">
-            <span className="px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
-              {(currentUser?.rol === 'SUPER_ADMIN' || currentUser?.rol === 'SUPERADMIN_NACIONAL' || currentUser?.nivelAcceso === 5)
-                ? '[SYS] SUPER-ADMIN'
-                : '[NIVEL 2] JURISDICCIÓN PROVINCIAL | COSTA RICA UNIDOS'}
-            </span>
-            <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
-              [VERIF] Ley 8968
-            </span>
-            <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 font-mono">
-              [ESTADO] Operativo 100%
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Contenedor Flex con Sidebar Colapsable y Área Principal */}
-      <div className="flex flex-1 min-h-[calc(100vh-120px)]">
-        {/* ====================================================================
-            SIDEBAR LATERAL IZQUIERDO COLAPSABLE
-            ==================================================================== */}
-        <aside
-          className={`${
-            sidebarColapsado ? 'w-20' : 'w-64'
-          } transition-all duration-300 border-r border-white/10 bg-[#00040D]/90 backdrop-blur-xl flex flex-col justify-between p-4 shrink-0 sticky top-[53px] h-[calc(100vh-53px)] z-20`}
-        >
-          {/* Sección Superior: Encabezado y Navegación de Módulos */}
-          <div className="space-y-6">
-            {/* Encabezado del Sidebar */}
-            <div
-              className={`flex items-center ${
-                sidebarColapsado ? 'justify-center' : 'justify-between'
-              } pb-3 border-b border-white/10`}
-            >
-              {!sidebarColapsado ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                      Panel de Mando
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSidebarColapsado(true)}
-                    className="p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-                    title="Colapsar menú lateral"
-                    aria-label="Colapsar menú lateral"
-                  >
-                    <PanelLeftClose className="w-5 h-5" strokeWidth={1.75} />
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setSidebarColapsado(false)}
-                  className="p-2 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-                  title="Expandir menú lateral"
-                  aria-label="Expandir menú lateral"
-                >
-                  <PanelLeftOpen className="w-5 h-5" strokeWidth={1.75} />
-                </button>
-              )}
+        {/* Encabezado del Sidebar con botón de alternar colapso */}
+        <div className="flex items-center justify-between p-3.5 border-b border-white/10 shrink-0">
+          {!sidebarColapsado ? (
+            <div className="flex items-center gap-2 overflow-hidden">
+              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-300 truncate admin-sidebar-title-text">
+                Panel de Mando
+              </span>
             </div>
+          ) : (
+            <div className="w-full flex justify-center py-0.5">
+              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse shrink-0" />
+            </div>
+          )}
 
-            {/* Lista de Módulos (Botones de navegación vertical) */}
-            <nav className="space-y-1.5" aria-label="Navegación de módulos administrativos">
-              {[
-                { id: 'dashboard', label: 'Dashboard Analítico', icon: BarChart3 },
-                { id: 'usuarios', label: 'Usuarios & Auditoría', icon: Users },
-                { id: 'comercio', label: 'Ventanilla Comercial', icon: Store },
-                { id: 'obras', label: 'Obras & Averías', icon: AlertTriangle },
-                { id: 'cne', label: 'Emergencias COE', icon: ShieldAlert },
-                { id: 'ia', label: 'Gobernanza de IA', icon: Cpu }
-              ].filter((mod) => {
-                const isSuper = (currentUser?.rol === 'SUPER_ADMIN' || currentUser?.rol === 'SUPERADMIN_NACIONAL' || currentUser?.nivelAcceso === 5);
-                if (!isSuper && (mod.id === 'ia' || mod.id === 'comercio')) {
-                  return false;
-                }
-                return true;
-              }).map((mod) => {
-                const IconoMod = mod.icon;
-                const isActive = activeTab === mod.id;
-
-                return (
-                  <button
-                    key={mod.id}
-                    type="button"
-                    onClick={() => setActiveTab(mod.id)}
-                    title={sidebarColapsado ? mod.label : undefined}
-                    className={`w-full py-3 rounded-2xl text-xs font-bold transition-all duration-200 flex items-center gap-3.5 border ${
-                      isActive
-                        ? 'bg-sky-500/15 border-sky-400/40 border-l-4 border-l-sky-400 text-white shadow-[0_0_20px_rgba(56,189,248,0.18)]'
-                        : 'border-transparent text-slate-400 hover:text-white hover:bg-white/[0.04]'
-                    } ${sidebarColapsado ? 'justify-center px-0' : 'px-3.5'}`}
-                  >
-                    <IconoMod
-                      className={`w-5 h-5 flex-shrink-0 transition-colors ${
-                        isActive ? 'text-sky-400' : 'text-slate-400'
-                      }`}
-                      strokeWidth={1.75}
-                    />
-                    {!sidebarColapsado && (
-                      <span className="truncate tracking-wide">{mod.label}</span>
-                    )}
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
-
-          {/* Sección Inferior: Navegación Pública y Cierre de Sesión */}
-          <div className="pt-3 border-t border-white/10 space-y-1.5">
-            <Link
-              to="/"
-              title={sidebarColapsado ? "Ir al Portal Público" : undefined}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors ${
-                sidebarColapsado ? 'justify-center px-0' : ''
-              }`}
-            >
-              <Home className="w-4 h-4 text-sky-400 flex-shrink-0" />
-              <span>{!sidebarColapsado && "Ir al Portal Público"}</span>
-            </Link>
-
+          <div className="flex items-center gap-1 shrink-0">
+            {/* Botón de alternar colapso en pantallas medianas y grandes */}
             <button
               type="button"
-              onClick={handleLogout}
-              title={sidebarColapsado ? "Cerrar Sesión Segura" : undefined}
-              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors cursor-pointer ${
-                sidebarColapsado ? 'justify-center px-0' : ''
-              }`}
+              onClick={() => setSidebarColapsado(!sidebarColapsado)}
+              className="sidebar-collapse-toggle-btn hidden md:flex p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors items-center justify-center shrink-0"
+              title={sidebarColapsado ? "Expandir menú" : "Minimizar menú"}
+              aria-label={sidebarColapsado ? "Expandir menú" : "Minimizar menú"}
             >
-              <LogOut className="w-4 h-4 text-red-400 flex-shrink-0" strokeWidth={1.75} />
-              <span>{!sidebarColapsado && "Cerrar Sesión"}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                {sidebarColapsado ? (
+                  <polyline points="9 18 15 12 9 6" />
+                ) : (
+                  <polyline points="15 18 9 12 15 6" />
+                )}
+              </svg>
             </button>
 
-            {!sidebarColapsado && (
-              <div className="px-3 pt-1 text-[10px] text-slate-500 leading-tight">
-                Control de acceso RBAC bajo Ley N° 8292.
-              </div>
-            )}
+            {/* Botón para cerrar drawer en móvil */}
+            <button
+              type="button"
+              onClick={() => setMobileSidebarOpen(false)}
+              className="md:hidden p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors flex items-center justify-center shrink-0"
+              title="Cerrar menú"
+              aria-label="Cerrar menú"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
           </div>
-        </aside>
+        </div>
+
+        {/* Lista de Módulos (Área de navegación interna con scroll independiente) */}
+        <nav className="admin-sidebar-nav-body space-y-1.5" aria-label="Navegación de módulos administrativos">
+          {[
+            { id: 'dashboard', label: 'Dashboard Analítico', icon: BarChart3 },
+            { id: 'usuarios', label: 'Usuarios & Auditoría', icon: Users },
+            { id: 'comercio', label: 'Ventanilla Comercial', icon: Store },
+            { id: 'obras', label: 'Obras & Averías', icon: AlertTriangle },
+            { id: 'cne', label: 'Emergencias COE', icon: ShieldAlert },
+            { id: 'ia', label: 'Gobernanza de IA', icon: Cpu }
+          ].filter((mod) => {
+            const isSuper = (
+              currentUser?.rol === 'SUPER_ADMIN' ||
+              currentUser?.rol === 'SUPERADMIN_NACIONAL' ||
+              currentUser?.rol === 'Super Administrador Nacional' ||
+              currentUser?.nivelAcceso === 5
+            );
+            // Usuarios & Auditoría, Gobernanza de IA y Ventanilla Comercial son exclusivos de Nivel 5
+            if (!isSuper && (mod.id === 'usuarios' || mod.id === 'ia' || mod.id === 'comercio')) {
+              return false;
+            }
+            return true;
+          }).map((mod) => {
+            const IconoMod = mod.icon;
+            const isActive = activeTab === mod.id;
+
+            return (
+              <button
+                key={mod.id}
+                type="button"
+                onClick={() => {
+                  setActiveTab(mod.id);
+                  setMobileSidebarOpen(false);
+                }}
+                title={sidebarColapsado ? mod.label : undefined}
+                className={`nav-item-btn w-full py-2.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center border ${
+                  isActive
+                    ? 'bg-sky-500/15 border-sky-400/40 border-l-4 border-l-sky-400 text-white shadow-[0_0_20px_rgba(56,189,248,0.18)]'
+                    : 'border-transparent text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                } ${sidebarColapsado ? 'justify-center px-0' : 'px-3 gap-3'}`}
+              >
+                <span className="nav-icon-slot flex items-center justify-center shrink-0">
+                  <IconoMod
+                    className={`w-5 h-5 transition-colors ${
+                      isActive ? 'text-sky-400' : 'text-slate-400'
+                    }`}
+                    strokeWidth={1.75}
+                  />
+                </span>
+                {!sidebarColapsado && (
+                  <span className="nav-label-text truncate tracking-wide">{mod.label}</span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Sección Inferior: Navegación Pública y Cierre de Sesión (Sticky Footer) */}
+        <div className="admin-sidebar-nav-footer space-y-1.5">
+          <Link
+            to="/"
+            onClick={() => setMobileSidebarOpen(false)}
+            title={sidebarColapsado ? "Ir al Portal Público" : undefined}
+            className={`flex items-center rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors ${
+              sidebarColapsado ? 'justify-center px-0 py-2' : 'px-3 py-2 gap-2.5'
+            }`}
+          >
+            <span className="nav-icon-slot flex items-center justify-center shrink-0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" className="text-sky-400">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            </span>
+            {!sidebarColapsado && <span className="nav-label-text">Ir al Portal Público</span>}
+          </Link>
+
+          <button
+            type="button"
+            onClick={() => {
+              setMobileSidebarOpen(false);
+              handleLogout();
+            }}
+            title={sidebarColapsado ? "Cerrar Sesión" : undefined}
+            className={`nav-logout-btn w-full flex items-center rounded-xl text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors cursor-pointer ${
+              sidebarColapsado ? 'justify-center px-0 py-2' : 'px-3 py-2 gap-2.5'
+            }`}
+          >
+            <span className="nav-icon-slot flex items-center justify-center shrink-0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </span>
+            {!sidebarColapsado && <span className="nav-label-text">Cerrar Sesión</span>}
+          </button>
+
+          {!sidebarColapsado && (
+            <div className="px-3 pt-1 text-[10px] text-slate-500 leading-tight admin-hide-on-collapse">
+              Control de acceso RBAC bajo Ley N° 8292.
+            </div>
+          )}
+        </div>
+      </aside>
+
+      {/* ====================================================================
+          COLUMNA 2: ÁREA DE CONTENIDO CENTRAL (ÚNICA CON SCROLL VERTICAL)
+          ==================================================================== */}
+      <div className="admin-main-scrollable">
+        {/* Barra Institucional Superior */}
+        <div 
+          style={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 30,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)'
+          }}
+          className="bg-[#00040D]/95 border-b border-white/10 px-6 py-3.5 transition-all shrink-0"
+        >
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            {/* Título institucional y botón hamburguesa móvil */}
+            <div className="flex items-center justify-between w-full md:w-auto gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-white font-bold text-sm tracking-wide">
+                  Soberanía Cívica Digital
+                </span>
+                <span className="text-slate-400 text-xs hidden sm:inline">
+                  | Consola de Mando y Auditoría Territorial · Costa Rica Unidos
+                </span>
+              </div>
+
+              {/* Botón Hamburguesa Móvil (< 768px) */}
+              <button
+                type="button"
+                onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+                className="md:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors flex items-center justify-center shrink-0"
+                title="Abrir menú de navegación"
+                aria-label="Abrir menú de navegación"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Badges de Estado (SYS, VERIF, ESTADO, AUDIT) */}
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <span className="px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
+                {(currentUser?.rol === 'SUPER_ADMIN' || currentUser?.rol === 'SUPERADMIN_NACIONAL' || currentUser?.nivelAcceso === 5)
+                  ? '[SYS] SUPER-ADMIN'
+                  : '[NIVEL 2] JURISDICCIÓN PROVINCIAL | COSTA RICA UNIDOS'}
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
+                [VERIF] Ley 8968
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 font-mono">
+                [ESTADO] Operativo 100%
+              </span>
+            </div>
+          </div>
+        </div>
 
         {/* Área Principal de Contenido */}
-        <main className="flex-1 p-6 md:p-10 space-y-8 min-w-0">
+        <main className="flex-1 p-4 sm:p-6 md:p-10 space-y-8 min-w-0 page-content-wrapper">
         {/* ====================================================================
             1. CABECERA INSTITUCIONAL DE CONTROL
             Membrete oficial de la República, ficha del administrador y RBAC
@@ -1343,7 +1512,7 @@ export default function Dashboard() {
             }}
           />
 
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 consola-banner-header">
             <div className="flex items-start gap-4">
               <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center flex-shrink-0 text-sky-400 shadow-inner">
                 <Building2 className="w-7 h-7" strokeWidth={1.75} />
@@ -1364,28 +1533,28 @@ export default function Dashboard() {
             </div>
 
             {/* Ficha del Administrador (Limpia, sin botón redundante) */}
-            <div className="flex flex-wrap items-center gap-3 bg-white/[0.04] p-3.5 rounded-2xl border border-white/10">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-900/40 border border-blue-500/40 flex items-center justify-center text-blue-300 font-bold">
+            <div className="flex flex-wrap items-center gap-3 bg-white/[0.04] p-3.5 rounded-2xl border border-white/10 admin-user-card w-full lg:w-auto">
+              <div className="flex items-start sm:items-center gap-3 w-full">
+                <div className="w-10 h-10 rounded-xl bg-blue-900/40 border border-blue-500/40 flex items-center justify-center text-blue-300 font-bold shrink-0">
                   <User className="w-5 h-5" strokeWidth={1.75} />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-bold text-white leading-tight">
                       {currentUser.nombre}
                     </span>
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                      <ShieldCheck className="w-3 h-3 text-amber-400" strokeWidth={2} />
-                      {currentRol}
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 badge-rol">
+                      <ShieldCheck className="w-3 h-3 text-amber-400 shrink-0" strokeWidth={2} />
+                      <span>{currentRol}</span>
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-slate-400 mt-1">
                     <span>Cédula: <strong className="text-slate-200 font-mono">{currentUser.cedula}</strong></span>
-                    <span>•</span>
+                    <span className="hidden sm:inline">•</span>
                     <span className="text-emerald-400 flex items-center gap-1 font-semibold">
                       <CheckCircle2 className="w-3 h-3" strokeWidth={2} /> Hacienda OK
                     </span>
-                    <span>•</span>
+                    <span className="hidden sm:inline">•</span>
                     <span>Cantón: <strong className="text-white">{currentUser.canton || 'San José'}</strong></span>
                   </div>
                 </div>
@@ -1801,6 +1970,11 @@ export default function Dashboard() {
             -------------------------------------------------------------------- */}
 
         {activeTab === 'usuarios' && (
+          currentUser?.nivelAcceso === 5 ||
+          currentUser?.rol === 'SUPER_ADMIN' ||
+          currentUser?.rol === 'SUPERADMIN_NACIONAL' ||
+          currentUser?.rol === 'Super Administrador Nacional'
+        ) && (
           <div className="space-y-8 animate-fadeIn">
             {/* Módulo Oficial de Padrón Cívico, Auditoría y Control RBAC */}
             <UsuariosAuditoriaModule

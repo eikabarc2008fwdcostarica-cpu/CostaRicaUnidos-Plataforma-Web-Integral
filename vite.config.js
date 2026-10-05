@@ -225,7 +225,7 @@ function jsonDbServerPlugin() {
           if (req.method === 'OPTIONS') {
             res.statusCode = 204;
             res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
             res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
             res.end();
             return;
@@ -281,6 +281,69 @@ function jsonDbServerPlugin() {
             res.setHeader('Content-Type', 'application/json');
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.end(JSON.stringify({ success: true, message: 'El usuario ya no se encuentra en db.json.' }));
+            return;
+          }
+
+          // 2.1 Manejo de PATCH / PUT (Actualizar parcialmente datos de usuario en db.json)
+          if (req.method === 'PATCH' || req.method === 'PUT') {
+            const cleanPath = url.replace(/^\/api/, '');
+            const segments = cleanPath.split('/').filter(Boolean);
+            const idToUpdate = segments.length > 1 ? decodeURIComponent(segments[1]) : null;
+
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const cambios = JSON.parse(bodyStr || '{}');
+
+                const db = readDb();
+                if (!Array.isArray(db.usuarios)) db.usuarios = [];
+
+                const userIndex = db.usuarios.findIndex(
+                  (u) => String(u.id) === String(idToUpdate) || String(u.cedula) === String(idToUpdate)
+                );
+
+                if (userIndex === -1) {
+                  res.statusCode = 404;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: false, message: 'Usuario no encontrado en db.json.' }));
+                  return;
+                }
+
+                db.usuarios[userIndex] = {
+                  ...db.usuarios[userIndex],
+                  ...cambios
+                };
+
+                if (Array.isArray(db.bitacoraAccesos)) {
+                  db.bitacoraAccesos.push({
+                    id: `LOG-${Date.now().toString().slice(-4)}`,
+                    usuarioId: db.usuarios[userIndex].id,
+                    usuarioNombre: db.usuarios[userIndex].nombre,
+                    rol: db.usuarios[userIndex].rol,
+                    accion: 'ACTUALIZACION_USUARIO',
+                    detalles: `Actualización de usuario ${db.usuarios[userIndex].nombre} (Rol: ${db.usuarios[userIndex].rol}, Nivel: ${db.usuarios[userIndex].nivelAcceso}).`,
+                    timestamp: new Date().toISOString()
+                  });
+                }
+
+                writeDb(db);
+                console.log(`[jsonDbServer] Usuario ${idToUpdate} actualizado físicamente en db.json`);
+
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: true, user: db.usuarios[userIndex] }));
+              } catch (err) {
+                console.error('[jsonDbServer] Error en PATCH /api/usuarios:', err);
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error interno al actualizar usuario.' }));
+              }
+            });
             return;
           }
 
@@ -721,15 +784,19 @@ function jsonDbServerPlugin() {
           const pathSegments = cleanPath.split('/').filter(Boolean);
           const noticiaIdFromPath = pathSegments.length > 1 ? pathSegments[1] : null;
 
-          // Helper RBAC para validar rol de Editor Municipal
+          // Helper RBAC para validar rol de Gestor Territorial y Editor Municipal
           const esEditorMunicipal = (rol) => {
             if (!rol) return false;
             const r = String(rol).toLowerCase().trim();
             return (
+              r.includes('gestor territorial') ||
+              r.includes('gestor_territorial') ||
+              r.includes('territorial') ||
               r.includes('editor municipal') ||
               r === 'editor_muni' ||
               r === 'editormunicipal' ||
               r.includes('super administrador') ||
+              r.includes('super_admin') ||
               r.includes('administrador provincial')
             );
           };

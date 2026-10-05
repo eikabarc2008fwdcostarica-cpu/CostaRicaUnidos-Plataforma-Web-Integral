@@ -20,57 +20,29 @@
       "correo": "eik@gmail.com",
       "email": "eik@gmail.com",
       "password": "12345678",
-      "rol": "Ciudadano Residente",
-      "nivelAcceso": 2,
-      "provincia": "Puntarenas",
-      "canton": "Puntarenas",
+      "rol": "Gestor Territorial",
+      "nivelAcceso": 4,
+      "provincia": "San José",
+      "canton": "San José",
       "fechaRegistro": "2026-10-03T08:28:38.464Z",
       "verificadoHacienda": true,
-      "estado": "ACTIVO"
+      "estado": "ACTIVO",
+      "forzarCambioPassword": false
     },
     {
-      "id": "USR-CIUD-2783",
-      "cedula": "605040857",
-      "nombre": "ALANIE MARISA CASTILLO RUIZ CASTILLO RUIZ",
-      "correo": "alanie@gmail.com",
-      "password": "123456",
-      "rol": "CIUDADANO",
+      "id": "yDDWDouwQZ0",
+      "cedula": "603620745",
+      "nombre": "REBECA SANCHEZ RUIZ",
+      "correo": "rebeca@gmail.com",
+      "email": "rebeca@gmail.com",
+      "password": "12345678",
+      "rol": "Ciudadano Residente",
       "nivelAcceso": 2,
-      "provincia": "Puntarenas",
-      "canton": "Puntarenas",
-      "distrito": "Puntarenas",
-      "fechaRegistro": "2026-10-02T19:31:52.783Z",
-      "verificadoHacienda": true
-    },
-    {
-      "id": "USR-CIUD-7415",
-      "cedula": "1-0111-0222",
-      "nombre": "María Elena Rodríguez Vargas Rodríguez Vargas",
-      "correo": "maria.elena.rodriguez@gmail.com",
-      "password": "Ciudadano2026*",
-      "rol": "CIUDADANO",
-      "nivelAcceso": 2,
-      "provincia": "Puntarenas",
-      "canton": "Puntarenas",
-      "distrito": "Puntarenas",
-      "fechaRegistro": "2026-10-02T20:22:27.416Z",
-      "verificadoHacienda": false
-    },
-    {
-      "id": "USR-EMP-002",
-      "cedula": "3-102-456123",
-      "nombre": "Valeria Chaves Monge",
-      "correo": "valeria.chaves@ujarras.cr",
-      "password": "Empresa2026*",
-      "rol": "Ciudadano/Turista",
-      "nivelAcceso": 2,
-      "provincia": "Cartago",
-      "canton": "Cartago",
-      "distrito": "Ujarrás",
-      "fechaRegistro": "2026-09-22T14:30:00Z",
+      "provincia": "Heredia",
+      "canton": "Santo Domingo",
+      "fechaRegistro": "2026-10-04T05:42:54.982Z",
       "verificadoHacienda": true,
-      "empresaAprobada": true,
-      "nombreComercio": "Hortalizas del Valle de Ujarrás"
+      "estado": "ACTIVO"
     }
   ],
   "solicitudesComercio": [
@@ -88,10 +60,13 @@
       "sectorFeriaSolicitado": "Categoría: Gastronomía y Alimentos",
       "sectorFeria": "Categoría: Gastronomía y Alimentos",
       "fechaSolicitud": "2026-10-02T15:23:14.154Z",
-      "estado": "PENDIENTE",
-      "justificacion": "oubbiubio",
-      "notas": "Trámite Emprendedor. Nuevo correo comercial: alanie@gmail.com",
-      "verificadoHacienda": true
+      "estado": "rechazado",
+      "justificacion": "porque si",
+      "notas": "porque si",
+      "verificadoHacienda": true,
+      "motivoRechazo": "porque si",
+      "fechaResolucion": "2026-10-04T06:45:21.760Z",
+      "verificado": false
     },
     {
       "id": "SOL-COM-001",
@@ -470,7 +445,7 @@
     },
     {
       "id": "LOG-2783",
-      "usuarioId": "USR-CIUD-2783",
+      "usuarioId": null,
       "usuarioNombre": "ALANIE MARISA CASTILLO RUIZ CASTILLO RUIZ",
       "rol": "CIUDADANO",
       "accion": "REGISTRO_USUARIO",
@@ -479,12 +454,21 @@
     },
     {
       "id": "LOG-7416",
-      "usuarioId": "USR-CIUD-7415",
+      "usuarioId": null,
       "usuarioNombre": "María Elena Rodríguez Vargas Rodríguez Vargas",
       "rol": "CIUDADANO",
       "accion": "REGISTRO_USUARIO",
       "detalles": "Registro exitoso para María Elena Rodríguez Vargas Rodríguez Vargas en cantón Puntarenas.",
       "timestamp": "2026-10-02T20:22:27.416Z"
+    },
+    {
+      "id": "LOG-2798",
+      "usuarioId": "VuM2sRah80w",
+      "usuarioNombre": "EIKER MANUEL ABARCA MURILLO",
+      "rol": "Ciudadano Residente",
+      "accion": "ACTUALIZACION_USUARIO",
+      "detalles": "Actualización de usuario EIKER MANUEL ABARCA MURILLO (Rol: Ciudadano Residente, Nivel: 2).",
+      "timestamp": "2026-10-03T09:59:02.798Z"
     }
   ],
   "foro_posts": [
@@ -1088,8 +1072,11 @@
       "canton": "San José",
       "provincia": "San José",
       "justificacion": "oubbiubio",
-      "estado": "pendiente",
-      "fechaSolicitud": "2026-10-02T15:23:14.154Z"
+      "estado": "rechazado",
+      "fechaSolicitud": "2026-10-02T15:23:14.154Z",
+      "motivoRechazo": "porque si",
+      "fechaResolucion": "2026-10-04T06:45:21.760Z",
+      "verificado": false
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

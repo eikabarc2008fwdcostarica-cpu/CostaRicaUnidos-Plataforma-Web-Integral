@@ -6,7 +6,7 @@
  * Elecciones Municipales 2024-2028 · Datos Abiertos Territoriales
  * ============================================================================
  */
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Landmark,
   Users,
@@ -34,6 +34,8 @@ import { GOBIERNOS_LOCALES_DB, getGobiernoCantonalCompleto } from '../../data/go
 
 export default function ConcejosMunicipalesModule({
   provincia = null,
+  activeCanton = null,
+  canton = null,
   onNavigateModule = null
 }) {
   const { user } = useAuth();
@@ -55,7 +57,7 @@ export default function ConcejosMunicipalesModule({
           p.nombre.toLowerCase() === str ||
           String(p.id) === str ||
           p.codigo.toLowerCase() === str
-      ) || PROVINCIAS_DATA[5] // Por defecto Puntarenas (id: 6)
+      ) || PROVINCIAS_DATA[0] // Default: San José (id: 1)
     );
   }, [provincia, user]);
 
@@ -63,11 +65,29 @@ export default function ConcejosMunicipalesModule({
   const cantones = useMemo(() => {
     const lista = CANTONES_OFICIALES.filter((c) => c.provinciaId === provinciaObj.id);
     if (lista.length > 0) return lista;
-    return CANTONES_OFICIALES.filter((c) => c.provinciaId === 6); // Fallback garantizado Puntarenas
+    return CANTONES_OFICIALES.filter((c) => c.provinciaId === 1); // Fallback garantizado San José
   }, [provinciaObj.id]);
 
-  // 3. Selección automática del primer cantón de la lista al montar
-  const [selectedCanton, setSelectedCanton] = useState(cantones[0]?.nombre || 'Puntarenas');
+  // 3. Selección reactiva con persistencia en sesión y detección del cantón activo
+  const [selectedCanton, setSelectedCanton] = useState(() => {
+    try {
+      const target = activeCanton || canton || localStorage.getItem('cr_canton_activo');
+      if (target && cantones.some((c) => c.nombre.toLowerCase() === target.toLowerCase())) {
+        return target;
+      }
+    } catch {
+      // ignore
+    }
+    return cantones[0]?.nombre || 'Puntarenas';
+  });
+
+  // Reajustar cantón si viene por prop activo
+  useEffect(() => {
+    const target = activeCanton || canton;
+    if (target && cantones.some((c) => c.nombre.toLowerCase() === target.toLowerCase()) && selectedCanton.toLowerCase() !== target.toLowerCase()) {
+      setSelectedCanton(target);
+    }
+  }, [activeCanton, canton, cantones, selectedCanton]);
 
   // Reajustar cantón seleccionado si cambia la lista de cantones
   useEffect(() => {
@@ -75,6 +95,18 @@ export default function ConcejosMunicipalesModule({
       setSelectedCanton(cantones[0]?.nombre || 'Puntarenas');
     }
   }, [cantones, selectedCanton]);
+
+  // Sincronización reactiva bidireccional con eventos cantonChanged externos
+  useEffect(() => {
+    const handleCantonChange = (e) => {
+      const nombre = e.detail?.nombre;
+      if (nombre && cantones.some((c) => c.nombre.toLowerCase() === nombre.toLowerCase())) {
+        setSelectedCanton(nombre);
+      }
+    };
+    window.addEventListener('cantonChanged', handleCantonChange);
+    return () => window.removeEventListener('cantonChanged', handleCantonChange);
+  }, [cantones]);
 
   // 4. Cantón activo resuelto
   const cantonItem = useMemo(() => {
@@ -116,6 +148,38 @@ export default function ConcejosMunicipalesModule({
     return cantones.filter((c) => c.nombre.toLowerCase().includes(q) || c.codigoDta.includes(q));
   }, [cantones, busquedaCanton]);
 
+  // Ref y controlador de navegación suave horizontal del carrusel de cantones
+  const scrollRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const offset = direction === 'left' ? -220 : 220;
+      scrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+  };
+
+  // Sincronización inmediata del cantón seleccionado
+  const handleSelectCanton = (c) => {
+    setSelectedCanton(c.nombre);
+    try {
+      localStorage.setItem('cr_canton_activo', c.nombre);
+    } catch {
+      // ignore
+    }
+    // Notificar en tiempo real a la consola territorial y al widget de voz (Gemini 3.8 Flash)
+    window.dispatchEvent(
+      new CustomEvent('cantonChanged', {
+        detail: {
+          nombre: c.nombre,
+          id: c.id,
+          provinciaId: c.provinciaId,
+          codigoDta: c.codigoDta,
+          cabecera: c.cabecera
+        }
+      })
+    );
+  };
+
   return (
     <div
       id="modulo-concejos-municipales"
@@ -130,6 +194,57 @@ export default function ConcejosMunicipalesModule({
         @keyframes fadeInModule {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        .cantones-carousel-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          gap: 8px;
+        }
+        .cantones-carousel-track {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          overflow-x: auto;
+          scroll-behavior: smooth;
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE/Edge */
+          flex: 1;
+          min-width: 0;
+          padding: 4px 2px;
+        }
+        .cantones-carousel-track::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera */
+        }
+        .cantones-nav-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          min-width: 32px;
+          border-radius: 50%;
+          background: rgba(5, 12, 28, 0.70);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          color: #CBD5E1;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+          flex-shrink: 0;
+          padding: 0;
+        }
+        .cantones-nav-btn:hover {
+          background: rgba(56, 189, 248, 0.16);
+          border-color: rgba(56, 189, 248, 0.45);
+          color: #38BDF8;
+          box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+          transform: scale(1.06);
+        }
+        .cantones-nav-btn:active {
+          transform: scale(0.96);
         }
       `}</style>
 
@@ -238,61 +353,77 @@ export default function ConcejosMunicipalesModule({
           </div>
         </div>
 
-        {/* Píldoras interactivas de cantones */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.55rem',
-            overflowX: 'auto',
-            paddingBottom: '0.5rem',
-            scrollbarWidth: 'thin'
-          }}
-        >
-          {cantonesFiltrados.map((c) => {
-            const isSelected = c.nombre.toLowerCase() === (selectedCanton || '').toLowerCase();
-            return (
-              <button
-                key={`${c.provinciaId}-${c.id}-${c.codigoDta}`}
-                type="button"
-                onClick={() => setSelectedCanton(c.nombre)}
-                style={{
-                  padding: '0.5rem 1rem',
-                  borderRadius: '12px',
-                  fontSize: '0.82rem',
-                  fontWeight: isSelected ? 800 : 500,
-                  cursor: 'pointer',
-                  border: isSelected
-                    ? `1px solid var(--province-primary, var(--prov-primary, #38BDF8))`
-                    : '1px solid rgba(255, 255, 255, 0.08)',
-                  backgroundColor: isSelected
-                    ? 'rgba(56, 189, 248, 0.18)'
-                    : 'rgba(255, 255, 255, 0.03)',
-                  color: isSelected ? '#FFFFFF' : '#CBD5E1',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.2s ease',
-                  boxShadow: isSelected
-                    ? `0 0 16px var(--province-primary, var(--prov-primary, rgba(56, 189, 248, 0.3)))`
-                    : 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.45rem'
-                }}
-              >
-                <Compass size={14} color={isSelected ? '#38BDF8' : '#94A3B8'} />
-                <span>{c.nombre}</span>
-                <span
+        {/* Carrusel interactivo de cantones con navegación suave en vidrio */}
+        <div className="cantones-carousel-wrapper">
+          <button
+            type="button"
+            onClick={() => scroll('left')}
+            className="cantones-nav-btn cantones-nav-prev"
+            aria-label="Desplazar cantones hacia la izquierda"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+
+          <div ref={scrollRef} className="cantones-carousel-track">
+            {cantonesFiltrados.map((c) => {
+              const isSelected = c.nombre.toLowerCase() === (selectedCanton || '').toLowerCase();
+              return (
+                <button
+                  key={`${c.provinciaId}-${c.id}-${c.codigoDta}`}
+                  type="button"
+                  onClick={() => handleSelectCanton(c)}
                   style={{
-                    fontSize: '0.68rem',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    color: isSelected ? '#38BDF8' : '#64748B'
+                    padding: '0.5rem 1rem',
+                    borderRadius: '12px',
+                    fontSize: '0.82rem',
+                    fontWeight: isSelected ? 800 : 500,
+                    cursor: 'pointer',
+                    border: isSelected
+                      ? `1px solid var(--province-primary, var(--prov-primary, #38BDF8))`
+                      : '1px solid rgba(255, 255, 255, 0.08)',
+                    backgroundColor: isSelected
+                      ? 'rgba(56, 189, 248, 0.18)'
+                      : 'rgba(255, 255, 255, 0.03)',
+                    color: isSelected ? '#FFFFFF' : '#CBD5E1',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.2s ease',
+                    boxShadow: isSelected
+                      ? `0 0 16px var(--province-primary, var(--prov-primary, rgba(56, 189, 248, 0.3)))`
+                      : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    flexShrink: 0
                   }}
                 >
-                  {c.codigoDta}
-                </span>
-              </button>
-            );
-          })}
+                  <Compass size={14} color={isSelected ? '#38BDF8' : '#94A3B8'} />
+                  <span>{c.nombre}</span>
+                  <span
+                    style={{
+                      fontSize: '0.68rem',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      color: isSelected ? '#38BDF8' : '#64748B'
+                    }}
+                  >
+                    {c.codigoDta}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => scroll('right')}
+            className="cantones-nav-btn cantones-nav-next"
+            aria-label="Desplazar cantones hacia la derecha"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
         </div>
       </section>
 

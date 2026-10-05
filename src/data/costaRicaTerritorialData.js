@@ -281,7 +281,7 @@ export const SERVICIOS_CIVICOS = [
     tipo: 'servicio',
     titulo: 'Auditoría y Fiscalización de Obra Pública (SICOP / MOPT)',
     descripcion: 'Seguimiento financiero, avance físico y contratos viales cantonales.',
-    ruta: '/dashboard',
+    ruta: '/gobernanza',
     badge: 'Fiscalización'
   },
   {
@@ -289,7 +289,7 @@ export const SERVICIOS_CIVICOS = [
     tipo: 'servicio',
     titulo: 'Verificación Tributaria Ministerio de Hacienda (ATV)',
     descripcion: 'Consulta pública de situación fiscal por cédula física o jurídica.',
-    ruta: '/dashboard',
+    ruta: '/portal-ciudadano',
     badge: 'Hacienda'
   },
   {
@@ -297,7 +297,7 @@ export const SERVICIOS_CIVICOS = [
     tipo: 'servicio',
     titulo: 'Visor Cartográfico GIS y Relieve 3D de Cuencas',
     descripcion: 'Análisis topográfico, curvas de nivel y prevención de riesgos de inundación.',
-    ruta: '/dashboard',
+    ruta: '/mapa-gis',
     badge: 'Geotecnología'
   },
   {
@@ -305,7 +305,7 @@ export const SERVICIOS_CIVICOS = [
     tipo: 'servicio',
     titulo: 'Directorio Territorial DTA y Municipalidades',
     descripcion: 'Catálogo oficial de los 84 gobiernos locales y concejos distritales.',
-    ruta: '/dashboard',
+    ruta: '/gobernanza',
     badge: 'Territorio'
   },
   {
@@ -313,7 +313,7 @@ export const SERVICIOS_CIVICOS = [
     tipo: 'servicio',
     titulo: 'Rutas de Abastecimiento: Feria del Agricultor',
     descripcion: 'Mercados comunitarios cantonales, precios de referencia y productores locales.',
-    ruta: '/dashboard',
+    ruta: '/feria',
     badge: 'Comercio'
   },
   {
@@ -321,7 +321,7 @@ export const SERVICIOS_CIVICOS = [
     tipo: 'servicio',
     titulo: 'Reportes Ciudadanos e Incidencias Distritales',
     descripcion: 'Canal de alerta comunitaria para vialidad, alumbrado y servicios públicos.',
-    ruta: '/dashboard',
+    ruta: '/reportar-incidencia',
     badge: 'Comunidad'
   }
 ];

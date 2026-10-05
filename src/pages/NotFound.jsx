@@ -19,7 +19,7 @@ export default function NotFound() {
 
   // Catálogo cívico indexado para recuperación rápida
   const catalogoCivico = [
-    { titulo: 'Trámites y Sede Electrónica', ruta: '/dashboard', icon: FileText, tag: 'Servicios' },
+    { titulo: 'Trámites y Sede Electrónica', ruta: '/portal-ciudadano', icon: FileText, tag: 'Servicios' },
     { titulo: 'Gobernanza y Actas del Concejo', ruta: '/gobernanza', icon: Vote, tag: 'Gaceta' },
     { titulo: 'Territorio 3D & Cartografía GIS', ruta: '/mapa-gis', icon: MapPin, tag: 'Cartografía' },
     { titulo: 'Emergencias 911 y Albergues CNE', ruta: '/seguridad-emergencias', icon: PhoneCall, tag: 'Seguridad' }
@@ -28,9 +28,9 @@ export default function NotFound() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/dashboard?q=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`/portal-ciudadano?q=${encodeURIComponent(searchQuery.trim())}`);
     } else {
-      navigate('/dashboard');
+      navigate('/portal-ciudadano');
     }
   };
 

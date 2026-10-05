@@ -46,16 +46,46 @@ import { normalizarRolOficial, ROLES_SISTEMA } from '../config/roles';
 // Alias para el Panel de Mando del Super Administrador Nacional
 const SuperAdminDashboard = Dashboard;
 
-function AdminDispatcher() {
-  const { user } = useAuth();
-  const rolNorm = normalizarRolOficial(user?.rol);
-  if (rolNorm === ROLES_SISTEMA.GESTOR_TERRITORIAL) {
-    return <Navigate to="/admin/territorial" replace />;
+function DashboardDispatcher() {
+  const { user, isAuthenticated } = useAuth();
+
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/login" replace />;
   }
-  if (rolNorm === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL) {
+
+  // Redirección unívoca según el rol oficial o nivel de acceso:
+  const rolNormalizado = (user.rol || "").toUpperCase();
+
+  if (user.nivelAcceso === 5 || rolNormalizado.includes("SUPER") || rolNormalizado.includes("NACIONAL")) {
     return <Navigate to="/admin/super" replace />;
   }
-  return <Navigate to="/dashboard" replace />;
+
+  if (user.nivelAcceso === 4 || rolNormalizado.includes("TERRITORIAL") || rolNormalizado.includes("PROVINCIAL")) {
+    return <Navigate to="/admin/territorial" replace />;
+  }
+
+  // Nivel 2 o Ciudadano:
+  return <Navigate to="/portal-ciudadano" replace />;
+}
+
+function AdminDispatcher() {
+  const { user, isAuthenticated } = useAuth();
+
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const rolNormalizado = (user.rol || "").toUpperCase();
+
+  if (user.nivelAcceso === 5 || rolNormalizado.includes("SUPER") || rolNormalizado.includes("NACIONAL")) {
+    return <Navigate to="/admin/super" replace />;
+  }
+
+  if (user.nivelAcceso === 4 || rolNormalizado.includes("TERRITORIAL") || rolNormalizado.includes("PROVINCIAL")) {
+    return <Navigate to="/admin/territorial" replace />;
+  }
+
+  return <Navigate to="/portal-ciudadano" replace />;
 }
 
 /**
@@ -103,13 +133,13 @@ export default function Routing() {
         <Route path="/comunicados" element={<NoticiasPage />} />
         <Route path="/noticias-municipales" element={<NoticiasPage />} />
 
-        {/* Portal Cívico Ciudadano y Perfiles Públicos (Ley N° 8968) */}
-        <Route path="/portal-ciudadano" element={<PortalCiudadanoPage />} />
-        <Route path="/portal" element={<PortalCiudadanoPage />} />
+        {/* Perfil Público (Ley N° 8968) */}
         <Route path="/perfil/:usuarioId" element={<PerfilPage />} />
 
-        {/* Rutas Privadas Ciudadanas y Trámites (Cualquier Ciudadano Autenticado con Cédula/Contraseña) */}
-        <Route element={<RoleRoute minLevel={1} />}>
+        {/* Rutas Privadas del Portal Ciudadano y Trámites */}
+        <Route element={<PrivateRoutes allowedRoles={["CIUDADANO", "GESTOR_TERRITORIAL", "SUPER_ADMIN_NACIONAL"]} />}>
+          <Route path="/portal-ciudadano" element={<PortalCiudadanoPage />} />
+          <Route path="/portal" element={<Navigate to="/portal-ciudadano" replace />} />
           <Route path="/perfil" element={<PerfilPage />} />
           <Route path="/participacion/votar" element={<ParticipacionPage />} />
           <Route path="/gobernanza/audiencia" element={<ParticipacionPage />} />
@@ -132,9 +162,9 @@ export default function Routing() {
           <Route path="/admin/provincial" element={<ProvincialAdminDashboard />} />
         </Route>
 
-        {/* 3. Ruta Ciudadano (accesible por Ciudadano, Gestor y Super Admin) */}
-        <Route element={<PrivateRoutes allowedRoles={["CIUDADANO", "GESTOR_TERRITORIAL", "SUPER_ADMIN_NACIONAL"]} />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+        {/* 3. Despachador Inteligente de Dashboard segregado por rol */}
+        <Route element={<PrivateRoutes allowedRoles={["SUPER_ADMIN_NACIONAL", "GESTOR_TERRITORIAL", "CIUDADANO"]} />}>
+          <Route path="/dashboard" element={<DashboardDispatcher />} />
         </Route>
 
         {/* Ruta Comodín 404 */}

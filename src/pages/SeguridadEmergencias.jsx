@@ -133,12 +133,6 @@ export default function SeguridadEmergencias() {
         fontFamily: 'var(--font-body, system-ui, sans-serif)'
       }}
     >
-      {/* 1. Cintillo Superior Oficial de la CNE con Protocolo Activo */}
-      <CneAlertRibbon
-        currentAlert={currentAlertKey}
-        onAlertChange={(key) => setCurrentAlertKey(key)}
-      />
-
       <Navbar />
 
       {/* Banner de Aviso de Modo Sin Conexión */}

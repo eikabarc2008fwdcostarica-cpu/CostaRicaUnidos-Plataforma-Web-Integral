@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Anchor } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, PROVINCIAS_COSTA_RICA } from '../context/AuthContext';
 import { PROVINCIAL_THEMES } from '../config/provincialThemes';
 
 // 1. Menú Lateral Unificado y Encabezado Superior Administrativo
@@ -26,6 +26,7 @@ import EmergenciasCNEModule from '../components/admin/EmergenciasCNEModule';
 
 export default function ProvincialAdminDashboard() {
   const { user, logout } = useAuth();
+  const isSuperAdmin = user?.rol === 'SUPER_ADMIN_NACIONAL' || user?.nivelAcceso === 5;
 
   // Estados de navegación, colapso de sidebar y modal de logout
   const [activeModule, setActiveModule] = useState(() => {
@@ -40,21 +41,64 @@ export default function ProvincialAdminDashboard() {
   });
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  // Selector provincial interactivo (por defecto la provincia del admin o Puntarenas)
-  const defaultProvId = String(user?.provinciaId || '6');
-  const [selectedProvId, setSelectedProvId] = useState(defaultProvId);
+  // 1. Resolver jurisdicción provincial oficial del usuario (RBAC Nivel 4)
+  const officialProvId = useMemo(() => {
+    const raw =
+      user?.provinciaId ||
+      user?.provincia ||
+      user?.provinciaNombre ||
+      '1'; // Default soberano: San José (id: 1)
+    const str = String(raw).toLowerCase().trim();
+
+    const matched = PROVINCIAS_COSTA_RICA.find(
+      (p) =>
+        p.nombre.toLowerCase() === str ||
+        String(p.id) === str ||
+        (p.id === '1' && str.includes('san jos')) ||
+        (p.id === '2' && str.includes('alajuel')) ||
+        (p.id === '3' && str.includes('cartag')) ||
+        (p.id === '4' && str.includes('heredi')) ||
+        (p.id === '5' && str.includes('guanacas')) ||
+        (p.id === '6' && str.includes('puntaren')) ||
+        (p.id === '7' && str.includes('lim'))
+    );
+    return matched ? String(matched.id) : '1';
+  }, [user]);
+
+  // Si es Gestor Territorial, selectedProvId SIEMPRE queda estrictamente restringido a su jurisdicción
+  const [selectedProvId, setSelectedProvId] = useState(officialProvId);
 
   useEffect(() => {
-    if (user?.provinciaId) {
-      setSelectedProvId(String(user.provinciaId));
+    if (!isSuperAdmin) {
+      setSelectedProvId(officialProvId);
     }
-  }, [user?.provinciaId]);
+  }, [isSuperAdmin, officialProvId]);
+
+  // Sincronización del cantón territorial activo en toda la consola
+  const [activeCanton, setActiveCanton] = useState(() => {
+    try {
+      return localStorage.getItem('cr_canton_activo') || 'San José';
+    } catch {
+      return 'San José';
+    }
+  });
+
+  useEffect(() => {
+    const handleCantonChange = (e) => {
+      if (e.detail?.nombre) {
+        setActiveCanton(e.detail.nombre);
+      }
+    };
+    window.addEventListener('cantonChanged', handleCantonChange);
+    return () => window.removeEventListener('cantonChanged', handleCantonChange);
+  }, []);
 
   // Tema provincial dinámico activo
   const activeTheme = useMemo(() => {
-    return PROVINCIAL_THEMES[selectedProvId] || PROVINCIAL_THEMES['6'];
+    return PROVINCIAL_THEMES[selectedProvId] || PROVINCIAL_THEMES['1'];
   }, [selectedProvId]);
 
   // Manejador reactivo de selección de módulo con sincronización de URL
@@ -105,15 +149,17 @@ export default function ProvincialAdminDashboard() {
   return (
     <div
       id="provincial-admin-layout-root"
-      className="provincial-admin-layout"
+      className="provincial-admin-layout admin-layout-container admin-viewport-wrapper"
       style={{
         display: 'flex',
-        minHeight: '100vh',
+        height: '100vh',
+        maxHeight: '100vh',
+        width: '100vw',
+        overflow: 'hidden',
         backgroundColor: '#00040D', // Obsidiana Soberana
         color: '#E2E8F0',
         fontFamily: "'Paloseco', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
         position: 'relative',
-        overflowX: 'hidden',
         // Inyección dinámica de tokens CSS según la provincia activa
         '--province-primary': activeTheme.primary,
         '--prov-primary': activeTheme.primary,
@@ -144,9 +190,14 @@ export default function ProvincialAdminDashboard() {
       {/* ===================================================================== */}
       <ProvincialSidebar
         activeModule={activeModule}
-        setActiveModule={handleSelectModule}
+        setActiveModule={(mod) => {
+          handleSelectModule(mod);
+          setIsMobileDrawerOpen(false);
+        }}
         isSidebarCollapsed={isSidebarCollapsed}
         setIsSidebarCollapsed={setIsSidebarCollapsed}
+        isMobileOpen={isMobileDrawerOpen}
+        setIsMobileOpen={setIsMobileDrawerOpen}
         setIsLogoutModalOpen={setIsLogoutModalOpen}
         activeTheme={activeTheme}
       />
@@ -155,9 +206,13 @@ export default function ProvincialAdminDashboard() {
       {/* 2. ÁREA DE TRABAJO PRINCIPAL (MAIN VIEWPORT CONTAINER)                */}
       {/* ===================================================================== */}
       <div
-        className="main-viewport-container"
+        className="main-viewport-container admin-main-viewport admin-main-scrollable"
         style={{
           flex: 1,
+          height: '100vh',
+          maxHeight: '100vh',
+          overflowY: 'auto',
+          overflowX: 'hidden',
           minWidth: 0,
           display: 'flex',
           flexDirection: 'column',
@@ -172,6 +227,7 @@ export default function ProvincialAdminDashboard() {
           setSelectedProvId={setSelectedProvId}
           currentTime={currentTime}
           formatHoraCST={formatHoraCST}
+          onToggleMobileSidebar={() => setIsMobileDrawerOpen((prev) => !prev)}
         />
 
         {/* Barra Territorial Institucional de Identidad */}
@@ -293,19 +349,22 @@ export default function ProvincialAdminDashboard() {
         {/* 3. VISTA ÚNICA ACTIVA (RENDERIZADO EXCLUSIVO DEL MÓDULO SELECCIONADO)*/}
         {/* =================================================================== */}
         <main
-          className="content-viewport admin-content-viewport"
+          className="content-viewport admin-content-viewport page-content-wrapper"
           style={{
             maxWidth: '1520px',
             width: '100%',
             margin: '0 auto',
             padding: '1.75rem 1.5rem 4rem',
             position: 'relative',
-            zIndex: 1
+            zIndex: 1,
+            boxSizing: 'border-box',
+            overflowX: 'hidden'
           }}
         >
           {activeModule === 'concejos' && (
             <ConcejosMunicipalesModule
               provincia={provinciaNombre}
+              activeCanton={activeCanton}
               onNavigateModule={handleSelectModule}
             />
           )}
@@ -313,6 +372,7 @@ export default function ProvincialAdminDashboard() {
           {activeModule === 'gaceta' && (
             <GacetaActasModule
               provincia={provinciaNombre}
+              canton={activeCanton}
               onNavigateModule={handleSelectModule}
             />
           )}
@@ -320,6 +380,7 @@ export default function ProvincialAdminDashboard() {
           {activeModule === 'organigrama' && (
             <OrganigramaModule
               provincia={provinciaNombre}
+              canton={activeCanton}
               onNavigateModule={handleSelectModule}
             />
           )}
@@ -327,6 +388,7 @@ export default function ProvincialAdminDashboard() {
           {activeModule === 'audiencia' && (
             <AudienciaFormalModule
               provincia={provinciaNombre}
+              canton={activeCanton}
               onNavigateModule={handleSelectModule}
             />
           )}
@@ -335,6 +397,7 @@ export default function ProvincialAdminDashboard() {
             <ObrasAveriasModule
               provincia={provinciaNombre}
               provinciaTheme={activeTheme}
+              canton={activeCanton}
             />
           )}
 
@@ -342,6 +405,7 @@ export default function ProvincialAdminDashboard() {
             <EmergenciasCNEModule
               provincia={provinciaNombre}
               provinciaTheme={activeTheme}
+              canton={activeCanton}
             />
           )}
         </main>
