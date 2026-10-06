@@ -10,6 +10,7 @@ export default function MunicipalFooter() {
   return (
     <footer
       aria-label="Pie de página institucional Costa Rica Unidos"
+      className="surface-dark"
       style={{
         backgroundColor: 'var(--night, #01004E)',
         color: '#FFFFFF',

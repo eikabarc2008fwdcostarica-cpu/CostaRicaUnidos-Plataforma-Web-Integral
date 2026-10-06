@@ -3,6 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Script bloqueante inline anti-flash (Fase 0) -->
+    <script>
+      (function() {
+        try {
+          var key = 'cr_theme_preference';
+          var saved = localStorage.getItem(key);
+          if (!saved) {
+            var legacy = localStorage.getItem('theme');
+            if (legacy === 'light' || legacy === 'dark') {
+              saved = legacy;
+              localStorage.setItem(key, legacy);
+              localStorage.removeItem('theme');
+            }
+          }
+          var theme = saved;
+          if (theme !== 'light' && theme !== 'dark') {
+            theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+          }
+          var root = document.documentElement;
+          if (theme === 'dark') {
+            root.classList.add('dark');
+            root.classList.remove('light');
+            root.style.colorScheme = 'dark';
+          } else {
+            root.classList.add('light');
+            root.classList.remove('dark');
+            root.style.colorScheme = 'light';
+          }
+        } catch (_e) {}
+      })();
+    </script>
     <title>Costa Rica Unidos — Plataforma Territorial Soberana</title>
     <meta name="description" content="Plataforma ciudadana soberana para la gestión territorial, trámites y participación cívica en la República de Costa Rica." />
     <!-- Favicon Oficial con Rompedor de Caché -->
@@ -50,6 +81,49 @@
               'institutional-blue': '#001489',
               'solidarity-red': '#CE1126',
               'national-red': '#DA291C',
+              // Tokens Semánticos Dinámicos Costa Rica Unidos (Fase 1 y 3)
+              'cru-text': 'var(--cru-text)',
+              'cru-text-soft': 'var(--cru-text-soft)',
+              'cru-text-muted': 'var(--cru-text-muted)',
+              'cru-surface': 'var(--cru-surface)',
+              'cru-surface-card': 'var(--cru-surface-card)',
+              'cru-surface-hover': 'var(--cru-surface-hover)',
+              'cru-surface-muted': 'var(--cru-surface-muted)',
+              'cru-panel': 'var(--cru-panel)',
+              'cru-panel-muted': 'var(--cru-panel-muted)',
+              'cru-border': 'var(--cru-border)',
+              'cru-border-hover': 'var(--cru-border-hover)',
+              'cru-border-strong': 'var(--cru-border-strong)',
+              'cru-page-bg': 'var(--cru-page-bg)',
+              'cru-card-bg': 'var(--cru-card-bg)',
+              'cru-section-warm': 'var(--cru-section-warm)',
+              'cru-cartroad-bg': 'var(--cru-cartroad-bg)',
+              'theme-header-bg': 'var(--theme-header-bg)',
+              'theme-header-border': 'var(--theme-header-border)',
+              'cru-accent-blue': 'var(--cru-accent-blue)',
+              'cru-accent-blue-bg': 'var(--cru-accent-blue-bg)',
+              'cru-accent-blue-border': 'var(--cru-accent-blue-border)',
+              'cru-accent-sky': 'var(--cru-accent-sky)',
+              'cru-accent-sky-bg': 'var(--cru-accent-sky-bg)',
+              'cru-accent-sky-border': 'var(--cru-accent-sky-border)',
+              'cru-accent-red': 'var(--cru-accent-red)',
+              'cru-accent-red-bg': 'var(--cru-accent-red-bg)',
+              'cru-accent-red-border': 'var(--cru-accent-red-border)',
+              'cru-accent-green': 'var(--cru-accent-green)',
+              'cru-accent-green-bg': 'var(--cru-accent-green-bg)',
+              'cru-accent-green-border': 'var(--cru-accent-green-border)',
+              'cru-accent-amber': 'var(--cru-accent-amber)',
+              'cru-accent-amber-bg': 'var(--cru-accent-amber-bg)',
+              'cru-accent-amber-border': 'var(--cru-accent-amber-border)',
+              'cru-accent-purple': 'var(--cru-accent-purple)',
+              'cru-accent-purple-bg': 'var(--cru-accent-purple-bg)',
+              'cru-accent-purple-border': 'var(--cru-accent-purple-border)',
+              'cru-track': 'var(--cru-track)',
+              'theme-input-bg': 'var(--theme-input-bg)',
+              'theme-input-border': 'var(--theme-input-border)',
+              'theme-input-text': 'var(--theme-input-text)',
+              'cru-select-bg': 'var(--cru-select-bg)',
+              'cru-select-text': 'var(--cru-select-text)',
             },
             fontFamily: {
               sans: ['Poppins', 'Plus Jakarta Sans', 'sans-serif'],

@@ -151,23 +151,40 @@
   --cru-surface: #FFFFFF;
   --cru-surface-card: #FFFFFF;
   --cru-surface-hover: #F8FAFC;
+  --cru-surface-muted: #F1F5F9;
+  --cru-page-bg: #F8FAFC;
+  --cru-card-bg: #FFFFFF;
+  --cru-section-warm: #F3E8CC;
+  --cru-cartroad-bg: #FFFFFF;
+  --cru-panel: #FFFFFF;
+  --cru-panel-muted: #F8FAFC;
   --cru-border: #E2E8F0;
   --cru-border-hover: #CBD5E1;
+  --cru-border-strong: #CBD5E1;
+  --cru-select-bg: #FFFFFF;
+  --cru-select-text: #0F172A;
   --cru-text: #062A77;
   --cru-text-soft: #334155;
-  --cru-text-muted: #64748B;
+  --cru-text-muted: #475569;
   --cru-accent-blue: #002B7F;
   --cru-accent-blue-bg: rgba(0, 43, 127, 0.08);
   --cru-accent-blue-border: rgba(0, 43, 127, 0.25);
-  --cru-accent-sky: #0284C7;
-  --cru-accent-sky-bg: rgba(2, 132, 199, 0.08);
-  --cru-accent-sky-border: rgba(2, 132, 199, 0.25);
-  --cru-accent-red: #DA291C;
-  --cru-accent-red-bg: rgba(218, 41, 28, 0.08);
-  --cru-accent-red-border: rgba(218, 41, 28, 0.25);
-  --cru-accent-green: #19532B;
-  --cru-accent-green-bg: rgba(25, 83, 43, 0.08);
-  --cru-accent-green-border: rgba(25, 83, 43, 0.25);
+  --cru-accent-sky: #0369A1;
+  --cru-accent-sky-bg: rgba(3, 105, 161, 0.08);
+  --cru-accent-sky-border: rgba(3, 105, 161, 0.25);
+  --cru-accent-red: #B91C1C;
+  --cru-accent-red-bg: rgba(185, 28, 28, 0.08);
+  --cru-accent-red-border: rgba(185, 28, 28, 0.25);
+  --cru-accent-green: #047857;
+  --cru-accent-green-bg: rgba(4, 120, 87, 0.08);
+  --cru-accent-green-border: rgba(4, 120, 87, 0.25);
+  --cru-accent-amber: #B45309;
+  --cru-accent-amber-bg: rgba(217, 119, 6, 0.08);
+  --cru-accent-amber-border: rgba(217, 119, 6, 0.25);
+  --cru-accent-purple: #6D28D9;
+  --cru-accent-purple-bg: rgba(109, 40, 217, 0.08);
+  --cru-accent-purple-border: rgba(109, 40, 217, 0.25);
+  --cru-track: #E2E8F0;
   --cru-badge-neutral-bg: #F1F5F9;
   --cru-badge-neutral-text: #475569;
   --cru-badge-neutral-border: #CBD5E1;
@@ -196,11 +213,24 @@ html.dark, :root.dark, .dark {
   --cru-surface: rgba(10, 15, 29, 0.85);
   --cru-surface-card: #0D1527;
   --cru-surface-hover: rgba(19, 28, 49, 0.95);
+  --cru-surface-muted: rgba(255, 255, 255, 0.05);
+  --cru-page-bg: #00040D;
+  --cru-card-bg: #0D1527;
+  --cru-section-warm: #061536;
+  --cru-cartroad-bg: #01004E;
+  --cru-panel: rgba(255, 255, 255, 0.02);
+  --cru-panel-muted: rgba(255, 255, 255, 0.05);
   --cru-border: rgba(255, 255, 255, 0.12);
   --cru-border-hover: rgba(255, 255, 255, 0.24);
+  --cru-border-strong: rgba(255, 255, 255, 0.24);
+  --cru-border-subtle: rgba(255, 255, 255, 0.08);
+  --cru-select-bg: #0D1527;
+  --cru-select-text: #FFFFFF;
   --cru-text: #FFFFFF;
+  --cru-text-secondary: #94A3B8;
   --cru-text-soft: #CBD5E1;
   --cru-text-muted: #94A3B8;
+  --cru-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   --cru-accent-blue: #79a6ff;
   --cru-accent-blue-bg: rgba(0, 20, 137, 0.35);
   --cru-accent-blue-border: rgba(121, 166, 255, 0.35);
@@ -213,6 +243,13 @@ html.dark, :root.dark, .dark {
   --cru-accent-green: #34D399;
   --cru-accent-green-bg: rgba(52, 211, 153, 0.15);
   --cru-accent-green-border: rgba(52, 211, 153, 0.35);
+  --cru-accent-amber: #FBBF24;
+  --cru-accent-amber-bg: rgba(251, 191, 36, 0.15);
+  --cru-accent-amber-border: rgba(251, 191, 36, 0.35);
+  --cru-accent-purple: #C084FC;
+  --cru-accent-purple-bg: rgba(192, 132, 252, 0.15);
+  --cru-accent-purple-border: rgba(192, 132, 252, 0.35);
+  --cru-track: rgba(255, 255, 255, 0.1);
   --cru-badge-neutral-bg: rgba(255, 255, 255, 0.05);
   --cru-badge-neutral-text: #CBD5E1;
   --cru-badge-neutral-border: rgba(255, 255, 255, 0.1);
@@ -251,28 +288,160 @@ html.light {
 
   /* Tokens Semánticos Soberanos Costa Rica Unidos (CRU Tokens) - Modo Claro */
   --cru-surface: #FFFFFF;
+  --cru-surface-card: #FFFFFF;
   --cru-surface-hover: #F8FAFC;
+  --cru-surface-muted: #F1F5F9;
+  --cru-page-bg: #F8FAFC;
+  --cru-card-bg: #FFFFFF;
+  --cru-section-warm: #F3E8CC;
+  --cru-cartroad-bg: #FFFFFF;
+  --cru-panel: #FFFFFF;
+  --cru-panel-muted: #F8FAFC;
   --cru-border: #E2E8F0;
   --cru-border-hover: #CBD5E1;
+  --cru-border-strong: #CBD5E1;
+  --cru-border-subtle: #EDF2F7;
+  --cru-select-bg: #FFFFFF;
+  --cru-select-text: #0F172A;
   --cru-text: #0F172A;
+  --cru-text-secondary: #334155;
   --cru-text-soft: #334155;
-  --cru-text-muted: #64748B;
+  --cru-text-muted: #475569;
+  --cru-card-shadow: 0 4px 20px rgba(0, 20, 137, 0.06), 0 1px 3px rgba(0, 0, 0, 0.05);
   --cru-accent-blue: #002B7F;
   --cru-accent-blue-bg: rgba(0, 43, 127, 0.08);
   --cru-accent-blue-border: rgba(0, 43, 127, 0.25);
-  --cru-accent-sky: #0284C7;
-  --cru-accent-sky-bg: rgba(2, 132, 199, 0.08);
-  --cru-accent-sky-border: rgba(2, 132, 199, 0.25);
+  --cru-accent-sky: #0369A1;
+  --cru-accent-sky-bg: rgba(3, 105, 161, 0.08);
+  --cru-accent-sky-border: rgba(3, 105, 161, 0.25);
   --cru-accent-red: #B91C1C;
   --cru-accent-red-bg: rgba(185, 28, 28, 0.08);
   --cru-accent-red-border: rgba(185, 28, 28, 0.25);
   --cru-accent-green: #047857;
   --cru-accent-green-bg: rgba(4, 120, 87, 0.08);
   --cru-accent-green-border: rgba(4, 120, 87, 0.25);
+  --cru-accent-amber: #B45309;
+  --cru-accent-amber-bg: rgba(217, 119, 6, 0.08);
+  --cru-accent-amber-border: rgba(217, 119, 6, 0.25);
+  --cru-accent-purple: #6D28D9;
+  --cru-accent-purple-bg: rgba(109, 40, 217, 0.08);
+  --cru-accent-purple-border: rgba(109, 40, 217, 0.25);
+  --cru-track: #E2E8F0;
   --cru-badge-neutral-bg: #F1F5F9;
   --cru-badge-neutral-text: #475569;
   --cru-badge-neutral-border: #CBD5E1;
   --cru-card-shadow-hover: 0 16px 36px rgba(0, 20, 137, 0.10);
+}
+
+/* Transición suave global durante cambio de tema interactivo (≈200ms, WCAG 2.1 AA Motion) */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 200ms ease !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-crossfade-layer {
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   UTILIDADES DE AISLAMIENTO TEMÁTICO ("ISLAS") - WCAG 2.1 AA
+   Permiten forzar una superficie oscura o de marca independientemente del tema activo
+   ========================================================================== */
+
+/* Isla siempre oscura: banner del dashboard, toasts, modales oscuros */
+.surface-dark {
+  --theme-bg: #01004E;
+  --theme-text-primary: #FFFFFF;
+  --theme-text-secondary: #94A3B8;
+  --theme-text-muted: #64748B;
+  --theme-card-bg: rgba(10, 15, 29, 0.95);
+  --theme-card-border: rgba(255, 255, 255, 0.12);
+  --theme-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --theme-input-bg: rgba(10, 15, 29, 0.85);
+  --theme-input-border: rgba(255, 255, 255, 0.2);
+  --theme-input-text: #FFFFFF;
+
+  --cru-surface: rgba(10, 15, 29, 0.95);
+  --cru-surface-card: #0D1527;
+  --cru-surface-hover: rgba(19, 28, 49, 0.95);
+  --cru-surface-muted: rgba(255, 255, 255, 0.05);
+  --cru-page-bg: #00040D;
+  --cru-card-bg: #0D1527;
+  --cru-section-warm: #061536;
+  --cru-cartroad-bg: #01004E;
+  --cru-panel: rgba(255, 255, 255, 0.02);
+  --cru-panel-muted: rgba(255, 255, 255, 0.05);
+  --cru-border: rgba(255, 255, 255, 0.12);
+  --cru-border-hover: rgba(255, 255, 255, 0.24);
+  --cru-border-strong: rgba(255, 255, 255, 0.24);
+  --cru-border-subtle: rgba(255, 255, 255, 0.08);
+  --cru-select-bg: #0D1527;
+  --cru-select-text: #FFFFFF;
+  --cru-text: #FFFFFF;
+  --cru-text-secondary: #94A3B8;
+  --cru-text-soft: #CBD5E1;
+  --cru-text-muted: #94A3B8;
+  --cru-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --cru-card-shadow-hover: 0 20px 50px rgba(0, 20, 137, 0.4);
+
+  --cru-accent-blue: #79a6ff;
+  --cru-accent-blue-bg: rgba(0, 20, 137, 0.35);
+  --cru-accent-blue-border: rgba(121, 166, 255, 0.35);
+  --cru-accent-sky: #38BDF8;
+  --cru-accent-sky-bg: rgba(56, 189, 248, 0.15);
+  --cru-accent-sky-border: rgba(56, 189, 248, 0.35);
+  --cru-accent-red: #FF6B6B;
+  --cru-accent-red-bg: rgba(218, 41, 28, 0.18);
+  --cru-accent-red-border: rgba(218, 41, 28, 0.4);
+  --cru-accent-green: #34D399;
+  --cru-accent-green-bg: rgba(52, 211, 153, 0.15);
+  --cru-accent-green-border: rgba(52, 211, 153, 0.35);
+  --cru-accent-amber: #FBBF24;
+  --cru-accent-amber-bg: rgba(251, 191, 36, 0.15);
+  --cru-accent-amber-border: rgba(251, 191, 36, 0.35);
+  --cru-accent-purple: #C084FC;
+  --cru-accent-purple-bg: rgba(192, 132, 252, 0.15);
+  --cru-accent-purple-border: rgba(192, 132, 252, 0.35);
+  --cru-track: rgba(255, 255, 255, 0.1);
+
+  background-color: var(--cru-surface);
+  color: var(--cru-text);
+  color-scheme: dark;
+}
+
+/* Isla sobre color de marca (rojo patrio / azul soberano): texto e hijos siempre blancos */
+.surface-brand {
+  --cru-text: #FFFFFF;
+  --cru-text-soft: rgba(255, 255, 255, 0.90);
+  --cru-text-muted: rgba(255, 255, 255, 0.75);
+  --cru-text-secondary: rgba(255, 255, 255, 0.85);
+  --cru-border: rgba(255, 255, 255, 0.20);
+  --cru-border-hover: rgba(255, 255, 255, 0.35);
+  --cru-border-subtle: rgba(255, 255, 255, 0.12);
+
+  --theme-text-primary: #FFFFFF;
+  --theme-text-secondary: rgba(255, 255, 255, 0.85);
+  --theme-text-muted: rgba(255, 255, 255, 0.75);
+
+  color: #FFFFFF;
+}
+
+/* Forzar que los encabezados dentro de islas de marca permanezcan 100% blancos */
+.surface-brand :is(h1, h2, h3, h4, h5, h6) {
+  color: #FFFFFF !important;
+}
+
+/* Asegurar herencia de enlaces y párrafos dentro de islas de marca */
+.surface-brand a,
+.surface-brand p,
+.surface-brand span {
+  color: inherit;
 }
 
 html.light body {
@@ -303,23 +472,24 @@ html.light textarea {
   color: var(--theme-input-text);
 }
 
-/* Soporte global de accesibilidad para menús desplegables <select> y <option> (WCAG 2.1 AA) */
-select {
+/* Soporte global para menús desplegables <select> y <option> dependiente del tema (WCAG 2.1 AA) */
+html.dark select {
   color-scheme: dark;
-}
-
-select option {
-  background-color: #000814 !important;
-  color: #FFFFFF !important;
 }
 
 html.light select {
   color-scheme: light;
 }
 
-html.light select option {
-  background-color: #FFFFFF !important;
-  color: #0F172A !important;
+select {
+  background-color: var(--theme-input-bg);
+  border-color: var(--theme-input-border);
+  color: var(--theme-input-text);
+}
+
+select option {
+  background-color: var(--cru-select-bg);
+  color: var(--cru-select-text);
 }
 
 html.light input::placeholder,
@@ -327,9 +497,9 @@ html.light textarea::placeholder {
   color: var(--theme-text-muted);
 }
 
-/* Reducir especificidad con :where para permitir sobreescritura natural por clases y estilos inline */
-:where(html.light) :is(h1, h2, h3, h4, h5, h6) {
-  color: var(--theme-text-primary);
+/* Encabezados semánticos accesibles: herencia limpia del contenedor y body (WCAG 2.1 AA) */
+h1, h2, h3, h4, h5, h6 {
+  color: inherit;
 }
 
 html.light a {
@@ -2042,8 +2212,8 @@ html.light .civic-table-container::-webkit-scrollbar-thumb:hover {
 
 /* Soporte de Cabecera Institucional en Modo Claro (WCAG 2.1 AA) */
 html.light header {
-  background-color: rgba(255, 255, 255, 0.96) !important;
-  border-bottom-color: rgba(226, 232, 240, 0.9) !important;
+  background-color: var(--theme-header-bg);
+  border-bottom-color: var(--theme-header-border);
 }
 
 /* El Cintillo Superior siempre mantiene fondo Azul Institucional y texto Blanco Radiante (#FFFFFF) con contraste AAA */
@@ -2053,27 +2223,6 @@ html.light header .cintillo-superior-container * {
 }
 html.light header .cintillo-superior-container .cintillo-superior-item-secundario {
   color: rgba(255, 255, 255, 0.85) !important;
-}
-
-/* En la barra de navegación principal (fuera del cintillo), adaptar tipografía a texto oscuro */
-html.light header :not(.cintillo-superior-container):not(.cintillo-superior-container *) > .text-white {
-  color: #0F172A;
-}
-
-html.light header :not(.cintillo-superior-container):not(.cintillo-superior-container *) > .text-slate-200 {
-  color: #1E293B;
-}
-
-html.light header :not(.cintillo-superior-container):not(.cintillo-superior-container *) > .text-slate-300 {
-  color: #334155;
-}
-
-html.light header :not(.cintillo-superior-container):not(.cintillo-superior-container *) > .text-slate-400 {
-  color: #64748B;
-}
-
-html.light header button:hover {
-  color: #0F172A;
 }
 
 /* Adaptación del Entorno Administrativo (Dashboard) en Modo Claro */

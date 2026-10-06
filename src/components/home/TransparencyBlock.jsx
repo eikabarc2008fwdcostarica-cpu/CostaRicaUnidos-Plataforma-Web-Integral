@@ -19,6 +19,7 @@ export default function TransparencyBlock() {
       }}
     >
       <div
+        className="surface-brand"
         style={{
           backgroundColor: 'var(--red, #C22727)',
           borderRadius: 'var(--radius-card, 24px)',

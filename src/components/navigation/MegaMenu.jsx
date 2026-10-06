@@ -167,11 +167,11 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
       onMouseLeave={alCerrar}
       role="region"
       aria-label={`Mega menú: ${categoria.label}`}
-      className="absolute top-full left-0 w-full z-50 border-b shadow-2xl py-8 px-6 md:px-16 transition-all duration-300 animate-fadeIn"
+      className="absolute top-full left-0 w-full z-50 border-b shadow-2xl py-8 px-6 md:px-16 transition-all duration-300 animate-fadeIn bg-theme-header-bg border-theme-header-border text-cru-text"
       style={{
-        backgroundColor: '#FFFFFF',
-        borderBottom: '2px solid rgba(6, 42, 119, 0.08)',
-        boxShadow: '0 20px 45px -10px rgba(6, 42, 119, 0.10), 0 4px 16px rgba(0, 0, 0, 0.04)',
+        backgroundColor: 'var(--theme-header-bg)',
+        borderBottom: '2px solid var(--theme-header-border)',
+        boxShadow: 'var(--cru-card-shadow, 0 20px 45px -10px rgba(0, 0, 0, 0.10))',
         opacity: 1
       }}
     >
@@ -179,7 +179,7 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
         {/* Encabezado del eje municipal */}
         <div
           className="flex items-center gap-2 mb-6 font-bold text-xs tracking-widest uppercase"
-          style={{ color: 'var(--red, #C22727)' }}
+          style={{ color: 'var(--cru-accent-red, #C22727)' }}
         >
           <IconoCategoria className="w-4 h-4" strokeWidth={2} />
           <span>Eje Municipal: {categoria.label}</span>
@@ -197,21 +197,21 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
                 className="group p-5 rounded-2xl border shadow-sm transition-all duration-200 flex flex-col justify-between"
                 style={{
                   minHeight: '170px',
-                  backgroundColor: '#F8FAFC',
-                  borderColor: 'rgba(6, 42, 119, 0.08)',
+                  backgroundColor: 'var(--cru-surface-muted)',
+                  borderColor: 'var(--cru-border)',
                   borderRadius: '20px',
-                  boxShadow: '0 4px 14px rgba(6, 42, 119, 0.04)'
+                  boxShadow: 'var(--cru-card-shadow, 0 4px 14px rgba(0, 0, 0, 0.04))'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FFFFFF';
-                  e.currentTarget.style.borderColor = 'rgba(0, 83, 175, 0.35)';
-                  e.currentTarget.style.boxShadow = '0 12px 28px rgba(6, 42, 119, 0.12)';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-card-bg)';
+                  e.currentTarget.style.borderColor = 'var(--cru-accent-blue-border, rgba(0, 83, 175, 0.35))';
+                  e.currentTarget.style.boxShadow = '0 12px 28px rgba(0, 0, 0, 0.12)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8FAFC';
-                  e.currentTarget.style.borderColor = 'rgba(6, 42, 119, 0.08)';
-                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(6, 42, 119, 0.04)';
+                  e.currentTarget.style.backgroundColor = 'var(--cru-surface-muted)';
+                  e.currentTarget.style.borderColor = 'var(--cru-border)';
+                  e.currentTarget.style.boxShadow = 'var(--cru-card-shadow, 0 4px 14px rgba(0, 0, 0, 0.04))';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -219,9 +219,9 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
                     style={{
-                      backgroundColor: 'rgba(194, 39, 39, 0.08)',
-                      color: 'var(--red, #C22727)',
-                      border: '1px solid rgba(194, 39, 39, 0.15)'
+                      backgroundColor: 'var(--cru-accent-red-bg)',
+                      color: 'var(--cru-accent-red, #C22727)',
+                      border: '1px solid var(--cru-accent-red-border)'
                     }}
                   >
                     <IconoModulo className="w-5 h-5" strokeWidth={1.8} />
@@ -229,7 +229,7 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
                   <h4
                     className="font-bold text-base mb-1.5 transition-colors"
                     style={{
-                      color: 'var(--navy, #062A77)',
+                      color: 'var(--cru-text)',
                       fontFamily: 'var(--font-main, "Poppins", sans-serif)'
                     }}
                   >
@@ -237,14 +237,14 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
                   </h4>
                   <p
                     className="text-xs leading-relaxed"
-                    style={{ color: '#475569', fontWeight: 500 }}
+                    style={{ color: 'var(--cru-text-soft)', fontWeight: 500 }}
                   >
                     {m.desc}
                   </p>
                 </div>
                 <div
                   className="mt-4 flex items-center gap-1 text-xs font-semibold group-hover:translate-x-1 transition-transform"
-                  style={{ color: 'var(--blue, #0053AF)' }}
+                  style={{ color: 'var(--cru-accent-blue)' }}
                 >
                   <span>Acceder al módulo</span>
                   <ChevronRight className="w-3.5 h-3.5" strokeWidth={2} />

@@ -128,7 +128,7 @@ export default function ServicesSection() {
             style={{
               fontSize: 'clamp(1.85rem, 3.2vw, 2.5rem)',
               fontWeight: 900,
-              color: 'var(--navy, #062A77)',
+              color: 'var(--cru-text)',
               margin: 0,
               letterSpacing: '-0.02em',
               fontFamily: 'var(--font-main, "Poppins", sans-serif)'
@@ -143,8 +143,8 @@ export default function ServicesSection() {
           to="/portal-ciudadano"
           style={{
             textDecoration: 'none',
-            color: 'var(--navy, #062A77)',
-            border: '1.5px solid var(--navy, #062A77)',
+            color: 'var(--cru-text)',
+            border: '1.5px solid var(--cru-border)',
             padding: '0.55rem 1.4rem',
             borderRadius: '999px',
             fontSize: '0.85rem',
@@ -155,12 +155,14 @@ export default function ServicesSection() {
             justifyContent: 'center'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--navy, #062A77)';
+            e.currentTarget.style.backgroundColor = 'var(--cru-accent-blue)';
+            e.currentTarget.style.borderColor = 'var(--cru-accent-blue)';
             e.currentTarget.style.color = '#FFFFFF';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = 'var(--navy, #062A77)';
+            e.currentTarget.style.borderColor = 'var(--cru-border)';
+            e.currentTarget.style.color = 'var(--cru-text)';
           }}
         >
           Ver todos

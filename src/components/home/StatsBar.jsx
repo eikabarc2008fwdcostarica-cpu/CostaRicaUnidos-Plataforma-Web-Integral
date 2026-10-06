@@ -19,13 +19,13 @@ export default function StatsBar() {
     >
       <div
         style={{
-          backgroundColor: 'var(--cream, #F3E8CC)',
+          backgroundColor: 'var(--cru-section-warm)',
           borderRadius: 'var(--radius-card, 24px)',
           padding: '3rem 2rem',
           position: 'relative',
           overflow: 'hidden',
-          boxShadow: '0 10px 30px rgba(6, 42, 119, 0.06)',
-          border: '1px solid rgba(107, 62, 31, 0.12)'
+          boxShadow: 'var(--cru-card-shadow, 0 10px 30px rgba(6, 42, 119, 0.06))',
+          border: '1px solid var(--cru-border)'
         }}
       >
         {/* Planta ilustrada en esquina izquierda */}
@@ -92,7 +92,7 @@ export default function StatsBar() {
                 display: 'block',
                 fontSize: 'clamp(3.4rem, 6vw, 4.8rem)',
                 fontWeight: 900,
-                color: 'var(--red, #C22727)',
+                color: 'var(--cru-accent-red, #C22727)',
                 lineHeight: 1,
                 marginBottom: '0.45rem',
                 fontFamily: 'var(--font-main, "Poppins", sans-serif)'
@@ -104,7 +104,7 @@ export default function StatsBar() {
               style={{
                 fontSize: '0.98rem',
                 fontWeight: 600,
-                color: 'var(--ink, #131313)',
+                color: 'var(--cru-text)',
                 margin: 0,
                 lineHeight: 1.4
               }}
@@ -120,7 +120,7 @@ export default function StatsBar() {
                 display: 'block',
                 fontSize: 'clamp(3.4rem, 6vw, 4.8rem)',
                 fontWeight: 900,
-                color: 'var(--red, #C22727)',
+                color: 'var(--cru-accent-red, #C22727)',
                 lineHeight: 1,
                 marginBottom: '0.45rem',
                 fontFamily: 'var(--font-main, "Poppins", sans-serif)'
@@ -132,7 +132,7 @@ export default function StatsBar() {
               style={{
                 fontSize: '0.98rem',
                 fontWeight: 600,
-                color: 'var(--ink, #131313)',
+                color: 'var(--cru-text)',
                 margin: 0,
                 lineHeight: 1.4
               }}
@@ -148,7 +148,7 @@ export default function StatsBar() {
                 display: 'block',
                 fontSize: 'clamp(3.4rem, 6vw, 4.8rem)',
                 fontWeight: 900,
-                color: 'var(--red, #C22727)',
+                color: 'var(--cru-accent-red, #C22727)',
                 lineHeight: 1,
                 marginBottom: '0.45rem',
                 fontFamily: 'var(--font-main, "Poppins", sans-serif)'
@@ -160,7 +160,7 @@ export default function StatsBar() {
               style={{
                 fontSize: '0.98rem',
                 fontWeight: 600,
-                color: 'var(--ink, #131313)',
+                color: 'var(--cru-text)',
                 margin: 0,
                 lineHeight: 1.4
               }}

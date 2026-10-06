@@ -83,7 +83,7 @@ export default function NewsSection() {
             style={{
               fontSize: 'clamp(1.85rem, 3.2vw, 2.5rem)',
               fontWeight: 900,
-              color: 'var(--navy, #062A77)',
+              color: 'var(--cru-text)',
               margin: 0,
               letterSpacing: '-0.02em',
               fontFamily: 'var(--font-main, "Poppins", sans-serif)'
@@ -100,7 +100,8 @@ export default function NewsSection() {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            backgroundColor: '#EFF4FB',
+            backgroundColor: 'var(--cru-surface-muted)',
+            border: '1px solid var(--cru-border)',
             padding: '0.35rem',
             borderRadius: '999px',
             gap: '0.35rem'
@@ -121,8 +122,8 @@ export default function NewsSection() {
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   border: 'none',
-                  backgroundColor: isSelected ? 'var(--navy, #062A77)' : 'transparent',
-                  color: isSelected ? '#FFFFFF' : '#475569',
+                  backgroundColor: isSelected ? 'var(--cru-accent-blue)' : 'transparent',
+                  color: isSelected ? '#FFFFFF' : 'var(--cru-text-muted)',
                   padding: '0.45rem 1.25rem',
                   borderRadius: '999px',
                   fontSize: '0.85rem',

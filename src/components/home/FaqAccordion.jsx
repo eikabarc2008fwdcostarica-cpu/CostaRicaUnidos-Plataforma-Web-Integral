@@ -73,7 +73,7 @@ export default function FaqAccordion() {
           style={{
             fontSize: 'clamp(1.85rem, 3.2vw, 2.5rem)',
             fontWeight: 900,
-            color: 'var(--navy, #062A77)',
+            color: 'var(--cru-text)',
             margin: 0,
             letterSpacing: '-0.02em',
             fontFamily: 'var(--font-main, "Poppins", sans-serif)'
@@ -101,10 +101,10 @@ export default function FaqAccordion() {
               key={idx}
               className="reveal-on-scroll"
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--cru-card-bg)',
                 borderRadius: '16px',
-                border: '1px solid rgba(6, 42, 119, 0.08)',
-                boxShadow: '0 4px 16px rgba(6, 42, 119, 0.05)',
+                border: '1px solid var(--cru-border)',
+                boxShadow: 'var(--cru-card-shadow, 0 4px 16px rgba(6, 42, 119, 0.05))',
                 overflow: 'hidden',
                 transition: 'all 0.25s ease'
               }}
@@ -124,7 +124,7 @@ export default function FaqAccordion() {
                   cursor: 'pointer',
                   textAlign: 'left',
                   gap: '1rem',
-                  color: 'var(--ink, #131313)',
+                  color: 'var(--cru-text)',
                   fontFamily: 'inherit'
                 }}
               >
@@ -132,7 +132,7 @@ export default function FaqAccordion() {
                   style={{
                     fontSize: '1.02rem',
                     fontWeight: 700,
-                    color: 'var(--ink, #131313)',
+                    color: 'var(--cru-text)',
                     lineHeight: 1.4
                   }}
                 >
@@ -157,7 +157,7 @@ export default function FaqAccordion() {
                     style={{
                       fontSize: '1.5rem',
                       fontWeight: 800,
-                      color: 'var(--red, #C22727)',
+                      color: 'var(--cru-accent-red, #C22727)',
                       lineHeight: 1
                     }}
                   >
@@ -170,10 +170,10 @@ export default function FaqAccordion() {
                 <div
                   style={{
                     padding: '0 1.6rem 1.4rem',
-                    color: '#475569',
+                    color: 'var(--cru-text-soft)',
                     fontSize: '0.94rem',
                     lineHeight: 1.65,
-                    borderTop: '1px solid #F1F5F9',
+                    borderTop: '1px solid var(--cru-border)',
                     paddingTop: '1rem'
                   }}
                 >
