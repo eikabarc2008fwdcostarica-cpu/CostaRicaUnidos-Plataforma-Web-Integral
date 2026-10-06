@@ -168,10 +168,10 @@ export const CivicModal: FC<CivicModalProps> = ({
           maxHeight: size === 'full' ? '92vh' : '88vh',
           display: 'flex',
           flexDirection: 'column',
-          background: 'rgba(5, 12, 28, 0.92)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
+          background: 'var(--cru-surface-card)',
+          border: '1px solid var(--cru-border)',
           borderRadius: 'var(--radius-modal, 24px)',
-          boxShadow: '0 25px 60px -15px rgba(0, 4, 13, 0.95), 0 0 40px rgba(0, 43, 127, 0.3)',
+          boxShadow: 'var(--cru-card-shadow, 0 25px 60px -15px rgba(0, 4, 13, 0.7))',
           overflow: 'hidden',
           outline: 'none',
           animation: 'civicModalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards'
@@ -184,8 +184,8 @@ export const CivicModal: FC<CivicModalProps> = ({
             alignItems: 'flex-start',
             justifyContent: 'space-between',
             padding: '1.5rem 1.75rem',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-            background: 'rgba(255, 255, 255, 0.02)'
+            borderBottom: '1px solid var(--cru-border)',
+            background: 'var(--cru-surface-muted)'
           }}
         >
           <div>
@@ -195,7 +195,7 @@ export const CivicModal: FC<CivicModalProps> = ({
                 fontFamily: "var(--font-headline, 'Mistical Spring', serif)",
                 fontSize: '1.35rem',
                 fontWeight: 700,
-                color: '#FFFFFF',
+                color: 'var(--cru-text)',
                 margin: 0,
                 letterSpacing: '-0.01em'
               }}
@@ -208,9 +208,9 @@ export const CivicModal: FC<CivicModalProps> = ({
                 style={{
                   fontFamily: "var(--font-body, 'Paloseco', sans-serif)",
                   fontSize: '0.875rem',
-                  color: '#94A3B8',
+                  color: 'var(--cru-text-secondary)',
                   marginTop: '0.35rem',
-                  marginBotom: 0
+                  marginBottom: 0
                 }}
               >
                 {description}
@@ -224,21 +224,21 @@ export const CivicModal: FC<CivicModalProps> = ({
               onClick={onClose}
               aria-label="Cerrar ventana modal"
               style={{
-                background: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: 'var(--cru-surface-muted)',
+                border: '1px solid var(--cru-border)',
                 borderRadius: '8px',
                 width: '38px',
                 height: '38px',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#E2E8F0',
+                color: 'var(--cru-text)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 flexShrink: 0,
                 marginLeft: '1rem'
               }}
-              className="civic-modal-close-btn"
+              className="civic-modal-close-btn focus-visible:ring-2 focus-visible:ring-cru-accent-blue focus-visible:outline-none"
             >
               <X size={20} />
             </button>
@@ -252,7 +252,7 @@ export const CivicModal: FC<CivicModalProps> = ({
             padding: '1.75rem',
             overflowY: 'auto',
             flex: '1 1 auto',
-            color: '#F8FAFC',
+            color: 'var(--cru-text)',
             fontFamily: "var(--font-body, 'Paloseco', sans-serif)",
             lineHeight: 1.6
           }}
@@ -265,8 +265,8 @@ export const CivicModal: FC<CivicModalProps> = ({
           <footer
             style={{
               padding: '1.25rem 1.75rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-              background: 'rgba(0, 0, 0, 0.25)',
+              borderTop: '1px solid var(--cru-border)',
+              background: 'var(--cru-surface-muted)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end',

@@ -68,46 +68,45 @@ export const CivicBadge = forwardRef<HTMLSpanElement, CivicBadgeProps>(
     // Estilos visuales por variante
     const variantStyles: Record<CivicBadgeVariant, React.CSSProperties> = {
       default: {
-        background: 'rgba(255, 255, 255, 0.08)',
-        color: '#F8FAFC',
-        border: '1px solid rgba(255, 255, 255, 0.16)'
+        background: 'var(--cru-badge-neutral-bg, rgba(255, 255, 255, 0.08))',
+        color: 'var(--cru-badge-neutral-text, var(--cru-text))',
+        border: '1px solid var(--cru-badge-neutral-border, rgba(255, 255, 255, 0.16))'
       },
       provincial: {
         background: 'var(--color-provincial-surface, rgba(0, 43, 127, 0.25))',
-        color: '#FFFFFF',
+        color: 'var(--color-provincial-text, #FFFFFF)',
         border: '1px solid var(--color-provincial-border, rgba(0, 43, 127, 0.45))',
         boxShadow: '0 0 10px rgba(0, 43, 127, 0.3)'
       },
       info: {
-        background: 'rgba(14, 165, 233, 0.18)',
-        color: '#7DD3FC',
-        border: '1px solid rgba(56, 189, 248, 0.35)'
+        background: 'var(--cru-accent-sky-bg)',
+        color: 'var(--cru-accent-sky)',
+        border: '1px solid var(--cru-accent-sky-border)'
       },
       success: {
-        background: 'rgba(16, 185, 129, 0.18)',
-        color: '#6EE7B7',
-        border: '1px solid rgba(52, 211, 153, 0.38)'
+        background: 'var(--cru-accent-green-bg)',
+        color: 'var(--cru-accent-green)',
+        border: '1px solid var(--cru-accent-green-border)'
       },
       warning: {
-        background: 'rgba(245, 158, 11, 0.18)',
-        color: '#FDE68A',
-        border: '1px solid rgba(251, 191, 36, 0.42)'
+        background: 'var(--cru-accent-amber-bg)',
+        color: 'var(--cru-accent-amber)',
+        border: '1px solid var(--cru-accent-amber-border)'
       },
       danger: {
-        background: 'rgba(239, 68, 68, 0.18)',
-        color: '#FCA5A5',
-        border: '1px solid rgba(248, 113, 113, 0.4)'
+        background: 'var(--cru-accent-red-bg)',
+        color: 'var(--cru-accent-red)',
+        border: '1px solid var(--cru-accent-red-border)'
       },
       ctp: {
-        background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.25) 0%, rgba(124, 58, 237, 0.25) 100%)',
-        color: '#C7D2FE',
-        border: '1px solid rgba(167, 139, 250, 0.42)',
-        boxShadow: '0 0 12px rgba(124, 58, 237, 0.25)'
+        background: 'var(--cru-accent-purple-bg)',
+        color: 'var(--cru-accent-purple)',
+        border: '1px solid var(--cru-accent-purple-border)'
       },
       outline: {
         background: 'transparent',
-        color: '#E2E8F0',
-        border: '1px solid rgba(255, 255, 255, 0.28)'
+        color: 'var(--cru-text)',
+        border: '1px solid var(--cru-border)'
       }
     };
 

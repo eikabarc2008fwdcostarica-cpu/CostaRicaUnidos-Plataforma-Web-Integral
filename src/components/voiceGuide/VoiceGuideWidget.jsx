@@ -4,6 +4,7 @@ import { useSpeechSynthesis } from './useSpeechSynthesis';
 import { getCantonInstitutionalSummary } from './cantonSummaryHelper';
 import { useAuth } from '../../context/AuthContext';
 import { useAccessibility } from '../accessibility/AccessibilityContext';
+import { useTheme } from '../../context/ThemeContext';
 
 /**
  * VoiceGuideWidget (Sovereign Civic Glass v2.1)
@@ -25,6 +26,8 @@ export default function VoiceGuideWidget({
   isAnalyzing = false,
   className = ''
 }) {
+  const { isDark } = useTheme?.() || { isDark: true };
+
   // Manejo de estado interno o controlado para el modo minimizado
   const [internalMinimized, setInternalMinimized] = useState(false);
   const isMinimized = controlledMinimized !== undefined ? controlledMinimized : internalMinimized;
@@ -190,28 +193,28 @@ export default function VoiceGuideWidget({
           width: '44px',
           height: '44px',
           borderRadius: '50%',
-          backgroundColor: 'rgba(5, 12, 28, 0.85)',
+          backgroundColor: isDark ? 'rgba(5, 12, 28, 0.85)' : '#FFFFFF',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(56, 189, 248, 0.40)',
+          border: isDark ? '1px solid rgba(56, 189, 248, 0.40)' : '1.5px solid var(--cru-border, #CBD5E1)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           cursor: 'pointer',
-          color: '#38BDF8',
-          boxShadow: '0 8px 32px rgba(0, 4, 13, 0.45)'
+          color: isDark ? '#38BDF8' : '#002B7F',
+          boxShadow: isDark ? '0 8px 32px rgba(0, 4, 13, 0.45)' : '0 8px 24px rgba(0, 43, 127, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08)'
         }}
         title={isSpeaking ? "Reproduciendo Guía... (Click para expandir)" : "Expandir Guía por Voz"}
         aria-label={isSpeaking ? "Reproduciendo Guía... (Click para expandir)" : "Expandir Guía por Voz"}
       >
         {isSpeaking ? (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="voice-audio-bars">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill={isDark ? '#38BDF8' : '#002B7F'} className="voice-audio-bars">
             <rect className="sound-wave-bar bar-1" x="4" y="4" width="3.2" height="16" rx="1.6" />
             <rect className="sound-wave-bar bar-2" x="10.4" y="4" width="3.2" height="16" rx="1.6" />
             <rect className="sound-wave-bar bar-3" x="16.8" y="4" width="3.2" height="16" rx="1.6" />
           </svg>
         ) : (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#38BDF8' : '#002B7F'} strokeWidth="2">
             <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
           </svg>
         )}
@@ -233,12 +236,12 @@ export default function VoiceGuideWidget({
         alignItems: 'center',
         gap: '6px',
         padding: '4px',
-        backgroundColor: 'rgba(5, 12, 28, 0.85)',
+        backgroundColor: isDark ? 'rgba(5, 12, 28, 0.85)' : 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.10)',
+        border: isDark ? '1px solid rgba(255, 255, 255, 0.10)' : '1px solid var(--cru-border, #CBD5E1)',
         borderRadius: '9999px',
-        boxShadow: '0 8px 32px rgba(0, 4, 13, 0.45)'
+        boxShadow: isDark ? '0 8px 32px rgba(0, 4, 13, 0.45)' : '0 8px 28px rgba(0, 43, 127, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08)'
       }}
     >
       {/* Subtítulos Sincronizados en Pantalla (Ley N° 7600) */}
@@ -363,9 +366,15 @@ export default function VoiceGuideWidget({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: isSettingsOpen ? 'rgba(56, 189, 248, 0.20)' : 'rgba(255, 255, 255, 0.08)',
-          border: isSettingsOpen ? '1px solid rgba(56, 189, 248, 0.60)' : '1px solid rgba(255, 255, 255, 0.15)',
-          color: isSettingsOpen ? '#38BDF8' : '#94A3B8',
+          backgroundColor: isDark
+            ? (isSettingsOpen ? 'rgba(56, 189, 248, 0.20)' : 'rgba(255, 255, 255, 0.08)')
+            : (isSettingsOpen ? 'var(--cru-accent-sky-bg)' : 'var(--cru-surface-muted)'),
+          border: isDark
+            ? (isSettingsOpen ? '1px solid rgba(56, 189, 248, 0.60)' : '1px solid rgba(255, 255, 255, 0.15)')
+            : '1px solid var(--cru-border)',
+          color: isDark
+            ? (isSettingsOpen ? '#38BDF8' : '#94A3B8')
+            : (isSettingsOpen ? 'var(--cru-accent-sky)' : 'var(--cru-text)'),
           cursor: 'pointer',
           transition: 'all 0.2s ease'
         }}
@@ -389,26 +398,32 @@ export default function VoiceGuideWidget({
           gap: '7px',
           padding: '8px 18px',
           borderRadius: '9999px',
-          backgroundColor: isSpeaking ? 'rgba(14, 116, 144, 0.45)' : 'rgba(30, 136, 229, 0.22)',
-          border: isSpeaking ? '1px solid rgba(56, 189, 248, 0.85)' : '1px solid rgba(56, 189, 248, 0.45)',
+          backgroundColor: isDark
+            ? (isSpeaking ? 'rgba(14, 116, 144, 0.45)' : 'rgba(30, 136, 229, 0.22)')
+            : (isSpeaking ? '#001489' : '#002B7F'),
+          border: isDark
+            ? (isSpeaking ? '1px solid rgba(56, 189, 248, 0.85)' : '1px solid rgba(56, 189, 248, 0.45)')
+            : '1px solid #001489',
           color: '#FFFFFF',
           cursor: isAnalyzing ? 'wait' : 'pointer',
           fontSize: '0.85rem',
           fontWeight: 700,
-          boxShadow: isSpeaking ? '0 0 18px rgba(56, 189, 248, 0.45)' : 'none',
+          boxShadow: isDark
+            ? (isSpeaking ? '0 0 18px rgba(56, 189, 248, 0.45)' : 'none')
+            : '0 4px 12px rgba(0, 43, 127, 0.25)',
           transition: 'all 0.22s ease'
         }}
         title="Iniciar recorrido guiado interactivo por voz"
         aria-label="Iniciar recorrido guiado interactivo por voz"
       >
         {isSpeaking ? (
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="#38BDF8" className="voice-audio-bars" aria-label="Audio activo">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill={isDark ? '#38BDF8' : '#FFFFFF'} className="voice-audio-bars" aria-label="Audio activo">
             <rect className="sound-wave-bar bar-1" x="4" y="4" width="3.2" height="16" rx="1.6" />
             <rect className="sound-wave-bar bar-2" x="10.4" y="4" width="3.2" height="16" rx="1.6" />
             <rect className="sound-wave-bar bar-3" x="16.8" y="4" width="3.2" height="16" rx="1.6" />
           </svg>
         ) : (
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#38BDF8' : '#FFFFFF'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
             <path d="M5 3v4" />
             <path d="M19 17v4" />

@@ -2,17 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, X, Volume2, RotateCcw, Shield, Map, Siren, Check, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAccessibility } from './AccessibilityContext';
 import { ONBOARDING_STEPS_MULTILINGUE, IDIOMAS_SOPORTADOS } from './accessibilityData';
+import { useTheme } from '../../context/ThemeContext';
 
-function renderStepIcon(stepId) {
+function renderStepIcon(stepId, isDark = true) {
   switch (stepId) {
     case 1:
-      return <Shield size={32} color="#00D166" />;
+      return <Shield size={32} color={isDark ? "#00D166" : "#05853B"} />;
     case 2:
-      return <Map size={32} color="#3B82F6" />;
+      return <Map size={32} color={isDark ? "#3B82F6" : "#002B7F"} />;
     case 3:
       return <Siren size={32} color="#EF4444" />;
     default:
-      return <Sparkles size={32} color="#79a6ff" />;
+      return <Sparkles size={32} color={isDark ? "#79a6ff" : "#002B7F"} />;
   }
 }
 
@@ -33,6 +34,7 @@ export default function VoiceGuidedOnboardingModal() {
     stopSpeaking,
     isSpeaking
   } = useAccessibility();
+  const { isDark } = useTheme?.() || { isDark: true };
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [doNotShowAgain, setDoNotShowAgain] = useState(true);
@@ -109,7 +111,7 @@ export default function VoiceGuidedOnboardingModal() {
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(0, 4, 13, 0.88)',
+        backgroundColor: isDark ? 'rgba(0, 4, 13, 0.88)' : 'rgba(15, 23, 42, 0.65)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
         zIndex: 10000,
@@ -125,22 +127,24 @@ export default function VoiceGuidedOnboardingModal() {
         style={{
           width: '100%',
           maxWidth: '680px',
-          backgroundColor: 'rgba(0, 8, 30, 0.98)',
-          border: '1px solid rgba(121, 166, 255, 0.45)',
+          backgroundColor: isDark ? 'rgba(0, 8, 30, 0.98)' : 'var(--cru-surface-card, #FFFFFF)',
+          border: isDark ? '1px solid rgba(121, 166, 255, 0.45)' : '1px solid var(--cru-border, #CBD5E1)',
           borderRadius: '24px',
-          boxShadow: '0 25px 70px rgba(0, 4, 13, 0.95), 0 0 40px rgba(0, 43, 127, 0.5)',
+          boxShadow: isDark
+            ? '0 25px 70px rgba(0, 4, 13, 0.95), 0 0 40px rgba(0, 43, 127, 0.5)'
+            : '0 25px 70px rgba(0, 43, 127, 0.20), 0 4px 16px rgba(0, 0, 0, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          color: '#FFFFFF'
+          color: isDark ? '#FFFFFF' : '#0F172A'
         }}
       >
         {/* Barra Superior con Selector Rápido de Idioma y Botón de Salir */}
         <div
           style={{
             padding: '1rem 1.5rem',
-            backgroundColor: 'rgba(0, 20, 80, 0.4)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            backgroundColor: isDark ? 'rgba(0, 20, 80, 0.4)' : 'var(--cru-surface-muted, #F8FAFC)',
+            borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid var(--cru-border, #CBD5E1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -148,8 +152,8 @@ export default function VoiceGuidedOnboardingModal() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <Sparkles size={16} color="#79a6ff" />
-            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#79a6ff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            <Sparkles size={16} color={isDark ? "#79a6ff" : "#002B7F"} />
+            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: isDark ? '#79a6ff' : '#002B7F', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
               Recorrido Asistido por Voz (Paso {currentStepIndex + 1} de {stepsList.length})
             </span>
           </div>
@@ -161,10 +165,10 @@ export default function VoiceGuidedOnboardingModal() {
               onChange={(e) => setSelectedLang(e.target.value)}
               aria-label="Seleccionar idioma de narración"
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(121, 166, 255, 0.3)',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#FFFFFF',
+                border: isDark ? '1px solid rgba(121, 166, 255, 0.3)' : '1px solid var(--cru-border, #CBD5E1)',
                 borderRadius: '8px',
-                color: '#FFFFFF',
+                color: isDark ? '#FFFFFF' : '#0F172A',
                 fontSize: '0.76rem',
                 fontWeight: 700,
                 padding: '0.3rem 0.5rem',
@@ -173,7 +177,14 @@ export default function VoiceGuidedOnboardingModal() {
               }}
             >
               {IDIOMAS_SOPORTADOS.map((item) => (
-                <option key={item.codigo} value={item.codigo} style={{ backgroundColor: '#00081E', color: '#FFFFFF' }}>
+                <option
+                  key={item.codigo}
+                  value={item.codigo}
+                  style={{
+                    backgroundColor: isDark ? '#00081E' : '#FFFFFF',
+                    color: isDark ? '#FFFFFF' : '#0F172A'
+                  }}
+                >
                   [{item.bandera}] {item.nativo}
                 </option>
               ))}
@@ -185,10 +196,10 @@ export default function VoiceGuidedOnboardingModal() {
               onClick={() => setVoiceGender(voiceGender === 'female' ? 'male' : 'female')}
               title={`Cambiar a voz ${voiceGender === 'female' ? 'masculina' : 'femenina'}`}
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #F1F5F9)',
+                border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid var(--cru-border, #CBD5E1)',
                 borderRadius: '8px',
-                color: '#FFFFFF',
+                color: isDark ? '#FFFFFF' : '#0F172A',
                 padding: '0.3rem 0.55rem',
                 fontSize: '0.78rem',
                 cursor: 'pointer',
@@ -196,9 +207,9 @@ export default function VoiceGuidedOnboardingModal() {
               }}
             >
               {voiceGender === 'female' ? (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Volume2 size={13} color="#79a6ff" /> Voz Femenina</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Volume2 size={13} color={isDark ? "#79a6ff" : "#002B7F"} /> Voz Femenina</span>
               ) : (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Volume2 size={13} color="#79a6ff" /> Voz Masculina</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><Volume2 size={13} color={isDark ? "#79a6ff" : "#002B7F"} /> Voz Masculina</span>
               )}
             </button>
 
@@ -209,7 +220,7 @@ export default function VoiceGuidedOnboardingModal() {
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: '#94A3B8',
+                color: isDark ? '#94A3B8' : '#64748B',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -222,13 +233,13 @@ export default function VoiceGuidedOnboardingModal() {
         </div>
 
         {/* Indicador de Progreso Visual */}
-        <div style={{ display: 'flex', height: '4px', backgroundColor: 'rgba(255, 255, 255, 0.08)' }}>
+        <div style={{ display: 'flex', height: '4px', backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #E2E8F0)' }}>
           {stepsList.map((s, idx) => (
             <div
               key={s.id}
               style={{
                 flex: 1,
-                backgroundColor: idx <= currentStepIndex ? '#00D166' : 'transparent',
+                backgroundColor: idx <= currentStepIndex ? (isDark ? '#00D166' : '#05853B') : 'transparent',
                 transition: 'background-color 0.3s ease'
               }}
             />
@@ -238,26 +249,26 @@ export default function VoiceGuidedOnboardingModal() {
         {/* Cuerpo del Paso Activo */}
         <div style={{ padding: '2rem 2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.25rem' }}>
-            {/* Icono Monumental Tricolor */}
+            {/* Icono Monumental */}
             <div
               style={{
                 width: '64px',
                 height: '64px',
                 borderRadius: '16px',
-                backgroundColor: 'rgba(0, 20, 137, 0.35)',
-                border: '1px solid rgba(121, 166, 255, 0.4)',
+                backgroundColor: isDark ? 'rgba(0, 20, 137, 0.35)' : 'var(--cru-accent-sky-bg, #E0F2FE)',
+                border: isDark ? '1px solid rgba(121, 166, 255, 0.4)' : '1px solid #BAE6FD',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 8px 25px rgba(0, 20, 137, 0.5)',
+                boxShadow: isDark ? '0 8px 25px rgba(0, 20, 137, 0.5)' : '0 4px 12px rgba(0, 43, 127, 0.12)',
                 flexShrink: 0
               }}
             >
-              {renderStepIcon(step.id)}
+              {renderStepIcon(step.id, isDark)}
             </div>
 
             <div>
-              <div style={{ fontSize: '0.78rem', color: '#79a6ff', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <div style={{ fontSize: '0.78rem', color: isDark ? '#79a6ff' : '#002B7F', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 {step.subtitulo}
               </div>
               <h2
@@ -267,7 +278,7 @@ export default function VoiceGuidedOnboardingModal() {
                   fontWeight: 900,
                   margin: '0.2rem 0 0.5rem',
                   letterSpacing: '-0.02em',
-                  color: '#FFFFFF'
+                  color: isDark ? '#FFFFFF' : '#0F172A'
                 }}
               >
                 {step.titulo}
@@ -281,8 +292,8 @@ export default function VoiceGuidedOnboardingModal() {
               display: 'flex',
               flexWrap: 'wrap',
               gap: '0.5rem',
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.03)' : 'var(--cru-surface-muted, #F8FAFC)',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid var(--cru-border, #CBD5E1)',
               borderRadius: '12px',
               padding: '0.85rem 1rem'
             }}
@@ -294,16 +305,16 @@ export default function VoiceGuidedOnboardingModal() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  backgroundColor: 'rgba(0, 43, 127, 0.45)',
-                  border: '1px solid rgba(121, 166, 255, 0.3)',
+                  backgroundColor: isDark ? 'rgba(0, 43, 127, 0.45)' : 'var(--cru-accent-sky-bg, #E0F2FE)',
+                  border: isDark ? '1px solid rgba(121, 166, 255, 0.3)' : '1px solid #BAE6FD',
                   padding: '0.3rem 0.65rem',
                   borderRadius: '999px',
                   fontSize: '0.78rem',
                   fontWeight: 700,
-                  color: '#E2E8F0'
+                  color: isDark ? '#E2E8F0' : '#0369A1'
                 }}
               >
-                <Check size={12} strokeWidth={2.5} color="#79a6ff" />
+                <Check size={12} strokeWidth={2.5} color={isDark ? "#79a6ff" : "#0284C7"} />
                 <span>{item}</span>
               </span>
             ))}
@@ -315,19 +326,19 @@ export default function VoiceGuidedOnboardingModal() {
             role="status"
             aria-live="polite"
             style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.45)',
-              borderLeft: '4px solid #00D166',
+              backgroundColor: isDark ? 'rgba(0, 0, 0, 0.45)' : 'var(--cru-surface-muted, #F1F5F9)',
+              borderLeft: isDark ? '4px solid #00D166' : '4px solid #05853B',
               padding: '1rem 1.25rem',
               borderRadius: '0 12px 12px 0',
-              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-              borderRight: '1px solid rgba(255, 255, 255, 0.06)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+              borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid var(--cru-border, #CBD5E1)',
+              borderRight: isDark ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid var(--cru-border, #CBD5E1)',
+              borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid var(--cru-border, #CBD5E1)',
               position: 'relative'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#00D166', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                <Volume2 size={13} color="#00D166" />
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, color: isDark ? '#00D166' : '#05853B', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Volume2 size={13} color={isDark ? "#00D166" : "#05853B"} />
                 <span>Subtítulo de Locución en Tiempo Real ({activeLangObj.nativo}):</span>
               </span>
               <button
@@ -337,7 +348,7 @@ export default function VoiceGuidedOnboardingModal() {
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#79a6ff',
+                  color: isDark ? '#79a6ff' : '#002B7F',
                   cursor: 'pointer',
                   fontSize: '0.76rem',
                   fontWeight: 700,
@@ -350,7 +361,7 @@ export default function VoiceGuidedOnboardingModal() {
                 <span>Repetir Voz</span>
               </button>
             </div>
-            <p style={{ margin: 0, fontSize: '0.92rem', color: '#F1F5F9', lineHeight: 1.55, fontWeight: 500 }}>
+            <p style={{ margin: 0, fontSize: '0.92rem', color: isDark ? '#F1F5F9' : '#0F172A', lineHeight: 1.55, fontWeight: 500 }}>
               {step.narracion}
             </p>
           </div>
@@ -360,8 +371,8 @@ export default function VoiceGuidedOnboardingModal() {
         <div
           style={{
             padding: '1rem 1.5rem',
-            backgroundColor: 'rgba(0, 4, 13, 0.9)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            backgroundColor: isDark ? 'rgba(0, 4, 13, 0.9)' : 'var(--cru-surface-muted, #F8FAFC)',
+            borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid var(--cru-border, #CBD5E1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -370,7 +381,7 @@ export default function VoiceGuidedOnboardingModal() {
           }}
         >
           {/* Checkbox No Volver a Mostrar */}
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem', color: '#94A3B8', cursor: 'pointer' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem', color: isDark ? '#94A3B8' : '#64748B', cursor: 'pointer' }}>
             <input
               type="checkbox"
               checked={doNotShowAgain}
@@ -386,10 +397,10 @@ export default function VoiceGuidedOnboardingModal() {
               onClick={closeOnboarding}
               style={{
                 backgroundColor: 'transparent',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                border: isDark ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid var(--cru-border, #CBD5E1)',
                 borderRadius: '10px',
                 padding: '0.55rem 1rem',
-                color: '#CBD5E1',
+                color: isDark ? '#CBD5E1' : '#475569',
                 fontSize: '0.85rem',
                 fontWeight: 700,
                 cursor: 'pointer'
@@ -403,11 +414,11 @@ export default function VoiceGuidedOnboardingModal() {
                 type="button"
                 onClick={handlePrev}
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#FFFFFF',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid var(--cru-border, #CBD5E1)',
                   borderRadius: '10px',
                   padding: '0.55rem 1.1rem',
-                  color: '#FFFFFF',
+                  color: isDark ? '#FFFFFF' : '#0F172A',
                   fontSize: '0.85rem',
                   fontWeight: 700,
                   cursor: 'pointer'
@@ -424,17 +435,19 @@ export default function VoiceGuidedOnboardingModal() {
               type="button"
               onClick={handleNext}
               style={{
-                backgroundColor: currentStepIndex === stepsList.length - 1 ? '#00D166' : '#DA291C',
+                backgroundColor: currentStepIndex === stepsList.length - 1
+                  ? (isDark ? '#00D166' : '#05853B')
+                  : (isDark ? '#DA291C' : '#002B7F'),
                 border: 'none',
                 borderRadius: '10px',
                 padding: '0.58rem 1.35rem',
-                color: currentStepIndex === stepsList.length - 1 ? '#00040D' : '#FFFFFF',
+                color: '#FFFFFF',
                 fontSize: '0.88rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 boxShadow: currentStepIndex === stepsList.length - 1
-                  ? '0 4px 15px rgba(0, 209, 102, 0.4)'
-                  : '0 4px 15px rgba(218, 41, 28, 0.4)',
+                  ? (isDark ? '0 4px 15px rgba(0, 209, 102, 0.4)' : '0 4px 15px rgba(5, 133, 59, 0.35)')
+                  : (isDark ? '0 4px 15px rgba(218, 41, 28, 0.4)' : '0 4px 15px rgba(0, 43, 127, 0.3)'),
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.4rem'

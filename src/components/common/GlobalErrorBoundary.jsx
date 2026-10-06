@@ -43,8 +43,8 @@ export default class GlobalErrorBoundary extends React.Component {
           role="alert"
           style={{
             minHeight: '100vh',
-            backgroundColor: '#00040D',
-            color: '#FFFFFF',
+            backgroundColor: 'var(--cru-page-bg, #00040D)',
+            color: 'var(--cru-text, #FFFFFF)',
             display: 'flex',
             flexDirection: 'column',
             fontFamily: 'system-ui, -apple-system, sans-serif'
@@ -57,8 +57,8 @@ export default class GlobalErrorBoundary extends React.Component {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-              background: 'rgba(5, 12, 28, 0.95)'
+              borderBottom: '1px solid var(--cru-border, rgba(255, 255, 255, 0.08))',
+              background: 'var(--theme-header-bg, rgba(5, 12, 28, 0.95))'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -72,21 +72,22 @@ export default class GlobalErrorBoundary extends React.Component {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 900,
-                  fontSize: '0.9rem'
+                  fontSize: '0.9rem',
+                  color: '#FFFFFF'
                 }}
               >
                 CR
               </div>
-              <span style={{ fontSize: '0.9rem', fontWeight: 800, letterSpacing: '0.05em' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: 800, letterSpacing: '0.05em', color: 'var(--cru-text)' }}>
                 COSTA RICA UNIDOS
               </span>
             </div>
             <button
               onClick={this.handleGoHome}
               style={{
-                backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
-                color: '#38BDF8',
+                backgroundColor: 'var(--cru-accent-sky-bg)',
+                border: '1px solid var(--cru-accent-sky-border)',
+                color: 'var(--cru-accent-sky)',
                 borderRadius: '9999px',
                 padding: '0.4rem 1rem',
                 fontSize: '0.8rem',
@@ -112,12 +113,12 @@ export default class GlobalErrorBoundary extends React.Component {
               style={{
                 maxWidth: '560px',
                 width: '100%',
-                backgroundColor: 'rgba(7, 13, 27, 0.85)',
-                border: '1px solid rgba(239, 68, 68, 0.35)',
+                backgroundColor: 'var(--cru-surface-card)',
+                border: '1px solid var(--cru-accent-red-border, rgba(239, 68, 68, 0.35))',
                 borderRadius: '24px',
                 padding: '2.5rem',
                 textAlign: 'center',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 30px rgba(239, 68, 68, 0.15)'
+                boxShadow: 'var(--cru-card-shadow, 0 25px 50px -12px rgba(0, 0, 0, 0.5))'
               }}
             >
               <div
@@ -126,12 +127,12 @@ export default class GlobalErrorBoundary extends React.Component {
                   height: '64px',
                   margin: '0 auto 1.5rem',
                   borderRadius: '20px',
-                  backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                  border: '1px solid rgba(239, 68, 68, 0.4)',
+                  backgroundColor: 'var(--cru-accent-red-bg)',
+                  border: '1px solid var(--cru-accent-red-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#EF4444'
+                  color: 'var(--cru-accent-red)'
                 }}
               >
                 <AlertTriangle size={32} />
@@ -144,8 +145,8 @@ export default class GlobalErrorBoundary extends React.Component {
                   fontWeight: 800,
                   textTransform: 'uppercase',
                   letterSpacing: '0.1em',
-                  color: '#F87171',
-                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                  color: 'var(--cru-accent-red)',
+                  backgroundColor: 'var(--cru-accent-red-bg)',
                   padding: '0.2rem 0.75rem',
                   borderRadius: '9999px',
                   marginBottom: '0.75rem'
@@ -158,7 +159,7 @@ export default class GlobalErrorBoundary extends React.Component {
                 style={{
                   fontSize: '1.5rem',
                   fontWeight: 800,
-                  color: '#FFFFFF',
+                  color: 'var(--cru-text)',
                   marginBottom: '0.75rem',
                   letterSpacing: '-0.02em'
                 }}
@@ -169,7 +170,7 @@ export default class GlobalErrorBoundary extends React.Component {
               <p
                 style={{
                   fontSize: '0.9rem',
-                  color: '#94A3B8',
+                  color: 'var(--cru-text-secondary)',
                   lineHeight: 1.6,
                   marginBottom: '2rem'
                 }}
@@ -180,15 +181,15 @@ export default class GlobalErrorBoundary extends React.Component {
               {this.state.error?.message && (
                 <div
                   style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    backgroundColor: 'var(--cru-surface-muted)',
+                    border: '1px solid var(--cru-border)',
                     borderRadius: '12px',
                     padding: '0.75rem 1rem',
                     marginBottom: '2rem',
                     textAlign: 'left',
                     fontFamily: 'monospace',
                     fontSize: '0.75rem',
-                    color: '#FCA5A5',
+                    color: 'var(--cru-accent-red)',
                     overflowX: 'auto'
                   }}
                 >
@@ -212,7 +213,7 @@ export default class GlobalErrorBoundary extends React.Component {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.5rem',
-                    backgroundColor: '#0284C7',
+                    backgroundColor: 'var(--cru-accent-sky)',
                     color: '#FFFFFF',
                     border: 'none',
                     borderRadius: '14px',
@@ -236,9 +237,9 @@ export default class GlobalErrorBoundary extends React.Component {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.5rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    color: '#E2E8F0',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    backgroundColor: 'var(--cru-surface-muted)',
+                    color: 'var(--cru-text)',
+                    border: '1px solid var(--cru-border)',
                     borderRadius: '14px',
                     padding: '0.75rem 1.5rem',
                     fontSize: '0.85rem',

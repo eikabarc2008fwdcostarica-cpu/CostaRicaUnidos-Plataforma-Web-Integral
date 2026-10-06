@@ -256,6 +256,7 @@ html.dark, :root.dark, .dark {
   --cru-accent-purple-border: rgba(192, 132, 252, 0.35);
   --cru-track: rgba(255, 255, 255, 0.1);
   --cru-badge-neutral-bg: rgba(255, 255, 255, 0.05);
+  --cru-badge-neutral-text: #94A3B8;
   --cru-badge-neutral-border: rgba(255, 255, 255, 0.1);
   --cru-card-shadow-hover: 0 20px 50px rgba(0, 20, 137, 0.4);
   --cru-chip-bg: rgba(255, 255, 255, 0.05);
@@ -338,6 +339,7 @@ html.light {
   --cru-accent-purple-border: rgba(109, 40, 217, 0.25);
   --cru-track: #E2E8F0;
   --cru-badge-neutral-bg: #F1F5F9;
+  --cru-badge-neutral-text: #475569;
   --cru-badge-neutral-border: #CBD5E1;
   --cru-card-shadow-hover: 0 16px 36px rgba(0, 20, 137, 0.10);
   --cru-chip-bg: #F1F5F9;
@@ -354,20 +356,20 @@ html.light {
   html.theme-transition *,
   html.theme-transition *::before,
   html.theme-transition *::after {
-    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 200ms ease !important;
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-crossfade-layer {
-    transition: none !important;
+  html body #root .hero-crossfade-layer {
+    transition: none;
   }
 }
 
 /* Optimización de rendimiento: pausar animaciones en capa oculta del Hero */
-.hero-crossfade-layer.is-hidden,
-.hero-crossfade-layer.is-hidden * {
-  animation-play-state: paused !important;
+html body #root .hero-crossfade-layer.is-hidden,
+html body #root .hero-crossfade-layer.is-hidden * {
+  animation-play-state: paused;
 }
 
 /* ==========================================================================
@@ -534,10 +536,6 @@ html.light .civic-card {
   box-shadow: var(--theme-card-shadow);
 }
 
-html.light header:not(.surface-dark):not(.surface-brand) {
-  background-color: var(--theme-header-bg);
-  border-color: var(--theme-header-border);
-}
 
 html.light input,
 html.light select,

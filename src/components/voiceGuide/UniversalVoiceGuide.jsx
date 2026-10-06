@@ -42,6 +42,7 @@ import {
 import { askGeminiAboutSection } from '../../services/geminiService';
 import { useAccessibility } from '../accessibility/AccessibilityContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTheme } from '../../context/ThemeContext';
 import VoiceGuideWidget from './VoiceGuideWidget';
 
 export default function UniversalVoiceGuide() {
@@ -56,6 +57,7 @@ export default function UniversalVoiceGuide() {
 
   const { isOnboardingOpen, closeOnboarding } = useAccessibility();
   const { langCode } = useLanguage();
+  const { isDark } = useTheme?.() || { isDark: true };
 
   const {
     isTourActive,
@@ -279,8 +281,10 @@ export default function UniversalVoiceGuide() {
             width: targetRect.width + 12,
             height: targetRect.height + 12,
             borderRadius: '16px',
-            border: '2px solid #38BDF8',
-            boxShadow: '0 0 0 9999px rgba(0, 4, 13, 0.82), 0 0 35px rgba(56, 189, 248, 0.65)',
+            border: isDark ? '2px solid #38BDF8' : '3px solid #002B7F',
+            boxShadow: isDark
+              ? '0 0 0 9999px rgba(0, 4, 13, 0.82), 0 0 35px rgba(56, 189, 248, 0.65)'
+              : '0 0 0 9999px rgba(15, 23, 42, 0.50), 0 0 25px rgba(0, 43, 127, 0.35)',
             pointerEvents: 'none',
             zIndex: 9998,
             transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
@@ -323,12 +327,14 @@ export default function UniversalVoiceGuide() {
             left: '50%',
             transform: 'translateX(-50%)',
             width: 'min(720px, 94vw)',
-            backgroundColor: 'rgba(7, 13, 27, 0.96)',
+            backgroundColor: isDark ? 'rgba(7, 13, 27, 0.96)' : 'var(--cru-surface-card, #FFFFFF)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            border: '2px solid rgba(56, 189, 248, 0.4)',
+            border: isDark ? '2px solid rgba(56, 189, 248, 0.4)' : '1.5px solid var(--cru-border, #CBD5E1)',
             borderRadius: '24px',
-            boxShadow: '0 20px 60px rgba(0, 4, 13, 0.95), 0 0 30px rgba(0, 43, 127, 0.45)',
+            boxShadow: isDark
+              ? '0 20px 60px rgba(0, 4, 13, 0.95), 0 0 30px rgba(0, 43, 127, 0.45)'
+              : '0 20px 60px rgba(0, 43, 127, 0.18), 0 4px 16px rgba(0, 0, 0, 0.08)',
             zIndex: 9999,
             overflow: 'hidden',
             display: 'flex',
@@ -339,8 +345,8 @@ export default function UniversalVoiceGuide() {
           <div
             style={{
               padding: '0.75rem 1.25rem',
-              backgroundColor: 'rgba(15, 23, 42, 0.8)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              backgroundColor: isDark ? 'rgba(15, 23, 42, 0.8)' : 'var(--cru-surface-muted, #F8FAFC)',
+              borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid var(--cru-border, #CBD5E1)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -353,18 +359,18 @@ export default function UniversalVoiceGuide() {
                   width: '28px',
                   height: '28px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                  backgroundColor: isDark ? 'rgba(56, 189, 248, 0.2)' : 'var(--cru-accent-sky-bg, #E0F2FE)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#38BDF8'
+                  color: isDark ? '#38BDF8' : '#002B7F'
                 }}
               >
                 <Sparkles size={15} />
               </div>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#F1F5F9' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: isDark ? '#F1F5F9' : '#0F172A' }}>
                     {pageTitle || 'Recorrido Asistido'}
                   </span>
                   <span
@@ -373,16 +379,16 @@ export default function UniversalVoiceGuide() {
                       fontWeight: 700,
                       padding: '0.1rem 0.5rem',
                       borderRadius: '9999px',
-                      backgroundColor: fromAi ? 'rgba(16, 185, 129, 0.2)' : 'rgba(56, 189, 248, 0.2)',
-                      color: fromAi ? '#34D399' : '#38BDF8',
-                      border: `1px solid ${fromAi ? 'rgba(52, 211, 153, 0.4)' : 'rgba(56, 189, 248, 0.4)'}`
+                      backgroundColor: fromAi ? 'rgba(16, 185, 129, 0.2)' : (isDark ? 'rgba(56, 189, 248, 0.2)' : 'var(--cru-accent-sky-bg, #E0F2FE)'),
+                      color: fromAi ? (isDark ? '#34D399' : '#065F46') : (isDark ? '#38BDF8' : '#002B7F'),
+                      border: `1px solid ${fromAi ? (isDark ? 'rgba(52, 211, 153, 0.4)' : '#A7F3D0') : (isDark ? 'rgba(56, 189, 248, 0.4)' : '#BAE6FD')}`
                     }}
                   >
                     {fromAi ? '✦ Gemini 3.6 Flash' : '✦ Guía GovTech'}
                   </span>
                 </div>
-                <div style={{ fontSize: '0.7rem', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <MapPin size={11} className="text-sky-400" />
+                <div style={{ fontSize: '0.7rem', color: isDark ? '#94A3B8' : '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <MapPin size={11} className={isDark ? "text-sky-400" : "text-sky-700"} />
                   <span>Cantón: <strong>{activeCanton}</strong></span>
                   <span>&bull;</span>
                   <span>Paso {currentStepIndex + 1} de {steps.length}</span>
@@ -399,9 +405,11 @@ export default function UniversalVoiceGuide() {
                 style={{
                   padding: '0.4rem 0.75rem',
                   borderRadius: '12px',
-                  backgroundColor: showAiAsk ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255, 255, 255, 0.06)',
-                  border: '1px solid rgba(56, 189, 248, 0.3)',
-                  color: showAiAsk ? '#38BDF8' : '#E2E8F0',
+                  backgroundColor: showAiAsk
+                    ? (isDark ? 'rgba(56, 189, 248, 0.25)' : '#002B7F')
+                    : (isDark ? 'rgba(255, 255, 255, 0.06)' : 'var(--cru-surface-muted, #F1F5F9)'),
+                  border: isDark ? '1px solid rgba(56, 189, 248, 0.3)' : '1px solid var(--cru-border, #CBD5E1)',
+                  color: showAiAsk ? (isDark ? '#38BDF8' : '#FFFFFF') : (isDark ? '#E2E8F0' : '#0F172A'),
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   cursor: 'pointer',
@@ -425,9 +433,9 @@ export default function UniversalVoiceGuide() {
                   width: '32px',
                   height: '32px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#94A3B8',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'var(--cru-surface-muted, #F1F5F9)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid var(--cru-border, #CBD5E1)',
+                  color: isDark ? '#94A3B8' : '#64748B',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -462,19 +470,19 @@ export default function UniversalVoiceGuide() {
             )}
 
             <div style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h3 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+              <h3 style={{ fontSize: '0.98rem', fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', margin: 0 }}>
                 {currentStep.title || currentStep.titulo}
               </h3>
               {isSpeaking && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }} title="Voz en reproducción">
-                  <span className="w-1 h-3 bg-sky-400 rounded animate-pulse" />
-                  <span className="w-1 h-4 bg-sky-400 rounded animate-pulse delay-75" />
-                  <span className="w-1 h-2 bg-sky-400 rounded animate-pulse delay-150" />
+                  <span className={`w-1 h-3 ${isDark ? 'bg-sky-400' : 'bg-sky-600'} rounded animate-pulse`} />
+                  <span className={`w-1 h-4 ${isDark ? 'bg-sky-400' : 'bg-sky-600'} rounded animate-pulse delay-75`} />
+                  <span className={`w-1 h-2 ${isDark ? 'bg-sky-400' : 'bg-sky-600'} rounded animate-pulse delay-150`} />
                 </div>
               )}
             </div>
 
-            <p style={{ fontSize: '0.85rem', lineHeight: 1.5, color: '#CBD5E1', margin: 0 }}>
+            <p style={{ fontSize: '0.85rem', lineHeight: 1.5, color: isDark ? '#CBD5E1' : '#334155', margin: 0 }}>
               {liveSubtitle || currentStep.speechText || currentStep.locucion}
             </p>
 
@@ -484,10 +492,10 @@ export default function UniversalVoiceGuide() {
                   marginTop: '0.65rem',
                   padding: '0.4rem 0.75rem',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(56, 189, 248, 0.08)',
-                  borderLeft: '3px solid #38BDF8',
+                  backgroundColor: isDark ? 'rgba(56, 189, 248, 0.08)' : '#F0F9FF',
+                  borderLeft: isDark ? '3px solid #38BDF8' : '3px solid #002B7F',
                   fontSize: '0.75rem',
-                  color: '#94A3B8'
+                  color: isDark ? '#94A3B8' : '#0369A1'
                 }}
               >
                 <strong>Tip cívico:</strong> {currentStep.tips}
@@ -566,8 +574,8 @@ export default function UniversalVoiceGuide() {
           <div
             style={{
               padding: '0.75rem 1.25rem',
-              backgroundColor: 'rgba(15, 23, 42, 0.85)',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              backgroundColor: isDark ? 'rgba(15, 23, 42, 0.85)' : 'var(--cru-surface-muted, #F8FAFC)',
+              borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid var(--cru-border, #CBD5E1)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -585,9 +593,9 @@ export default function UniversalVoiceGuide() {
                 style={{
                   padding: '0.45rem 0.75rem',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#FFFFFF',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#FFFFFF',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid var(--cru-border, #CBD5E1)',
+                  color: isDark ? '#FFFFFF' : '#0F172A',
                   fontSize: '0.78rem',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -608,9 +616,9 @@ export default function UniversalVoiceGuide() {
                 style={{
                   padding: '0.45rem 0.75rem',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#CBD5E1',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#FFFFFF',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid var(--cru-border, #CBD5E1)',
+                  color: isDark ? '#CBD5E1' : '#475569',
                   fontSize: '0.78rem',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -634,9 +642,11 @@ export default function UniversalVoiceGuide() {
                 style={{
                   padding: '0.45rem 0.85rem',
                   borderRadius: '10px',
-                  backgroundColor: currentStepIndex === 0 ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: currentStepIndex === 0 ? '#64748B' : '#FFFFFF',
+                  backgroundColor: currentStepIndex === 0
+                    ? (isDark ? 'rgba(255, 255, 255, 0.04)' : '#F1F5F9')
+                    : (isDark ? 'rgba(255, 255, 255, 0.1)' : '#FFFFFF'),
+                  border: '1px solid var(--cru-border, #CBD5E1)',
+                  color: currentStepIndex === 0 ? '#94A3B8' : (isDark ? '#FFFFFF' : '#0F172A'),
                   fontSize: '0.78rem',
                   fontWeight: 700,
                   cursor: currentStepIndex === 0 ? 'not-allowed' : 'pointer',
@@ -656,8 +666,8 @@ export default function UniversalVoiceGuide() {
                 style={{
                   padding: '0.45rem 1.15rem',
                   borderRadius: '10px',
-                  backgroundColor: '#0284C7',
-                  border: '1px solid #38BDF8',
+                  backgroundColor: '#002B7F',
+                  border: '1px solid #001489',
                   color: '#FFFFFF',
                   fontSize: '0.78rem',
                   fontWeight: 700,
@@ -665,7 +675,7 @@ export default function UniversalVoiceGuide() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)'
+                  boxShadow: '0 4px 15px rgba(0, 43, 127, 0.35)'
                 }}
               >
                 <span>{currentStepIndex === steps.length - 1 ? 'Finalizar Recorrido' : 'Siguiente'}</span>

@@ -8,12 +8,16 @@ import { Link } from 'react-router-dom';
 export default function Logo({ size = '40px', showText = true, variant = 'auto', spin = false }) {
   const pixelHeight = typeof size === 'number' ? `${size}px` : (typeof size === 'string' && (size.endsWith('px') || size.endsWith('rem')) ? size : '40px');
 
-  const primaryTextColor = variant === 'dark'
-    ? '#FFFFFF'
-    : (variant === 'light' ? '#062A77' : 'var(--cru-text, #062A77)');
-  const secondaryTextColor = variant === 'dark'
-    ? '#38BDF8'
-    : (variant === 'light' ? '#C22727' : 'var(--cru-accent-sky, #38BDF8)');
+  // Variantes cromáticas explícitas de marca (sin filtros distorsionantes):
+  // Modo Claro: Azul Soberano (#062A77) + Rojo Patrio (#C22727)
+  // Modo Oscuro: Blanco Cívico (#FFFFFF) + Celeste Cielo (#38BDF8)
+  const primaryClass = variant === 'dark'
+    ? 'text-white'
+    : (variant === 'light' ? 'text-[#062A77]' : 'text-[#062A77] dark:text-white');
+
+  const secondaryClass = variant === 'dark'
+    ? 'text-[#38BDF8]'
+    : (variant === 'light' ? 'text-[#C22727]' : 'text-[#C22727] dark:text-[#38BDF8]');
 
   return (
     <Link
@@ -28,7 +32,7 @@ export default function Logo({ size = '40px', showText = true, variant = 'auto',
         flexShrink: 0
       }}
     >
-      {/* Isotipo Oficial (100% Estático - Sin animación de rotación) */}
+      {/* Isotipo Oficial (100% Estático - Sin alteración cromática) */}
       <img
         src="/logo.png"
         alt="Logo Costa Rica Unidos"
@@ -36,8 +40,7 @@ export default function Logo({ size = '40px', showText = true, variant = 'auto',
           height: pixelHeight,
           maxHeight: pixelHeight,
           width: 'auto',
-          objectFit: 'contain',
-          filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))'
+          objectFit: 'contain'
         }}
         className="h-10 w-10 object-contain"
       />
@@ -52,9 +55,8 @@ export default function Logo({ size = '40px', showText = true, variant = 'auto',
           }}
         >
           <span
-            className={`font-extrabold text-lg tracking-tight leading-none ${variant === 'dark' ? 'text-white' : 'text-[#062A77]'}`}
+            className={`font-extrabold text-lg tracking-tight leading-none ${primaryClass}`}
             style={{
-              color: primaryTextColor,
               fontWeight: 800,
               fontSize: '1.15rem',
               letterSpacing: '-0.01em',
@@ -64,9 +66,8 @@ export default function Logo({ size = '40px', showText = true, variant = 'auto',
             COSTA RICA
           </span>
           <span
-            className={`font-bold text-xs tracking-widest leading-tight mt-0.5 ${variant === 'dark' ? 'text-[#38BDF8]' : 'text-[#C22727]'}`}
+            className={`font-bold text-xs tracking-widest leading-tight mt-0.5 ${secondaryClass}`}
             style={{
-              color: secondaryTextColor,
               fontWeight: 700,
               fontSize: '0.72rem',
               letterSpacing: '0.24em',
@@ -91,8 +92,7 @@ export function Isotipo({ size = '40px', className = '' }) {
         height: pixelHeight,
         maxHeight: pixelHeight,
         width: 'auto',
-        objectFit: 'contain',
-        filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))'
+        objectFit: 'contain'
       }}
       className={`h-10 w-10 object-contain ${className}`}
     />

@@ -20,6 +20,15 @@ import { Link } from 'react-router-dom';
 export default function EmergencyQuickAccess() {
   const [modalAbierto, setModalAbierto] = useState(false);
 
+  React.useEffect(() => {
+    if (!modalAbierto) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setModalAbierto(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [modalAbierto]);
+
   const DIRECTORIO_EMERGENCIAS = [
     {
       servicio: 'Sistema Nacional de Emergencias 9-1-1',
@@ -76,9 +85,9 @@ export default function EmergencyQuickAccess() {
           marginBottom: '1.4rem',
           padding: '0.85rem 1rem',
           borderRadius: '12px',
-          backgroundColor: 'rgba(220, 38, 38, 0.12)',
-          border: '1px solid rgba(239, 68, 68, 0.45)',
-          boxShadow: '0 4px 20px rgba(220, 38, 38, 0.18)',
+          backgroundColor: 'var(--cru-accent-red-bg)',
+          border: '1px solid var(--cru-accent-red-border)',
+          boxShadow: 'var(--cru-card-shadow, 0 4px 20px rgba(220, 38, 38, 0.18))',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -93,12 +102,12 @@ export default function EmergencyQuickAccess() {
               width: '36px',
               height: '36px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(239, 68, 68, 0.22)',
-              border: '1px solid rgba(239, 68, 68, 0.5)',
+              backgroundColor: 'var(--cru-accent-red-bg)',
+              border: '1px solid var(--cru-accent-red-border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#EF4444',
+              color: 'var(--cru-accent-red)',
               flexShrink: 0
             }}
           >
@@ -107,7 +116,7 @@ export default function EmergencyQuickAccess() {
 
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FEE2E2', letterSpacing: '0.02em' }}>
+              <span style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--cru-text)', letterSpacing: '0.02em' }}>
                 SOS 911
               </span>
               <span
@@ -116,15 +125,15 @@ export default function EmergencyQuickAccess() {
                   fontWeight: 800,
                   padding: '0.1rem 0.45rem',
                   borderRadius: '9999px',
-                  backgroundColor: 'rgba(239, 68, 68, 0.3)',
-                  color: '#FECACA',
-                  border: '1px solid rgba(239, 68, 68, 0.5)'
+                  backgroundColor: 'var(--cru-accent-red-bg)',
+                  color: 'var(--cru-accent-red)',
+                  border: '1px solid var(--cru-accent-red-border)'
                 }}
               >
                 SIN AUTENTICACIÓN
               </span>
             </div>
-            <p style={{ margin: 0, fontSize: '0.72rem', color: '#FCA5A5', lineHeight: 1.3 }}>
+            <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--cru-text-secondary)', lineHeight: 1.3 }}>
               ¿En una emergencia? Solicite auxilio antes de ingresar al sistema.
             </p>
           </div>
@@ -138,8 +147,8 @@ export default function EmergencyQuickAccess() {
             style={{
               padding: '0.45rem 0.95rem',
               borderRadius: '8px',
-              backgroundColor: '#DC2626',
-              border: '1px solid #EF4444',
+              backgroundColor: 'var(--cru-accent-red)',
+              border: '1px solid var(--cru-accent-red)',
               color: '#FFFFFF',
               fontSize: '0.78rem',
               fontWeight: 800,
@@ -147,7 +156,7 @@ export default function EmergencyQuickAccess() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              boxShadow: '0 2px 10px rgba(220, 38, 38, 0.5)',
+              boxShadow: '0 2px 10px rgba(220, 38, 38, 0.4)',
               transition: 'all 0.15s ease'
             }}
           >
@@ -162,9 +171,9 @@ export default function EmergencyQuickAccess() {
             style={{
               padding: '0.45rem 0.75rem',
               borderRadius: '8px',
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              color: '#FEE2E2',
+              backgroundColor: 'var(--cru-surface-muted)',
+              border: '1px solid var(--cru-border)',
+              color: 'var(--cru-text)',
               fontSize: '0.75rem',
               fontWeight: 600,
               cursor: 'pointer',
@@ -192,7 +201,7 @@ export default function EmergencyQuickAccess() {
             position: 'fixed',
             inset: 0,
             zIndex: 99999,
-            backgroundColor: 'rgba(0, 4, 13, 0.88)',
+            backgroundColor: 'rgba(0, 4, 13, 0.85)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             display: 'flex',
@@ -207,10 +216,10 @@ export default function EmergencyQuickAccess() {
             style={{
               width: '100%',
               maxWidth: '520px',
-              backgroundColor: '#0A0F1D',
-              border: '1px solid rgba(239, 68, 68, 0.4)',
+              backgroundColor: 'var(--cru-surface-card)',
+              border: '1px solid var(--cru-accent-red-border)',
               borderRadius: '20px',
-              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(220, 38, 38, 0.25)',
+              boxShadow: 'var(--cru-card-shadow, 0 25px 60px rgba(0, 0, 0, 0.7))',
               overflow: 'hidden',
               display: 'flex',
               flexDirection: 'column'
@@ -220,8 +229,8 @@ export default function EmergencyQuickAccess() {
             <div
               style={{
                 padding: '1.25rem 1.5rem',
-                backgroundColor: 'rgba(220, 38, 38, 0.15)',
-                borderBottom: '1px solid rgba(239, 68, 68, 0.3)',
+                backgroundColor: 'var(--cru-accent-red-bg)',
+                borderBottom: '1px solid var(--cru-accent-red-border)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -234,7 +243,7 @@ export default function EmergencyQuickAccess() {
                     width: '38px',
                     height: '38px',
                     borderRadius: '10px',
-                    backgroundColor: '#DC2626',
+                    backgroundColor: 'var(--cru-accent-red)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -246,11 +255,11 @@ export default function EmergencyQuickAccess() {
                 <div>
                   <h2
                     id="modal-emergencia-titulo"
-                    style={{ fontSize: '1.05rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}
+                    style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--cru-text)', margin: 0 }}
                   >
                     Directorio de Auxilio Inmediato
                   </h2>
-                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#FCA5A5' }}>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--cru-text-secondary)' }}>
                     Disponible las 24 horas sin requerir inicio de sesión
                   </p>
                 </div>
@@ -264,9 +273,9 @@ export default function EmergencyQuickAccess() {
                   width: '32px',
                   height: '32px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  color: '#CBD5E1',
+                  backgroundColor: 'var(--cru-surface-muted)',
+                  border: '1px solid var(--cru-border)',
+                  color: 'var(--cru-text)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -296,8 +305,8 @@ export default function EmergencyQuickAccess() {
                     style={{
                       padding: '0.85rem 1rem',
                       borderRadius: '12px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      backgroundColor: 'var(--cru-surface-muted)',
+                      border: '1px solid var(--cru-border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
@@ -323,7 +332,7 @@ export default function EmergencyQuickAccess() {
                       </div>
                       <div style={{ minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#F1F5F9' }}>
+                          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--cru-text)' }}>
                             {item.servicio}
                           </span>
                           <span
@@ -332,14 +341,14 @@ export default function EmergencyQuickAccess() {
                               fontWeight: 700,
                               padding: '0.1rem 0.4rem',
                               borderRadius: '4px',
-                              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                              color: '#94A3B8'
+                              backgroundColor: 'var(--cru-badge-neutral-bg)',
+                              color: 'var(--cru-text-soft)'
                             }}
                           >
                             {item.badge}
                           </span>
                         </div>
-                        <p style={{ margin: 0, fontSize: '0.72rem', color: '#94A3B8', lineHeight: 1.3 }}>
+                        <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--cru-text-soft)', lineHeight: 1.3 }}>
                           {item.descripcion}
                         </p>
                       </div>
@@ -350,9 +359,9 @@ export default function EmergencyQuickAccess() {
                       style={{
                         padding: '0.45rem 0.85rem',
                         borderRadius: '8px',
-                        backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                        border: '1px solid rgba(239, 68, 68, 0.4)',
-                        color: '#F87171',
+                        backgroundColor: 'var(--cru-accent-red-bg)',
+                        border: '1px solid var(--cru-accent-red-border)',
+                        color: 'var(--cru-accent-red)',
                         fontSize: '0.82rem',
                         fontWeight: 800,
                         textDecoration: 'none',
@@ -375,14 +384,14 @@ export default function EmergencyQuickAccess() {
             <div
               style={{
                 padding: '0.85rem 1.5rem',
-                backgroundColor: 'rgba(15, 23, 42, 0.8)',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                backgroundColor: 'var(--cru-surface-muted)',
+                borderTop: '1px solid var(--cru-border)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '1rem',
                 fontSize: '0.75rem',
-                color: '#94A3B8'
+                color: 'var(--cru-text-soft)'
               }}
             >
               <span>Centro de Mando CNE &bull; República de Costa Rica</span>
@@ -390,7 +399,7 @@ export default function EmergencyQuickAccess() {
                 to="/seguridad-emergencias"
                 onClick={() => setModalAbierto(false)}
                 style={{
-                  color: '#38BDF8',
+                  color: 'var(--cru-accent-sky)',
                   textDecoration: 'none',
                   fontWeight: 600,
                   display: 'flex',

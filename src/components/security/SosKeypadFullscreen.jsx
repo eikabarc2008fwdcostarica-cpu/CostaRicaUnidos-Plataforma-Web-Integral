@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Siren, Shield, Flame, HeartPulse, Scale, Maximize2, PhoneCall, Flashlight, Megaphone, MapPin, Check, X } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 export const SOS_NUMEROS = [
   {
@@ -70,10 +71,24 @@ export const SOS_NUMEROS = [
 ];
 
 export default function SosKeypadFullscreen() {
+  const { isDark } = useTheme?.() || { isDark: true };
   const [isFullscreenMode, setIsFullscreenMode] = useState(false);
   const [beaconFlash, setBeaconFlash] = useState(false);
   const [isSirenOn, setIsSirenOn] = useState(false);
   const [copiedCoords, setCopiedCoords] = useState(false);
+
+  // Escuchar tecla Escape para cerrar modo pantalla completa
+  useEffect(() => {
+    if (!isFullscreenMode) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsFullscreenMode(false);
+        setBeaconFlash(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreenMode]);
 
   // Sintetizador Web Audio API para simulación sonora de baliza SOS
   const toggleSirenSound = () => {
@@ -133,11 +148,11 @@ export default function SosKeypadFullscreen() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.2rem' }}>
             <Siren size={24} color="#EF4444" />
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF' }}>
+            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: isDark ? '#FFFFFF' : 'var(--cru-text, #0F172A)' }}>
               Botonera Táctil de Emergencia SOS
             </h3>
           </div>
-          <p style={{ color: '#CBD5E1', fontSize: '0.9rem' }}>
+          <p style={{ color: isDark ? '#CBD5E1' : 'var(--cru-text-muted, #64748B)', fontSize: '0.9rem' }}>
             Marcado telefónico directo con un solo toque y soporte para lectores de pantalla (WCAG 2.1 AA).
           </p>
         </div>

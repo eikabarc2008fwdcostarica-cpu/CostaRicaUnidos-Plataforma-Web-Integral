@@ -98,6 +98,15 @@ export function CivicModalProvider({ children }) {
     setErrorInput('');
   };
 
+  React.useEffect(() => {
+    if (!modalConfig.abierto) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') cerrarModal();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [modalConfig.abierto]);
+
   const confirmarAccion = () => {
     if (modalConfig.tipo === 'motivo') {
       if (!valorInput.trim()) {
@@ -135,7 +144,7 @@ export function CivicModalProvider({ children }) {
           {/* Notificación con diseño Sovereign Civic Glass */}
           <div 
             style={{ pointerEvents: 'auto' }}
-            className="flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-[#00040D]/95 dark:bg-[#00040D]/95 light:bg-white text-white dark:text-white light:text-slate-900 border border-white/20 dark:border-white/20 light:border-slate-300 shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-4 duration-200"
+            className="flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-cru-surface-card text-cru-text border border-cru-border shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-4 duration-200"
           >
             {toastNotificacion.icono === 'exito' && <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" strokeWidth={2} />}
             {toastNotificacion.icono === 'advertencia' && <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" strokeWidth={2} />}
@@ -152,15 +161,15 @@ export function CivicModalProvider({ children }) {
           <div
             role="dialog"
             aria-modal="true"
-            className="relative w-full max-w-lg p-6 rounded-3xl bg-[#00040D]/95 dark:bg-[#00040D]/95 text-white dark:text-white border border-white/20 dark:border-white/20 shadow-2xl transition-all"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.85)' }}
+            className="relative w-full max-w-lg p-6 rounded-3xl bg-cru-surface-card text-cru-text border border-cru-border shadow-2xl transition-all"
+            style={{ boxShadow: 'var(--cru-card-shadow, 0 25px 50px -12px rgba(0, 0, 0, 0.7))' }}
           >
             {/* Botón cerrar X */}
             <button
               type="button"
               onClick={cerrarModal}
               aria-label="Cerrar ventana modal"
-              className="absolute top-5 right-5 text-slate-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
+              className="absolute top-5 right-5 text-cru-text-soft hover:text-cru-text p-1.5 rounded-full hover:bg-cru-surface-muted transition-colors focus-visible:ring-2 focus-visible:ring-cru-accent-blue focus-visible:outline-none"
             >
               <X className="w-5 h-5" strokeWidth={1.75} />
             </button>
@@ -184,10 +193,10 @@ export function CivicModalProvider({ children }) {
                 {modalConfig.icono === 'info' && <Info className="w-6 h-6" strokeWidth={1.75} />}
               </div>
               <div className="pr-6">
-                <h3 className="text-lg font-bold tracking-tight text-white">
+                <h3 className="text-lg font-bold tracking-tight text-cru-text">
                   {modalConfig.titulo || 'Notificación Municipal Oficial'}
                 </h3>
-                <p className="text-sm text-slate-300 mt-1 leading-relaxed">
+                <p className="text-sm text-cru-text-secondary mt-1 leading-relaxed">
                   {modalConfig.mensaje}
                 </p>
               </div>
@@ -204,7 +213,7 @@ export function CivicModalProvider({ children }) {
                     if (errorInput) setErrorInput('');
                   }}
                   placeholder={modalConfig.placeholder}
-                  className="w-full p-3.5 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] border border-white/15 dark:border-white/15 text-white text-sm outline-none focus:border-red-500 transition-colors resize-none placeholder-slate-500"
+                  className="w-full p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border text-cru-text text-sm outline-none focus:border-red-500 transition-colors resize-none placeholder-cru-text-soft"
                 />
                 {errorInput && (
                   <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1 font-medium">
@@ -216,12 +225,12 @@ export function CivicModalProvider({ children }) {
             )}
 
             {/* Botonera de Acción */}
-            <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-white/10">
+            <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-cru-border">
               {modalConfig.tipo !== 'alerta' && (
                 <button
                   type="button"
                   onClick={cerrarModal}
-                  className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-semibold text-cru-text hover:text-cru-text bg-cru-surface-muted hover:bg-cru-surface-hover border border-cru-border transition-colors"
                 >
                   {modalConfig.textoBotonCancelar}
                 </button>

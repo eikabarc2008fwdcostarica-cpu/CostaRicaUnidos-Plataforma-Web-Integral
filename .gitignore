@@ -35,4 +35,5 @@ lerna-debug.log*
 Thumbs.db
 
 # Scripts de verificación y temporales
-scratch/
+scratch/*
+!scratch/testVoiceTourCoverage.js
