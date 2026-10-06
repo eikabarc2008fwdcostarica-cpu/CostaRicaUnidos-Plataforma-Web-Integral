@@ -388,7 +388,7 @@ const CATEGORIAS_CONFIG = {
   educacion: { nombre: 'Educación (CTPs y MEP)', color: '#3B82F6' },
   transporte: { nombre: 'Transporte e Interurbano', color: '#F59E0B' },
   recreativa: { nombre: 'Deportes y Recreación CCDR', color: '#8B5CF6' },
-  albergues: { nombre: 'Albergues de Emergencia CNE', color: '#DA291C' }
+  albergues: { nombre: 'Albergues de Emergencia CNE', color: 'var(--cru-accent-red)' }
 };
 
 export default function MapaGIS() {
@@ -749,7 +749,7 @@ export default function MapaGIS() {
                 borderRadius: '50%',
                 animation: 'spin 1s linear infinite'
               }} />
-              <p style={{ color: '#94A3B8', fontSize: '0.9rem', margin: 0 }}>
+              <p style={{ color: 'var(--cru-text-muted)', fontSize: '0.9rem', margin: 0 }}>
                 Iniciando Visor Satelital 3D Soberano...
               </p>
             </div>
@@ -770,7 +770,7 @@ export default function MapaGIS() {
               textAlign: 'center'
             }}>
               <p style={{ color: '#F87171', fontSize: '1rem', fontWeight: 600 }}>{mapError}</p>
-              <p style={{ color: '#94A3B8', fontSize: '0.85rem' }}>Verifique la conexión y clave de API autorizada de Google Maps Platform.</p>
+              <p style={{ color: 'var(--cru-text-muted)', fontSize: '0.85rem' }}>Verifique la conexión y clave de API autorizada de Google Maps Platform.</p>
             </div>
           )}
 
@@ -819,7 +819,7 @@ export default function MapaGIS() {
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: '#94A3B8',
+                    color: 'var(--cru-text-muted)',
                     cursor: 'pointer',
                     padding: '0 0.3rem',
                     display: 'flex',
@@ -878,7 +878,7 @@ export default function MapaGIS() {
                 alignItems: 'center',
                 gap: '0.45rem',
                 boxShadow: '0 8px 20px rgba(0,0,0,0.5)',
-                transition: 'all 0.2s ease'
+                transition: 'var(--transition-smooth)'
               }}
             >
               {mapType === 'hybrid' ? (
@@ -914,7 +914,7 @@ export default function MapaGIS() {
                 alignItems: 'center',
                 gap: '0.45rem',
                 boxShadow: '0 8px 20px rgba(0,0,0,0.5)',
-                transition: 'all 0.2s ease'
+                transition: 'var(--transition-smooth)'
               }}
             >
               <Compass size={15} color="#79a6ff" />
@@ -954,7 +954,7 @@ export default function MapaGIS() {
                   top: '110%',
                   right: 0,
                   width: '240px',
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: 'var(--cru-surface-card)',
                   border: '2px solid rgba(6, 42, 119, 0.15)',
                   borderRadius: '16px',
                   padding: '1rem',
@@ -963,7 +963,7 @@ export default function MapaGIS() {
                   gap: '0.65rem',
                   boxShadow: '0 12px 35px rgba(6, 42, 119, 0.16)'
                 }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#062A77', textTransform: 'uppercase', marginBottom: '0.2rem', letterSpacing: '0.05em' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--cru-text)', textTransform: 'uppercase', marginBottom: '0.2rem', letterSpacing: '0.05em' }}>
                     Capas Cívicas Activas
                   </div>
                   {Object.entries(CATEGORIAS_CONFIG).map(([key, info]) => (
@@ -1018,7 +1018,7 @@ export default function MapaGIS() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                transition: 'all 0.15s ease'
+                transition: 'var(--transition-smooth)'
               }}
             >
               <RotateCcw size={17} color="#79a6ff" />
@@ -1044,7 +1044,7 @@ export default function MapaGIS() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                transition: 'all 0.15s ease'
+                transition: 'var(--transition-smooth)'
               }}
             >
               <RotateCw size={17} color="#79a6ff" />
@@ -1070,7 +1070,7 @@ export default function MapaGIS() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                transition: 'all 0.15s ease'
+                transition: 'var(--transition-smooth)'
               }}
             >
               <Locate size={17} color="#00D166" />
@@ -1096,7 +1096,7 @@ export default function MapaGIS() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                transition: 'all 0.15s ease'
+                transition: 'var(--transition-smooth)'
               }}
             >
               <Plus size={17} />
@@ -1122,7 +1122,7 @@ export default function MapaGIS() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                transition: 'all 0.15s ease'
+                transition: 'var(--transition-smooth)'
               }}
             >
               <Minus size={17} />
@@ -1144,9 +1144,9 @@ export default function MapaGIS() {
             borderRadius: '16px',
             padding: '1.5rem',
             overflow: 'visible',
-            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))'
+            boxShadow: 'var(--cru-card-shadow)'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#062A77' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: 'var(--cru-text)' }}>
               01 &bull; Geofencing Soberano
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-secondary, #334155)', margin: 0, lineHeight: 1.6, whiteSpace: 'normal', wordBreak: 'normal', overflow: 'visible', fontWeight: 500 }}>
@@ -1156,13 +1156,13 @@ export default function MapaGIS() {
           <div style={{
             backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
             border: '1px solid var(--cru-border, #E2E8F0)',
-            borderTop: '4px solid #C22727',
+            borderTop: '4px solid var(--cru-accent-red)',
             borderRadius: '16px',
             padding: '1.5rem',
             overflow: 'visible',
-            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))'
+            boxShadow: 'var(--cru-card-shadow)'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#062A77' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: 'var(--cru-text)' }}>
               02 &bull; Capas Cívicas Activas
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-secondary, #334155)', margin: 0, lineHeight: 1.6, whiteSpace: 'normal', wordBreak: 'normal', overflow: 'visible', fontWeight: 500 }}>
@@ -1176,9 +1176,9 @@ export default function MapaGIS() {
             borderRadius: '16px',
             padding: '1.5rem',
             overflow: 'visible',
-            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))'
+            boxShadow: 'var(--cru-card-shadow)'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#062A77' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: 'var(--cru-text)' }}>
               03 &bull; Navegación Directa
             </h3>
             <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-secondary, #334155)', margin: 0, lineHeight: 1.6, whiteSpace: 'normal', wordBreak: 'normal', overflow: 'visible', fontWeight: 500 }}>

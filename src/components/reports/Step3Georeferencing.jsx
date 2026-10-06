@@ -292,9 +292,9 @@ export default function Step3Georeferencing({
         <span
           className="telemetry-badge"
           style={{
-            backgroundColor: '#EFF6FF',
-            color: '#0053AF',
-            border: '1px solid #BFDBFE',
+            backgroundColor: 'var(--cru-accent-blue-bg)',
+            color: 'var(--cru-accent-blue)',
+            border: '1px solid var(--cru-accent-blue-border)',
             fontWeight: 700
           }}
         >
@@ -303,13 +303,13 @@ export default function Step3Georeferencing({
         <h3 style={{
           fontSize: '1.5rem',
           fontWeight: 800,
-          color: '#062A77',
+          color: 'var(--cru-text)',
           marginTop: '0.6rem',
           marginBottom: '0.35rem'
         }}>
           Ubique la Avería en el Territorio Nacional
         </h3>
-        <p style={{ color: '#334155', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', fontWeight: 500 }}>
+        <p style={{ color: 'var(--cru-text-soft)', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', fontWeight: 500 }}>
           Toque cualquier calle o cantón real en el mapa para colocar o arrastrar el pin, o active su GPS para fijar la posición automáticamente.
         </p>
       </div>
@@ -320,7 +320,7 @@ export default function Step3Georeferencing({
           padding: '1.25rem',
           marginBottom: '1.75rem',
           borderRadius: '24px',
-          backgroundColor: '#F8FAFC',
+          backgroundColor: 'var(--cru-surface-muted)',
           border: '1.5px solid rgba(6, 42, 119, 0.14)',
           boxShadow: '0 4px 16px rgba(6, 42, 119, 0.04)'
         }}
@@ -334,17 +334,17 @@ export default function Step3Georeferencing({
           marginBottom: '1rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <MapPin size={20} color="#0053AF" />
-            <span style={{ fontWeight: 700, fontSize: '1rem', color: '#062A77' }}>
+            <MapPin size={20} color="var(--cru-accent-blue)" />
+            <span style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--cru-text)' }}>
               Mapa Cartográfico Real de Costa Rica
             </span>
             <span
               className="telemetry-badge"
               style={{
                 fontSize: '0.75rem',
-                backgroundColor: '#EFF6FF',
-                color: '#0053AF',
-                border: '1px solid #BFDBFE',
+                backgroundColor: 'var(--cru-accent-blue-bg)',
+                color: 'var(--cru-accent-blue)',
+                border: '1px solid var(--cru-accent-blue-border)',
                 fontWeight: 600
               }}
             >
@@ -362,7 +362,7 @@ export default function Step3Georeferencing({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              backgroundColor: '#0053AF',
+              backgroundColor: 'var(--cru-accent-blue)',
               color: '#FFFFFF',
               borderRadius: '9999px',
               border: 'none',
@@ -418,8 +418,8 @@ export default function Step3Georeferencing({
             marginTop: '0.85rem',
             padding: '0.75rem 1rem',
             borderRadius: '10px',
-            backgroundColor: '#ECFDF5',
-            border: '1px solid #A7F3D0',
+            backgroundColor: 'var(--cru-accent-green-bg)',
+            border: '1px solid var(--cru-accent-green-border)',
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
@@ -427,7 +427,7 @@ export default function Step3Georeferencing({
             color: '#065F46',
             fontWeight: 600
           }}>
-            <Zap size={15} color="#059669" />
+            <Zap size={15} color="var(--cru-accent-green)" />
             <span><strong>Ubicación Detectada Automáticamente:</strong> {reverseGeocodingNotice}</span>
           </div>
         )}
@@ -438,7 +438,7 @@ export default function Step3Georeferencing({
         style={{
           padding: '1.5rem',
           borderRadius: '20px',
-          backgroundColor: '#F8FAFC',
+          backgroundColor: 'var(--cru-surface-muted)',
           border: '1.5px solid rgba(6, 42, 119, 0.14)',
           boxShadow: '0 4px 16px rgba(6, 42, 119, 0.04)'
         }}
@@ -446,7 +446,7 @@ export default function Step3Georeferencing({
         <h4 style={{
           fontSize: '1.05rem',
           fontWeight: 800,
-          color: '#062A77',
+          color: 'var(--cru-text)',
           marginBottom: '1rem',
           display: 'flex',
           alignItems: 'center',
@@ -459,9 +459,9 @@ export default function Step3Georeferencing({
             <span
               className="telemetry-badge"
               style={{
-                backgroundColor: '#EFF6FF',
-                color: '#0053AF',
-                border: '1px solid #BFDBFE',
+                backgroundColor: 'var(--cru-accent-blue-bg)',
+                color: 'var(--cru-accent-blue)',
+                border: '1px solid var(--cru-accent-blue-border)',
                 fontWeight: 700
               }}
             >
@@ -479,7 +479,7 @@ export default function Step3Georeferencing({
           <div>
             <label
               htmlFor="step3-provincia"
-              style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#1E293B', marginBottom: '0.4rem' }}
+              style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.4rem' }}
             >
               1. Provincia
             </label>
@@ -496,10 +496,10 @@ export default function Step3Georeferencing({
               style={{
                 width: '100%',
                 padding: '0.7rem 0.9rem',
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--cru-surface-card)',
                 border: '1.5px solid #CBD5E1',
                 borderRadius: '10px',
-                color: '#0F172A',
+                color: 'var(--theme-text-primary)',
                 fontSize: '0.9rem',
                 fontWeight: 600
               }}
@@ -517,7 +517,7 @@ export default function Step3Georeferencing({
           <div>
             <label
               htmlFor="step3-canton"
-              style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#1E293B', marginBottom: '0.4rem' }}
+              style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.4rem' }}
             >
               2. Cantón
             </label>
@@ -534,10 +534,10 @@ export default function Step3Georeferencing({
               style={{
                 width: '100%',
                 padding: '0.7rem 0.9rem',
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--cru-surface-card)',
                 border: '1.5px solid #CBD5E1',
                 borderRadius: '10px',
-                color: '#0F172A',
+                color: 'var(--theme-text-primary)',
                 fontSize: '0.9rem',
                 fontWeight: 600
               }}
@@ -555,7 +555,7 @@ export default function Step3Georeferencing({
           <div>
             <label
               htmlFor="step3-distrito"
-              style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#1E293B', marginBottom: '0.4rem' }}
+              style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.4rem' }}
             >
               3. Distrito
             </label>
@@ -568,10 +568,10 @@ export default function Step3Georeferencing({
               style={{
                 width: '100%',
                 padding: '0.7rem 0.9rem',
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--cru-surface-card)',
                 border: '1.5px solid #CBD5E1',
                 borderRadius: '10px',
-                color: '#0F172A',
+                color: 'var(--theme-text-primary)',
                 fontSize: '0.9rem',
                 fontWeight: 600
               }}

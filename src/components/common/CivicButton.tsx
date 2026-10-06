@@ -78,36 +78,36 @@ export const CivicButton = forwardRef<HTMLButtonElement, CivicButtonProps>(
     // Estilos por variante visual
     const variantStyles: Record<CivicButtonVariant, React.CSSProperties> = {
       primary: {
-        background: 'linear-gradient(135deg, rgba(0, 43, 127, 0.9) 0%, rgba(0, 20, 137, 0.95) 100%)',
+        background: 'linear-gradient(135deg, rgba(0, 43, 127, 0.95) 0%, rgba(0, 20, 137, 1) 100%)',
         color: '#FFFFFF',
         border: '1px solid rgba(255, 255, 255, 0.22)',
         boxShadow: '0 4px 14px rgba(0, 43, 127, 0.4)'
       },
       secondary: {
-        background: 'rgba(255, 255, 255, 0.08)',
-        color: '#F8FAFC',
-        border: '1px solid rgba(255, 255, 255, 0.16)',
+        background: 'var(--cru-surface-muted)',
+        color: 'var(--cru-text)',
+        border: '1px solid var(--cru-border)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        boxShadow: '0 4px 12px rgba(0, 4, 13, 0.35)'
+        boxShadow: 'var(--cru-card-shadow, 0 4px 12px rgba(0, 4, 13, 0.2))'
       },
       outline: {
         background: 'transparent',
-        color: '#FFFFFF',
-        border: '1.5px solid rgba(255, 255, 255, 0.35)',
+        color: 'var(--cru-text)',
+        border: '1.5px solid var(--cru-border-strong, var(--cru-border))',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)'
       },
       ghost: {
         background: 'transparent',
-        color: '#F8FAFC',
+        color: 'var(--cru-text)',
         border: '1px solid transparent'
       },
       danger: {
-        background: 'linear-gradient(135deg, rgba(206, 17, 38, 0.88) 0%, rgba(160, 10, 25, 0.95) 100%)',
+        background: 'linear-gradient(135deg, #B91C1C 0%, #991B1B 100%)',
         color: '#FFFFFF',
-        border: '1px solid rgba(255, 255, 255, 0.25)',
-        boxShadow: '0 4px 16px rgba(206, 17, 38, 0.45)'
+        border: '1px solid var(--cru-accent-red-border, rgba(185, 28, 28, 0.35))',
+        boxShadow: '0 4px 16px rgba(185, 28, 28, 0.35)'
       },
       provincial: {
         background: 'var(--color-provincial-primary, #002B7F)',
@@ -116,22 +116,22 @@ export const CivicButton = forwardRef<HTMLButtonElement, CivicButtonProps>(
         boxShadow: 'var(--glow-provincial, 0 4px 16px rgba(0, 43, 127, 0.4))'
       },
       accent: {
-        background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+        background: 'linear-gradient(135deg, #047857 0%, #065F46 100%)',
         color: '#FFFFFF',
-        border: '1px solid #10B981',
-        boxShadow: '0 4px 18px rgba(16, 185, 129, 0.45)'
+        border: '1px solid var(--cru-accent-green-border, rgba(4, 120, 87, 0.35))',
+        boxShadow: '0 4px 18px rgba(4, 120, 87, 0.35)'
       },
       success: {
-        background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+        background: 'linear-gradient(135deg, #047857 0%, #065F46 100%)',
         color: '#FFFFFF',
-        border: '1px solid #10B981',
-        boxShadow: '0 4px 18px rgba(16, 185, 129, 0.45)'
+        border: '1px solid var(--cru-accent-green-border, rgba(4, 120, 87, 0.35))',
+        boxShadow: '0 4px 18px rgba(4, 120, 87, 0.35)'
       },
       warning: {
-        background: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)',
+        background: 'linear-gradient(135deg, #B45309 0%, #92400E 100%)',
         color: '#FFFFFF',
-        border: '1px solid #F59E0B',
-        boxShadow: '0 4px 18px rgba(245, 158, 11, 0.45)'
+        border: '1px solid var(--cru-accent-amber-border, rgba(180, 83, 9, 0.35))',
+        boxShadow: '0 4px 18px rgba(180, 83, 9, 0.35)'
       }
     };
 

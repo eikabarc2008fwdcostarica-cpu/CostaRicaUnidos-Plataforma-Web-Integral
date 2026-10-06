@@ -56,7 +56,7 @@ export default function CartRoad() {
         width: '100%',
         height: '135px',
         overflow: 'hidden',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'var(--cru-cartroad-bg, #FFFFFF)',
         margin: '2rem 0 3.5rem'
       }}
     >

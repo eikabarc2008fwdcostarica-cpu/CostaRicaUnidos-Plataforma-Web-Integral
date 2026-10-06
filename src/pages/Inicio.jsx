@@ -48,11 +48,11 @@ export default function Inicio() {
 
   return (
     <div
-      className="costa-rica-unidos-portal"
+      className="costa-rica-unidos-portal bg-cru-page-bg text-cru-text"
       style={{
         minHeight: '100vh',
-        backgroundColor: 'var(--white, #FDFDFF)',
-        color: 'var(--ink, #131313)',
+        backgroundColor: 'var(--cru-page-bg)',
+        color: 'var(--cru-text)',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',

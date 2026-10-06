@@ -101,7 +101,7 @@ export default function PerfilPublicoModal({
               style={{
                 background: 'rgba(255, 255, 255, 0.06)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#94A3B8',
+                color: 'var(--cru-text-muted)',
                 borderRadius: '8px',
                 width: '32px',
                 height: '32px',
@@ -164,8 +164,8 @@ export default function PerfilPublicoModal({
                   </span>
                 )}
               </div>
-              <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.2rem' }}>
-                Rol Cívico: <strong style={{ color: '#E2E8F0' }}>Ciudadano / Vecino</strong>
+              <div style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)', marginTop: '0.2rem' }}>
+                Rol Cívico: <strong style={{ color: 'var(--cru-border)' }}>Ciudadano / Vecino</strong>
               </div>
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function PerfilPublicoModal({
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#64748B', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--cru-text-muted)', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
                 <Calendar className="w-3.5 h-3.5 text-sky-400" />
                 <span>Fecha de Registro</span>
               </div>
@@ -193,7 +193,7 @@ export default function PerfilPublicoModal({
             </div>
 
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#64748B', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--cru-text-muted)', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
                 <MapPin className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Ubicación Cantonal</span>
               </div>
@@ -216,7 +216,7 @@ export default function PerfilPublicoModal({
             }}
           >
             <Lock className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-            <div style={{ fontSize: '0.76rem', color: '#CBD5E1', lineHeight: 1.45 }}>
+            <div style={{ fontSize: '0.76rem', color: 'var(--cru-border-strong)', lineHeight: 1.45 }}>
               <strong style={{ color: '#FFFFFF', display: 'block', marginBottom: '0.2rem' }}>
                 Privacidad Blindada · Ley N° 8968
               </strong>

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Type, X } from 'lucide-react';
 import { useAccessibility } from './AccessibilityContext';
 import { FASES_TIPOGRAFICAS } from './accessibilityData';
+import { useTheme } from '../../context/ThemeContext';
 
 /**
  * Selector de Escala Tipográfica en 4 Fases (RNF-05.1 / Ley 7600)
@@ -9,6 +10,7 @@ import { FASES_TIPOGRAFICAS } from './accessibilityData';
  */
 export default function TypographicScaleSelector({ variant = 'navbar' }) {
   const { textPhase, setTextPhase, currentScaleConfig } = useAccessibility();
+  const { isDark } = useTheme?.() || { isDark: true };
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
 
@@ -58,15 +60,19 @@ export default function TypographicScaleSelector({ variant = 'navbar' }) {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '0.4rem',
-          backgroundColor: textPhase > 1 ? 'rgba(0, 43, 127, 0.65)' : 'rgba(255, 255, 255, 0.08)',
-          border: textPhase > 1 ? '1px solid #79a6ff' : '1px solid rgba(255, 255, 255, 0.2)',
+          backgroundColor: isDark
+            ? (textPhase > 1 ? 'rgba(0, 43, 127, 0.65)' : 'rgba(255, 255, 255, 0.08)')
+            : (textPhase > 1 ? 'var(--cru-accent-sky-bg, #E0F2FE)' : 'var(--cru-surface-muted, #F1F5F9)'),
+          border: isDark
+            ? (textPhase > 1 ? '1px solid #79a6ff' : '1px solid rgba(255, 255, 255, 0.2)')
+            : (textPhase > 1 ? '1.5px solid #002B7F' : '1px solid var(--cru-border, #CBD5E1)'),
           borderRadius: '8px',
           padding: '0.45rem 0.75rem',
-          color: '#FFFFFF',
+          color: isDark ? '#FFFFFF' : (textPhase > 1 ? '#002B7F' : 'var(--cru-text, #0F172A)'),
           fontSize: '0.88rem',
           fontWeight: 700,
           cursor: 'pointer',
-          boxShadow: textPhase > 1 ? '0 0 12px rgba(121, 166, 255, 0.4)' : 'none',
+          boxShadow: isDark && textPhase > 1 ? '0 0 12px rgba(121, 166, 255, 0.4)' : 'none',
           transition: 'all 0.2s ease',
           whiteSpace: 'nowrap'
         }}
@@ -75,6 +81,7 @@ export default function TypographicScaleSelector({ variant = 'navbar' }) {
         <span
           style={{
             backgroundColor: textPhase === 4 ? '#DA291C' : '#001489',
+            color: '#FFFFFF',
             padding: '0.1rem 0.4rem',
             borderRadius: '4px',
             fontSize: '0.72rem',
@@ -95,21 +102,23 @@ export default function TypographicScaleSelector({ variant = 'navbar' }) {
             top: 'calc(100% + 8px)',
             right: 0,
             width: '290px',
-            backgroundColor: 'rgba(0, 8, 30, 0.96)',
+            backgroundColor: isDark ? 'rgba(0, 8, 30, 0.96)' : 'var(--cru-surface-card, #FFFFFF)',
             backdropFilter: 'blur(28px)',
             WebkitBackdropFilter: 'blur(28px)',
-            border: '1px solid rgba(121, 166, 255, 0.35)',
+            border: isDark ? '1px solid rgba(121, 166, 255, 0.35)' : '1px solid var(--cru-border, #CBD5E1)',
             borderRadius: '14px',
             padding: '1rem',
-            boxShadow: '0 16px 40px rgba(0, 4, 13, 0.9), 0 0 20px rgba(0, 43, 127, 0.35)',
+            boxShadow: isDark
+              ? '0 16px 40px rgba(0, 4, 13, 0.9), 0 0 20px rgba(0, 43, 127, 0.35)'
+              : '0 16px 40px rgba(0, 43, 127, 0.16), 0 4px 12px rgba(0, 0, 0, 0.08)',
             zIndex: 1000,
             display: 'flex',
             flexDirection: 'column',
             gap: '0.65rem'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#79a6ff', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid var(--cru-border, #CBD5E1)', paddingBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: isDark ? '#79a6ff' : '#002B7F', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <Type size={15} />
               <span>Escala Tipográfica (Ley 7600)</span>
             </span>
@@ -117,13 +126,13 @@ export default function TypographicScaleSelector({ variant = 'navbar' }) {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Cerrar selector de escala"
-              style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.2rem' }}
+              style={{ background: 'transparent', border: 'none', color: isDark ? '#94A3B8' : '#64748B', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.2rem' }}
             >
               <X size={16} />
             </button>
           </div>
 
-          <p style={{ margin: 0, fontSize: '0.76rem', color: '#CBD5E1', lineHeight: 1.4 }}>
+          <p style={{ margin: 0, fontSize: '0.76rem', color: isDark ? '#CBD5E1' : '#475569', lineHeight: 1.4 }}>
             Ajusta el tamaño proporcional de textos y botones sin romper el diseño en móviles:
           </p>
 
@@ -147,9 +156,13 @@ export default function TypographicScaleSelector({ variant = 'navbar' }) {
                     justifyContent: 'space-between',
                     padding: '0.55rem 0.85rem',
                     borderRadius: '8px',
-                    backgroundColor: isSelected ? 'rgba(0, 43, 127, 0.6)' : 'rgba(255, 255, 255, 0.04)',
-                    border: isSelected ? '1px solid #79a6ff' : '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#FFFFFF',
+                    backgroundColor: isDark
+                      ? (isSelected ? 'rgba(0, 43, 127, 0.6)' : 'rgba(255, 255, 255, 0.04)')
+                      : (isSelected ? 'var(--cru-accent-sky-bg, #E0F2FE)' : 'var(--cru-surface-muted, #F8FAFC)'),
+                    border: isDark
+                      ? (isSelected ? '1px solid #79a6ff' : '1px solid rgba(255, 255, 255, 0.1)')
+                      : (isSelected ? '1.5px solid #002B7F' : '1px solid var(--cru-border, #CBD5E1)'),
+                    color: isDark ? '#FFFFFF' : '#0F172A',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease',
                     textAlign: 'left'
@@ -157,7 +170,7 @@ export default function TypographicScaleSelector({ variant = 'navbar' }) {
                 >
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <span style={{ fontWeight: 800, fontSize: '0.88rem', color: isSelected ? '#79a6ff' : '#FFFFFF' }}>
+                      <span style={{ fontWeight: 800, fontSize: '0.88rem', color: isDark ? (isSelected ? '#79a6ff' : '#FFFFFF') : (isSelected ? '#002B7F' : '#0F172A') }}>
                         Fase {item.fase}: {item.etiqueta}
                       </span>
                       {item.fase === 4 && (
@@ -175,7 +188,7 @@ export default function TypographicScaleSelector({ variant = 'navbar' }) {
                         </span>
                       )}
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px' }}>
+                    <div style={{ fontSize: '0.7rem', color: isDark ? '#94A3B8' : '#64748B', marginTop: '2px' }}>
                       {item.descripcion}
                     </div>
                   </div>
@@ -185,7 +198,7 @@ export default function TypographicScaleSelector({ variant = 'navbar' }) {
                       fontFamily: 'var(--font-telemetry, monospace)',
                       fontWeight: 800,
                       fontSize: '0.88rem',
-                      color: isSelected ? '#00D166' : '#94A3B8'
+                      color: isDark ? (isSelected ? '#00D166' : '#94A3B8') : (isSelected ? '#05853B' : '#64748B')
                     }}
                   >
                     {item.porcentaje}

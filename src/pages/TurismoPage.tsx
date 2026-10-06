@@ -157,7 +157,7 @@ export default function TurismoPage() {
                 style={{ borderRadius: '20px' }}
               >
                 <div className="flex items-center gap-2 text-[#0053AF] font-bold text-sm">
-                  <Sparkles size={16} color="#0053AF" />
+                  <Sparkles size={16} color="var(--cru-accent-blue)" />
                   <span>Motor Generativo de Itinerarios</span>
                 </div>
                 <h3 className="text-lg font-bold text-[#062A77] mt-1">
@@ -209,8 +209,8 @@ export default function TurismoPage() {
               onClick={() => setMostrarGeoJsonModal(true)}
               style={{
                 borderColor: '#0053AF',
-                color: '#0053AF',
-                backgroundColor: '#EFF6FF',
+                color: 'var(--cru-accent-blue)',
+                backgroundColor: 'var(--cru-accent-blue-bg)',
                 fontWeight: 600
               }}
               leftIcon={<Database size={15} />}
@@ -434,7 +434,7 @@ export default function TurismoPage() {
               variant="outline"
               size="sm"
               onClick={restablecerFiltros}
-              style={{ borderColor: '#0053AF', color: '#0053AF' }}
+              style={{ borderColor: '#0053AF', color: 'var(--cru-accent-blue)' }}
             >
               Restablecer filtros
             </CivicButton>
@@ -461,7 +461,7 @@ export default function TurismoPage() {
             <div className="relative max-w-2xl w-full bg-white border border-slate-200 rounded-2xl p-6 shadow-2xl space-y-4 text-slate-800">
               <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                 <div className="flex items-center gap-2 text-[#062A77] font-bold">
-                  <Database size={18} color="#0053AF" />
+                  <Database size={18} color="var(--cru-accent-blue)" />
                   <span>Dataset GeoJSON de Destinos Turísticos (Para Eiker)</span>
                 </div>
                 <button
@@ -491,7 +491,7 @@ export default function TurismoPage() {
                     variant="outline"
                     size="sm"
                     onClick={copiarGeoJson}
-                    style={{ borderColor: '#0053AF', color: '#0053AF' }}
+                    style={{ borderColor: '#0053AF', color: 'var(--cru-accent-blue)' }}
                     leftIcon={geojsonCopiado ? <Check size={14} /> : <Copy size={14} />}
                   >
                     {geojsonCopiado ? '¡Copiado!' : 'Copiar GeoJSON'}
@@ -499,7 +499,7 @@ export default function TurismoPage() {
                   <CivicButton
                     variant="primary"
                     size="sm"
-                    style={{ backgroundColor: '#062A77', borderColor: '#062A77', color: '#FFFFFF' }}
+                    style={{ backgroundColor: 'var(--navy, #062A77)', borderColor: '#062A77', color: '#FFFFFF' }}
                     onClick={() => setMostrarGeoJsonModal(false)}
                   >
                     Cerrar

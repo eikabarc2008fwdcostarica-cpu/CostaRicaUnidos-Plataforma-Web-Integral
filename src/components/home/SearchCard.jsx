@@ -100,10 +100,10 @@ export default function SearchCard() {
     >
       <div
         style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: 'var(--cru-card-bg)',
           borderRadius: 'var(--radius-card, 24px)',
-          boxShadow: '0 16px 45px rgba(6, 42, 119, 0.12)',
-          border: '1px solid rgba(6, 42, 119, 0.08)',
+          boxShadow: 'var(--cru-card-shadow, 0 16px 45px rgba(6, 42, 119, 0.12))',
+          border: '1px solid var(--cru-border)',
           padding: '1.25rem 1.5rem',
           display: 'flex',
           alignItems: 'center',
@@ -119,10 +119,10 @@ export default function SearchCard() {
             flex: '1 1 380px',
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: '#F1F5F9',
+            backgroundColor: 'var(--cru-surface-muted)',
             borderRadius: '999px',
             padding: '0.4rem 0.5rem 0.4rem 1.25rem',
-            border: '1.5px solid transparent',
+            border: '1.5px solid var(--cru-border)',
             transition: 'all 0.2s ease',
             position: 'relative'
           }}
@@ -143,7 +143,7 @@ export default function SearchCard() {
               border: 'none',
               outline: 'none',
               fontSize: '0.94rem',
-              color: 'var(--ink, #131313)',
+              color: 'var(--cru-text)',
               fontFamily: 'inherit',
               minWidth: 0
             }}
@@ -254,7 +254,7 @@ export default function SearchCard() {
           </button>
         </div>
 
-        {/* Menú de Sugerencias Flotante en Blanco Limpio */}
+        {/* Menú de Sugerencias Flotante Adaptativo */}
         {showSuggestions && searchQuery.trim() && (
           <div
             style={{
@@ -262,11 +262,11 @@ export default function SearchCard() {
               top: 'calc(100% + 10px)',
               left: 0,
               right: 0,
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--cru-card-bg)',
               borderRadius: '18px',
               padding: '1.25rem',
-              boxShadow: '0 20px 50px rgba(6, 42, 119, 0.18)',
-              border: '1px solid rgba(6, 42, 119, 0.1)',
+              boxShadow: 'var(--cru-card-shadow, 0 20px 50px rgba(0, 0, 0, 0.18))',
+              border: '1px solid var(--cru-border)',
               zIndex: 50,
               maxHeight: '340px',
               overflowY: 'auto'
@@ -286,7 +286,7 @@ export default function SearchCard() {
                       fontWeight: 800,
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase',
-                      color: 'var(--navy, #062A77)',
+                      color: 'var(--cru-accent-blue)',
                       display: 'block',
                       padding: '0.2rem 0.5rem',
                       marginBottom: '0.35rem'
@@ -309,7 +309,7 @@ export default function SearchCard() {
                         border: 'none',
                         padding: '0.65rem 0.75rem',
                         borderRadius: '10px',
-                        color: 'var(--ink, #131313)',
+                        color: 'var(--cru-text)',
                         fontSize: '0.88rem',
                         fontWeight: 500,
                         cursor: 'pointer',
@@ -319,14 +319,14 @@ export default function SearchCard() {
                         transition: 'background 0.15s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#F1F5F9';
+                        e.currentTarget.style.backgroundColor = 'var(--cru-surface-hover)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = 'transparent';
                       }}
                     >
                       <span>{item.label}</span>
-                      <ChevronRight size={15} color="var(--blue, #0053AF)" />
+                      <ChevronRight size={15} color="var(--cru-accent-blue)" />
                     </button>
                   ))}
                 </div>

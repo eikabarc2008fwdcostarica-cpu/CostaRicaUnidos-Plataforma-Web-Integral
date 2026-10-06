@@ -41,12 +41,12 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
   return (
     <div
       style={{
-        backgroundColor: '#FFFFFF',
-        border: '1px solid #E2E8F0',
+        backgroundColor: 'var(--cru-surface-card)',
+        border: '1px solid var(--cru-border)',
         borderTop: centro.nivel === 'CTP' ? '4px solid #C22727' : '4px solid #0053AF',
         borderRadius: '16px',
         padding: '1.35rem',
-        boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))',
+        boxShadow: 'var(--cru-card-shadow)',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
         display: 'flex',
         flexDirection: 'column'
@@ -68,12 +68,12 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
               <CivicBadge variant={getNivelBadgeVariant()} size="sm">
                 {centro.nivel}
               </CivicBadge>
-              <span style={{ fontFamily: "monospace", fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+              <span style={{ fontFamily: "monospace", fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>
                 {centro.codigoMep}
               </span>
             </div>
 
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#062A77', margin: 0 }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--cru-text)', margin: 0 }}>
               {centro.nombre}
             </h3>
           </div>
@@ -82,20 +82,20 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
         </div>
 
         {/* Información y Ubicación */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.85rem', color: '#334155' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.85rem', color: 'var(--cru-text-soft)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <MapPin size={15} color="#0053AF" />
-            <span>{centro.direccion}, <strong style={{ color: '#0F172A' }}>{centro.distrito}</strong></span>
+            <MapPin size={15} color="var(--cru-accent-blue)" />
+            <span>{centro.direccion}, <strong style={{ color: 'var(--theme-text-primary)' }}>{centro.distrito}</strong></span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <UserCheck size={15} color="#64748B" />
-            <span>Dirección: <strong style={{ color: '#0F172A' }}>{centro.director}</strong></span>
+            <UserCheck size={15} color="var(--cru-text-muted)" />
+            <span>Dirección: <strong style={{ color: 'var(--theme-text-primary)' }}>{centro.director}</strong></span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <GraduationCap size={15} color="#0053AF" />
-            <span>{centro.circuito} &bull; Matrícula: <strong style={{ color: '#062A77' }}>~{centro.matriculaAproximada.toLocaleString()}</strong></span>
+            <GraduationCap size={15} color="var(--cru-accent-blue)" />
+            <span>{centro.circuito} &bull; Matrícula: <strong style={{ color: 'var(--cru-text)' }}>~{centro.matriculaAproximada.toLocaleString()}</strong></span>
           </div>
         </div>
 
@@ -104,7 +104,7 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
           <div
             style={{
               background: '#EFF6FF',
-              border: '1px solid #BFDBFE',
+              border: '1px solid var(--cru-accent-blue-border)',
               borderRadius: '10px',
               padding: '0.75rem',
               display: 'flex',
@@ -125,7 +125,7 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
                     fontWeight: 600,
                     padding: '0.25rem 0.65rem',
                     borderRadius: '9999px',
-                    background: '#FFFFFF',
+                    background: 'var(--cru-surface-card)',
                     border: '1px solid #93C5FD',
                     color: '#1E3A8A',
                     display: 'inline-flex',
@@ -146,7 +146,7 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
         {/* Servicios del Centro */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', fontSize: '0.78rem' }}>
           {centro.comedorEstudiantil && (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#047857', fontWeight: 600 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: 'var(--cru-accent-green)', fontWeight: 600 }}>
               <Utensils size={13} /> Comedor Estudiantil Activo
             </span>
           )}
@@ -160,7 +160,7 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
         {/* Footer y Enlace para Eiker GIS */}
         <div
           style={{
-            borderTop: '1px solid #E2E8F0',
+            borderTop: '1px solid var(--cru-border)',
             paddingTop: '0.75rem',
             display: 'flex',
             alignItems: 'center',
@@ -170,10 +170,10 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', fontSize: '0.8rem' }}>
-            <a href={`tel:${centro.telefono}`} style={{ color: '#0053AF', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <a href={`tel:${centro.telefono}`} style={{ color: 'var(--cru-accent-blue)', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
               <Phone size={13} /> {centro.telefono}
             </a>
-            <a href={`mailto:${centro.correo}`} style={{ color: '#475569', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <a href={`mailto:${centro.correo}`} style={{ color: 'var(--cru-text-muted)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
               <Mail size={13} /> Correo MEP
             </a>
           </div>
@@ -184,7 +184,7 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#C22727',
+              color: 'var(--cru-accent-red)',
               fontSize: '0.8rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -193,7 +193,7 @@ export const FichaCentroEducativo: FC<FichaCentroEducativoProps> = ({ centro, on
               gap: '0.35rem'
             }}
           >
-            <Navigation size={13} color="#C22727" />
+            <Navigation size={13} color="var(--cru-accent-red)" />
             POI GIS: {centro.lat.toFixed(4)}, {centro.lng.toFixed(4)}
           </button>
         </div>

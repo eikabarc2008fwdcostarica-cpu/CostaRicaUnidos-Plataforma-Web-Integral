@@ -28,9 +28,9 @@ export default function Step4Confirmation({
         <span
           className="telemetry-badge"
           style={{
-            backgroundColor: '#EFF6FF',
-            color: '#0053AF',
-            border: '1px solid #BFDBFE',
+            backgroundColor: 'var(--cru-accent-blue-bg)',
+            color: 'var(--cru-accent-blue)',
+            border: '1px solid var(--cru-accent-blue-border)',
             fontWeight: 700
           }}
         >
@@ -39,13 +39,13 @@ export default function Step4Confirmation({
         <h3 style={{
           fontSize: '1.5rem',
           fontWeight: 800,
-          color: '#062A77',
+          color: 'var(--cru-text)',
           marginTop: '0.6rem',
           marginBottom: '0.35rem'
         }}>
           Revisión General y Emisión del Ticket Cívico
         </h3>
-        <p style={{ color: '#334155', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', fontWeight: 500 }}>
+        <p style={{ color: 'var(--cru-text-soft)', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', fontWeight: 500 }}>
           Verifique el resumen de los datos recopilados antes de emitir el reporte oficial. Se asignará un código único estandarizado con trazabilidad pública.
         </p>
       </div>
@@ -61,11 +61,11 @@ export default function Step4Confirmation({
         <div style={{
           padding: '1.25rem',
           borderRadius: '16px',
-          backgroundColor: '#F8FAFC',
+          backgroundColor: 'var(--cru-surface-muted)',
           border: '1.5px solid rgba(6, 42, 119, 0.14)',
           boxShadow: '0 4px 12px rgba(6, 42, 119, 0.04)'
         }}>
-          <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
             Tipología & Entidad Competente
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
@@ -73,21 +73,21 @@ export default function Step4Confirmation({
               width: '42px',
               height: '42px',
               borderRadius: '10px',
-              backgroundColor: '#EFF6FF',
+              backgroundColor: 'var(--cru-accent-blue-bg)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0
             }}>
               {typeof tipologiaObj.icono === 'function'
-                ? React.createElement(tipologiaObj.icono, { size: 24, color: '#0053AF' })
-                : <Building2 size={24} color="#0053AF" />}
+                ? React.createElement(tipologiaObj.icono, { size: 24, color: 'var(--cru-accent-blue)' })
+                : <Building2 size={24} color="var(--cru-accent-blue)" />}
             </div>
             <div>
-              <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#062A77', lineHeight: 1.2 }}>
+              <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--cru-text)', lineHeight: 1.2 }}>
                 {tipologiaObj.titulo}
               </h4>
-              <span style={{ fontSize: '0.78rem', color: '#047857', fontWeight: 600 }}>
+              <span style={{ fontSize: '0.78rem', color: 'var(--cru-accent-green)', fontWeight: 600 }}>
                 Plazo: {tipologiaObj.plazoEstimado}
               </span>
             </div>
@@ -96,9 +96,9 @@ export default function Step4Confirmation({
             fontSize: '0.78rem',
             padding: '0.4rem 0.6rem',
             borderRadius: '6px',
-            backgroundColor: '#EFF6FF',
-            border: '1px solid #BFDBFE',
-            color: '#0053AF',
+            backgroundColor: 'var(--cru-accent-blue-bg)',
+            border: '1px solid var(--cru-accent-blue-border)',
+            color: 'var(--cru-accent-blue)',
             fontWeight: 600,
             display: 'inline-flex',
             alignItems: 'center',
@@ -113,27 +113,27 @@ export default function Step4Confirmation({
         <div style={{
           padding: '1.25rem',
           borderRadius: '16px',
-          backgroundColor: '#F8FAFC',
+          backgroundColor: 'var(--cru-surface-muted)',
           border: '1.5px solid rgba(6, 42, 119, 0.14)',
           boxShadow: '0 4px 12px rgba(6, 42, 119, 0.04)'
         }}>
-          <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
             Ubicación Territorial Oficial
           </div>
           <div style={{ marginBottom: '0.5rem' }}>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#062A77' }}>
+            <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--cru-text)' }}>
               {provinciaNombre || 'San José'} › {cantonNombre || 'Cantón Central'}
             </div>
-            <div style={{ fontSize: '0.85rem', color: '#0053AF', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.85rem', color: 'var(--cru-accent-blue)', fontWeight: 600 }}>
               Distrito: {distritoNombre || 'Cabecera'}
             </div>
           </div>
           <div style={{
             fontSize: '0.78rem',
             fontFamily: 'var(--font-telemetry)',
-            color: '#334155',
-            backgroundColor: '#F1F5F9',
-            border: '1px solid #E2E8F0',
+            color: 'var(--cru-text-soft)',
+            backgroundColor: 'var(--cru-surface-muted)',
+            border: '1px solid var(--cru-border)',
             fontWeight: 600,
             padding: '0.4rem 0.6rem',
             borderRadius: '6px'
@@ -146,11 +146,11 @@ export default function Step4Confirmation({
         <div style={{
           padding: '1.25rem',
           borderRadius: '16px',
-          backgroundColor: '#F8FAFC',
+          backgroundColor: 'var(--cru-surface-muted)',
           border: '1.5px solid rgba(6, 42, 119, 0.14)',
           boxShadow: '0 4px 12px rgba(6, 42, 119, 0.04)'
         }}>
-          <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
             Evidencia Multimedia Comprimida
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -171,23 +171,23 @@ export default function Step4Confirmation({
                 width: '64px',
                 height: '64px',
                 borderRadius: '10px',
-                backgroundColor: '#F1F5F9',
+                backgroundColor: 'var(--cru-surface-muted)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Camera size={26} color="#64748B" />
+                <Camera size={26} color="var(--cru-text-muted)" />
               </div>
             )}
             <div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#062A77' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--cru-text)' }}>
                 {photoData ? `Peso: ${photoData.compressedSizeFormatted}` : 'Foto procesada'}
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#047857', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--cru-accent-green)', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
                 <Check size={14} strokeWidth={2.5} />
                 <span>Ley N° 8968 Verificada</span>
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#64748B', fontFamily: 'var(--font-telemetry)', fontWeight: 600 }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontFamily: 'var(--font-telemetry)', fontWeight: 600 }}>
                 {photoData ? photoData.dimensiones : '1920x1080'} &bull; WebP
               </div>
             </div>
@@ -201,7 +201,7 @@ export default function Step4Confirmation({
           padding: '1.5rem',
           borderRadius: '20px',
           marginBottom: '2rem',
-          backgroundColor: '#F8FAFC',
+          backgroundColor: 'var(--cru-surface-muted)',
           border: '1.5px solid rgba(6, 42, 119, 0.14)',
           boxShadow: '0 4px 16px rgba(6, 42, 119, 0.04)'
         }}
@@ -212,13 +212,13 @@ export default function Step4Confirmation({
             display: 'block',
             fontSize: '0.95rem',
             fontWeight: 800,
-            color: '#062A77',
+            color: 'var(--cru-text)',
             marginBottom: '0.4rem'
           }}
         >
           Dirección Exacta y Puntos de Referencia de la Incidencia *
         </label>
-        <p style={{ color: '#475569', fontSize: '0.85rem', marginBottom: '0.75rem', fontWeight: 500 }}>
+        <p style={{ color: 'var(--cru-text-muted)', fontSize: '0.85rem', marginBottom: '0.75rem', fontWeight: 500 }}>
           Describa señas particulares para la cuadrilla técnica (ej: frente al abastecedor, poste número, color de casa, etc.).
         </p>
 
@@ -231,10 +231,10 @@ export default function Step4Confirmation({
           maxLength={400}
           style={{
             width: '100%',
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'var(--cru-surface-card)',
             border: '1.5px solid #CBD5E1',
             borderRadius: '12px',
-            color: '#0F172A',
+            color: 'var(--theme-text-primary)',
             padding: '1rem',
             fontFamily: 'var(--font-main)',
             fontSize: '0.92rem',
@@ -249,7 +249,7 @@ export default function Step4Confirmation({
           alignItems: 'center',
           marginTop: '0.4rem',
           fontSize: '0.75rem',
-          color: '#64748B',
+          color: 'var(--cru-text-muted)',
           fontWeight: 600
         }}>
           <span>Mínimo 15 caracteres para orientar a la cuadrilla</span>
@@ -293,8 +293,8 @@ export default function Step4Confirmation({
         </button>
 
         {observaciones.trim().length < 10 && (
-          <p style={{ color: '#B45309', fontSize: '0.85rem', marginTop: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 600 }}>
-            <AlertTriangle size={15} color="#D97706" />
+          <p style={{ color: 'var(--cru-accent-amber)', fontSize: '0.85rem', marginTop: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 600 }}>
+            <AlertTriangle size={15} color="var(--cru-accent-amber)" />
             <span>Ingrese una dirección exacta o descripción mínima antes de continuar.</span>
           </p>
         )}

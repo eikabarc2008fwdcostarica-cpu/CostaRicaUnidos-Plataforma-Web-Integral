@@ -463,7 +463,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                 <span
                   style={{
                     fontSize: '0.75rem',
-                    color: '#94A3B8',
+                    color: 'var(--cru-text-muted)',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.3rem'
@@ -520,7 +520,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                   fontWeight: 700,
                   cursor: 'pointer',
                   boxShadow: '0 4px 15px -3px rgba(0, 0, 0, 0.5)',
-                  transition: 'all 0.2s ease',
+                  transition: 'var(--transition-smooth)',
                   flexShrink: 0
                 }}
                 className="hover:bg-sky-500/20 hover:border-sky-400 active:scale-95"
@@ -548,7 +548,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                   fontWeight: 700,
                   cursor: 'pointer',
                   boxShadow: '0 10px 25px -5px rgba(2, 132, 199, 0.5)',
-                  transition: 'all 0.2s ease',
+                  transition: 'var(--transition-smooth)',
                   flexShrink: 0
                 }}
                 className="hover:bg-sky-500 hover:scale-[1.02] active:scale-95"
@@ -579,7 +579,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                 border: '1px solid rgba(255, 255, 255, 0.06)'
               }}
             >
-              <div style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
                 Iniciativas Activas
               </div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#38BDF8', marginTop: '0.25rem' }}>
@@ -595,7 +595,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                 border: '1px solid rgba(255, 255, 255, 0.06)'
               }}
             >
-              <div style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
                 Votos Ciudadanos
               </div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#34D399', marginTop: '0.25rem' }}>
@@ -611,7 +611,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                 border: '1px solid rgba(255, 255, 255, 0.06)'
               }}
             >
-              <div style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
                 Comentarios & Debates
               </div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#C084FC', marginTop: '0.25rem' }}>
@@ -627,7 +627,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                 border: '1px solid rgba(255, 255, 255, 0.06)'
               }}
             >
-              <div style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
                 {esAdmin ? 'Cobertura Territorial' : 'Ámbito Autorizado'}
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FACC15', marginTop: '0.25rem' }}>
@@ -683,14 +683,14 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
             style={{
               background: 'rgba(245, 158, 11, 0.18)',
               border: '1px solid rgba(245, 158, 11, 0.35)',
-              color: '#FDE68A',
+              color: 'var(--cru-accent-amber-border)',
               cursor: 'pointer',
               fontSize: '0.78rem',
               fontWeight: 700,
               padding: '0.35rem 0.85rem',
               borderRadius: '8px',
               flexShrink: 0,
-              transition: 'all 0.15s ease'
+              transition: 'var(--transition-smooth)'
             }}
             className="hover:bg-amber-400/30 active:scale-95"
           >
@@ -736,7 +736,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
               </span>
             )}
           </div>
-          <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)' }}>
             {esAdmin
               ? 'Supervisión completa: 7 Provincias + Nacional'
               : `Espacios cívicos exclusivos para residentes de ${provinciaUsuarioObj?.nombre || 'Costa Rica'}`}
@@ -885,7 +885,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
               borderRadius: '10px',
               backgroundColor: 'rgba(15, 23, 42, 0.8)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#CBD5E1',
+              color: 'var(--cru-border-strong)',
               fontSize: '0.825rem',
               outline: 'none',
               cursor: 'pointer'
@@ -928,7 +928,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                 borderRadius: '10px',
                 backgroundColor: 'rgba(15, 23, 42, 0.8)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#CBD5E1',
+                color: 'var(--cru-border-strong)',
                 fontSize: '0.825rem',
                 outline: 'none',
                 cursor: 'pointer'
@@ -963,7 +963,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
               gap: '0.35rem',
               fontSize: '0.8rem',
               fontWeight: 600,
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
             className="hover:bg-sky-500/20 hover:text-white"
           >
@@ -981,12 +981,12 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
               borderRadius: '10px',
               backgroundColor: 'rgba(255, 255, 255, 0.05)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#94A3B8',
+              color: 'var(--cru-text-muted)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
             className="hover:bg-white/10 hover:text-white"
           >
@@ -1026,7 +1026,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
             <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--cru-text, #062A77)', marginBottom: '0.5rem' }}>
               No se encontraron publicaciones en {ambitoActualObj.nombre}
             </h3>
-            <p style={{ color: '#94A3B8', fontSize: '0.85rem', maxWidth: '480px', margin: '0 auto 1.5rem auto' }}>
+            <p style={{ color: 'var(--cru-text-muted)', fontSize: '0.85rem', maxWidth: '480px', margin: '0 auto 1.5rem auto' }}>
               {busqueda || categoriaFiltro !== 'TODAS'
                 ? 'Prueba modificando tus términos de búsqueda o filtros temáticos.'
                 : `Aún no hay propuestas registradas para ${ambitoActualObj.nombre}. ¡Sé el primero en iniciar un debate vecinal!`}

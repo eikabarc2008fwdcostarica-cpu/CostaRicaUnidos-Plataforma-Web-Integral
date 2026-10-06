@@ -14,11 +14,19 @@ import {
   Award
 } from 'lucide-react';
 
+import { useTheme } from '../../context/ThemeContext';
+import { getProvincialTextColor } from '../../data/costaRicaTerritorialData';
+
 /**
  * Componente Base (Scaffolding): Comercio y Ferias Provinciales
  * Módulo 08/M10 — Ferias del Agricultor, PYMES y Fomento Turístico Local
  */
 export default function ProvinciaComercio({ provincia }) {
+  const { isLight } = useTheme?.() || { isLight: false };
+  const provAccentColor = getProvincialTextColor(provincia, isLight);
+  const amberAccent = isLight ? '#B45309' : '#F59E0B';
+  const amberChip = isLight ? '#B45309' : '#FBBF24';
+
   // Módulos temáticos del ecosistema económico provincial
   const pilaresComerciales = [
     {
@@ -88,7 +96,7 @@ export default function ProvinciaComercio({ provincia }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid var(--cru-border)',
           paddingBottom: '1.25rem'
         }}
       >
@@ -98,12 +106,12 @@ export default function ProvinciaComercio({ provincia }) {
               width: '42px',
               height: '42px',
               borderRadius: '10px',
-              backgroundColor: 'rgba(245, 158, 11, 0.15)',
+              backgroundColor: isLight ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.15)',
               border: '1px solid rgba(245, 158, 11, 0.35)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#F59E0B'
+              color: amberAccent
             }}
           >
             <ShoppingBag size={22} />
@@ -116,7 +124,7 @@ export default function ProvinciaComercio({ provincia }) {
                   fontWeight: 800,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  color: '#F59E0B',
+                  color: amberAccent,
                   fontFamily: 'monospace'
                 }}
               >
@@ -127,15 +135,15 @@ export default function ProvinciaComercio({ provincia }) {
                   fontSize: '0.68rem',
                   padding: '2px 8px',
                   borderRadius: '999px',
-                  backgroundColor: 'rgba(245, 158, 11, 0.12)',
-                  color: '#FBBF24',
-                  border: '1px solid rgba(245, 158, 11, 0.3)'
+                  backgroundColor: 'var(--cru-chip-bg)',
+                  color: amberChip,
+                  border: '1px solid var(--cru-chip-border)'
                 }}
               >
                 Producción Local 100%
               </span>
             </div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: '2px 0 0 0' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--cru-text)', margin: '2px 0 0 0' }}>
               Comercio Comunal, Ferias del Agricultor y PYMES — {provincia.nombre}
             </h3>
           </div>
@@ -148,16 +156,17 @@ export default function ProvinciaComercio({ provincia }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+            backgroundColor: isLight ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.15)',
             border: '1px solid rgba(245, 158, 11, 0.35)',
             borderRadius: '8px',
             padding: '0.55rem 1.15rem',
-            color: '#FBBF24',
+            color: amberChip,
             fontSize: '0.82rem',
             fontWeight: 700,
             textDecoration: 'none',
             transition: 'all 0.15s ease'
           }}
+          className="hover:opacity-90"
         >
           <span>Registrar Comercio Local</span>
           <ArrowRight size={14} />
@@ -174,26 +183,31 @@ export default function ProvinciaComercio({ provincia }) {
       >
         {pilaresComerciales.map((pilar) => {
           const Icono = pilar.icono;
+          const badgeColor = isLight
+            ? (pilar.id === 'feria' ? '#047857' : pilar.id === 'pymes' ? '#0369A1' : '#B45309')
+            : pilar.colorBadge;
+
           return (
             <div
               key={pilar.id}
               style={{
-                backgroundColor: 'rgba(0, 10, 28, 0.55)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                backgroundColor: 'var(--cru-card-bg)',
+                border: '1px solid var(--cru-border)',
                 borderRadius: '14px',
                 padding: '1.35rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 gap: '1.25rem',
+                boxShadow: 'var(--cru-card-shadow)',
                 transition: 'transform 0.2s ease, border-color 0.2s ease'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = `${pilar.colorBadge}50`;
+                e.currentTarget.style.borderColor = pilar.colorBadge;
                 e.currentTarget.style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.borderColor = 'var(--cru-border)';
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
@@ -209,7 +223,7 @@ export default function ProvinciaComercio({ provincia }) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: pilar.colorBadge
+                      color: badgeColor
                     }}
                   >
                     <Icono size={18} />
@@ -218,8 +232,8 @@ export default function ProvinciaComercio({ provincia }) {
                     style={{
                       fontSize: '0.66rem',
                       fontWeight: 800,
-                      color: pilar.colorBadge,
-                      backgroundColor: `${pilar.colorBadge}10`,
+                      color: badgeColor,
+                      backgroundColor: `${pilar.colorBadge}12`,
                       padding: '2px 8px',
                       borderRadius: '4px',
                       border: `1px solid ${pilar.colorBadge}30`
@@ -229,10 +243,10 @@ export default function ProvinciaComercio({ provincia }) {
                   </span>
                 </div>
 
-                <h4 style={{ fontSize: '1.02rem', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.5rem 0' }}>
+                <h4 style={{ fontSize: '1.02rem', fontWeight: 700, color: 'var(--cru-text)', margin: '0 0 0.5rem 0' }}>
                   {pilar.titulo}
                 </h4>
-                <p style={{ fontSize: '0.82rem', lineHeight: 1.55, color: '#94A3B8', margin: 0 }}>
+                <p style={{ fontSize: '0.82rem', lineHeight: 1.55, color: 'var(--cru-text-soft)', margin: 0 }}>
                   {pilar.descripcion}
                 </p>
               </div>
@@ -245,17 +259,18 @@ export default function ProvinciaComercio({ provincia }) {
                   justifyContent: 'space-between',
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#FFFFFF',
+                  backgroundColor: 'var(--cru-surface-muted)',
+                  border: '1px solid var(--cru-border)',
+                  color: 'var(--cru-text)',
                   fontSize: '0.78rem',
                   fontWeight: 700,
                   textDecoration: 'none',
                   transition: 'background-color 0.15s ease'
                 }}
+                className="hover:opacity-90"
               >
                 <span>{pilar.textoBoton}</span>
-                <ArrowRight size={13} color={pilar.colorBadge} />
+                <ArrowRight size={13} color={badgeColor} />
               </Link>
             </div>
           );
@@ -264,7 +279,7 @@ export default function ProvinciaComercio({ provincia }) {
 
       {/* Muestra de Productores y Comercios Locales */}
       <div>
-        <div style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: 700, marginBottom: '0.75rem' }}>
+        <div style={{ fontSize: '0.78rem', color: 'var(--cru-text-soft)', fontWeight: 700, marginBottom: '0.75rem' }}>
           Emprendimientos y Cooperativas Destacadas en {provincia.nombre}:
         </div>
         <div
@@ -278,21 +293,22 @@ export default function ProvinciaComercio({ provincia }) {
             <div
               key={comercio.id}
               style={{
-                backgroundColor: 'rgba(0, 10, 28, 0.45)',
-                border: '1px solid rgba(255, 255, 255, 0.06)',
+                backgroundColor: 'var(--cru-card-bg)',
+                border: '1px solid var(--cru-border)',
                 borderRadius: '10px',
                 padding: '0.85rem 1rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                gap: '0.75rem'
+                gap: '0.75rem',
+                boxShadow: 'var(--cru-card-shadow)'
               }}
             >
               <div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '2px' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--cru-text)', marginBottom: '2px' }}>
                   {comercio.nombre}
                 </div>
-                <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--cru-text-soft)' }}>
                   {comercio.categoria} • {comercio.canton}
                 </div>
               </div>
@@ -300,9 +316,9 @@ export default function ProvinciaComercio({ provincia }) {
                 style={{
                   fontSize: '0.64rem',
                   fontWeight: 700,
-                  color: '#34D399',
-                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                  border: '1px solid rgba(16, 185, 129, 0.25)',
+                  color: isLight ? '#047857' : '#34D399',
+                  backgroundColor: isLight ? 'rgba(16, 185, 129, 0.12)' : 'rgba(16, 185, 129, 0.1)',
+                  border: isLight ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(16, 185, 129, 0.25)',
                   padding: '2px 6px',
                   borderRadius: '4px',
                   whiteSpace: 'nowrap'
@@ -318,8 +334,8 @@ export default function ProvinciaComercio({ provincia }) {
       {/* Scaffolding de Conexión de Datos */}
       <div
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.02)',
-          border: '1px dashed rgba(255, 255, 255, 0.12)',
+          backgroundColor: 'var(--cru-surface-muted)',
+          border: '1px dashed var(--cru-border)',
           borderRadius: '12px',
           padding: '1.25rem',
           display: 'flex',
@@ -329,7 +345,7 @@ export default function ProvinciaComercio({ provincia }) {
           gap: '1rem'
         }}
       >
-        <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+        <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-soft)' }}>
           Base técnica M08/M10: Sincronización en tiempo real con las colecciones de ferias y solicitudes de patente comercial de <strong>db.json</strong>.
         </span>
         <Link
@@ -341,12 +357,14 @@ export default function ProvinciaComercio({ provincia }) {
             fontSize: '0.8rem',
             fontWeight: 700,
             color: '#FFFFFF',
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
+            backgroundColor: isLight ? '#059669' : 'rgba(255, 255, 255, 0.08)',
+            border: isLight ? '1px solid #059669' : '1px solid rgba(255, 255, 255, 0.15)',
             padding: '6px 14px',
             borderRadius: '8px',
-            textDecoration: 'none'
+            textDecoration: 'none',
+            transition: 'all 0.15s ease'
           }}
+          className="hover:opacity-90"
         >
           <span>Ver Ferias del Agricultor</span>
           <ExternalLink size={13} />

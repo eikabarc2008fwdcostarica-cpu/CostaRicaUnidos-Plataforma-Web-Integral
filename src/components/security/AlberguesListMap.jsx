@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Home, MapPin, Navigation, Map, Circle, Check } from 'lucide-react';
 import { generarEnlaceWaze, generarEnlaceGoogleMaps } from '../gis/gisLayersData';
+import { useTheme } from '../../context/ThemeContext';
 
 export const ALBERGUES_CNE_DATA = [
   {
@@ -114,6 +115,7 @@ export const ALBERGUES_CNE_DATA = [
 ];
 
 export default function AlberguesListMap() {
+  const { isDark } = useTheme?.() || { isDark: true };
   const [selectedProvincia, setSelectedProvincia] = useState('todas');
   const [busqueda, setBusqueda] = useState('');
 
@@ -140,12 +142,12 @@ export default function AlberguesListMap() {
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.2rem' }}>
-            <Home size={22} color="#38BDF8" />
-            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF' }}>
+            <Home size={22} color={isDark ? "#38BDF8" : "#002B7F"} />
+            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: isDark ? '#FFFFFF' : 'var(--cru-text, #0F172A)' }}>
               Red Nacional de Albergues y Refugios Temporales CNE
             </h3>
           </div>
-          <p style={{ color: '#CBD5E1', fontSize: '0.88rem' }}>
+          <p style={{ color: isDark ? '#CBD5E1' : 'var(--cru-text-muted, #64748B)', fontSize: '0.88rem' }}>
             Salones comunales, gimnasios y centros escolares habilitados con capacidad de aforo y estado de ocupación.
           </p>
         </div>
@@ -158,10 +160,10 @@ export default function AlberguesListMap() {
           placeholder="Buscar cantón o albergue..."
           style={{
             padding: '0.55rem 1rem',
-            backgroundColor: 'rgba(0, 10, 30, 0.8)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            backgroundColor: isDark ? 'rgba(0, 10, 30, 0.8)' : '#FFFFFF',
+            border: isDark ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid var(--cru-border, #CBD5E1)',
             borderRadius: '10px',
-            color: '#FFFFFF',
+            color: isDark ? '#FFFFFF' : 'var(--cru-text, #0F172A)',
             fontSize: '0.85rem',
             outline: 'none',
             minWidth: '240px'
@@ -192,8 +194,15 @@ export default function AlberguesListMap() {
             onClick={() => setSelectedProvincia(prov.id)}
             className="provincial-chip"
             style={{
-              backgroundColor: selectedProvincia === prov.id ? 'rgba(0, 43, 127, 0.6)' : 'rgba(255, 255, 255, 0.04)',
-              borderColor: selectedProvincia === prov.id ? '#79a6ff' : 'rgba(255, 255, 255, 0.12)',
+              backgroundColor: isDark
+                ? (selectedProvincia === prov.id ? 'rgba(0, 43, 127, 0.6)' : 'rgba(255, 255, 255, 0.04)')
+                : (selectedProvincia === prov.id ? '#002B7F' : 'var(--cru-surface-muted, #F1F5F9)'),
+              borderColor: isDark
+                ? (selectedProvincia === prov.id ? '#79a6ff' : 'rgba(255, 255, 255, 0.12)')
+                : (selectedProvincia === prov.id ? '#001489' : 'var(--cru-border, #CBD5E1)'),
+              color: isDark
+                ? (selectedProvincia === prov.id ? '#FFFFFF' : '#CBD5E1')
+                : (selectedProvincia === prov.id ? '#FFFFFF' : 'var(--cru-text, #0F172A)'),
               fontSize: '0.8rem'
             }}
           >
@@ -224,19 +233,26 @@ export default function AlberguesListMap() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                border: alb.estado === 'activo'
-                  ? '1px solid rgba(0, 209, 102, 0.35)'
-                  : '1px solid rgba(255, 255, 255, 0.14)',
-                backgroundColor: 'rgba(0, 15, 45, 0.6)'
+                border: isDark
+                  ? (alb.estado === 'activo' ? '1px solid rgba(0, 209, 102, 0.35)' : '1px solid rgba(255, 255, 255, 0.14)')
+                  : (alb.estado === 'activo' ? '1.5px solid #05853B' : '1px solid var(--cru-border, #CBD5E1)'),
+                backgroundColor: isDark ? 'rgba(0, 15, 45, 0.6)' : 'var(--cru-surface-card, #FFFFFF)',
+                boxShadow: isDark ? 'none' : '0 4px 16px rgba(0, 43, 127, 0.08)'
               }}
             >
               <div>
                 {/* Cabecera de Albergue */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                   <span className="telemetry-badge" style={{
-                    backgroundColor: alb.estado === 'activo' ? 'rgba(0, 209, 102, 0.2)' : 'rgba(245, 158, 11, 0.2)',
-                    color: alb.estado === 'activo' ? '#00D166' : '#F59E0B',
-                    borderColor: alb.estado === 'activo' ? '#00D166' : '#F59E0B',
+                    backgroundColor: alb.estado === 'activo'
+                      ? (isDark ? 'rgba(0, 209, 102, 0.2)' : '#ECFDF5')
+                      : (isDark ? 'rgba(245, 158, 11, 0.2)' : '#FFFBEB'),
+                    color: alb.estado === 'activo'
+                      ? (isDark ? '#00D166' : '#047857')
+                      : (isDark ? '#F59E0B' : '#B45309'),
+                    borderColor: alb.estado === 'activo'
+                      ? (isDark ? '#00D166' : '#A7F3D0')
+                      : (isDark ? '#F59E0B' : '#FDE68A'),
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '4px'
@@ -245,25 +261,25 @@ export default function AlberguesListMap() {
                     <span>{alb.estado === 'activo' ? 'ALBERGUE ACTIVO' : 'EN PREPARACIÓN'}</span>
                   </span>
 
-                  <span style={{ fontSize: '0.78rem', color: '#79a6ff', fontFamily: 'var(--font-telemetry)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                  <span style={{ fontSize: '0.78rem', color: isDark ? '#79a6ff' : '#002B7F', fontFamily: 'var(--font-telemetry)', display: 'inline-flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
                     <MapPin size={12} />
                     <span>{alb.canton}, {alb.provincia}</span>
                   </span>
                 </div>
 
-                <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.35rem' }}>
+                <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: isDark ? '#FFFFFF' : 'var(--cru-text, #0F172A)', marginBottom: '0.35rem' }}>
                   {alb.nombre}
                 </h4>
-                <p style={{ fontSize: '0.84rem', color: '#CBD5E1', marginBottom: '1rem', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.84rem', color: isDark ? '#CBD5E1' : 'var(--cru-text-muted, #475569)', marginBottom: '1rem', lineHeight: 1.5 }}>
                   {alb.descripcion}
                 </p>
 
                 {/* Barra Visual de Capacidad y Ocupación */}
                 <div style={{
-                  backgroundColor: 'rgba(0, 4, 13, 0.8)',
+                  backgroundColor: isDark ? 'rgba(0, 4, 13, 0.8)' : 'var(--cru-surface-muted, #F8FAFC)',
                   padding: '0.85rem 1rem',
                   borderRadius: '12px',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid var(--cru-border, #CBD5E1)',
                   marginBottom: '1rem'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '0.4rem' }}>
@@ -303,15 +319,15 @@ export default function AlberguesListMap() {
                           fontSize: '0.72rem',
                           padding: '0.2rem 0.55rem',
                           borderRadius: '6px',
-                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          color: '#E2E8F0',
+                          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : 'var(--cru-surface-muted, #F1F5F9)',
+                          border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid var(--cru-border, #CBD5E1)',
+                          color: isDark ? '#E2E8F0' : 'var(--cru-text, #0F172A)',
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '4px'
                         }}
                       >
-                        <Check size={11} strokeWidth={2.5} className="text-emerald-400" />
+                        <Check size={11} strokeWidth={2.5} className={isDark ? "text-emerald-400" : "text-emerald-600"} />
                         <span>{sum}</span>
                       </span>
                     ))}
@@ -322,7 +338,7 @@ export default function AlberguesListMap() {
               {/* Botonera de Contacto y Deep-Linking (Waze / Google Maps) */}
               <div style={{
                 paddingTop: '1rem',
-                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid var(--cru-border, #CBD5E1)',
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
                 gap: '0.65rem'
@@ -336,12 +352,14 @@ export default function AlberguesListMap() {
                     padding: '0.55rem',
                     fontSize: '0.8rem',
                     textAlign: 'center',
-                    backgroundColor: 'rgba(0, 160, 255, 0.18)',
-                    borderColor: 'rgba(0, 160, 255, 0.35)',
+                    backgroundColor: isDark ? 'rgba(0, 160, 255, 0.18)' : 'var(--cru-accent-sky-bg, #E0F2FE)',
+                    borderColor: isDark ? 'rgba(0, 160, 255, 0.35)' : 'var(--cru-accent-sky, #0284C7)',
+                    color: isDark ? '#FFFFFF' : 'var(--cru-accent-sky, #0369A1)',
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '5px'
+                    gap: '5px',
+                    fontWeight: 700
                   }}
                 >
                   <Navigation size={13} />

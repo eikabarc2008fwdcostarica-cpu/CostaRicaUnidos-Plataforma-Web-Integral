@@ -665,8 +665,13 @@
 }
 
 .voice-floating-unified-container:hover {
-  border-color: rgba(56, 189, 248, 0.30) !important;
-  box-shadow: 0 12px 36px rgba(0, 4, 13, 0.65), 0 0 20px rgba(56, 189, 248, 0.20) !important;
+  border-color: rgba(56, 189, 248, 0.30);
+  box-shadow: 0 12px 36px rgba(0, 4, 13, 0.65), 0 0 20px rgba(56, 189, 248, 0.20);
+}
+
+html.light .voice-floating-unified-container:hover {
+  border-color: var(--cru-accent-sky, #0284C7);
+  box-shadow: 0 12px 32px rgba(0, 43, 127, 0.22), 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .voice-floating-unified-container button {
@@ -679,5 +684,81 @@
 
 .voice-floating-unified-container button:active {
   transform: scale(0.96);
+}
+
+/* ==========================================================================
+   9. ADAPTACIÓN DE TEMA CLARO PARA VENTANAS FLOTANTES DE VOZ (LEY N° 7600)
+   ========================================================================== */
+html.light .voice-settings-popover {
+  background: var(--cru-surface-card, #FFFFFF);
+  border: 1px solid var(--cru-border, #CBD5E1);
+  color: var(--cru-text, #0F172A);
+  box-shadow: 0 20px 40px rgba(0, 43, 127, 0.16), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+html.light .voice-settings-header {
+  border-bottom-color: var(--cru-border, #CBD5E1);
+}
+
+html.light .voice-settings-title {
+  color: #002B7F;
+}
+
+html.light .voice-settings-close-btn {
+  color: var(--cru-text-muted, #64748B);
+}
+
+html.light .voice-settings-close-btn:hover {
+  color: var(--cru-text, #0F172A);
+}
+
+html.light .voice-settings-label {
+  color: var(--cru-text-muted, #64748B);
+}
+
+html.light .voice-speed-chip {
+  background-color: var(--cru-surface-muted, #F1F5F9);
+  border-color: var(--cru-border, #CBD5E1);
+  color: var(--cru-text, #0F172A);
+}
+
+html.light .voice-speed-chip:hover {
+  background-color: var(--cru-surface-alt, #E2E8F0);
+  border-color: #002B7F;
+  color: #002B7F;
+}
+
+html.light .voice-speed-chip.is-active {
+  background-color: #002B7F;
+  border-color: #002B7F;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 43, 127, 0.25);
+}
+
+html.light .voice-settings-action-btn.secondary {
+  background-color: var(--cru-surface-muted, #F1F5F9);
+  border: 1px solid var(--cru-border, #CBD5E1);
+  color: var(--cru-text, #0F172A);
+}
+
+html.light .voice-settings-action-btn.secondary:hover {
+  background-color: var(--cru-surface-alt, #E2E8F0);
+  border-color: #002B7F;
+  color: #002B7F;
+}
+
+html.light .voice-live-subtitles-card {
+  background: var(--cru-surface-card, #FFFFFF);
+  border: 1.5px solid #002B7F;
+  box-shadow: 0 16px 36px rgba(0, 43, 127, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08);
+  color: var(--cru-text, #0F172A);
+}
+
+html.light .voice-live-title {
+  color: #002B7F;
+}
+
+html.light .voice-live-subtitles-body {
+  color: var(--cru-text, #0F172A);
 }
 

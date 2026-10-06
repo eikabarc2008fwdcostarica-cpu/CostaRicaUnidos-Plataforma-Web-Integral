@@ -381,3 +381,40 @@ export const MAPA_PROVINCIAS_SVG = [
     labelPos: { x: 370, y: 405 }
   }
 ];
+
+/**
+ * Variantes de color de texto provincial para garantizar contraste WCAG 2.1 AA (>= 4.5:1)
+ * sobre fondos claros (--cru-card-bg #FFFFFF, --cru-page-bg #F8FAFC, --cru-surface-muted #F1F5F9).
+ */
+export const PROVINCIAL_LIGHT_TEXT = {
+  1: '#601438', // San José (11.59:1 - 12.69:1)
+  2: '#991B1B', // Alajuela (7.59:1 - 8.31:1)
+  3: '#0A3282', // Cartago (10.70:1 - 11.72:1)
+  4: '#92400E', // Heredia (6.47:1 - 7.09:1)
+  5: '#065F46', // Guanacaste (7.01:1 - 7.68:1)
+  6: '#9A3412', // Puntarenas (6.67:1 - 7.31:1)
+  7: '#065F46'  // Limón (7.01:1 - 7.68:1)
+};
+
+/**
+ * Variantes de color de texto provincial para garantizar contraste WCAG 2.1 AA (>= 4.5:1)
+ * sobre fondos oscuros (--cru-card-bg #0D1527, --cru-page-bg #00040D, --cru-surface-muted rgba(255,255,255,0.05)).
+ */
+export const PROVINCIAL_DARK_TEXT = {
+  1: '#F472B6', // San José (6.08:1 - 7.75:1)
+  2: '#FF6B6B', // Alajuela (5.80:1 - 7.40:1)
+  3: '#60A5FA', // Cartago (6.33:1 - 8.07:1)
+  4: '#FFC700', // Heredia (10.29:1 - 13.12:1)
+  5: '#34D399', // Guanacaste (8.37:1 - 10.68:1)
+  6: '#FB923C', // Puntarenas (7.11:1 - 9.07:1)
+  7: '#4ADE80'  // Limón (9.24:1 - 11.78:1)
+};
+
+export function getProvincialTextColor(prov, isLight = false) {
+  if (!prov) return 'var(--cru-text)';
+  const id = prov.id || prov.codigo;
+  if (isLight) {
+    return PROVINCIAL_LIGHT_TEXT[id] || PROVINCIAL_LIGHT_TEXT[prov.id] || prov.color;
+  }
+  return PROVINCIAL_DARK_TEXT[id] || PROVINCIAL_DARK_TEXT[prov.id] || prov.color;
+}

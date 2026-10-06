@@ -190,7 +190,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
         border: '1px solid var(--cru-border, #E2E8F0)',
         boxShadow: 'var(--cru-card-shadow, 0 10px 30px rgba(6, 42, 119, 0.06))',
         padding: '1.5rem',
-        transition: 'all 0.25s ease',
+        transition: 'var(--transition-smooth)',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative'
@@ -249,7 +249,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
                 alignItems: 'center',
                 gap: '0.5rem',
                 fontSize: '0.75rem',
-                color: '#64748B',
+                color: 'var(--cru-text-muted)',
                 marginTop: '1px'
               }}
             >
@@ -296,7 +296,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
                 borderRadius: '9999px',
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#94A3B8',
+                color: 'var(--cru-text-muted)',
                 fontSize: '0.75rem',
                 fontWeight: 500
               }}
@@ -347,7 +347,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
           flexWrap: 'wrap'
         }}
       >
-        <span style={{ fontSize: '0.75rem', color: '#64748B', marginRight: '0.25rem' }}>
+        <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', marginRight: '0.25rem' }}>
           Reacciones cívicas:
         </span>
 
@@ -368,7 +368,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
             fontSize: '0.775rem',
             fontWeight: 600,
             cursor: 'pointer',
-            transition: 'all 0.2s ease'
+            transition: 'var(--transition-smooth)'
           }}
           className="hover:bg-sky-500/20 active:scale-95"
         >
@@ -393,7 +393,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
             fontSize: '0.775rem',
             fontWeight: 600,
             cursor: 'pointer',
-            transition: 'all 0.2s ease'
+            transition: 'var(--transition-smooth)'
           }}
           className="hover:bg-rose-500/20 active:scale-95"
         >
@@ -418,7 +418,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
             fontSize: '0.775rem',
             fontWeight: 600,
             cursor: 'pointer',
-            transition: 'all 0.2s ease'
+            transition: 'var(--transition-smooth)'
           }}
           className="hover:bg-amber-500/20 active:scale-95"
         >
@@ -461,7 +461,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
               fontSize: '0.825rem',
               fontWeight: 600,
               cursor: votando ? 'wait' : 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
             className="hover:bg-emerald-500/15"
           >
@@ -491,7 +491,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
               fontSize: '0.825rem',
               fontWeight: 600,
               cursor: votando ? 'wait' : 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
             className="hover:bg-rose-500/15"
           >
@@ -522,7 +522,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
               fontSize: '0.825rem',
               fontWeight: 600,
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
             className="hover:bg-sky-500/10"
           >
@@ -550,7 +550,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
               color: copiado ? '#34D399' : '#94A3B8',
               fontSize: '0.825rem',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
             className="hover:bg-white/10"
           >
@@ -574,7 +574,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
                 border: '1px solid rgba(244, 63, 94, 0.2)',
                 color: '#FB7185',
                 cursor: 'pointer',
-                transition: 'all 0.2s ease'
+                transition: 'var(--transition-smooth)'
               }}
               className="hover:bg-rose-500/20"
             >

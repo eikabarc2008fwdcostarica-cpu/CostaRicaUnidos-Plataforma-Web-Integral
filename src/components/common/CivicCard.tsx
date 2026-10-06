@@ -42,13 +42,13 @@ export const CivicCard = forwardRef<HTMLDivElement, CivicCardProps>(
     const glassConfig = GLASSMORPHISM_TOKENS[`level${level}` as const] || GLASSMORPHISM_TOKENS.level2;
 
     const baseStyle: React.CSSProperties = {
-      background: glassConfig.background,
+      background: `var(--glass-level-${level}-bg, var(--cru-card-bg, ${glassConfig.background}))`,
       backdropFilter: `blur(${glassConfig.backdropBlur})`,
       WebkitBackdropFilter: `blur(${glassConfig.backdropBlur})`,
-      border: glassConfig.border,
+      border: `1px solid var(--glass-level-${level}-border, var(--cru-border, ${glassConfig.border}))`,
       borderRadius: 'var(--radius-card, 16px)',
-      boxShadow: provincialGlow ? 'var(--glow-provincial, ' + glassConfig.boxShadow + ')' : glassConfig.boxShadow,
-      color: '#FFFFFF',
+      boxShadow: provincialGlow ? 'var(--glow-provincial, ' + glassConfig.boxShadow + ')' : 'var(--cru-card-shadow, ' + glassConfig.boxShadow + ')',
+      color: 'var(--cru-text, #FFFFFF)',
       transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease',
       position: 'relative',
       overflow: 'hidden',
@@ -72,8 +72,8 @@ export const CivicCard = forwardRef<HTMLDivElement, CivicCardProps>(
             className="civic-card-header"
             style={{
               padding: '1.25rem 1.5rem',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-              background: 'rgba(255, 255, 255, 0.02)'
+              borderBottom: '1px solid var(--cru-border, rgba(255, 255, 255, 0.1))',
+              background: 'var(--cru-surface-muted, rgba(255, 255, 255, 0.02))'
             }}
           >
             {header}
@@ -95,8 +95,8 @@ export const CivicCard = forwardRef<HTMLDivElement, CivicCardProps>(
             className="civic-card-footer"
             style={{
               padding: '1rem 1.5rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-              background: 'rgba(0, 0, 0, 0.18)'
+              borderTop: '1px solid var(--cru-border, rgba(255, 255, 255, 0.08))',
+              background: 'var(--cru-surface-muted, rgba(0, 0, 0, 0.18))'
             }}
           >
             {footer}

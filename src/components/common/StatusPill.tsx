@@ -66,11 +66,11 @@ export const StatusPill = forwardRef<HTMLSpanElement, StatusPillProps>(
     ) {
       config = {
         defaultLabel: 'Abierto al Público',
-        bg: 'rgba(5, 133, 59, 0.22)',
-        border: 'rgba(16, 185, 129, 0.5)',
-        text: '#A7F3D0',
-        dotColor: '#10B981',
-        glow: '0 0 10px rgba(16, 185, 129, 0.45)'
+        bg: 'var(--cru-accent-green-bg)',
+        border: 'var(--cru-accent-green-border)',
+        text: 'var(--cru-accent-green)',
+        dotColor: 'var(--cru-accent-green)',
+        glow: '0 0 10px var(--cru-accent-green-bg)'
       };
     } else if (
       normalizedStatus === 'maintenance' ||
@@ -78,11 +78,11 @@ export const StatusPill = forwardRef<HTMLSpanElement, StatusPillProps>(
     ) {
       config = {
         defaultLabel: 'Mantenimiento Programado',
-        bg: 'rgba(217, 119, 6, 0.22)',
-        border: 'rgba(245, 158, 11, 0.55)',
-        text: '#FDE68A',
-        dotColor: '#F59E0B',
-        glow: '0 0 10px rgba(245, 158, 11, 0.45)'
+        bg: 'var(--cru-accent-amber-bg)',
+        border: 'var(--cru-accent-amber-border)',
+        text: 'var(--cru-accent-amber)',
+        dotColor: 'var(--cru-accent-amber)',
+        glow: '0 0 10px var(--cru-accent-amber-bg)'
       };
     } else if (
       normalizedStatus === 'reservado_escuelas' ||
@@ -90,21 +90,21 @@ export const StatusPill = forwardRef<HTMLSpanElement, StatusPillProps>(
     ) {
       config = {
         defaultLabel: 'Reservado para Escuelas Formativas',
-        bg: 'rgba(0, 43, 127, 0.35)',
-        border: 'rgba(125, 211, 252, 0.5)',
-        text: '#BAE6FD',
-        dotColor: '#38BDF8',
-        glow: '0 0 10px rgba(56, 189, 248, 0.45)'
+        bg: 'var(--cru-accent-sky-bg)',
+        border: 'var(--cru-accent-sky-border)',
+        text: 'var(--cru-accent-sky)',
+        dotColor: 'var(--cru-accent-sky)',
+        glow: '0 0 10px var(--cru-accent-sky-bg)'
       };
     } else {
       // occupied / alquiler / ocupado
       config = {
         defaultLabel: 'Uso Reglamentado',
-        bg: 'rgba(211, 20, 36, 0.22)',
-        border: 'rgba(239, 68, 68, 0.55)',
-        text: '#FECACA',
-        dotColor: '#EF4444',
-        glow: '0 0 10px rgba(239, 68, 68, 0.45)'
+        bg: 'var(--cru-accent-red-bg)',
+        border: 'var(--cru-accent-red-border)',
+        text: 'var(--cru-accent-red)',
+        dotColor: 'var(--cru-accent-red)',
+        glow: '0 0 10px var(--cru-accent-red-bg)'
       };
     }
 

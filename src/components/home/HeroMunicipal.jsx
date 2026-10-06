@@ -26,16 +26,12 @@ export default function HeroMunicipal() {
   return (
     <section
       aria-label="Escena de Bienvenida Institucional Costa Rica Unidos"
-      className="hero-municipal-container"
+      className="hero-municipal-container surface-brand"
       style={{
         position: 'relative',
         width: '100%',
         minHeight: '640px',
-        backgroundColor: isNight ? '#020617' : '#0B4BB8',
-        backgroundImage: isNight
-          ? 'linear-gradient(180deg, #020617 0%, #061536 45%, #0B2252 100%)'
-          : 'linear-gradient(180deg, #0B4BB8 0%, #1668CC 40%, #2D8DF0 75%, #64B5F6 100%)',
-        transition: 'background 0.8s ease-in-out, background-color 0.8s ease-in-out',
+        backgroundColor: '#020617',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
@@ -45,29 +41,68 @@ export default function HeroMunicipal() {
       }}
     >
       {/* ====================================================================
-          1. ESCENA ILUSTRADA VECTORIAL (VOLCÁN ARENAL, FUMAROLA, LAGO, FAUNA, FLORA)
-          ==================================================================== */}
-      <HeroScene isNight={isNight} />
-
-      {/* ====================================================================
-          2. FILTRO DE CONTRASTE SUAVE PARA GARANTÍA WCAG AA (LEY N° 7600)
+          1. CAPA DÍA (ESCENA ILUSTRADA SOL, VOLCÁN, LAGO, FAUNA Y FLORA)
           ==================================================================== */}
       <div
         aria-hidden="true"
+        className={`hero-crossfade-layer hero-crossfade-day ${isNight ? 'is-hidden' : 'is-active'}`}
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '65%',
-          height: '100%',
-          background: isNight
-            ? 'radial-gradient(ellipse at 20% 45%, rgba(2, 6, 23, 0.65) 0%, rgba(2, 6, 23, 0) 75%)'
-            : 'radial-gradient(ellipse at 20% 45%, rgba(6, 36, 95, 0.42) 0%, rgba(6, 36, 95, 0) 75%)',
+          inset: 0,
           pointerEvents: 'none',
-          zIndex: 5,
-          transition: 'background 0.8s ease-in-out'
+          zIndex: 1,
+          opacity: isNight ? 0 : 1,
+          transition: 'opacity 400ms ease-in-out',
+          background: 'linear-gradient(180deg, #0B4BB8 0%, #1668CC 40%, #2D8DF0 75%, #64B5F6 100%)'
         }}
-      />
+      >
+        <HeroScene isNight={false} />
+        {/* Filtro de contraste suave sobre capa día */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '65%',
+            height: '100%',
+            background: 'radial-gradient(ellipse at 20% 45%, rgba(6, 36, 95, 0.42) 0%, rgba(6, 36, 95, 0) 75%)',
+            pointerEvents: 'none',
+            zIndex: 5
+          }}
+        />
+      </div>
+
+      {/* ====================================================================
+          2. CAPA NOCHE (ESCENA ILUSTRADA LUNA, ESTRELLAS, VOLCÁN Y LAGO NOCTURNO)
+          ==================================================================== */}
+      <div
+        aria-hidden="true"
+        className={`hero-crossfade-layer hero-crossfade-night ${isNight ? 'is-active' : 'is-hidden'}`}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: 2,
+          opacity: isNight ? 1 : 0,
+          transition: 'opacity 400ms ease-in-out',
+          background: 'linear-gradient(180deg, #020617 0%, #061536 45%, #0B2252 100%)'
+        }}
+      >
+        <HeroScene isNight={true} />
+        {/* Filtro de contraste suave sobre capa noche */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '65%',
+            height: '100%',
+            background: 'radial-gradient(ellipse at 20% 45%, rgba(2, 6, 23, 0.65) 0%, rgba(2, 6, 23, 0) 75%)',
+            pointerEvents: 'none',
+            zIndex: 5
+          }}
+        />
+      </div>
 
       {/* ====================================================================
           3. CONTENIDO TEXTUAL HERO (MUNICIPAL, CÁLIDO E INSTITUCIONAL)

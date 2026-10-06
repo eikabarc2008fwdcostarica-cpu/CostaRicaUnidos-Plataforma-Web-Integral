@@ -387,8 +387,8 @@ function normalizarRolInfo(rolRaw, nivelAcceso) {
       codigo: 'SUPER_ADMIN_NACIONAL',
       nombre: 'Super Administrador Nacional',
       nivel: 5,
-      badgeClass: 'bg-rose-500/15 border-rose-500/30 text-rose-300',
-      dotClass: 'bg-rose-400'
+      badgeClass: 'bg-cru-accent-red-bg border-cru-accent-red-border text-cru-accent-red',
+      dotClass: 'bg-cru-accent-red'
     };
   }
   if (n === 4 || r.includes('GESTOR') || r.includes('TERRITORIAL') || r.includes('MUNICIPAL') || r.includes('PROVINCIAL')) {
@@ -396,8 +396,8 @@ function normalizarRolInfo(rolRaw, nivelAcceso) {
       codigo: 'GESTOR_TERRITORIAL',
       nombre: 'Gestor Territorial',
       nivel: 4,
-      badgeClass: 'bg-amber-500/15 border-amber-500/30 text-amber-300',
-      dotClass: 'bg-amber-400'
+      badgeClass: 'bg-cru-accent-amber-bg border-cru-accent-amber-border text-cru-accent-amber',
+      dotClass: 'bg-cru-accent-amber'
     };
   }
   if (n === 3 || r.includes('COMERCIANTE') || r.includes('EMPRENDEDOR') || r.includes('COMERCIO')) {
@@ -405,16 +405,16 @@ function normalizarRolInfo(rolRaw, nivelAcceso) {
       codigo: 'COMERCIANTE',
       nombre: 'Comerciante y Emprendedor',
       nivel: 3,
-      badgeClass: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
-      dotClass: 'bg-emerald-400'
+      badgeClass: 'bg-cru-accent-green-bg border-cru-accent-green-border text-cru-accent-green',
+      dotClass: 'bg-cru-accent-green'
     };
   }
   return {
     codigo: 'CIUDADANO',
     nombre: 'Ciudadano Residente',
     nivel: 2,
-    badgeClass: 'bg-sky-500/15 border-sky-500/30 text-sky-300',
-    dotClass: 'bg-sky-400'
+    badgeClass: 'bg-cru-accent-sky-bg border-cru-accent-sky-border text-cru-accent-sky',
+    dotClass: 'bg-cru-accent-sky'
   };
 }
 
@@ -570,17 +570,17 @@ export default function UsuariosAuditoriaModule({
 
   if (!esSuperAdminNacional) {
     return (
-      <div className="p-8 rounded-3xl bg-[#050C1C] border border-rose-500/30 text-center space-y-4 max-w-2xl mx-auto my-8 shadow-2xl animate-fadeIn">
-        <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 mx-auto">
+      <div className="p-8 rounded-3xl bg-cru-surface border border-cru-accent-red-border text-center space-y-4 max-w-2xl mx-auto my-8 shadow-2xl animate-fadeIn">
+        <div className="w-14 h-14 rounded-2xl bg-cru-accent-red-bg border border-cru-accent-red-border flex items-center justify-center text-cru-accent-red mx-auto">
           <AlertTriangleIcon width={28} height={28} />
         </div>
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-white">Módulo Reservado Exclusivamente a Nivel 5</h3>
-          <p className="text-xs text-rose-300 font-mono">
+          <h3 className="text-lg font-bold text-cru-text">Módulo Reservado Exclusivamente a Nivel 5</h3>
+          <p className="text-xs text-cru-accent-red font-mono">
             [SEGURIDAD RBAC] ACCESO DENEGADO • SUPERINTENDENCIA NACIONAL
           </p>
         </div>
-        <p className="text-xs text-slate-300 leading-relaxed max-w-lg mx-auto">
+        <p className="text-xs text-cru-text-soft leading-relaxed max-w-lg mx-auto">
           El módulo de <strong>Usuarios & Auditoría Inmutable</strong> del Padrón Nacional contiene datos protegidos bajo la Ley N° 8968 y Ley N° 8292. Los Gestores Territoriales (Nivel 4) tienen jurisdicción limitada a Gobiernos Locales, Obras Cantonales, Gaceta y Emergencias CNE.
         </p>
       </div>
@@ -1398,14 +1398,14 @@ export default function UsuariosAuditoriaModule({
   };
 
   return (
-    <div className="space-y-8 animate-fadeIn text-slate-100 font-sans">
+    <div className="space-y-8 animate-fadeIn text-cru-text font-sans">
       {/* Toast Flotante Soberano */}
       {toastMensaje && (
-        <div className="fixed top-6 right-6 z-[100] max-w-md p-4 rounded-2xl bg-[#050C1C]/95 border border-sky-400/40 shadow-2xl backdrop-blur-xl flex items-center gap-3 animate-slideDown">
-          <div className="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+        <div className="fixed top-6 right-6 z-[100] max-w-md p-4 rounded-2xl bg-cru-surface border border-cru-accent-sky-border shadow-2xl backdrop-blur-xl flex items-center gap-3 animate-slideDown">
+          <div className="w-8 h-8 rounded-xl bg-cru-accent-sky-bg text-cru-accent-sky flex items-center justify-center shrink-0">
             <CheckCircleIcon width={18} height={18} />
           </div>
-          <p className="text-xs font-medium text-slate-200">{toastMensaje}</p>
+          <p className="text-xs font-medium text-cru-text">{toastMensaje}</p>
         </div>
       )}
 
@@ -1414,16 +1414,16 @@ export default function UsuariosAuditoriaModule({
           ==================================================================== */}
       <div className="space-y-6">
         {/* Cabecera Principal */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-cru-border pb-5">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-medium tracking-wide bg-sky-500/10 border border-sky-400/20 text-sky-300 mb-2">
-              <UsersNetworkIcon width={14} height={14} className="text-sky-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-medium tracking-wide bg-cru-accent-sky-bg border border-cru-accent-sky-border text-cru-accent-sky mb-2">
+              <UsersNetworkIcon width={14} height={14} className="text-cru-accent-sky" />
               <span>SISTEMA NACIONAL DE CONTROL DE PADRÓN CÍVICO</span>
             </div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
+            <h2 className="text-2xl lg:text-3xl font-bold text-cru-text tracking-tight">
               Padrón & Auditoría Cívica Institucional
             </h2>
-            <p className="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs text-cru-text-muted mt-1 max-w-2xl leading-relaxed">
               Consola soberana de fiscalización de identidades digitales, asignación jerárquica
               RBAC y verificación tributaria directa ante el Ministerio de Hacienda (Ley N° 8292).
             </p>
@@ -1433,19 +1433,19 @@ export default function UsuariosAuditoriaModule({
             <button
               type="button"
               onClick={() => setIsCreateModalOpen(true)}
-              className="px-4 py-2.5 rounded-xl bg-[#1E88E5]/25 hover:bg-[#1E88E5]/35 active:scale-[0.98] border border-sky-400/50 text-white text-xs font-bold inline-flex items-center gap-2 transition-all shadow-lg shadow-sky-500/20 hover:shadow-sky-400/30 cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-cru-accent-sky-bg hover:opacity-80 active:scale-[0.98] border border-cru-accent-sky-border text-cru-accent-sky text-xs font-bold inline-flex items-center gap-2 transition-all cursor-pointer"
               title="Registrar una nueva cuenta oficial en el padrón soberano"
             >
-              <UserPlusIcon width={16} height={16} className="text-sky-300" />
+              <UserPlusIcon width={16} height={16} className="text-cru-accent-sky" />
               <span>Nuevo Usuario Oficial</span>
             </button>
             <button
               type="button"
               onClick={exportarPadronCSV}
-              className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] active:scale-[0.98] border border-white/10 text-white text-xs font-bold inline-flex items-center gap-2 transition-all shadow-lg hover:border-white/20"
+              className="px-4 py-2.5 rounded-xl bg-cru-surface-muted hover:bg-cru-surface active:scale-[0.98] border border-cru-border text-cru-text text-xs font-bold inline-flex items-center gap-2 transition-all shadow-sm hover:border-cru-border-hover"
               title="Descargar padrón filtrado en formato CSV compatible con hojas de cálculo"
             >
-              <DownloadTrayIcon width={16} height={16} className="text-sky-400" />
+              <DownloadTrayIcon width={16} height={16} className="text-cru-accent-sky" />
               <span>Exportar Padrón (CSV)</span>
             </button>
           </div>
@@ -1454,67 +1454,67 @@ export default function UsuariosAuditoriaModule({
         {/* 4 Tarjetas Métricas en Vidrio Translúcido */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Métrica 1: Total Cuentas Registradas */}
-          <div className="rounded-2xl p-5 bg-[#050C1C]/70 backdrop-blur-[24px] border border-white/10 hover:border-sky-500/30 transition-all shadow-xl space-y-2">
+          <div className="rounded-2xl p-5 bg-cru-surface border border-cru-border hover:border-cru-accent-sky-border transition-all shadow-sm space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-cru-text-muted uppercase tracking-wider">
                 Total Cuentas
               </span>
-              <div className="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+              <div className="w-8 h-8 rounded-xl bg-cru-accent-sky-bg border border-cru-accent-sky-border flex items-center justify-center text-cru-accent-sky">
                 <UsersNetworkIcon width={16} height={16} />
               </div>
             </div>
-            <div className="text-2xl lg:text-3xl font-mono font-bold text-white">
+            <div className="text-2xl lg:text-3xl font-mono font-bold text-cru-text">
               {metricas.total.toLocaleString('es-CR')}
             </div>
-            <p className="text-[11px] text-slate-400">Padrón cívico y administrativo consolidado</p>
+            <p className="text-[11px] text-cru-text-muted">Padrón cívico y administrativo consolidado</p>
           </div>
 
           {/* Métrica 2: Gestores Territoriales Activos */}
-          <div className="rounded-2xl p-5 bg-[#050C1C]/70 backdrop-blur-[24px] border border-white/10 hover:border-amber-500/30 transition-all shadow-xl space-y-2">
+          <div className="rounded-2xl p-5 bg-cru-surface border border-cru-border hover:border-cru-accent-amber-border transition-all shadow-sm space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-cru-text-muted uppercase tracking-wider">
                 Gestores Activos
               </span>
-              <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+              <div className="w-8 h-8 rounded-xl bg-cru-accent-amber-bg border border-cru-accent-amber-border flex items-center justify-center text-cru-accent-amber">
                 <ShieldStarIcon width={16} height={16} />
               </div>
             </div>
-            <div className="text-2xl lg:text-3xl font-mono font-bold text-amber-300">
+            <div className="text-2xl lg:text-3xl font-mono font-bold text-cru-accent-amber">
               {metricas.gestoresActivos.toLocaleString('es-CR')}
             </div>
-            <p className="text-[11px] text-slate-400">Gobernanza cantonal y provincial</p>
+            <p className="text-[11px] text-cru-text-muted">Gobernanza cantonal y provincial</p>
           </div>
 
           {/* Métrica 3: Ciudadanos Verificados por Hacienda */}
-          <div className="rounded-2xl p-5 bg-[#050C1C]/70 backdrop-blur-[24px] border border-white/10 hover:border-emerald-500/30 transition-all shadow-xl space-y-2">
+          <div className="rounded-2xl p-5 bg-cru-surface border border-cru-border hover:border-cru-accent-green-border transition-all shadow-sm space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-cru-text-muted uppercase tracking-wider">
                 Verificados Hacienda
               </span>
-              <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <div className="w-8 h-8 rounded-xl bg-cru-accent-green-bg border border-cru-accent-green-border flex items-center justify-center text-cru-accent-green">
                 <CheckCircleIcon width={16} height={16} />
               </div>
             </div>
-            <div className="text-2xl lg:text-3xl font-mono font-bold text-emerald-400">
+            <div className="text-2xl lg:text-3xl font-mono font-bold text-cru-accent-green">
               {metricas.verificadosHacienda.toLocaleString('es-CR')}
             </div>
-            <p className="text-[11px] text-slate-400">Certificación fiscal y tributaria ATV</p>
+            <p className="text-[11px] text-cru-text-muted">Certificación fiscal y tributaria ATV</p>
           </div>
 
           {/* Métrica 4: Cuentas en Revisión / Suspendidas */}
-          <div className="rounded-2xl p-5 bg-[#050C1C]/70 backdrop-blur-[24px] border border-white/10 hover:border-rose-500/30 transition-all shadow-xl space-y-2">
+          <div className="rounded-2xl p-5 bg-cru-surface border border-cru-border hover:border-cru-accent-red-border transition-all shadow-sm space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-cru-text-muted uppercase tracking-wider">
                 Cuentas Suspendidas
               </span>
-              <div className="w-8 h-8 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+              <div className="w-8 h-8 rounded-xl bg-cru-accent-red-bg border border-cru-accent-red-border flex items-center justify-center text-cru-accent-red">
                 <AlertTriangleIcon width={16} height={16} />
               </div>
             </div>
-            <div className="text-2xl lg:text-3xl font-mono font-bold text-rose-400">
+            <div className="text-2xl lg:text-3xl font-mono font-bold text-cru-accent-red">
               {metricas.suspendidosORevision.toLocaleString('es-CR')}
             </div>
-            <p className="text-[11px] text-slate-400">Acceso preventivo restringido</p>
+            <p className="text-[11px] text-cru-text-muted">Acceso preventivo restringido</p>
           </div>
         </div>
       </div>
@@ -1522,27 +1522,27 @@ export default function UsuariosAuditoriaModule({
       {/* ====================================================================
           2. BARRA DE BÚSQUEDA Y FILTROS MULTICRITERIO
           ==================================================================== */}
-      <div className="rounded-3xl p-5 bg-[#050C1C]/70 backdrop-blur-[24px] border border-white/10 space-y-4 shadow-xl">
+      <div className="rounded-3xl p-5 bg-cru-surface border border-cru-border space-y-4 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           {/* Campo de Búsqueda Reactivo */}
           <div className="relative flex-1 max-w-md">
             <SearchLensIcon
               width={16}
               height={16}
-              className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-cru-text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
             />
             <input
               type="text"
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               placeholder="Buscar por cédula, nombre o correo..."
-              className="w-full pl-10 pr-9 py-2.5 text-xs rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/30 transition-colors"
+              className="w-full pl-10 pr-9 py-2.5 text-xs rounded-xl bg-cru-surface-muted border border-cru-border text-cru-text placeholder:text-cru-text-muted focus:border-cru-accent-sky focus:outline-none transition-colors"
             />
             {busqueda && (
               <button
                 type="button"
                 onClick={() => setBusqueda('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-0.5"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-cru-text-muted hover:text-cru-text p-0.5"
                 title="Limpiar búsqueda"
               >
                 <XCloseIcon width={14} height={14} />
@@ -1550,13 +1550,13 @@ export default function UsuariosAuditoriaModule({
             )}
           </div>
 
-          {/* Selectores Desplegables Estilizados en Vidrio Oscuro */}
+          {/* Selectores Desplegables Estilizados */}
           <div className="flex flex-wrap items-center gap-2 text-xs">
             {/* Filtro por Rol */}
             <select
               value={filtroRol}
               onChange={(e) => setFiltroRol(e.target.value)}
-              className="py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-200 focus:border-sky-500 focus:outline-none cursor-pointer"
+              className="py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-sky focus:outline-none cursor-pointer"
             >
               <option value="TODOS">Rol: Todos</option>
               <option value="SUPER_ADMIN_NACIONAL">Super Administrador Nacional</option>
@@ -1569,7 +1569,7 @@ export default function UsuariosAuditoriaModule({
             <select
               value={filtroEstado}
               onChange={(e) => setFiltroEstado(e.target.value)}
-              className="py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-200 focus:border-sky-500 focus:outline-none cursor-pointer"
+              className="py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-sky focus:outline-none cursor-pointer"
             >
               <option value="TODOS">Estado: Todos</option>
               <option value="ACTIVO">Activos</option>
@@ -1580,7 +1580,7 @@ export default function UsuariosAuditoriaModule({
             <select
               value={filtroProvincia}
               onChange={(e) => setFiltroProvincia(e.target.value)}
-              className="py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-200 focus:border-sky-500 focus:outline-none cursor-pointer"
+              className="py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-sky focus:outline-none cursor-pointer"
             >
               <option value="TODAS">Provincia: Todas</option>
               {PROVINCIAS_OFICIALES.map((prov) => (
@@ -1594,7 +1594,7 @@ export default function UsuariosAuditoriaModule({
             <select
               value={filtroHacienda}
               onChange={(e) => setFiltroHacienda(e.target.value)}
-              className="py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-200 focus:border-sky-500 focus:outline-none cursor-pointer"
+              className="py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-sky focus:outline-none cursor-pointer"
             >
               <option value="TODOS">Hacienda: Todos</option>
               <option value="VERIFICADOS">Verificados Oficiales</option>
@@ -1606,7 +1606,7 @@ export default function UsuariosAuditoriaModule({
               <button
                 type="button"
                 onClick={limpiarFiltros}
-                className="py-2.5 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white inline-flex items-center gap-1.5 transition-colors font-medium"
+                className="py-2.5 px-3 rounded-xl bg-cru-surface-muted hover:bg-cru-surface border border-cru-border text-cru-text-muted hover:text-cru-text inline-flex items-center gap-1.5 transition-colors font-medium"
                 title="Restablecer todos los filtros"
               >
                 <FilterResetIcon width={14} height={14} />
@@ -1617,13 +1617,13 @@ export default function UsuariosAuditoriaModule({
         </div>
 
         {/* Resumen de Registros Filtrados */}
-        <div className="flex items-center justify-between text-[11px] text-slate-400 border-t border-white/5 pt-2">
+        <div className="flex items-center justify-between text-[11px] text-cru-text-muted border-t border-cru-border pt-2">
           <span>
-            Mostrando <strong className="font-mono text-sky-300">{usuariosFiltrados.length}</strong> de{' '}
-            <strong className="font-mono text-slate-200">{usuarios.length}</strong> expedientes registrados.
+            Mostrando <strong className="font-mono text-cru-accent-sky">{usuariosFiltrados.length}</strong> de{' '}
+            <strong className="font-mono text-cru-text">{usuarios.length}</strong> expedientes registrados.
           </span>
           {hayFiltrosActivos && (
-            <span className="text-amber-400/90 font-mono text-[10px]">
+            <span className="text-cru-accent-amber font-mono text-[10px]">
               Filtro multicriterio activo
             </span>
           )}
@@ -1633,10 +1633,10 @@ export default function UsuariosAuditoriaModule({
       {/* ====================================================================
           3. TABLA DE PADRÓN Y AUDITORÍA CÍVICA
           ==================================================================== */}
-      <div className="rounded-3xl bg-[#050C1C]/70 backdrop-blur-[24px] border border-white/10 overflow-hidden shadow-2xl">
+      <div className="rounded-3xl bg-cru-surface border border-cru-border overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#09152C]/80 text-slate-300 uppercase tracking-wider font-semibold border-b border-white/10 text-[11px]">
+            <thead className="bg-cru-surface-muted text-cru-text-soft uppercase tracking-wider font-semibold border-b border-cru-border text-[11px]">
               <tr>
                 <th className="py-3.5 px-4 font-semibold">IDENTIFICACIÓN Y CIUDADANO</th>
                 <th className="py-3.5 px-4 font-semibold">CORREO ELECTRÓNICO</th>
@@ -1646,17 +1646,17 @@ export default function UsuariosAuditoriaModule({
                 <th className="py-3.5 px-4 text-right font-semibold">ACCIONES</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-cru-border">
               {usuariosFiltrados.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400 space-y-2">
-                    <div className="w-10 h-10 rounded-2xl bg-white/[0.03] border border-white/5 mx-auto flex items-center justify-center text-slate-500">
+                  <td colSpan={6} className="py-12 text-center text-cru-text-muted space-y-2">
+                    <div className="w-10 h-10 rounded-2xl bg-cru-surface-muted border border-cru-border mx-auto flex items-center justify-center text-cru-text-muted">
                       <SearchLensIcon width={20} height={20} />
                     </div>
-                    <div className="text-sm font-semibold text-slate-300">
+                    <div className="text-sm font-semibold text-cru-text-soft">
                       No se encontraron coincidencias en el padrón
                     </div>
-                    <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                    <p className="text-xs text-cru-text-muted max-w-sm mx-auto">
                       Modifique los parámetros de búsqueda o restablezca los filtros para visualizar más expedientes.
                     </p>
                   </td>
@@ -1669,18 +1669,18 @@ export default function UsuariosAuditoriaModule({
                   return (
                     <tr
                       key={u.id || u.cedula}
-                      className="hover:bg-white/[0.02] transition-colors group"
+                      className="hover:bg-cru-surface-muted transition-colors group"
                     >
                       {/* IDENTIFICACIÓN Y CIUDADANO */}
                       <td className="py-3.5 px-4">
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <span className="font-mono font-bold text-sky-300 text-xs">
+                            <span className="font-mono font-bold text-cru-accent-sky text-xs">
                               {u.cedula}
                             </span>
                             {u.verificadoHacienda && (
                               <span
-                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
+                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border"
                                 title="Identidad certificada oficialmente ante el Ministerio de Hacienda (ATV)"
                               >
                                 <CheckCircleIcon width={12} height={12} />
@@ -1688,42 +1688,31 @@ export default function UsuariosAuditoriaModule({
                               </span>
                             )}
                           </div>
-                          <div className="text-white font-semibold text-sm">
+                          <div className="text-cru-text font-semibold text-sm">
                             {u.nombre}
                           </div>
                         </div>
                       </td>
 
                       {/* CORREO ELECTRÓNICO */}
-                      <td className="py-3.5 px-4 font-sans text-slate-300">
+                      <td className="py-3.5 px-4 font-sans text-cru-text-soft">
                         {u.correo || u.email || 'Sin correo registrado'}
                       </td>
 
                       {/* ROL Y JERARQUÍA */}
                       <td className="py-3.5 px-4">
                         {u.nivelAcceso === 3 || (u.rol && u.rol.includes("Comerciante")) ? (
-                          <div className="badge-rol-comerciante" style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            padding: '4px 10px',
-                            borderRadius: '9999px',
-                            border: '1px solid rgba(16, 185, 129, 0.4)',
-                            background: 'rgba(16, 185, 129, 0.12)',
-                            color: '#34D399',
-                            fontSize: '0.75rem',
-                            fontWeight: 600
-                          }}>
-                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }}></span>
+                          <div className="badge-rol-comerciante inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border border-cru-accent-green-border bg-cru-accent-green-bg text-cru-accent-green">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cru-accent-green"></span>
                             <span>Comerciante y Emprendedor • Nivel 3</span>
                           </div>
                         ) : (
                           <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border shadow-sm tracking-wide ${rolInfo.badgeClass}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${rolInfo.dotClass}`} />
-                            <span className={rolInfo.badgeClass.split(' ')[2] || 'text-slate-200'}>
+                            <span className={rolInfo.badgeClass.split(' ')[2] || 'text-cru-text'}>
                               {rolInfo.nombre}
                             </span>
-                            <span className="font-mono text-[10px] text-slate-400 pl-0.5">
+                            <span className="font-mono text-[10px] text-cru-text-muted pl-0.5">
                               · Nivel {rolInfo.nivel}
                             </span>
                           </div>
@@ -1731,10 +1720,10 @@ export default function UsuariosAuditoriaModule({
                       </td>
 
                       {/* JURISDICCIÓN */}
-                      <td className="py-3.5 px-4 text-slate-300">
+                      <td className="py-3.5 px-4 text-cru-text-soft">
                         <div>
-                          <span className="font-medium text-white">{u.canton || 'Central'}</span>
-                          <span className="text-slate-400 text-[11px] block">
+                          <span className="font-medium text-cru-text">{u.canton || 'Central'}</span>
+                          <span className="text-cru-text-muted text-[11px] block">
                             {u.provincia || 'Nacional'}
                           </span>
                         </div>
@@ -1743,13 +1732,13 @@ export default function UsuariosAuditoriaModule({
                       {/* ESTADO */}
                       <td className="py-3.5 px-4">
                         {estaActivo ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cru-accent-green" />
                             <span>ACTIVO</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30">
-                            <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-cru-accent-red-bg text-cru-accent-red border border-cru-accent-red-border">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cru-accent-red" />
                             <span>SUSPENDIDO</span>
                           </span>
                         )}
@@ -1762,7 +1751,7 @@ export default function UsuariosAuditoriaModule({
                           <button
                             type="button"
                             onClick={() => iniciarEdicion(u)}
-                            className="p-2 rounded-xl bg-white/[0.04] hover:bg-sky-500/20 text-slate-300 hover:text-sky-300 border border-white/10 hover:border-sky-500/30 transition-colors"
+                            className="p-2 rounded-xl bg-cru-surface-muted hover:bg-cru-accent-sky-bg text-cru-text-muted hover:text-cru-accent-sky border border-cru-border hover:border-cru-accent-sky-border transition-colors"
                             title="Editar Expediente Oficial"
                             aria-label={`Editar expediente de ${u.nombre}`}
                           >
@@ -1775,8 +1764,8 @@ export default function UsuariosAuditoriaModule({
                             onClick={() => toggleSuspension(u)}
                             className={`p-2 rounded-xl border transition-colors ${
                               estaActivo
-                                ? 'bg-white/[0.04] hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 border-white/10 hover:border-amber-500/30'
-                                : 'bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 border-emerald-500/30'
+                                ? 'bg-cru-surface-muted hover:bg-cru-accent-amber-bg text-cru-text-muted hover:text-cru-accent-amber border-cru-border hover:border-cru-accent-amber-border'
+                                : 'bg-cru-accent-green-bg text-cru-accent-green hover:opacity-80 border-cru-accent-green-border'
                             }`}
                             title={estaActivo ? 'Suspender Acceso Cívico' : 'Reactivar Acceso Cívico'}
                             aria-label={estaActivo ? 'Suspender acceso' : 'Reactivar acceso'}
@@ -1788,7 +1777,7 @@ export default function UsuariosAuditoriaModule({
                           <button
                             type="button"
                             onClick={() => iniciarBajaDefinitiva(u)}
-                            className="p-2 rounded-xl bg-white/[0.04] hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-white/10 hover:border-rose-500/30 transition-colors"
+                            className="p-2 rounded-xl bg-cru-surface-muted hover:bg-cru-accent-red-bg text-cru-text-muted hover:text-cru-accent-red border border-cru-border hover:border-cru-accent-red-border transition-colors"
                             title="Baja Definitiva de Expediente"
                             aria-label={`Baja definitiva de expediente ${u.nombre}`}
                           >
@@ -1810,22 +1799,22 @@ export default function UsuariosAuditoriaModule({
           ==================================================================== */}
       {usuarioAEditar && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-[24px] flex items-center justify-center p-4 animate-fadeIn"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
         >
-          <div className="max-w-lg w-full rounded-3xl bg-[#050C1C] border border-white/15 p-6 space-y-5 shadow-2xl text-slate-100 relative">
+          <div className="max-w-lg w-full rounded-3xl bg-cru-surface-card border border-cru-border p-6 space-y-5 shadow-2xl text-cru-text relative">
             {/* Cabecera del Modal */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-cru-border pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+                <div className="w-10 h-10 rounded-2xl bg-cru-accent-sky-bg border border-cru-accent-sky-border flex items-center justify-center text-cru-accent-sky">
                   <PenEditIcon width={18} height={18} />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white">
+                  <h3 className="text-base font-bold text-cru-text">
                     Actualización de Expediente Cívico
                   </h3>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-cru-text-muted">
                     Modificación de rol jerárquico, jurisdicción territorial y seguridad.
                   </p>
                 </div>
@@ -1833,7 +1822,7 @@ export default function UsuariosAuditoriaModule({
               <button
                 type="button"
                 onClick={() => setUsuarioAEditar(null)}
-                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                className="p-2 rounded-xl bg-cru-surface-muted hover:bg-cru-surface text-cru-text-muted hover:text-cru-text transition-colors"
                 title="Cerrar modal"
               >
                 <XCloseIcon width={16} height={16} />
@@ -1841,20 +1830,20 @@ export default function UsuariosAuditoriaModule({
             </div>
 
             {/* Identificación del Ciudadano (Solo Lectura) */}
-            <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
+            <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-1">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400">Expediente Oficial:</span>
-                <span className="font-mono text-sky-300 font-bold">{usuarioAEditar.cedula}</span>
+                <span className="text-cru-text-muted">Expediente Oficial:</span>
+                <span className="font-mono text-cru-accent-sky font-bold">{usuarioAEditar.cedula}</span>
               </div>
-              <div className="text-sm font-bold text-white">{usuarioAEditar.nombre}</div>
-              <div className="text-xs text-slate-400">{usuarioAEditar.correo || usuarioAEditar.email}</div>
+              <div className="text-sm font-bold text-cru-text">{usuarioAEditar.nombre}</div>
+              <div className="text-xs text-cru-text-muted">{usuarioAEditar.correo || usuarioAEditar.email}</div>
             </div>
 
             {/* Formulario de Modificación */}
             <form onSubmit={guardarCambiosEdicion} className="space-y-4 text-xs">
               {/* Selector de Rol Jerárquico */}
               <div className="space-y-1.5">
-                <label className="font-bold text-slate-300 block">
+                <label className="font-bold text-cru-text block">
                   Nivel Jerárquico y Rol (RBAC):
                 </label>
                 <select
@@ -1868,7 +1857,7 @@ export default function UsuariosAuditoriaModule({
                       canton: nuevoRol === 'SUPER_ADMIN_NACIONAL' ? 'Todas las Municipalidades' : (prev.canton && prev.canton !== 'Todas las Municipalidades' ? prev.canton : 'San José')
                     }));
                   }}
-                  className="w-full py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-200 focus:border-sky-500 focus:outline-none cursor-pointer"
+                  className="w-full py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-sky focus:outline-none cursor-pointer"
                 >
                   <option value="CIUDADANO">Ciudadano Residente (Nivel de Acceso: 2)</option>
                   <option value="COMERCIANTE">Comerciante y Emprendedor (Nivel de Acceso: 3)</option>
@@ -1883,8 +1872,8 @@ export default function UsuariosAuditoriaModule({
 
               {/* Selector Condicional para Jurisdicción Territorial y Patente Cantonal */}
               {formularioEdicion.rol !== 'SUPER_ADMIN_NACIONAL' && (
-                <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-3">
-                  <div className="font-bold text-amber-300 text-xs flex items-center gap-1.5">
+                <div className="p-3.5 rounded-2xl bg-cru-accent-amber-bg border border-cru-accent-amber-border space-y-3">
+                  <div className="font-bold text-cru-accent-amber text-xs flex items-center gap-1.5">
                     <ShieldStarIcon width={14} height={14} />
                     <span>
                       {formularioEdicion.rol === 'COMERCIANTE'
@@ -1898,7 +1887,7 @@ export default function UsuariosAuditoriaModule({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {/* Provincia */}
                     <div className="space-y-1">
-                      <label className="text-[11px] text-slate-300 font-semibold block">
+                      <label className="text-[11px] text-cru-text-soft font-semibold block">
                         Provincia Asignada:
                       </label>
                       <select
@@ -1912,7 +1901,7 @@ export default function UsuariosAuditoriaModule({
                             canton: cantones[0] || ''
                           }));
                         }}
-                        className="w-full py-2 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-white focus:border-amber-400 focus:outline-none cursor-pointer"
+                        className="w-full py-2 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-amber focus:outline-none cursor-pointer"
                       >
                         {PROVINCIAS_OFICIALES.map((prov) => (
                           <option key={prov} value={prov}>
@@ -1924,7 +1913,7 @@ export default function UsuariosAuditoriaModule({
 
                     {/* Cantón */}
                     <div className="space-y-1">
-                      <label className="text-[11px] text-slate-300 font-semibold block">
+                      <label className="text-[11px] text-cru-text-soft font-semibold block">
                         Cantón Asignado:
                       </label>
                       <select
@@ -1932,7 +1921,7 @@ export default function UsuariosAuditoriaModule({
                         onChange={(e) =>
                           setFormularioEdicion((prev) => ({ ...prev, canton: e.target.value }))
                         }
-                        className="w-full py-2 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-white focus:border-amber-400 focus:outline-none cursor-pointer"
+                        className="w-full py-2 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-amber focus:outline-none cursor-pointer"
                       >
                         {(CANTONES_POR_PROVINCIA[formularioEdicion.provincia] || []).map((can) => (
                           <option key={can} value={can}>
@@ -1947,7 +1936,7 @@ export default function UsuariosAuditoriaModule({
 
               {/* Opciones de Seguridad y Hacienda */}
               <div className="space-y-2.5 pt-1">
-                <label className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer hover:bg-white/[0.04] transition-colors">
+                <label className="flex items-center gap-2.5 p-3 rounded-xl bg-cru-surface-muted border border-cru-border cursor-pointer hover:bg-cru-surface transition-colors">
                   <input
                     type="checkbox"
                     checked={formularioEdicion.forzarCambioPassword}
@@ -1957,14 +1946,14 @@ export default function UsuariosAuditoriaModule({
                         forzarCambioPassword: e.target.checked
                       }))
                     }
-                    className="w-4 h-4 rounded border-white/20 bg-black/40 text-sky-500 focus:ring-sky-500/40 cursor-pointer"
+                    className="w-4 h-4 rounded border-cru-border bg-theme-input-bg text-cru-accent-sky focus:ring-cru-accent-sky/40 cursor-pointer"
                   />
-                  <span className="text-xs text-slate-300 font-medium">
+                  <span className="text-xs text-cru-text-soft font-medium">
                     Forzar cambio de contraseña en el próximo inicio de sesión
                   </span>
                 </label>
 
-                <label className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer hover:bg-white/[0.04] transition-colors">
+                <label className="flex items-center gap-2.5 p-3 rounded-xl bg-cru-surface-muted border border-cru-border cursor-pointer hover:bg-cru-surface transition-colors">
                   <input
                     type="checkbox"
                     checked={formularioEdicion.verificadoHacienda}
@@ -1974,32 +1963,32 @@ export default function UsuariosAuditoriaModule({
                         verificadoHacienda: e.target.checked
                       }))
                     }
-                    className="w-4 h-4 rounded border-white/20 bg-black/40 text-emerald-500 focus:ring-emerald-500/40 cursor-pointer"
+                    className="w-4 h-4 rounded border-cru-border bg-theme-input-bg text-cru-accent-green focus:ring-cru-accent-green/40 cursor-pointer"
                   />
-                  <span className="text-xs text-slate-300 font-medium">
+                  <span className="text-xs text-cru-text-soft font-medium">
                     Certificación de cotejo tributario ante Ministerio de Hacienda (ATV)
                   </span>
                 </label>
               </div>
 
               {/* Botonera de Acción */}
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-cru-border">
                 <button
                   type="button"
                   disabled={isSavingEdicion}
                   onClick={() => setUsuarioAEditar(null)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2.5 rounded-xl bg-cru-surface-muted hover:bg-cru-surface text-cru-text border border-cru-border font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancelar Operación
                 </button>
                 <button
                   type="submit"
                   disabled={isSavingEdicion}
-                  className="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-[0.98] text-slate-950 font-bold inline-flex items-center gap-2 transition-all shadow-lg shadow-sky-500/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-cru-accent-sky hover:opacity-90 active:scale-[0.98] text-white font-bold inline-flex items-center gap-2 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {isSavingEdicion ? (
                     <>
-                      <svg className="animate-spin w-4 h-4 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg className="animate-spin w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="12" />
                       </svg>
                       <span>Guardando en db.json...</span>
@@ -2018,77 +2007,77 @@ export default function UsuariosAuditoriaModule({
       )}
 
       {/* ====================================================================
-          5. MODAL B: ELIMINACIÓN DEFINITIVA (NIVEL 3 SOVEREIGN CIVIC GLASS)
+          5. MODAL B: ELIMINACIÓN DEFINITIVA
           ==================================================================== */}
       {usuarioAEliminar && (
         <div
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-[32px] flex items-center justify-center p-4 animate-fadeIn"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
         >
-          <div className="max-w-md w-full rounded-3xl bg-[#050C1C] border-2 border-rose-500/50 p-6 space-y-5 shadow-[0_0_50px_rgba(225,29,72,0.25)] text-slate-100 relative">
+          <div className="max-w-md w-full rounded-3xl bg-cru-surface-card border-2 border-cru-accent-red-border p-6 space-y-5 shadow-2xl text-cru-text relative">
             {/* Cabecera Crítica */}
-            <div className="flex items-start gap-3 border-b border-rose-500/20 pb-4">
-              <div className="w-10 h-10 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0">
+            <div className="flex items-start gap-3 border-b border-cru-accent-red-border pb-4">
+              <div className="w-10 h-10 rounded-2xl bg-cru-accent-red-bg border border-cru-accent-red-border flex items-center justify-center text-cru-accent-red shrink-0">
                 <OctagonAlertIcon width={22} height={22} />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">
+                <h3 className="text-base font-bold text-cru-text">
                   Confirmación de Baja Definitiva de Expediente
                 </h3>
-                <p className="text-[11px] text-rose-300/80 font-mono mt-0.5">
+                <p className="text-[11px] text-cru-accent-red font-mono mt-0.5">
                   OPERACIÓN CRÍTICA DE AUTORIDAD · LEY N° 8292
                 </p>
               </div>
             </div>
 
             {/* Ficha del Expediente Afectado */}
-            <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-1 text-xs">
+            <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-1 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Cédula Oficial:</span>
-                <span className="font-mono font-bold text-sky-300">{usuarioAEliminar.cedula}</span>
+                <span className="text-cru-text-muted">Cédula Oficial:</span>
+                <span className="font-mono font-bold text-cru-accent-sky">{usuarioAEliminar.cedula}</span>
               </div>
-              <div className="text-sm font-bold text-white">{usuarioAEliminar.nombre}</div>
-              <div className="text-slate-400">{usuarioAEliminar.correo || usuarioAEliminar.email}</div>
-              <div className="text-[11px] text-amber-300 font-mono pt-1">
+              <div className="text-sm font-bold text-cru-text">{usuarioAEliminar.nombre}</div>
+              <div className="text-cru-text-muted">{usuarioAEliminar.correo || usuarioAEliminar.email}</div>
+              <div className="text-[11px] text-cru-accent-amber font-mono pt-1">
                 Rol actual: {normalizarRolInfo(usuarioAEliminar.rol).nombre}
               </div>
             </div>
 
             {/* Advertencia Legal Inmutable */}
-            <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-200 space-y-1.5 leading-relaxed">
-              <p className="font-semibold text-rose-300">
+            <div className="p-3.5 rounded-2xl bg-cru-accent-red-bg border border-cru-accent-red-border text-xs text-cru-text space-y-1.5 leading-relaxed">
+              <p className="font-semibold text-cru-accent-red">
                 Esta acción revocará de manera permanente el acceso cívico y eliminará el registro del
                 usuario bajo el marco de la Ley N° 8292.
               </p>
-              <p className="text-[11px] text-rose-200/80">
+              <p className="text-[11px] text-cru-text-soft">
                 La revocación inmutable no podrá ser revertida. Los registros previos de auditoría
                 preservarán la trazabilidad histórica de los actos de autoridad ejecutados por este usuario.
               </p>
             </div>
 
             {/* Checkbox de Doble Verificación Obligatoria */}
-            <label className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/10 cursor-pointer hover:bg-white/[0.04] transition-colors">
+            <label className="flex items-start gap-2.5 p-3 rounded-xl bg-cru-surface-muted border border-cru-border cursor-pointer hover:bg-cru-surface transition-colors">
               <input
                 type="checkbox"
                 checked={confirmacionBaja}
                 onChange={(e) => setConfirmacionBaja(e.target.checked)}
-                className="w-4 h-4 mt-0.5 rounded border-rose-500/40 bg-black/60 text-rose-500 focus:ring-rose-500/40 cursor-pointer"
+                className="w-4 h-4 mt-0.5 rounded border-cru-accent-red-border bg-theme-input-bg text-cru-accent-red focus:ring-cru-accent-red/40 cursor-pointer"
               />
-              <span className="text-xs text-slate-300 font-medium">
+              <span className="text-xs text-cru-text-soft font-medium">
                 Entiendo las implicaciones legales y confirmo la revocación inmutable de esta identidad digital.
               </span>
             </label>
 
             {/* Botones de Confirmación Crítica */}
-            <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-3 border-t border-cru-border">
               <button
                 type="button"
                 onClick={() => {
                   setUsuarioAEliminar(null);
                   setConfirmacionBaja(false);
                 }}
-                className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
+                className="px-4 py-2.5 rounded-xl bg-cru-surface-muted hover:bg-cru-surface text-cru-text border border-cru-border text-xs font-semibold transition-colors"
               >
                 Cancelar Operación
               </button>
@@ -2098,8 +2087,8 @@ export default function UsuariosAuditoriaModule({
                 onClick={ejecutarBajaDefinitiva}
                 className={`px-5 py-2.5 rounded-xl text-xs font-bold inline-flex items-center gap-2 transition-all ${
                   confirmacionBaja
-                    ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/30 cursor-pointer active:scale-[0.98]'
-                    : 'bg-white/5 text-slate-500 border border-white/5 cursor-not-allowed'
+                    ? 'bg-cru-accent-red hover:opacity-90 text-white shadow-lg cursor-pointer active:scale-[0.98]'
+                    : 'bg-cru-surface-muted text-cru-text-muted border border-cru-border cursor-not-allowed'
                 }`}
               >
                 <TrashBinIcon width={16} height={16} />
@@ -2110,26 +2099,26 @@ export default function UsuariosAuditoriaModule({
         </div>
       )}
       {/* ====================================================================
-          MODAL C: REGISTRO Y ALTA DE CUENTA EN PADRÓN SOBERANO (NIVEL 3 SOVEREIGN CIVIC GLASS)
+          MODAL C: REGISTRO Y ALTA DE CUENTA EN PADRÓN SOBERANO
           ==================================================================== */}
       {isCreateModalOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-[32px] flex items-center justify-center p-4 overflow-y-auto animate-fadeIn"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fadeIn"
           role="dialog"
           aria-modal="true"
         >
-          <div className="max-w-2xl w-full rounded-3xl bg-[#050C1C]/95 border border-white/[0.12] p-6 sm:p-7 space-y-5 shadow-[0_0_50px_rgba(30,136,229,0.25)] text-slate-100 relative my-8 max-h-[90vh] overflow-y-auto">
+          <div className="max-w-2xl w-full rounded-3xl bg-cru-surface-card border border-cru-border p-6 sm:p-7 space-y-5 shadow-2xl text-cru-text relative my-8 max-h-[90vh] overflow-y-auto">
             {/* Encabezado del Modal */}
-            <div className="flex items-start justify-between border-b border-white/10 pb-4">
+            <div className="flex items-start justify-between border-b border-cru-border pb-4">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0 mt-0.5">
+                <div className="w-10 h-10 rounded-2xl bg-cru-accent-sky-bg border border-cru-accent-sky-border flex items-center justify-center text-cru-accent-sky shrink-0 mt-0.5">
                   <UserPlusIcon width={20} height={20} />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                  <h3 className="text-base sm:text-lg font-bold text-cru-text tracking-tight">
                     Registro y Alta de Cuenta en Padrón Soberano
                   </h3>
-                  <p className="text-[11px] font-mono text-sky-400 font-medium mt-0.5">
+                  <p className="text-[11px] font-mono text-cru-accent-sky font-medium mt-0.5">
                     NIVEL 5 AUTORIZADO • LEY N° 8292 & LEY N° 8968
                   </p>
                 </div>
@@ -2140,7 +2129,7 @@ export default function UsuariosAuditoriaModule({
                   setIsCreateModalOpen(false);
                   resetFormularioCrear();
                 }}
-                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="p-2 rounded-xl bg-cru-surface-muted hover:bg-cru-surface text-cru-text-muted hover:text-cru-text transition-colors cursor-pointer"
                 title="Cerrar modal"
               >
                 <XCloseIcon width={16} height={16} />
@@ -2150,8 +2139,8 @@ export default function UsuariosAuditoriaModule({
             {/* Formulario de Creación */}
             <form onSubmit={handleCrearUsuario} className="space-y-4 text-xs">
               {/* Sección A: Identificación y Consulta a Hacienda */}
-              <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-2.5">
-                <label className="font-bold text-slate-300 block">
+              <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-2.5">
+                <label className="font-bold text-cru-text block">
                   Cédula de Identidad Costarricense:
                 </label>
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -2168,13 +2157,13 @@ export default function UsuariosAuditoriaModule({
                       setHaciendaError(null);
                     }}
                     placeholder="Ej: 1-1823-0456 o 118230456"
-                    className="flex-1 py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none font-mono"
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text placeholder:text-cru-text-muted focus:border-cru-accent-sky focus:outline-none font-mono"
                   />
                   <button
                     type="button"
                     onClick={handleValidarHacienda}
                     disabled={validandoHacienda}
-                    className="px-4 py-2.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 active:scale-[0.98] border border-sky-400/40 text-sky-300 font-bold inline-flex items-center justify-center gap-2 transition-all shrink-0 cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2.5 rounded-xl bg-cru-accent-sky-bg hover:opacity-90 active:scale-[0.98] border border-cru-accent-sky-border text-cru-accent-sky font-bold inline-flex items-center justify-center gap-2 transition-all shrink-0 cursor-pointer disabled:opacity-50"
                   >
                     <SearchLensIcon width={14} height={14} />
                     <span>{validandoHacienda ? 'Consultando...' : 'Validar Hacienda'}</span>
@@ -2183,14 +2172,14 @@ export default function UsuariosAuditoriaModule({
 
                 {/* Mensajes de Validación ante Hacienda */}
                 {haciendaMensaje && (
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-[11px] flex items-center gap-2 animate-fadeIn">
-                    <CheckCircleIcon width={14} height={14} className="shrink-0 text-emerald-400" />
+                  <div className="p-2.5 rounded-xl bg-cru-accent-green-bg border border-cru-accent-green-border text-cru-accent-green text-[11px] flex items-center gap-2 animate-fadeIn">
+                    <CheckCircleIcon width={14} height={14} className="shrink-0 text-cru-accent-green" />
                     <span>{haciendaMensaje}</span>
                   </div>
                 )}
                 {haciendaError && (
-                  <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[11px] flex items-center gap-2 animate-fadeIn">
-                    <AlertTriangleIcon width={14} height={14} className="shrink-0 text-amber-400" />
+                  <div className="p-2.5 rounded-xl bg-cru-accent-amber-bg border border-cru-accent-amber-border text-cru-accent-amber text-[11px] flex items-center gap-2 animate-fadeIn">
+                    <AlertTriangleIcon width={14} height={14} className="shrink-0 text-cru-accent-amber" />
                     <span>{haciendaError}</span>
                   </div>
                 )}
@@ -2199,7 +2188,7 @@ export default function UsuariosAuditoriaModule({
               {/* Sección B: Datos Personales */}
               <div className="space-y-3">
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-300 block">
+                  <label className="font-bold text-cru-text block">
                     Nombre(s) de Pila:
                   </label>
                   <input
@@ -2210,13 +2199,13 @@ export default function UsuariosAuditoriaModule({
                       setFormularioCrear((prev) => ({ ...prev, nombres: e.target.value }))
                     }
                     placeholder="Ej: Juan Carlos"
-                    className="w-full py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
+                    className="w-full py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text placeholder:text-cru-text-muted focus:border-cru-accent-sky focus:outline-none"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-bold text-slate-300 block">
+                    <label className="font-bold text-cru-text block">
                       Primer Apellido:
                     </label>
                     <input
@@ -2229,12 +2218,12 @@ export default function UsuariosAuditoriaModule({
                         }))
                       }
                       placeholder="Ej: Rodríguez"
-                      className="w-full py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
+                      className="w-full py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text placeholder:text-cru-text-muted focus:border-cru-accent-sky focus:outline-none"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="font-bold text-slate-300 block">
+                    <label className="font-bold text-cru-text block">
                       Segundo Apellido:
                     </label>
                     <input
@@ -2247,14 +2236,14 @@ export default function UsuariosAuditoriaModule({
                         }))
                       }
                       placeholder="Ej: Vargas"
-                      className="w-full py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
+                      className="w-full py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text placeholder:text-cru-text-muted focus:border-cru-accent-sky focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="font-bold text-slate-300 block">
+                    <label className="font-bold text-cru-text block">
                       Correo Electrónico Institucional o Ciudadano:
                     </label>
                     <input
@@ -2265,12 +2254,12 @@ export default function UsuariosAuditoriaModule({
                         setFormularioCrear((prev) => ({ ...prev, correo: e.target.value }))
                       }
                       placeholder="usuario@gob.cr o ciudadano@dominio.cr"
-                      className="w-full py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none font-mono"
+                      className="w-full py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text placeholder:text-cru-text-muted focus:border-cru-accent-sky focus:outline-none font-mono"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="font-bold text-slate-300 block">
+                    <label className="font-bold text-cru-text block">
                       Contraseña Inicial de Acceso:
                     </label>
                     <div className="relative">
@@ -2282,12 +2271,12 @@ export default function UsuariosAuditoriaModule({
                           setFormularioCrear((prev) => ({ ...prev, password: e.target.value }))
                         }
                         placeholder="Mínimo 8 caracteres"
-                        className="w-full py-2.5 pl-3 pr-10 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none font-mono"
+                        className="w-full py-2.5 pl-3 pr-10 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text placeholder:text-cru-text-muted focus:border-cru-accent-sky focus:outline-none font-mono"
                       />
                       <button
                         type="button"
                         onClick={() => setMostrarPassword(!mostrarPassword)}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1 cursor-pointer"
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-cru-text-muted hover:text-cru-text p-1 cursor-pointer"
                         title={mostrarPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
                       >
                         {mostrarPassword ? (
@@ -2303,7 +2292,7 @@ export default function UsuariosAuditoriaModule({
 
               {/* Sección C: Nivel Jerárquico y Rol (RBAC) */}
               <div className="space-y-1.5">
-                <label className="font-bold text-slate-300 block">
+                <label className="font-bold text-cru-text block">
                   Nivel Jerárquico y Rol (RBAC):
                 </label>
                 <select
@@ -2316,11 +2305,11 @@ export default function UsuariosAuditoriaModule({
                       nuevaProvincia: r === 'SUPER_ADMIN_NACIONAL' ? 'Nacional' : (prev.nuevaProvincia !== 'Nacional' ? prev.nuevaProvincia : 'San José'),
                       nuevoCanton:
                         r === 'SUPER_ADMIN_NACIONAL'
-                          ? 'Todas las Municipalidades'
+                           ? 'Todas las Municipalidades'
                           : (CANTONES_POR_PROVINCIA[prev.nuevaProvincia !== 'Nacional' ? prev.nuevaProvincia : 'San José']?.[0] || 'San José')
                     }));
                   }}
-                  className="w-full py-2.5 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-slate-200 focus:border-sky-500 focus:outline-none cursor-pointer"
+                  className="w-full py-2.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-sky focus:outline-none cursor-pointer"
                 >
                   <option value="CIUDADANO">Ciudadano Residente (Nivel de Acceso: 2)</option>
                   <option value="COMERCIANTE">Comerciante y Emprendedor (Nivel de Acceso: 3)</option>
@@ -2335,25 +2324,25 @@ export default function UsuariosAuditoriaModule({
 
               {/* Sección D: Jurisdicción Territorial (Condicional) */}
               {formularioCrear.nuevoRol === 'SUPER_ADMIN_NACIONAL' ? (
-                <div className="p-3 rounded-2xl bg-sky-500/10 border border-sky-400/20 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3 rounded-2xl bg-cru-accent-sky-bg border border-cru-accent-sky-border grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                    <span className="text-[11px] text-slate-400 block font-semibold">Provincia:</span>
-                    <span className="font-bold text-sky-300">Nacional (Jurisdicción Soberana)</span>
+                    <span className="text-[11px] text-cru-text-muted block font-semibold">Provincia:</span>
+                    <span className="font-bold text-cru-accent-sky">Nacional (Jurisdicción Soberana)</span>
                   </div>
                   <div>
-                    <span className="text-[11px] text-slate-400 block font-semibold">Cantón:</span>
-                    <span className="font-bold text-sky-300">Todas las Municipalidades</span>
+                    <span className="text-[11px] text-cru-text-muted block font-semibold">Cantón:</span>
+                    <span className="font-bold text-cru-accent-sky">Todas las Municipalidades</span>
                   </div>
                 </div>
               ) : (
-                <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
-                  <div className="font-bold text-sky-300 text-xs flex items-center gap-1.5">
+                <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-3">
+                  <div className="font-bold text-cru-accent-sky text-xs flex items-center gap-1.5">
                     <ShieldStarIcon width={14} height={14} />
                     <span>Jurisdicción Territorial Asignada</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-[11px] text-slate-300 font-semibold block">
+                      <label className="text-[11px] text-cru-text-soft font-semibold block">
                         Provincia:
                       </label>
                       <select
@@ -2367,7 +2356,7 @@ export default function UsuariosAuditoriaModule({
                             nuevoCanton: cantones[0] || 'San José'
                           }));
                         }}
-                        className="w-full py-2 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-white focus:border-sky-400 focus:outline-none cursor-pointer"
+                        className="w-full py-2 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-sky focus:outline-none cursor-pointer"
                       >
                         {PROVINCIAS_OFICIALES.map((prov) => (
                           <option key={prov} value={prov}>
@@ -2378,7 +2367,7 @@ export default function UsuariosAuditoriaModule({
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-[11px] text-slate-300 font-semibold block">
+                      <label className="text-[11px] text-cru-text-soft font-semibold block">
                         Cantón:
                       </label>
                       <select
@@ -2386,7 +2375,7 @@ export default function UsuariosAuditoriaModule({
                         onChange={(e) =>
                           setFormularioCrear((prev) => ({ ...prev, nuevoCanton: e.target.value }))
                         }
-                        className="w-full py-2 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-white focus:border-sky-400 focus:outline-none cursor-pointer"
+                        className="w-full py-2 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-sky focus:outline-none cursor-pointer"
                       >
                         {(CANTONES_POR_PROVINCIA[formularioCrear.nuevaProvincia] || []).map((can) => (
                           <option key={can} value={can}>
@@ -2402,7 +2391,7 @@ export default function UsuariosAuditoriaModule({
               {/* Sección E: Estado Inicial y Hacienda */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-300 block">
+                  <label className="font-bold text-cru-text block">
                     Estado Inicial de la Cuenta:
                   </label>
                   <select
@@ -2410,7 +2399,7 @@ export default function UsuariosAuditoriaModule({
                     onChange={(e) =>
                       setFormularioCrear((prev) => ({ ...prev, nuevoEstado: e.target.value }))
                     }
-                    className="w-full py-2 px-3 rounded-xl bg-[#09152C] border border-white/10 text-xs text-white focus:border-sky-400 focus:outline-none cursor-pointer"
+                    className="w-full py-2 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-xs text-theme-input-text focus:border-cru-accent-sky focus:outline-none cursor-pointer"
                   >
                     <option value="ACTIVO">ACTIVO (Plenos Derechos Cívicos)</option>
                     <option value="SUSPENDIDO">SUSPENDIDO (Bloqueo Preventivo)</option>
@@ -2428,9 +2417,9 @@ export default function UsuariosAuditoriaModule({
                           isHaciendaVerified: e.target.checked
                         }))
                       }
-                      className="w-4 h-4 rounded border-white/20 bg-black/40 text-sky-500 focus:ring-sky-500/40 cursor-pointer"
+                      className="w-4 h-4 rounded border-cru-border bg-theme-input-bg text-cru-accent-sky focus:ring-cru-accent-sky/40 cursor-pointer"
                     />
-                    <span className="text-xs text-slate-300 font-medium">
+                    <span className="text-xs text-cru-text-soft font-medium">
                       Verificado ante Hacienda (Ley N° 8968)
                     </span>
                   </label>
@@ -2438,21 +2427,21 @@ export default function UsuariosAuditoriaModule({
               </div>
 
               {/* Botones de Acción */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-cru-border">
                 <button
                   type="button"
                   onClick={() => {
                     setIsCreateModalOpen(false);
                     resetFormularioCrear();
                   }}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-semibold transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-cru-surface-muted hover:bg-cru-surface text-cru-text border border-cru-border font-semibold transition-colors cursor-pointer"
                 >
                   Cancelar Operación
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingCrear}
-                  className="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-[0.98] text-slate-950 font-bold inline-flex items-center gap-2 transition-all shadow-lg shadow-sky-500/25 disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-cru-accent-sky hover:opacity-90 active:scale-[0.98] text-white font-bold inline-flex items-center gap-2 transition-all shadow-md disabled:opacity-50 cursor-pointer"
                 >
                   <UserPlusIcon width={16} height={16} />
                   <span>

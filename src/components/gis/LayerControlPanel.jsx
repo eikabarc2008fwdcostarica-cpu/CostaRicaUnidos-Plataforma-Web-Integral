@@ -104,7 +104,7 @@ export default function LayerControlPanel({
                     backgroundColor: isActive ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.02)',
                     border: `1px solid ${isActive ? layer.color + '55' : 'transparent'}`,
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease'
+                    transition: 'var(--transition-smooth)'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -122,7 +122,7 @@ export default function LayerControlPanel({
                     <span style={{ display: 'flex', alignItems: 'center' }}>
                       {renderLayerIcon(layer.id, layer.color)}
                     </span>
-                    <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#E2E8F0' }}>
+                    <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--cru-border)' }}>
                       {layer.nombre.split(' (')[0]}
                     </span>
                   </div>
@@ -177,7 +177,7 @@ export default function LayerControlPanel({
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#94A3B8',
+                color: 'var(--cru-text-muted)',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
                 fontFamily: 'var(--font-telemetry)',

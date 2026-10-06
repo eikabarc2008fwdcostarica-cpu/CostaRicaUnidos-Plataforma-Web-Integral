@@ -143,7 +143,7 @@ export default function SemanticGeoSearchBar({
           boxShadow: isListening
             ? '0 0 25px rgba(239, 68, 68, 0.5)'
             : '0 12px 35px rgba(0, 4, 13, 0.8), 0 0 20px rgba(0, 43, 127, 0.25)',
-          transition: 'all 0.25s ease',
+          transition: 'var(--transition-smooth)',
           gap: '0.75rem'
         }}
       >
@@ -200,7 +200,7 @@ export default function SemanticGeoSearchBar({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#94A3B8',
+              color: 'var(--cru-text-muted)',
               cursor: 'pointer',
               padding: '0.3rem 0.5rem',
               fontSize: '1rem',
@@ -233,7 +233,7 @@ export default function SemanticGeoSearchBar({
             gap: '0.4rem',
             fontSize: '0.85rem',
             fontWeight: 700,
-            transition: 'all 0.2s ease',
+            transition: 'var(--transition-smooth)',
             boxShadow: isListening ? '0 0 14px rgba(220, 38, 38, 0.8)' : 'none',
             animation: isListening ? 'pulse 1.2s infinite' : 'none',
             flexShrink: 0
@@ -261,7 +261,7 @@ export default function SemanticGeoSearchBar({
             display: 'flex',
             alignItems: 'center',
             gap: '0.45rem',
-            transition: 'all 0.2s ease',
+            transition: 'var(--transition-smooth)',
             boxShadow: '0 4px 14px rgba(218, 41, 28, 0.45)',
             flexShrink: 0
           }}
@@ -315,7 +315,7 @@ export default function SemanticGeoSearchBar({
         <span
           style={{
             fontSize: '0.74rem',
-            color: '#94A3B8',
+            color: 'var(--cru-text-muted)',
             fontWeight: 600,
             whiteSpace: 'nowrap',
             display: 'flex',
@@ -323,7 +323,7 @@ export default function SemanticGeoSearchBar({
             gap: '0.35rem'
           }}
         >
-          <Lightbulb size={13} color="#FBBF24" />
+          <Lightbulb size={13} color="var(--cru-accent-amber)" />
           <span>Sugerencias:</span>
         </span>
 
@@ -336,12 +336,12 @@ export default function SemanticGeoSearchBar({
               backgroundColor: 'rgba(0, 20, 137, 0.25)',
               border: '1px solid rgba(121, 166, 255, 0.25)',
               borderRadius: '999px',
-              color: '#CBD5E1',
+              color: 'var(--cru-border-strong)',
               padding: '0.28rem 0.75rem',
               fontSize: '0.78rem',
               cursor: 'pointer',
               whiteSpace: 'nowrap',
-              transition: 'all 0.15s ease',
+              transition: 'var(--transition-smooth)',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.3rem'

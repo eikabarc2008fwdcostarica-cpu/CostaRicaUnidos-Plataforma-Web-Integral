@@ -57,50 +57,50 @@ export const AccessibilityBadge = forwardRef<HTMLSpanElement, AccessibilityBadge
       'ley-7600': {
         label: 'Accesibilidad Total Ley 7600',
         ariaDescription: 'Espacio certificado con accesibilidad universal según Ley N° 7600',
-        bg: 'rgba(16, 185, 129, 0.15)',
-        border: '#10b981', // Borde verde esmeralda profesional normado
-        text: '#a7f3d0',
-        icon: (iconSize) => <Accessibility size={iconSize} className="text-emerald-400 shrink-0" />
+        bg: 'var(--cru-accent-green-bg)',
+        border: 'var(--cru-accent-green-border)',
+        text: 'var(--cru-accent-green)',
+        icon: (iconSize) => <Accessibility size={iconSize} className="shrink-0" style={{ color: 'var(--cru-accent-green)' }} />
       },
       'automovil-bajo': {
         label: 'Automóvil Bajo',
         ariaDescription: 'Destino con acceso apto para automóviles bajos y vehículos urbanos',
-        bg: 'rgba(14, 165, 233, 0.15)',
-        border: 'rgba(56, 189, 248, 0.5)',
-        text: '#bae6fd',
-        icon: (iconSize) => <Car size={iconSize} className="text-sky-400 shrink-0" />
+        bg: 'var(--cru-accent-sky-bg)',
+        border: 'var(--cru-accent-sky-border)',
+        text: 'var(--cru-accent-sky)',
+        icon: (iconSize) => <Car size={iconSize} className="shrink-0" style={{ color: 'var(--cru-accent-sky)' }} />
       },
       'acceso-4x4': {
         label: 'Tracción 4x4 Requerida',
         ariaDescription: 'Ruta o destino que requiere vehículo con tracción en las cuatro ruedas',
-        bg: 'rgba(245, 158, 11, 0.15)',
-        border: 'rgba(251, 191, 36, 0.5)',
-        text: '#fde68a',
-        icon: (iconSize) => <Navigation size={iconSize} className="text-amber-400 shrink-0" />
+        bg: 'var(--cru-accent-amber-bg)',
+        border: 'var(--cru-accent-amber-border)',
+        text: 'var(--cru-accent-amber)',
+        icon: (iconSize) => <Navigation size={iconSize} className="shrink-0" style={{ color: 'var(--cru-accent-amber)' }} />
       },
       'senderismo': {
         label: 'Senderismo',
         ariaDescription: 'Acceso por sendero natural pedestre o caminata de montaña',
-        bg: 'rgba(20, 184, 166, 0.15)',
-        border: 'rgba(45, 212, 191, 0.5)',
-        text: '#99f6e4',
-        icon: (iconSize) => <Footprints size={iconSize} className="text-teal-400 shrink-0" />
+        bg: 'var(--cru-accent-green-bg)',
+        border: 'var(--cru-accent-green-border)',
+        text: 'var(--cru-accent-green)',
+        icon: (iconSize) => <Footprints size={iconSize} className="shrink-0" style={{ color: 'var(--cru-accent-green)' }} />
       },
       'pet-friendly': {
         label: 'Pet-Friendly',
         ariaDescription: 'Lugar apto para mascotas y animales de asistencia',
-        bg: 'rgba(244, 63, 94, 0.15)',
-        border: 'rgba(251, 113, 133, 0.5)',
-        text: '#fecdd3',
-        icon: (iconSize) => <Heart size={iconSize} className="text-rose-400 shrink-0" />
+        bg: 'var(--cru-accent-red-bg)',
+        border: 'var(--cru-accent-red-border)',
+        text: 'var(--cru-accent-red)',
+        icon: (iconSize) => <Heart size={iconSize} className="shrink-0" style={{ color: 'var(--cru-accent-red)' }} />
       },
       'parqueo-disponible': {
         label: 'Parqueo Disponible',
         ariaDescription: 'Estacionamiento vehicular regulado y seguro disponible en el destino',
-        bg: 'rgba(99, 102, 241, 0.15)',
-        border: 'rgba(129, 140, 248, 0.5)',
-        text: '#c7d2fe',
-        icon: (iconSize) => <SquareParking size={iconSize} className="text-indigo-400 shrink-0" />
+        bg: 'var(--cru-accent-blue-bg)',
+        border: 'var(--cru-accent-blue-border)',
+        text: 'var(--cru-accent-blue)',
+        icon: (iconSize) => <SquareParking size={iconSize} className="shrink-0" style={{ color: 'var(--cru-accent-blue)' }} />
       }
     };
 
@@ -158,7 +158,7 @@ export const AccessibilityBadge = forwardRef<HTMLSpanElement, AccessibilityBadge
           WebkitBackdropFilter: 'blur(12px)',
           whiteSpace: 'nowrap',
           userSelect: 'none',
-          boxShadow: '0 2px 8px rgba(0, 4, 13, 0.25)',
+          boxShadow: 'var(--cru-card-shadow, 0 2px 8px rgba(0, 4, 13, 0.25))',
           ...style
         }}
         {...rest}

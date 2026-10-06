@@ -204,7 +204,7 @@ export const DeportesPage: FC = () => {
             <CivicBadge variant="provincial" size="md">
               COMITÉ CANTONAL DE DEPORTES Y RECREACIÓN &bull; {cantonActivo.toUpperCase()}
             </CivicBadge>
-            <span style={{ fontSize: '0.825rem', color: '#475569', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.825rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>
               Personería Jurídica Instrumental y Autonomía Administrativa (Artículos 164 al 172 del Código Municipal - Ley N° 7794)
             </span>
           </div>
@@ -231,12 +231,12 @@ export const DeportesPage: FC = () => {
         <div style={{ marginBottom: '2.5rem' }}>
           <div
             style={{
-              backgroundColor: '#FFFFFF',
-              border: '1px solid #E2E8F0',
+              backgroundColor: 'var(--cru-surface-card)',
+              border: '1px solid var(--cru-border)',
               borderTop: '4px solid #0053AF',
               borderRadius: '18px',
               padding: '1.5rem',
-              boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))'
+              boxShadow: 'var(--cru-card-shadow)'
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -248,19 +248,19 @@ export const DeportesPage: FC = () => {
                       height: '42px',
                       borderRadius: '10px',
                       background: 'rgba(0, 83, 175, 0.08)',
-                      border: '1px solid rgba(0, 83, 175, 0.2)',
+                      border: '1px solid var(--cru-accent-blue-border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <Shield size={22} color="#0053AF" />
+                    <Shield size={22} color="var(--cru-accent-blue)" />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#062A77', margin: 0 }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--cru-text)', margin: 0 }}>
                       Gobernanza y Autonomía Deportiva Municipal (Ley N° 7794)
                     </h3>
-                    <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 500 }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)', fontWeight: 500 }}>
                       Junta Directiva conformada por 5 miembros ad honorem con representación cantonal plural
                     </span>
                   </div>
@@ -277,39 +277,39 @@ export const DeportesPage: FC = () => {
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
                   gap: '1rem',
-                  background: '#F8FAFC',
+                  background: 'var(--cru-surface-muted)',
                   padding: '1.25rem',
                   borderRadius: '12px',
-                  border: '1px solid #E2E8F0'
+                  border: '1px solid var(--cru-border)'
                 }}
               >
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Instalaciones Administradas:</span>
-                  <strong style={{ fontSize: '1.4rem', color: '#062A77', fontFamily: "monospace" }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Instalaciones Administradas:</span>
+                  <strong style={{ fontSize: '1.4rem', color: 'var(--cru-text)', fontFamily: "monospace" }}>
                     {DEPORTES_MOCK_DATA.instalaciones.length} recintos
                   </strong>
-                  <span style={{ fontSize: '0.72rem', color: '#059669', display: 'block', fontWeight: 700 }}>100% con Ley 7600</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--cru-accent-green)', display: 'block', fontWeight: 700 }}>100% con Ley 7600</span>
                 </div>
 
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Atletas en Selecciones JDN:</span>
-                  <strong style={{ fontSize: '1.4rem', color: '#0F172A', fontFamily: "monospace" }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Atletas en Selecciones JDN:</span>
+                  <strong style={{ fontSize: '1.4rem', color: 'var(--theme-text-primary)', fontFamily: "monospace" }}>
                     284 atletas
                   </strong>
-                  <span style={{ fontSize: '0.72rem', color: '#475569', display: 'block', fontWeight: 600 }}>Fase Eliminatoria 2026</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Fase Eliminatoria 2026</span>
                 </div>
 
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Escuelas Formativas Comunitarias:</span>
-                  <strong style={{ fontSize: '1.4rem', color: '#0053AF', fontFamily: "monospace" }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Escuelas Formativas Comunitarias:</span>
+                  <strong style={{ fontSize: '1.4rem', color: 'var(--cru-accent-blue)', fontFamily: "monospace" }}>
                     {DEPORTES_MOCK_DATA.escuelas.length} gratuitas
                   </strong>
-                  <span style={{ fontSize: '0.72rem', color: '#475569', display: 'block', fontWeight: 600 }}>Cobertura en los distritos</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Cobertura en los distritos</span>
                 </div>
 
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Medallero Histórico JDN:</span>
-                  <strong style={{ fontSize: '1.4rem', color: '#B45309', fontFamily: "monospace" }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Medallero Histórico JDN:</span>
+                  <strong style={{ fontSize: '1.4rem', color: 'var(--cru-accent-amber)', fontFamily: "monospace" }}>
                     9 Medallas Oro
                   </strong>
                   <span style={{ fontSize: '0.72rem', color: '#92400E', display: 'block', fontWeight: 700 }}>Última edición nacional</span>
@@ -350,7 +350,7 @@ export const DeportesPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Dumbbell size={18} color={seccionActiva === 'instalaciones' ? '#0053AF' : '#64748B'} />
@@ -378,7 +378,7 @@ export const DeportesPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Medal size={18} color={seccionActiva === 'jdn' ? '#0053AF' : '#64748B'} />
@@ -406,7 +406,7 @@ export const DeportesPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Users size={18} color={seccionActiva === 'escuelas' ? '#0053AF' : '#64748B'} />
@@ -431,7 +431,7 @@ export const DeportesPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Trophy size={18} color={seccionActiva === 'orgullo' ? '#0053AF' : '#64748B'} />
@@ -456,7 +456,7 @@ export const DeportesPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Calendar size={18} color={seccionActiva === 'feed' ? '#0053AF' : '#64748B'} />
@@ -475,16 +475,16 @@ export const DeportesPage: FC = () => {
                 gap: '1rem',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                background: '#FFFFFF',
+                background: 'var(--cru-surface-card)',
                 padding: '1.25rem',
                 borderRadius: '16px',
-                border: '1px solid #E2E8F0',
-                boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))',
+                border: '1px solid var(--cru-border)',
+                boxShadow: 'var(--cru-card-shadow)',
                 marginBottom: '2rem'
               }}
             >
               <div style={{ position: 'relative', flex: '1 1 280px' }}>
-                <Search size={18} color="#0053AF" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+                <Search size={18} color="var(--cru-accent-blue)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="text"
                   value={busquedaInstalacion}
@@ -493,10 +493,10 @@ export const DeportesPage: FC = () => {
                   style={{
                     width: '100%',
                     padding: '0.65rem 1rem 0.65rem 2.4rem',
-                    background: '#F8FAFC',
-                    border: '1px solid #CBD5E1',
+                    background: 'var(--cru-surface-muted)',
+                    border: '1px solid var(--cru-border-strong)',
                     borderRadius: '10px',
-                    color: '#0F172A',
+                    color: 'var(--theme-text-primary)',
                     fontSize: '0.875rem',
                     outline: 'none',
                     fontWeight: 500
@@ -506,7 +506,7 @@ export const DeportesPage: FC = () => {
 
               {/* Botonera de Semáforo Formal */}
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>Semáforo:</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>Semáforo:</span>
                 <button
                   type="button"
                   onClick={() => setFiltroSemaforo('todos')}
@@ -527,8 +527,8 @@ export const DeportesPage: FC = () => {
                   type="button"
                   onClick={() => setFiltroSemaforo('abierto')}
                   style={{
-                    background: filtroSemaforo === 'abierto' ? '#ECFDF5' : '#F1F5F9',
-                    color: filtroSemaforo === 'abierto' ? '#047857' : '#334155',
+                    background: filtroSemaforo === 'abierto' ? 'var(--cru-accent-green-bg)' : '#F1F5F9',
+                    color: filtroSemaforo === 'abierto' ? 'var(--cru-accent-green)' : '#334155',
                     border: filtroSemaforo === 'abierto' ? '1.5px solid #059669' : '1px solid #CBD5E1',
                     borderRadius: '8px',
                     padding: '0.45rem 0.85rem',
@@ -547,7 +547,7 @@ export const DeportesPage: FC = () => {
                   type="button"
                   onClick={() => setFiltroSemaforo('mantenimiento')}
                   style={{
-                    background: filtroSemaforo === 'mantenimiento' ? '#FFFBEB' : '#F1F5F9',
+                    background: filtroSemaforo === 'mantenimiento' ? 'var(--cru-accent-amber-bg)' : '#F1F5F9',
                     color: filtroSemaforo === 'mantenimiento' ? '#B45309' : '#334155',
                     border: filtroSemaforo === 'mantenimiento' ? '1.5px solid #D97706' : '1px solid #CBD5E1',
                     borderRadius: '8px',
@@ -629,7 +629,7 @@ export const DeportesPage: FC = () => {
                     Programa Oficial Juegos Deportivos Nacionales (ICODER &bull; Ciclo 2026)
                   </h3>
                 </div>
-                <p style={{ fontSize: '0.9rem', color: '#CBD5E1', maxWidth: '750px', margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.9rem', color: 'var(--cru-border-strong)', maxWidth: '750px', margin: 0, lineHeight: 1.5 }}>
                   Proceso de captación, visorías técnicas y conformación de las selecciones cantonales que representarán a {cantonActivo} en las etapas eliminatorias y finales nacionales.
                 </p>
               </div>
@@ -663,9 +663,9 @@ export const DeportesPage: FC = () => {
                         </div>
                       </div>
 
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.85rem', color: '#CBD5E1' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.85rem', color: 'var(--cru-border-strong)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                          <Calendar size={15} color="#FBBF24" />
+                          <Calendar size={15} color="var(--cru-accent-amber)" />
                           <span>{conv.fechasVisorias}</span>
                         </div>
 
@@ -675,7 +675,7 @@ export const DeportesPage: FC = () => {
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                          <Users size={15} color="#34D399" />
+                          <Users size={15} color="var(--cru-accent-green)" />
                           <span>Entrenador: <strong style={{ color: '#FFFFFF' }}>{conv.entrenadorFederado}</strong></span>
                         </div>
                       </div>
@@ -687,10 +687,10 @@ export const DeportesPage: FC = () => {
                           borderRadius: '8px',
                           border: '1px solid rgba(255, 255, 255, 0.08)',
                           fontSize: '0.78rem',
-                          color: '#94A3B8'
+                          color: 'var(--cru-text-muted)'
                         }}
                       >
-                        <strong style={{ color: '#E2E8F0', display: 'block', marginBottom: '0.25rem' }}>Requisitos Obligatorios:</strong>
+                        <strong style={{ color: 'var(--cru-border)', display: 'block', marginBottom: '0.25rem' }}>Requisitos Obligatorios:</strong>
                         <ul style={{ margin: 0, paddingLeft: '1rem' }}>
                           {conv.requisitosObligatorios.map((req, i) => (
                             <li key={i}>{req}</li>
@@ -699,7 +699,7 @@ export const DeportesPage: FC = () => {
                       </div>
 
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                        <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>
                           Cierre: <strong style={{ color: '#F87171' }}>{conv.fechaCierreInscripcion}</strong>
                         </span>
 
@@ -739,10 +739,10 @@ export const DeportesPage: FC = () => {
                         </div>
                       </div>
 
-                      <div style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                         <div><strong>Sede: </strong>{disc.sedeEntrenamiento}</div>
                         <div><strong>Entrenador Principal: </strong>{disc.entrenadorPrincipal}</div>
-                        <div><strong>Licencia: </strong><code style={{ color: '#A7F3D0' }}>{disc.licenciaFederativa}</code></div>
+                        <div><strong>Licencia: </strong><code style={{ color: 'var(--cru-accent-green-border)' }}>{disc.licenciaFederativa}</code></div>
                         <div><strong>Atletas Activos: </strong>{disc.atletasActivos} atletas</div>
                       </div>
                     </div>
@@ -784,7 +784,7 @@ export const DeportesPage: FC = () => {
                       </CivicBadge>
                     </div>
 
-                    <div style={{ fontSize: '0.85rem', color: '#CBD5E1', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--cru-border-strong)', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                       <div><strong>Entrenador: </strong>{esc.profesorACargo}</div>
                       <div><strong>Sede: </strong>{esc.lugarEntrenamiento}</div>
                       <div><strong>Horarios: </strong>{esc.diasHorario}</div>
@@ -798,10 +798,10 @@ export const DeportesPage: FC = () => {
                         borderRadius: '8px',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
                         fontSize: '0.78rem',
-                        color: '#94A3B8'
+                        color: 'var(--cru-text-muted)'
                       }}
                     >
-                      <strong style={{ color: '#E2E8F0', display: 'block', marginBottom: '0.2rem' }}>Requisitos:</strong>
+                      <strong style={{ color: 'var(--cru-border)', display: 'block', marginBottom: '0.2rem' }}>Requisitos:</strong>
                       <ul style={{ margin: 0, paddingLeft: '1.1rem' }}>
                         {esc.requisitos.map((r, i) => (
                           <li key={i}>{r}</li>
@@ -881,7 +881,7 @@ export const DeportesPage: FC = () => {
                   right: '16px',
                   background: 'transparent',
                   border: 'none',
-                  color: '#94A3B8',
+                  color: 'var(--cru-text-muted)',
                   cursor: 'pointer'
                 }}
               >
@@ -895,14 +895,14 @@ export const DeportesPage: FC = () => {
                 <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', margin: '0.35rem 0' }}>
                   {instalacionParaReservar.nombre}
                 </h2>
-                <span style={{ fontSize: '0.85rem', color: '#CBD5E1' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--cru-border-strong)' }}>
                   Distrito: <strong>{instalacionParaReservar.distrito}</strong> &bull; {instalacionParaReservar.disciplinaPrincipal}
                 </span>
               </div>
 
               <form onSubmit={handleConfirmarReserva} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                  <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                     Nombre del Solicitante / Organización Comunal *
                   </label>
                   <input
@@ -924,7 +924,7 @@ export const DeportesPage: FC = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                       Cédula de Identidad *
                     </label>
                     <input
@@ -946,7 +946,7 @@ export const DeportesPage: FC = () => {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                       Teléfono de Contacto *
                     </label>
                     <input
@@ -969,7 +969,7 @@ export const DeportesPage: FC = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                       Fecha Requerida
                     </label>
                     <input
@@ -988,7 +988,7 @@ export const DeportesPage: FC = () => {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                       Horario
                     </label>
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -1005,7 +1005,7 @@ export const DeportesPage: FC = () => {
                           color: '#FFFFFF'
                         }}
                       />
-                      <span style={{ color: '#94A3B8' }}>a</span>
+                      <span style={{ color: 'var(--cru-text-muted)' }}>a</span>
                       <input
                         type="time"
                         value={formReserva.horaFin}
@@ -1030,7 +1030,7 @@ export const DeportesPage: FC = () => {
                     borderRadius: '8px',
                     padding: '0.75rem',
                     fontSize: '0.78rem',
-                    color: '#94A3B8'
+                    color: 'var(--cru-text-muted)'
                   }}
                 >
                   Tarifa reglamentaria: <strong>{instalacionParaReservar.tarifaAlquiler}</strong>. El CCDR garantiza el cumplimiento de los Artículos 164-172 del Código Municipal.
@@ -1096,7 +1096,7 @@ export const DeportesPage: FC = () => {
                   right: '16px',
                   background: 'transparent',
                   border: 'none',
-                  color: '#94A3B8',
+                  color: 'var(--cru-text-muted)',
                   cursor: 'pointer'
                 }}
               >
@@ -1117,7 +1117,7 @@ export const DeportesPage: FC = () => {
 
               <form onSubmit={handleConfirmarJdn} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                  <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                     Nombre Completo del Atleta *
                   </label>
                   <input
@@ -1139,7 +1139,7 @@ export const DeportesPage: FC = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                       Cédula / TIM del Atleta *
                     </label>
                     <input
@@ -1161,7 +1161,7 @@ export const DeportesPage: FC = () => {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                       Distrito de Residencia *
                     </label>
                     <input
@@ -1184,7 +1184,7 @@ export const DeportesPage: FC = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                       Nombre del Padre, Madre o Tutor *
                     </label>
                     <input
@@ -1205,7 +1205,7 @@ export const DeportesPage: FC = () => {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: '0.8rem', color: '#CBD5E1', display: 'block', marginBottom: '0.3rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--cru-border-strong)', display: 'block', marginBottom: '0.3rem' }}>
                       Teléfono de Emergencia / Tutor *
                     </label>
                     <input
@@ -1235,7 +1235,7 @@ export const DeportesPage: FC = () => {
                     onChange={(e) => setFormJdn({ ...formJdn, aceptaDeclaracion: e.target.checked })}
                     style={{ marginTop: '0.25rem', accentColor: '#002B7F' }}
                   />
-                  <label htmlFor="declaracionJdn" style={{ fontSize: '0.78rem', color: '#CBD5E1', lineHeight: 1.4 }}>
+                  <label htmlFor="declaracionJdn" style={{ fontSize: '0.78rem', color: 'var(--cru-border-strong)', lineHeight: 1.4 }}>
                     Declaro bajo juramento que los datos suministrados son fidedignos, el atleta reside en el cantón de {cantonActivo} y cuenta con póliza de accidentes activa para la visoría oficial.
                   </label>
                 </div>
@@ -1299,7 +1299,7 @@ export const DeportesPage: FC = () => {
                   right: '16px',
                   background: 'transparent',
                   border: 'none',
-                  color: '#94A3B8',
+                  color: 'var(--cru-text-muted)',
                   cursor: 'pointer'
                 }}
               >
@@ -1307,7 +1307,7 @@ export const DeportesPage: FC = () => {
               </button>
 
               <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                <div style={{ fontSize: '0.8rem', letterSpacing: '0.1em', color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                <div style={{ fontSize: '0.8rem', letterSpacing: '0.1em', color: 'var(--cru-text-muted)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
                   COMITÉ CANTONAL DE DEPORTES Y RECREACIÓN &bull; {cantonActivo.toUpperCase()}
                 </div>
                 <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.5rem 0' }}>
@@ -1325,7 +1325,7 @@ export const DeportesPage: FC = () => {
                   borderRadius: '12px',
                   padding: '1.25rem',
                   fontSize: '0.875rem',
-                  color: '#E2E8F0',
+                  color: 'var(--cru-border)',
                   lineHeight: 1.6,
                   marginBottom: '1.5rem'
                 }}
@@ -1336,13 +1336,13 @@ export const DeportesPage: FC = () => {
                 <p style={{ margin: '0 0 0.75rem 0' }}>
                   {comprobanteGenerado.detalle}
                 </p>
-                <div style={{ fontSize: '0.78rem', color: '#94A3B8', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.5rem' }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.5rem' }}>
                   Trámite oficial registrado bajo los Artículos 164-172 del Código Municipal (Ley N° 7794). Presente este comprobante digital o impreso ante el administrador de la instalación o cuerpo técnico en la sede.
                 </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>
                   Sello Cívico Digital &bull; CCDR {cantonActivo}
                 </span>
 

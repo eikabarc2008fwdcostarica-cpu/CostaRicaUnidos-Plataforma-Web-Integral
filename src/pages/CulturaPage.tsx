@@ -81,7 +81,7 @@ export const CulturaPage: FC = () => {
             <CivicBadge variant="provincial" size="md">
               MUNICIPALIDAD DE {cantonActivo.toUpperCase()} &bull; PATRIMONIO CULTURAL E HISTORIA
             </CivicBadge>
-            <span style={{ fontSize: '0.825rem', color: '#94A3B8' }}>
+            <span style={{ fontSize: '0.825rem', color: 'var(--cru-text-muted)' }}>
               Memoria Cívica, Símbolos Heráldicos Oficiales y Leyes Fundacionales de Costa Rica
             </span>
           </div>
@@ -99,7 +99,7 @@ export const CulturaPage: FC = () => {
             Patrimonio Cantonal, Heráldica y Memoria Histórica
           </h1>
 
-          <p style={{ fontSize: '1.05rem', color: '#CBD5E1', maxWidth: '900px', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: '1.05rem', color: 'var(--cru-border-strong)', maxWidth: '900px', lineHeight: 1.6, margin: 0 }}>
             Custodia institucional de las raíces democráticas de {cantonActivo}. Conozca el blasón oficial y la bandera del cantón, la ley de creación del gobierno local, el himno cantonal con partitura y letra oficial, y la línea de tiempo de los distritos que forjaron la República.
           </p>
         </div>
@@ -189,7 +189,7 @@ export const CulturaPage: FC = () => {
                       fontFamily: "var(--font-headline, 'Mistical Spring', serif)",
                       fontSize: '1rem',
                       fontStyle: 'italic',
-                      color: '#E2E8F0',
+                      color: 'var(--cru-border)',
                       display: 'block'
                     }}
                   >
@@ -224,39 +224,39 @@ export const CulturaPage: FC = () => {
                   }}
                 >
                   <div>
-                    <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Ley de Creación:</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', display: 'block' }}>Ley de Creación:</span>
                     <strong style={{ fontSize: '0.85rem', color: '#FFFFFF' }}>{resenna.leyCreacion}</strong>
                   </div>
 
                   <div>
-                    <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Fecha de Erección:</span>
-                    <strong style={{ fontSize: '0.85rem', color: '#A7F3D0' }}>{resenna.fechaFundacion}</strong>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', display: 'block' }}>Fecha de Erección:</span>
+                    <strong style={{ fontSize: '0.85rem', color: 'var(--cru-accent-green-border)' }}>{resenna.fechaFundacion}</strong>
                   </div>
 
                   <div>
-                    <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Título de Ciudad:</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', display: 'block' }}>Título de Ciudad:</span>
                     <strong style={{ fontSize: '0.85rem', color: '#FCD34D' }}>{resenna.tituloCiudadFecha}</strong>
                   </div>
 
                   <div>
-                    <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Administración Ejecutiva:</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', display: 'block' }}>Administración Ejecutiva:</span>
                     <strong style={{ fontSize: '0.85rem', color: '#FFFFFF' }}>{resenna.presidenteAdministracion}</strong>
                   </div>
 
                   <div>
-                    <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Cabecera Municipal:</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', display: 'block' }}>Cabecera Municipal:</span>
                     <strong style={{ fontSize: '0.85rem', color: '#7DD3FC' }}>{resenna.cabecera}</strong>
                   </div>
 
                   <div>
-                    <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Superficie & Población:</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', display: 'block' }}>Superficie & Población:</span>
                     <strong style={{ fontSize: '0.85rem', color: '#FFFFFF' }}>{resenna.superficieKm2} km² &bull; {resenna.poblacionHabitantes}</strong>
                   </div>
                 </div>
 
                 {/* Distritos Oficiales */}
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block', marginBottom: '0.35rem' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', marginBottom: '0.35rem' }}>
                     Distritos Oficiales ({resenna.distritosOficiales.length}):
                   </span>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
@@ -269,7 +269,7 @@ export const CulturaPage: FC = () => {
                           borderRadius: '6px',
                           padding: '0.2rem 0.5rem',
                           fontSize: '0.75rem',
-                          color: '#E2E8F0'
+                          color: 'var(--cru-border)'
                         }}
                       >
                         {dist}
@@ -313,7 +313,7 @@ export const CulturaPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Shield size={18} />
@@ -338,7 +338,7 @@ export const CulturaPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Music size={18} />
@@ -363,7 +363,7 @@ export const CulturaPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Clock size={18} />
@@ -388,7 +388,7 @@ export const CulturaPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Flag size={18} />
@@ -413,7 +413,7 @@ export const CulturaPage: FC = () => {
               alignItems: 'center',
               gap: '0.5rem',
               whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             <Sparkles size={18} />
@@ -436,7 +436,7 @@ export const CulturaPage: FC = () => {
                       Blasón Heráldico Oficial de {cantonActivo}
                     </h3>
                   </div>
-                  <p style={{ fontSize: '0.9rem', color: '#CBD5E1', lineHeight: 1.6, margin: 0 }}>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--cru-border-strong)', lineHeight: 1.6, margin: 0 }}>
                     {resenna.escudoDescripcionBlason}
                   </p>
                   <div
@@ -446,7 +446,7 @@ export const CulturaPage: FC = () => {
                       borderRadius: '8px',
                       padding: '0.85rem',
                       fontSize: '0.8rem',
-                      color: '#94A3B8'
+                      color: 'var(--cru-text-muted)'
                     }}
                   >
                     <strong>Normativa: </strong> Registro Oficial Heráldico Municipal &bull; Declaratoria cívica por acuerdo del Concejo Municipal.
@@ -462,7 +462,7 @@ export const CulturaPage: FC = () => {
                       Vexilología y Pabellón Cantonal
                     </h3>
                   </div>
-                  <p style={{ fontSize: '0.9rem', color: '#CBD5E1', lineHeight: 1.6, margin: 0 }}>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--cru-border-strong)', lineHeight: 1.6, margin: 0 }}>
                     {resenna.banderaDescripcion}
                   </p>
 
@@ -492,7 +492,7 @@ export const CulturaPage: FC = () => {
                         />
                         <div>
                           <strong style={{ fontSize: '0.825rem', color: '#FFFFFF', display: 'block' }}>{col.nombre}</strong>
-                          <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{col.significado}</span>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>{col.significado}</span>
                         </div>
                       </div>
                     ))}

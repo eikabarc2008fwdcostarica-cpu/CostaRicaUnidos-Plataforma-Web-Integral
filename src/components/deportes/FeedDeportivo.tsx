@@ -48,22 +48,22 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
       {/* Formulario de Publicación Comunitaria */}
       <div
         style={{
-          backgroundColor: '#FFFFFF',
-          border: '1px solid #E2E8F0',
+          backgroundColor: 'var(--cru-surface-card)',
+          border: '1px solid var(--cru-border)',
           borderTop: '4px solid #0053AF',
           borderRadius: '16px',
           padding: '1.35rem',
-          boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))'
+          boxShadow: 'var(--cru-card-shadow)'
         }}
       >
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#062A77', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <MessageSquare size={18} color="#0053AF" />
+            <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--cru-text)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <MessageSquare size={18} color="var(--cru-accent-blue)" />
               Publicar Convocatoria Deportiva Vecinal
             </h4>
-            <span style={{ fontSize: '0.75rem', color: '#059669', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
-              <ShieldAlert size={14} color="#059669" />
+            <span style={{ fontSize: '0.75rem', color: 'var(--cru-accent-green)', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
+              <ShieldAlert size={14} color="var(--cru-accent-green)" />
               Feed con moderación ética comunitaria
             </span>
           </div>
@@ -76,10 +76,10 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
             style={{
               width: '100%',
               padding: '0.75rem',
-              background: '#F8FAFC',
-              border: '1px solid #CBD5E1',
+              background: 'var(--cru-surface-muted)',
+              border: '1px solid var(--cru-border-strong)',
               borderRadius: '8px',
-              color: '#0F172A',
+              color: 'var(--theme-text-primary)',
               fontSize: '0.875rem',
               fontFamily: "inherit",
               outline: 'none',
@@ -94,9 +94,9 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
                 value={disciplina}
                 onChange={(e) => setDisciplina(e.target.value)}
                 style={{
-                  background: '#F8FAFC',
-                  color: '#0F172A',
-                  border: '1px solid #CBD5E1',
+                  background: 'var(--cru-surface-muted)',
+                  color: 'var(--theme-text-primary)',
+                  border: '1px solid var(--cru-border-strong)',
                   borderRadius: '6px',
                   padding: '0.4rem 0.65rem',
                   fontSize: '0.8rem',
@@ -114,9 +114,9 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
                 value={distrito}
                 onChange={(e) => setDistrito(e.target.value)}
                 style={{
-                  background: '#F8FAFC',
-                  color: '#0F172A',
-                  border: '1px solid #CBD5E1',
+                  background: 'var(--cru-surface-muted)',
+                  color: 'var(--theme-text-primary)',
+                  border: '1px solid var(--cru-border-strong)',
                   borderRadius: '6px',
                   padding: '0.4rem 0.65rem',
                   fontSize: '0.8rem',
@@ -137,8 +137,8 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
           </div>
 
           {enviadoExitoso && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#059669', fontSize: '0.825rem', fontWeight: 600 }}>
-              <CheckCircle2 size={16} color="#059669" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--cru-accent-green)', fontSize: '0.825rem', fontWeight: 600 }}>
+              <CheckCircle2 size={16} color="var(--cru-accent-green)" />
               <span>Convocatoria publicada con éxito en el feed comunitario.</span>
             </div>
           )}
@@ -151,11 +151,11 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
           <div
             key={post.id}
             style={{
-              backgroundColor: '#FFFFFF',
-              border: '1px solid #E2E8F0',
+              backgroundColor: 'var(--cru-surface-card)',
+              border: '1px solid var(--cru-border)',
               borderRadius: '16px',
               padding: '1.25rem',
-              boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))'
+              boxShadow: 'var(--cru-card-shadow)'
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -164,14 +164,14 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
                   <CivicBadge variant="provincial" size="sm">
                     {post.disciplina}
                   </CivicBadge>
-                  <strong style={{ fontSize: '0.9rem', color: '#062A77' }}>{post.autor}</strong>
-                  <span style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 500 }}>&bull; {post.distrito}</span>
+                  <strong style={{ fontSize: '0.9rem', color: 'var(--cru-text)' }}>{post.autor}</strong>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)', fontWeight: 500 }}>&bull; {post.distrito}</span>
                 </div>
 
-                <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>{post.fecha}</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>{post.fecha}</span>
               </div>
 
-              <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: 1.55, margin: '0.25rem 0', fontWeight: 500 }}>
+              <p style={{ fontSize: '0.875rem', color: 'var(--cru-text-soft)', lineHeight: 1.55, margin: '0.25rem 0', fontWeight: 500 }}>
                 {post.contenido}
               </p>
 
@@ -182,7 +182,7 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: '#C22727',
+                    color: 'var(--cru-accent-red)',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',

@@ -39,7 +39,7 @@ const NodoItem: FC<NodoItemProps> = ({ nodo, nivel = 0, filtroBusqueda = '' }) =
       case 'ejecutivo':
         return <Building size={18} color="#7DD3FC" />;
       case 'operativo':
-        return <Layers size={18} color="#34D399" />;
+        return <Layers size={18} color="var(--cru-accent-green)" />;
       case 'social':
         return <User size={18} color="#C084FC" />;
       default:
@@ -95,14 +95,14 @@ const NodoItem: FC<NodoItemProps> = ({ nodo, nivel = 0, filtroBusqueda = '' }) =
       {/* Tarjeta del Nodo */}
       <div
         style={{
-          background: '#FFFFFF',
+          background: 'var(--cru-surface-card)',
           border: coincide
             ? '1.5px solid #93C5FD'
             : '1px solid var(--cru-border, #E2E8F0)',
           borderRadius: '12px',
           padding: '1rem 1.25rem',
-          boxShadow: coincide && filtroBusqueda ? 'var(--shadow-hover, 0 10px 25px -3px rgba(6, 42, 119, 0.1))' : 'var(--shadow-card, 0 2px 6px -1px rgba(6, 42, 119, 0.04))',
-          transition: 'all 0.25s ease'
+          boxShadow: coincide && filtroBusqueda ? 'var(--cru-card-shadow-hover)' : 'var(--shadow-card, 0 2px 6px -1px rgba(6, 42, 119, 0.04))',
+          transition: 'var(--transition-smooth)'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
@@ -114,15 +114,15 @@ const NodoItem: FC<NodoItemProps> = ({ nodo, nivel = 0, filtroBusqueda = '' }) =
                 aria-label={expandido ? `Colapsar rama de ${nodo.nombre}` : `Expandir rama de ${nodo.nombre}`}
                 aria-expanded={expandido}
                 style={{
-                  background: '#F1F5F9',
-                  border: '1px solid #CBD5E1',
+                  background: 'var(--cru-surface-muted)',
+                  border: '1px solid var(--cru-border-strong)',
                   borderRadius: '6px',
                   width: '28px',
                   height: '28px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#062A77',
+                  color: 'var(--cru-text)',
                   cursor: 'pointer',
                   marginTop: '2px',
                   flexShrink: 0
@@ -156,8 +156,8 @@ const NodoItem: FC<NodoItemProps> = ({ nodo, nivel = 0, filtroBusqueda = '' }) =
                 {getCategoriaBadge()}
               </div>
 
-              <div style={{ fontSize: '0.85rem', color: '#0053AF', marginTop: '0.25rem', fontWeight: 600 }}>
-                {nodo.titular} &bull; <span style={{ color: '#64748B' }}>{nodo.cargo}</span>
+              <div style={{ fontSize: '0.85rem', color: 'var(--cru-accent-blue)', marginTop: '0.25rem', fontWeight: 600 }}>
+                {nodo.titular} &bull; <span style={{ color: 'var(--cru-text-muted)' }}>{nodo.cargo}</span>
               </div>
 
               <p style={{ fontSize: '0.825rem', color: 'var(--cru-text-secondary, #334155)', margin: '0.35rem 0 0 0', lineHeight: 1.5 }}>
@@ -173,13 +173,13 @@ const NodoItem: FC<NodoItemProps> = ({ nodo, nivel = 0, filtroBusqueda = '' }) =
               alignItems: 'center',
               gap: '0.85rem',
               fontSize: '0.8rem',
-              color: '#64748B',
+              color: 'var(--cru-text-muted)',
               flexShrink: 0
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Phone size={14} color="#059669" />
-              <span style={{ fontFamily: "var(--font-telemetry, monospace)", fontWeight: 600, color: '#062A77' }}>{nodo.extension}</span>
+              <Phone size={14} color="var(--cru-accent-green)" />
+              <span style={{ fontFamily: "var(--font-telemetry, monospace)", fontWeight: 600, color: 'var(--cru-text)' }}>{nodo.extension}</span>
             </div>
             <a
               href={`mailto:${nodo.correo}`}
@@ -187,7 +187,7 @@ const NodoItem: FC<NodoItemProps> = ({ nodo, nivel = 0, filtroBusqueda = '' }) =
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.35rem',
-                color: '#0053AF',
+                color: 'var(--cru-accent-blue)',
                 textDecoration: 'none',
                 fontFamily: "var(--font-telemetry, monospace)",
                 fontWeight: 600
@@ -244,7 +244,7 @@ export const OrganigramaMunicipal: FC<OrganigramaMunicipalProps> = ({ raiz }) =>
           </div>
 
           <div style={{ position: 'relative', width: '280px' }}>
-            <Search size={16} color="#0053AF" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+            <Search size={16} color="var(--cru-accent-blue)" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
             <input
               type="text"
               value={busqueda}
@@ -254,10 +254,10 @@ export const OrganigramaMunicipal: FC<OrganigramaMunicipalProps> = ({ raiz }) =>
               style={{
                 width: '100%',
                 padding: '0.5rem 0.8rem 0.5rem 2rem',
-                background: '#F8FAFC',
-                border: '1px solid #CBD5E1',
+                background: 'var(--cru-surface-muted)',
+                border: '1px solid var(--cru-border-strong)',
                 borderRadius: '8px',
-                color: '#0F172A',
+                color: 'var(--theme-text-primary)',
                 fontSize: '0.8rem',
                 outline: 'none'
               }}

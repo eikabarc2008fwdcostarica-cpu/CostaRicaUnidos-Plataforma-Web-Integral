@@ -9,24 +9,24 @@ import { Link } from 'react-router-dom';
 export default function NewsCard({ color, badge, title, excerpt, path = '/noticias' }) {
   return (
     <div
-      className="news-card-container reveal-on-scroll"
+      className="news-card-container reveal-on-scroll bg-cru-card-bg border-cru-border text-cru-text"
       style={{
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'var(--cru-card-bg)',
         borderRadius: '20px',
         overflow: 'hidden',
-        boxShadow: '0 10px 25px rgba(6, 42, 119, 0.07)',
-        border: '1px solid rgba(6, 42, 119, 0.08)',
+        boxShadow: 'var(--cru-card-shadow, 0 10px 25px rgba(6, 42, 119, 0.07))',
+        border: '1px solid var(--cru-border)',
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.28s ease'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-6px)';
-        e.currentTarget.style.boxShadow = '0 16px 36px rgba(6, 42, 119, 0.13)';
+        e.currentTarget.style.boxShadow = 'var(--cru-card-shadow-hover, 0 16px 36px rgba(6, 42, 119, 0.13))';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = '0 10px 25px rgba(6, 42, 119, 0.07)';
+        e.currentTarget.style.boxShadow = 'var(--cru-card-shadow, 0 10px 25px rgba(6, 42, 119, 0.07))';
       }}
     >
       {/* Cabecera de Color con Pastilla de Categoría */}
@@ -42,8 +42,8 @@ export default function NewsCard({ color, badge, title, excerpt, path = '/notici
       >
         <span
           style={{
-            backgroundColor: '#FFFFFF',
-            color: 'var(--ink, #131313)',
+            backgroundColor: 'var(--cru-surface)',
+            color: 'var(--cru-text)',
             padding: '0.3rem 0.85rem',
             borderRadius: '999px',
             fontSize: '0.74rem',
@@ -72,7 +72,7 @@ export default function NewsCard({ color, badge, title, excerpt, path = '/notici
             style={{
               fontSize: '1.12rem',
               fontWeight: 800,
-              color: 'var(--navy, #062A77)',
+              color: 'var(--cru-text)',
               margin: '0 0 0.65rem',
               lineHeight: 1.35
             }}
@@ -82,7 +82,7 @@ export default function NewsCard({ color, badge, title, excerpt, path = '/notici
           <p
             style={{
               fontSize: '0.88rem',
-              color: '#64748B',
+              color: 'var(--cru-text-soft)',
               lineHeight: 1.55,
               margin: '0 0 1.25rem'
             }}
@@ -95,7 +95,7 @@ export default function NewsCard({ color, badge, title, excerpt, path = '/notici
           to={path}
           style={{
             textDecoration: 'none',
-            color: 'var(--red, #C22727)',
+            color: 'var(--cru-accent-red, #C22727)',
             fontSize: '0.88rem',
             fontWeight: 800,
             display: 'inline-flex',

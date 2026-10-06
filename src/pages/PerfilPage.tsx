@@ -177,8 +177,8 @@ export default function PerfilPage() {
             marginBottom: '2rem',
             padding: '1rem 1.25rem',
             borderRadius: '16px',
-            backgroundColor: '#EFF6FF',
-            border: '1px solid #BFDBFE',
+            backgroundColor: 'var(--cru-accent-blue-bg)',
+            border: '1px solid var(--cru-accent-blue-border)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -192,21 +192,21 @@ export default function PerfilPage() {
                 width: '40px',
                 height: '40px',
                 borderRadius: '10px',
-                backgroundColor: '#DBEAFE',
+                backgroundColor: 'var(--cru-accent-sky-bg)',
                 border: '1px solid #93C5FD',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#0053AF'
+                color: 'var(--cru-accent-blue)'
               }}
             >
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#062A77' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--cru-text)' }}>
                 Protección de Datos Garantizada · Ley N° 8968
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#334155' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-soft)' }}>
                 {esMiPerfil
                   ? 'Usted se encuentra en su expediente privado protegido. Solo usted puede ver sus datos fiscales y cédula.'
                   : 'Vista de perfil público sanitizada. Cédula y datos sensibles protegidos.'}
@@ -214,7 +214,7 @@ export default function PerfilPage() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#475569', fontWeight: 500 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 500 }}>
             <Lock className="w-3.5 h-3.5 text-emerald-600" />
             <span>Encriptación TLS 1.3 · Ministerio de Hacienda</span>
           </div>
@@ -228,9 +228,9 @@ export default function PerfilPage() {
             {/* 1. Tarjeta Principal de Identidad Cívica */}
             <div
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--cru-surface-card)',
                 borderRadius: '24px',
-                border: '1px solid #E2E8F0',
+                border: '1px solid var(--cru-border)',
                 borderTop: '4px solid #0053AF',
                 padding: '2rem',
                 boxShadow: '0 4px 16px rgba(6, 42, 119, 0.06)'
@@ -243,14 +243,14 @@ export default function PerfilPage() {
                       width: '72px',
                       height: '72px',
                       borderRadius: '50%',
-                      backgroundColor: '#EFF6FF',
+                      backgroundColor: 'var(--cru-accent-blue-bg)',
                       border: '2px solid #BFDBFE',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '1.75rem',
                       fontWeight: 800,
-                      color: '#0053AF',
+                      color: 'var(--cru-accent-blue)',
                       boxShadow: '0 2px 10px rgba(0, 83, 175, 0.15)'
                     }}
                   >
@@ -259,15 +259,15 @@ export default function PerfilPage() {
 
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      <h1 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 800, color: '#062A77' }}>
+                      <h1 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 800, color: 'var(--cru-text)' }}>
                         {nombreTitular}
                       </h1>
                       <span
                         style={{
                           fontSize: '0.72rem',
                           fontWeight: 700,
-                          backgroundColor: '#ECFDF5',
-                          border: '1px solid #A7F3D0',
+                          backgroundColor: 'var(--cru-accent-green-bg)',
+                          border: '1px solid var(--cru-accent-green-border)',
                           color: '#065F46',
                           padding: '3px 10px',
                           borderRadius: '12px',
@@ -281,10 +281,10 @@ export default function PerfilPage() {
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.4rem', fontSize: '0.82rem', color: '#64748B' }}>
-                      <span>Rol: <strong style={{ color: '#0F172A' }}>{rolActual}</strong></span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.4rem', fontSize: '0.82rem', color: 'var(--cru-text-muted)' }}>
+                      <span>Rol: <strong style={{ color: 'var(--theme-text-primary)' }}>{rolActual}</strong></span>
                       <span>•</span>
-                      <span>Nombre Público: <strong style={{ color: '#0053AF' }}>{nombrePublico}</strong></span>
+                      <span>Nombre Público: <strong style={{ color: 'var(--cru-accent-blue)' }}>{nombrePublico}</strong></span>
                     </div>
                   </div>
                 </div>
@@ -297,9 +297,9 @@ export default function PerfilPage() {
                     gap: '0.5rem',
                     padding: '0.6rem 1.2rem',
                     borderRadius: '10px',
-                    backgroundColor: '#EFF6FF',
-                    border: '1px solid #BFDBFE',
-                    color: '#0053AF',
+                    backgroundColor: 'var(--cru-accent-blue-bg)',
+                    border: '1px solid var(--cru-accent-blue-border)',
+                    color: 'var(--cru-accent-blue)',
                     textDecoration: 'none',
                     fontSize: '0.82rem',
                     fontWeight: 700,
@@ -317,48 +317,48 @@ export default function PerfilPage() {
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
                   gap: '1rem',
-                  backgroundColor: '#F8FAFC',
+                  backgroundColor: 'var(--cru-surface-muted)',
                   padding: '1.25rem',
                   borderRadius: '16px',
-                  border: '1px solid #E2E8F0'
+                  border: '1px solid var(--cru-border)'
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
                     <Lock className="w-3 h-3 text-amber-600" />
                     <span>Cédula de Identidad Oficial</span>
                   </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0F172A', fontFamily: 'monospace' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--theme-text-primary)', fontFamily: 'monospace' }}>
                     {formatearCedulaOficial(cedulaOficial)}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
                     <Mail className="w-3 h-3 text-sky-600" />
                     <span>Correo Electrónico Personal</span>
                   </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0F172A' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--theme-text-primary)' }}>
                     {correoPersonal}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
                     <MapPin className="w-3 h-3 text-emerald-600" />
                     <span>Cantón y Provincia</span>
                   </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0F172A' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--theme-text-primary)' }}>
                     {cantonTitular}, {provinciaTitular}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
                     <Calendar className="w-3 h-3 text-indigo-600" />
                     <span>Fecha de Registro</span>
                   </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0F172A' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--theme-text-primary)' }}>
                     {new Date(fechaRegistro).toLocaleDateString('es-CR', { year: 'numeric', month: 'short', day: 'numeric' })}
                   </div>
                 </div>
@@ -368,10 +368,10 @@ export default function PerfilPage() {
             {/* 2. SECCIÓN: SOLICITAR CUENTA DE EMPRENDEDOR / COMERCIO LOCAL */}
             <div
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--cru-surface-card)',
                 borderRadius: '24px',
-                border: '1px solid #E2E8F0',
-                borderTop: '4px solid #C22727',
+                border: '1px solid var(--cru-border)',
+                borderTop: '4px solid var(--cru-accent-red)',
                 padding: '2rem',
                 boxShadow: '0 4px 16px rgba(6, 42, 119, 0.06)'
               }}
@@ -382,21 +382,21 @@ export default function PerfilPage() {
                     width: '42px',
                     height: '42px',
                     borderRadius: '12px',
-                    backgroundColor: '#FEF2F2',
-                    border: '1px solid #FECACA',
+                    backgroundColor: 'var(--cru-accent-red-bg)',
+                    border: '1px solid var(--cru-accent-red-border)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#C22727'
+                    color: 'var(--cru-accent-red)'
                   }}
                 >
                   <Store className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: '#062A77' }}>
+                  <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: 'var(--cru-text)' }}>
                     Solicitar Cuenta de Emprendedor / Comercio Local
                   </h2>
-                  <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: '#475569' }}>
+                  <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: 'var(--cru-text-muted)' }}>
                     Trámite formal regulado para elevar su rol cívico y publicar comercios y ofertas en el directorio cantonal.
                   </p>
                 </div>
@@ -411,16 +411,16 @@ export default function PerfilPage() {
                     borderRadius: '16px',
                     backgroundColor:
                       solicitudExistente.estado?.toLowerCase() === 'aprobado'
-                        ? '#ECFDF5'
+                        ? 'var(--cru-accent-green-bg)'
                         : solicitudExistente.estado?.toLowerCase() === 'rechazado'
                         ? '#FEF2F2'
-                        : '#FFFBEB',
+                        : 'var(--cru-accent-amber-bg)',
                     border: `1px solid ${
                       solicitudExistente.estado?.toLowerCase() === 'aprobado'
-                        ? '#A7F3D0'
+                        ? 'var(--cru-accent-green-border)'
                         : solicitudExistente.estado?.toLowerCase() === 'rechazado'
                         ? '#FECACA'
-                        : '#FDE68A'
+                        : 'var(--cru-accent-amber-border)'
                     }`
                   }}
                 >
@@ -431,7 +431,7 @@ export default function PerfilPage() {
                       ) : (
                         <Clock className="w-5 h-5 text-amber-600" />
                       )}
-                      <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0F172A' }}>
+                      <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--theme-text-primary)' }}>
                         Estado de Solicitud:{' '}
                         <strong
                           style={{
@@ -449,27 +449,27 @@ export default function PerfilPage() {
                       </span>
                     </div>
 
-                    <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>
                       Radicado: {new Date(solicitudExistente.fechaSolicitud).toLocaleDateString('es-CR')}
                     </span>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.85rem', fontSize: '0.82rem' }}>
                     <div>
-                      <span style={{ color: '#64748B' }}>Emprendimiento:</span>{' '}
-                      <strong style={{ color: '#0F172A' }}>{solicitudExistente.nombreEmprendimiento}</strong>
+                      <span style={{ color: 'var(--cru-text-muted)' }}>Emprendimiento:</span>{' '}
+                      <strong style={{ color: 'var(--theme-text-primary)' }}>{solicitudExistente.nombreEmprendimiento}</strong>
                     </div>
                     <div>
-                      <span style={{ color: '#64748B' }}>Correo Comercial:</span>{' '}
-                      <strong style={{ color: '#0053AF' }}>{solicitudExistente.correoComercial}</strong>
+                      <span style={{ color: 'var(--cru-text-muted)' }}>Correo Comercial:</span>{' '}
+                      <strong style={{ color: 'var(--cru-accent-blue)' }}>{solicitudExistente.correoComercial}</strong>
                     </div>
                     <div>
-                      <span style={{ color: '#64748B' }}>Categoría:</span>{' '}
-                      <strong style={{ color: '#0F172A' }}>{solicitudExistente.categoriaComercial}</strong>
+                      <span style={{ color: 'var(--cru-text-muted)' }}>Categoría:</span>{' '}
+                      <strong style={{ color: 'var(--theme-text-primary)' }}>{solicitudExistente.categoriaComercial}</strong>
                     </div>
                     <div>
-                      <span style={{ color: '#64748B' }}>Cantón:</span>{' '}
-                      <strong style={{ color: '#0F172A' }}>{solicitudExistente.canton}</strong>
+                      <span style={{ color: 'var(--cru-text-muted)' }}>Cantón:</span>{' '}
+                      <strong style={{ color: 'var(--theme-text-primary)' }}>{solicitudExistente.canton}</strong>
                     </div>
                   </div>
 
@@ -479,8 +479,8 @@ export default function PerfilPage() {
                         marginTop: '1rem',
                         padding: '0.85rem 1rem',
                         borderRadius: '10px',
-                        backgroundColor: '#FFFFFF',
-                        border: '1px solid #A7F3D0',
+                        backgroundColor: 'var(--cru-surface-card)',
+                        border: '1px solid var(--cru-accent-green-border)',
                         fontSize: '0.82rem',
                         color: '#065F46',
                         display: 'flex',
@@ -501,8 +501,8 @@ export default function PerfilPage() {
                         marginTop: '1rem',
                         padding: '0.75rem 1rem',
                         borderRadius: '10px',
-                        backgroundColor: '#FFFFFF',
-                        border: '1px solid #FDE68A',
+                        backgroundColor: 'var(--cru-surface-card)',
+                        border: '1px solid var(--cru-accent-amber-border)',
                         fontSize: '0.78rem',
                         color: '#92400E',
                         display: 'flex',
@@ -525,16 +525,16 @@ export default function PerfilPage() {
                     style={{
                       padding: '1rem',
                       borderRadius: '12px',
-                      backgroundColor: '#EFF6FF',
-                      border: '1px solid #BFDBFE',
+                      backgroundColor: 'var(--cru-accent-blue-bg)',
+                      border: '1px solid var(--cru-accent-blue-border)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.75rem'
                     }}
                   >
                     <Lock className="w-5 h-5 text-amber-600 shrink-0" />
-                    <div style={{ fontSize: '0.78rem', color: '#334155' }}>
-                      <strong style={{ color: '#062A77', display: 'block', marginBottom: '0.2rem' }}>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--cru-text-soft)' }}>
+                      <strong style={{ color: 'var(--cru-text)', display: 'block', marginBottom: '0.2rem' }}>
                         Regla Inmutable de Cédula de Identidad (Identidad Civil & Fiscal)
                       </strong>
                       El número de cédula está bloqueado en solo lectura. Bajo ninguna circunstancia se permite transferir o cambiar la cédula asignada, ya que vincula legalmente la personería física ante el Ministerio de Hacienda y el TSE.
@@ -544,7 +544,7 @@ export default function PerfilPage() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
                     {/* Campo 1: Cédula (Solo Lectura) */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.35rem' }}>
                         Cédula de Identidad (Bloqueada)
                       </label>
                       <div style={{ position: 'relative' }}>
@@ -557,9 +557,9 @@ export default function PerfilPage() {
                             width: '100%',
                             padding: '0.75rem 1rem 0.75rem 2.2rem',
                             borderRadius: '10px',
-                            backgroundColor: '#F1F5F9',
-                            border: '1px solid #CBD5E1',
-                            color: '#475569',
+                            backgroundColor: 'var(--cru-surface-muted)',
+                            border: '1px solid var(--cru-border-strong)',
+                            color: 'var(--cru-text-muted)',
                             fontSize: '0.9rem',
                             fontFamily: 'monospace',
                             cursor: 'not-allowed',
@@ -572,8 +572,8 @@ export default function PerfilPage() {
 
                     {/* Campo 2: Nuevo Correo Comercial */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
-                        Nuevo Correo Electrónico Comercial <span style={{ color: '#C22727' }}>*</span>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.35rem' }}>
+                        Nuevo Correo Electrónico Comercial <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                       </label>
                       <input
                         type="email"
@@ -585,9 +585,9 @@ export default function PerfilPage() {
                           width: '100%',
                           padding: '0.75rem 1rem',
                           borderRadius: '10px',
-                          backgroundColor: '#FFFFFF',
-                          border: '1px solid #CBD5E1',
-                          color: '#0F172A',
+                          backgroundColor: 'var(--cru-surface-card)',
+                          border: '1px solid var(--cru-border-strong)',
+                          color: 'var(--theme-text-primary)',
                           fontSize: '0.9rem',
                           outline: 'none',
                           boxSizing: 'border-box'
@@ -597,8 +597,8 @@ export default function PerfilPage() {
 
                     {/* Campo 3: Nombre del Emprendimiento */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
-                        Nombre del Emprendimiento / Comercio <span style={{ color: '#C22727' }}>*</span>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.35rem' }}>
+                        Nombre del Emprendimiento / Comercio <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                       </label>
                       <input
                         type="text"
@@ -610,9 +610,9 @@ export default function PerfilPage() {
                           width: '100%',
                           padding: '0.75rem 1rem',
                           borderRadius: '10px',
-                          backgroundColor: '#FFFFFF',
-                          border: '1px solid #CBD5E1',
-                          color: '#0F172A',
+                          backgroundColor: 'var(--cru-surface-card)',
+                          border: '1px solid var(--cru-border-strong)',
+                          color: 'var(--theme-text-primary)',
                           fontSize: '0.9rem',
                           outline: 'none',
                           boxSizing: 'border-box'
@@ -622,8 +622,8 @@ export default function PerfilPage() {
 
                     {/* Campo 4: Categoría Comercial */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
-                        Categoría Comercial <span style={{ color: '#C22727' }}>*</span>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.35rem' }}>
+                        Categoría Comercial <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                       </label>
                       <select
                         value={categoriaComercial}
@@ -632,9 +632,9 @@ export default function PerfilPage() {
                           width: '100%',
                           padding: '0.75rem 1rem',
                           borderRadius: '10px',
-                          backgroundColor: '#FFFFFF',
-                          border: '1px solid #CBD5E1',
-                          color: '#0F172A',
+                          backgroundColor: 'var(--cru-surface-card)',
+                          border: '1px solid var(--cru-border-strong)',
+                          color: 'var(--theme-text-primary)',
                           fontSize: '0.9rem',
                           outline: 'none',
                           boxSizing: 'border-box'
@@ -651,8 +651,8 @@ export default function PerfilPage() {
 
                     {/* Campo 5: Cantón */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
-                        Cantón donde opera <span style={{ color: '#C22727' }}>*</span>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.35rem' }}>
+                        Cantón donde opera <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                       </label>
                       <select
                         value={cantonComercial}
@@ -661,9 +661,9 @@ export default function PerfilPage() {
                           width: '100%',
                           padding: '0.75rem 1rem',
                           borderRadius: '10px',
-                          backgroundColor: '#FFFFFF',
-                          border: '1px solid #CBD5E1',
-                          color: '#0F172A',
+                          backgroundColor: 'var(--cru-surface-card)',
+                          border: '1px solid var(--cru-border-strong)',
+                          color: 'var(--theme-text-primary)',
                           fontSize: '0.9rem',
                           outline: 'none',
                           boxSizing: 'border-box'
@@ -680,8 +680,8 @@ export default function PerfilPage() {
 
                   {/* Campo 6: Justificación / Descripción */}
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
-                      Justificación y Descripción de la Actividad Económica <span style={{ color: '#C22727' }}>*</span>
+                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.35rem' }}>
+                      Justificación y Descripción de la Actividad Económica <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                     </label>
                     <textarea
                       required
@@ -693,9 +693,9 @@ export default function PerfilPage() {
                         width: '100%',
                         padding: '0.75rem 1rem',
                         borderRadius: '10px',
-                        backgroundColor: '#FFFFFF',
-                        border: '1px solid #CBD5E1',
-                        color: '#0F172A',
+                        backgroundColor: 'var(--cru-surface-card)',
+                        border: '1px solid var(--cru-border-strong)',
+                        color: 'var(--theme-text-primary)',
                         fontSize: '0.9rem',
                         outline: 'none',
                         resize: 'vertical',
@@ -712,7 +712,7 @@ export default function PerfilPage() {
                   )}
 
                   {mensajeExito && (
-                    <div style={{ color: '#059669', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
+                    <div style={{ color: 'var(--cru-accent-green)', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
                       <CheckCircle2 className="w-4 h-4" />
                       <span>{mensajeExito}</span>
                     </div>
@@ -736,7 +736,7 @@ export default function PerfilPage() {
                       cursor: enviando ? 'not-allowed' : 'pointer',
                       boxShadow: '0 4px 14px rgba(194, 39, 39, 0.25)',
                       opacity: enviando ? 0.7 : 1,
-                      transition: 'all 0.2s ease'
+                      transition: 'var(--transition-smooth)'
                     }}
                   >
                     <Send className="w-4 h-4" />
@@ -752,9 +752,9 @@ export default function PerfilPage() {
              ==================================================================== */
           <div
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--cru-surface-card)',
               borderRadius: '24px',
-              border: '1px solid #E2E8F0',
+              border: '1px solid var(--cru-border)',
               borderTop: '4px solid #0053AF',
               padding: '2.5rem',
               boxShadow: '0 4px 16px rgba(6, 42, 119, 0.06)',
@@ -769,21 +769,21 @@ export default function PerfilPage() {
                   width: '72px',
                   height: '72px',
                   borderRadius: '50%',
-                  backgroundColor: '#EFF6FF',
+                  backgroundColor: 'var(--cru-accent-blue-bg)',
                   border: '2px solid #BFDBFE',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '1.8rem',
                   fontWeight: 800,
-                  color: '#0053AF'
+                  color: 'var(--cru-accent-blue)'
                 }}
               >
                 {nombrePublico.charAt(0)}
               </div>
 
               <div>
-                <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#062A77' }}>
+                <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: 'var(--cru-text)' }}>
                   {nombrePublico}
                 </h1>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.35rem' }}>
@@ -791,8 +791,8 @@ export default function PerfilPage() {
                     style={{
                       fontSize: '0.72rem',
                       fontWeight: 700,
-                      backgroundColor: '#ECFDF5',
-                      border: '1px solid #A7F3D0',
+                      backgroundColor: 'var(--cru-accent-green-bg)',
+                      border: '1px solid var(--cru-accent-green-border)',
                       color: '#065F46',
                       padding: '2px 8px',
                       borderRadius: '12px',
@@ -804,7 +804,7 @@ export default function PerfilPage() {
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                     Ciudadano Verificado
                   </span>
-                  <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 500 }}>{cantonTitular}, {provinciaTitular}</span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)', fontWeight: 500 }}>{cantonTitular}, {provinciaTitular}</span>
                 </div>
               </div>
             </div>
@@ -814,22 +814,22 @@ export default function PerfilPage() {
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: '1rem',
-                backgroundColor: '#F8FAFC',
+                backgroundColor: 'var(--cru-surface-muted)',
                 padding: '1.25rem',
                 borderRadius: '16px',
-                border: '1px solid #E2E8F0'
+                border: '1px solid var(--cru-border)'
               }}
             >
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '0.25rem', fontWeight: 600 }}>Fecha de Registro</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0F172A' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>Fecha de Registro</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--theme-text-primary)' }}>
                   {new Date(fechaRegistro).toLocaleDateString('es-CR', { month: 'long', year: 'numeric' })}
                 </div>
               </div>
 
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '0.25rem', fontWeight: 600 }}>Participación Cívica</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0053AF' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>Participación Cívica</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--cru-accent-blue)' }}>
                   Aportes Comunitarios Activos
                 </div>
               </div>
@@ -839,16 +839,16 @@ export default function PerfilPage() {
               style={{
                 padding: '1rem 1.25rem',
                 borderRadius: '14px',
-                backgroundColor: '#EFF6FF',
-                border: '1px solid #BFDBFE',
+                backgroundColor: 'var(--cru-accent-blue-bg)',
+                border: '1px solid var(--cru-accent-blue-border)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.75rem'
               }}
             >
               <Lock className="w-4 h-4 text-sky-600 shrink-0" />
-              <span style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.45 }}>
-                <strong style={{ color: '#062A77' }}>Privacidad de Datos Personales (Ley N° 8968):</strong> La cédula de identidad, el correo electrónico y la información tributaria de este ciudadano se encuentran estrictamente ocultos para terceros y protegidos por la ley.
+              <span style={{ fontSize: '0.78rem', color: 'var(--cru-text-soft)', lineHeight: 1.45 }}>
+                <strong style={{ color: 'var(--cru-text)' }}>Privacidad de Datos Personales (Ley N° 8968):</strong> La cédula de identidad, el correo electrónico y la información tributaria de este ciudadano se encuentran estrictamente ocultos para terceros y protegidos por la ley.
               </span>
             </div>
           </div>

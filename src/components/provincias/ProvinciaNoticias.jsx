@@ -21,6 +21,8 @@ import {
 } from 'lucide-react';
 import { obtenerNoticias, esEditorMunicipal } from '../../services/noticiasService';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { getProvincialTextColor } from '../../data/costaRicaTerritorialData';
 import NoticiaDetalleModal from '../noticias/NoticiaDetalleModal';
 import NoticiaFormModal from '../noticias/NoticiaFormModal';
 
@@ -31,6 +33,8 @@ import NoticiaFormModal from '../noticias/NoticiaFormModal';
  */
 export default function ProvinciaNoticias({ provincia }) {
   const { user } = useAuth();
+  const { theme, isDark } = useTheme();
+  const isLight = theme === 'light' && !isDark;
   const tienePermisoEditor = esEditorMunicipal(user);
 
   const [categoriaFiltro, setCategoriaFiltro] = useState('TODAS');
@@ -117,7 +121,7 @@ export default function ProvinciaNoticias({ provincia }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid var(--cru-border)',
           paddingBottom: '1.25rem'
         }}
       >
@@ -127,12 +131,12 @@ export default function ProvinciaNoticias({ provincia }) {
               width: '42px',
               height: '42px',
               borderRadius: '10px',
-              backgroundColor: 'rgba(56, 189, 248, 0.15)',
-              border: '1px solid rgba(56, 189, 248, 0.35)',
+              backgroundColor: 'var(--cru-accent-sky-bg)',
+              border: '1px solid var(--cru-accent-sky-border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#38BDF8'
+              color: 'var(--cru-accent-sky)'
             }}
           >
             <Newspaper size={22} />
@@ -145,7 +149,7 @@ export default function ProvinciaNoticias({ provincia }) {
                   fontWeight: 800,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  color: '#38BDF8',
+                  color: 'var(--cru-accent-sky)',
                   fontFamily: 'monospace'
                 }}
               >
@@ -159,16 +163,16 @@ export default function ProvinciaNoticias({ provincia }) {
                   fontSize: '0.68rem',
                   padding: '2px 6px',
                   borderRadius: '999px',
-                  backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                  color: '#34D399',
-                  border: '1px solid rgba(16, 185, 129, 0.3)'
+                  backgroundColor: 'var(--cru-accent-green-bg)',
+                  color: 'var(--cru-accent-green)',
+                  border: '1px solid var(--cru-accent-green-border)'
                 }}
               >
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--cru-accent-green)' }} />
                 db.json Conectado
               </span>
             </div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: '2px 0 0 0' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--cru-text)', margin: '2px 0 0 0' }}>
               Noticias y Boletines Comunales — {provincia.nombre}
             </h3>
           </div>
@@ -183,8 +187,8 @@ export default function ProvinciaNoticias({ provincia }) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
-                backgroundColor: '#38BDF8',
-                color: '#00040D',
+                backgroundColor: 'var(--cru-accent-sky)',
+                color: '#FFFFFF',
                 fontWeight: 700,
                 fontSize: '0.78rem',
                 padding: '0.5rem 0.9rem',
@@ -206,7 +210,7 @@ export default function ProvinciaNoticias({ provincia }) {
                 left: '12px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                color: '#94A3B8'
+                color: 'var(--cru-text-muted)'
               }}
             />
             <input
@@ -216,11 +220,11 @@ export default function ProvinciaNoticias({ provincia }) {
               onChange={(e) => setBusqueda(e.target.value)}
               style={{
                 width: '100%',
-                backgroundColor: 'rgba(0, 10, 28, 0.65)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                backgroundColor: 'var(--theme-input-bg)',
+                border: '1px solid var(--theme-input-border)',
                 borderRadius: '8px',
                 padding: '0.45rem 0.85rem 0.45rem 2.2rem',
-                color: '#FFFFFF',
+                color: 'var(--theme-input-text)',
                 fontSize: '0.82rem',
                 outline: 'none',
                 boxSizing: 'border-box'
@@ -232,7 +236,7 @@ export default function ProvinciaNoticias({ provincia }) {
 
       {/* Píldoras de Filtro por Categoría */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <span style={{ fontSize: '0.74rem', color: '#94A3B8', fontWeight: 600, marginRight: '0.25rem' }}>
+        <span style={{ fontSize: '0.74rem', color: 'var(--cru-text-soft)', fontWeight: 600, marginRight: '0.25rem' }}>
           Filtrar por:
         </span>
         {categorias.map((cat) => (
@@ -249,13 +253,13 @@ export default function ProvinciaNoticias({ provincia }) {
               transition: 'all 0.15s ease',
               border:
                 categoriaFiltro === cat.id
-                  ? `1px solid ${provincia.colorAcento || '#38BDF8'}`
-                  : '1px solid rgba(255, 255, 255, 0.1)',
+                  ? '1px solid var(--cru-tab-active-border)'
+                  : '1px solid var(--cru-chip-border)',
               backgroundColor:
                 categoriaFiltro === cat.id
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : 'rgba(255, 255, 255, 0.03)',
-              color: categoriaFiltro === cat.id ? '#FFFFFF' : '#94A3B8'
+                  ? 'var(--cru-tab-active-bg)'
+                  : 'var(--cru-chip-bg)',
+              color: categoriaFiltro === cat.id ? 'var(--cru-text)' : 'var(--cru-chip-text)'
             }}
           >
             {cat.label}
@@ -280,8 +284,8 @@ export default function ProvinciaNoticias({ provincia }) {
               key={noticia.id}
               onClick={() => handleAbrirDetalle(noticia)}
               style={{
-                backgroundColor: 'rgba(0, 10, 28, 0.55)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                backgroundColor: 'var(--cru-card-bg)',
+                border: '1px solid var(--cru-border)',
                 borderRadius: '14px',
                 padding: '1.35rem',
                 display: 'flex',
@@ -290,14 +294,17 @@ export default function ProvinciaNoticias({ provincia }) {
                 gap: '1rem',
                 transition: 'transform 0.2s ease, border-color 0.2s ease',
                 position: 'relative',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                boxShadow: 'var(--cru-card-shadow, 0 4px 14px rgba(0,0,0,0.05))'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                e.currentTarget.style.borderColor = 'var(--cru-border-hover)';
+                e.currentTarget.style.backgroundColor = 'var(--cru-surface-hover)';
                 e.currentTarget.style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.borderColor = 'var(--cru-border)';
+                e.currentTarget.style.backgroundColor = 'var(--cru-card-bg)';
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
@@ -319,11 +326,11 @@ export default function ProvinciaNoticias({ provincia }) {
                       fontWeight: 800,
                       letterSpacing: '0.06em',
                       textTransform: 'uppercase',
-                      color: '#38BDF8',
-                      backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                      color: 'var(--cru-accent-sky)',
+                      backgroundColor: 'var(--cru-accent-sky-bg)',
                       padding: '2px 8px',
                       borderRadius: '6px',
-                      border: '1px solid rgba(56, 189, 248, 0.3)'
+                      border: '1px solid var(--cru-accent-sky-border)'
                     }}
                   >
                     {noticia.categoria || 'Comunicado'}
@@ -335,7 +342,7 @@ export default function ProvinciaNoticias({ provincia }) {
                       alignItems: 'center',
                       gap: '0.35rem',
                       fontSize: '0.7rem',
-                      color: '#94A3B8'
+                      color: 'var(--cru-text-muted)'
                     }}
                   >
                     <Building2 size={12} />
@@ -349,7 +356,7 @@ export default function ProvinciaNoticias({ provincia }) {
                     fontSize: '0.98rem',
                     fontWeight: 700,
                     lineHeight: 1.4,
-                    color: '#FFFFFF',
+                    color: 'var(--cru-text)',
                     margin: '0 0 0.6rem 0'
                   }}
                 >
@@ -361,7 +368,7 @@ export default function ProvinciaNoticias({ provincia }) {
                   style={{
                     fontSize: '0.82rem',
                     lineHeight: 1.55,
-                    color: '#94A3B8',
+                    color: 'var(--cru-text-soft)',
                     margin: 0,
                     display: '-webkit-box',
                     WebkitLineClamp: 3,
@@ -380,16 +387,16 @@ export default function ProvinciaNoticias({ provincia }) {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   paddingTop: '0.85rem',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                  borderTop: '1px solid var(--cru-border)',
                   fontSize: '0.72rem',
-                  color: '#64748B'
+                  color: 'var(--cru-text-muted)'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#34D399' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: 'var(--cru-accent-green)' }}>
                     <ThumbsUp size={11} /> {reacciones.apoyo || 0}
                   </span>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#94A3B8' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: 'var(--cru-text-muted)' }}>
                     <MessageSquare size={11} /> {comentariosCount}
                   </span>
                 </div>
@@ -399,7 +406,7 @@ export default function ProvinciaNoticias({ provincia }) {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '4px',
-                    color: '#38BDF8',
+                    color: 'var(--cru-accent-sky)',
                     fontWeight: 700
                   }}
                 >
@@ -414,8 +421,8 @@ export default function ProvinciaNoticias({ provincia }) {
       {/* Acceso directo al Portal Completo de Noticias */}
       <div
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.02)',
-          border: '1px dashed rgba(255, 255, 255, 0.12)',
+          backgroundColor: 'var(--cru-surface-muted)',
+          border: '1px dashed var(--cru-border)',
           borderRadius: '12px',
           padding: '1.25rem',
           display: 'flex',
@@ -431,11 +438,11 @@ export default function ProvinciaNoticias({ provincia }) {
               width: '10px',
               height: '10px',
               borderRadius: '50%',
-              backgroundColor: '#38BDF8',
-              boxShadow: '0 0 8px #38BDF8'
+              backgroundColor: 'var(--cru-accent-sky)',
+              boxShadow: '0 0 8px var(--cru-accent-sky)'
             }}
           />
-          <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-soft)' }}>
             Portal Nacional M01: Cobertura oficial de los <strong>{provincia.cantonesCount} cantones</strong> de {provincia.nombre}.
           </span>
         </div>
@@ -448,9 +455,9 @@ export default function ProvinciaNoticias({ provincia }) {
             gap: '6px',
             fontSize: '0.8rem',
             fontWeight: 700,
-            color: '#FFFFFF',
-            backgroundColor: 'rgba(56, 189, 248, 0.15)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
+            color: 'var(--cru-accent-sky)',
+            backgroundColor: 'var(--cru-accent-sky-bg)',
+            border: '1px solid var(--cru-accent-sky-border)',
             padding: '6px 14px',
             borderRadius: '8px',
             textDecoration: 'none',

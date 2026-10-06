@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useAccessibility } from './AccessibilityContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTheme } from '../../context/ThemeContext';
 import {
   getTourStepsForLanguage,
   askGeminiAboutSection,
@@ -46,6 +47,7 @@ export default function SpotlightGuidedTour() {
   } = useAccessibility();
 
   const { langCode, t } = useLanguage();
+  const { isDark } = useTheme?.() || { isDark: true };
 
   // El idioma de la narración se sincroniza con el idioma activo de la plataforma
   const activeLanguage = langCode || selectedLang || 'es-CR';
@@ -387,8 +389,10 @@ export default function SpotlightGuidedTour() {
             width: `${targetRect.width + 16}px`,
             height: `${targetRect.height + 16}px`,
             borderRadius: '16px',
-            border: '3px solid #38BDF8',
-            boxShadow: '0 0 0 9999px rgba(0, 4, 13, 0.76), 0 0 30px rgba(56, 189, 248, 0.6)',
+            border: isDark ? '3px solid #38BDF8' : '3px solid #002B7F',
+            boxShadow: isDark
+              ? '0 0 0 9999px rgba(0, 4, 13, 0.76), 0 0 30px rgba(56, 189, 248, 0.6)'
+              : '0 0 0 9999px rgba(15, 23, 42, 0.50), 0 0 25px rgba(0, 43, 127, 0.35)',
             pointerEvents: 'none',
             transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
             zIndex: 100000
@@ -400,7 +404,7 @@ export default function SpotlightGuidedTour() {
               position: 'absolute',
               inset: '-6px',
               borderRadius: '22px',
-              border: '2px solid rgba(56, 189, 248, 0.4)',
+              border: isDark ? '2px solid rgba(56, 189, 248, 0.4)' : '2px solid rgba(0, 43, 127, 0.4)',
               animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               pointerEvents: 'none'
             }}
@@ -420,11 +424,11 @@ export default function SpotlightGuidedTour() {
               textTransform: 'uppercase',
               padding: '2px 8px',
               borderRadius: '9999px',
-              border: '1px solid rgba(56, 189, 248, 0.6)',
+              border: isDark ? '1px solid rgba(56, 189, 248, 0.6)' : '1px solid #79A6FF',
               display: 'flex',
               alignItems: 'center',
               gap: '4px',
-              boxShadow: '0 2px 10px rgba(0, 4, 13, 0.9)'
+              boxShadow: '0 2px 10px rgba(0, 4, 13, 0.6)'
             }}
           >
             <span
@@ -447,7 +451,7 @@ export default function SpotlightGuidedTour() {
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(0, 4, 13, 0.65)',
+            backgroundColor: isDark ? 'rgba(0, 4, 13, 0.65)' : 'rgba(15, 23, 42, 0.45)',
             pointerEvents: 'none'
           }}
         />
@@ -471,14 +475,16 @@ export default function SpotlightGuidedTour() {
       >
         <div
           style={{
-            backgroundColor: 'rgba(5, 12, 28, 0.94)',
+            backgroundColor: isDark ? 'rgba(5, 12, 28, 0.94)' : 'rgba(255, 255, 255, 0.98)',
             backdropFilter: 'blur(28px)',
             WebkitBackdropFilter: 'blur(28px)',
-            border: '1px solid rgba(56, 189, 248, 0.35)',
+            border: isDark ? '1px solid rgba(56, 189, 248, 0.35)' : '1.5px solid var(--cru-border, #CBD5E1)',
             borderRadius: '24px',
             padding: '1.15rem 1.4rem',
-            boxShadow: '0 20px 60px rgba(0, 4, 13, 0.95), 0 0 35px rgba(0, 20, 137, 0.45)',
-            color: '#FFFFFF'
+            boxShadow: isDark
+              ? '0 20px 60px rgba(0, 4, 13, 0.95), 0 0 35px rgba(0, 20, 137, 0.45)'
+              : '0 20px 50px rgba(0, 43, 127, 0.18), 0 4px 16px rgba(0, 0, 0, 0.08)',
+            color: isDark ? '#FFFFFF' : '#0F172A'
           }}
         >
           {/* Fila 1: Cabecera con Progreso, Título y Salir */}
@@ -513,25 +519,25 @@ export default function SpotlightGuidedTour() {
                     style={{
                       fontSize: '0.7rem',
                       fontWeight: 800,
-                      color: '#38BDF8',
+                      color: isDark ? '#38BDF8' : '#002B7F',
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase'
                     }}
                   >
                     {step.badge}
                   </span>
-                  <span style={{ fontSize: '0.7rem', color: '#64748B' }}>•</span>
+                  <span style={{ fontSize: '0.7rem', color: isDark ? '#64748B' : '#94A3B8' }}>•</span>
                   <span
                     style={{
                       fontSize: '0.7rem',
                       fontWeight: 600,
-                      color: '#94A3B8',
+                      color: isDark ? '#94A3B8' : '#475569',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.25rem'
                     }}
                   >
-                    <MapPin size={11} color="#38BDF8" />
+                    <MapPin size={11} color={isDark ? '#38BDF8' : '#002B7F'} />
                     <span>{activeCanton}</span>
                   </span>
                 </div>
@@ -541,7 +547,7 @@ export default function SpotlightGuidedTour() {
                     fontSize: '1.02rem',
                     fontWeight: 800,
                     letterSpacing: '-0.01em',
-                    color: '#FFFFFF',
+                    color: isDark ? '#FFFFFF' : '#0F172A',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'
@@ -562,9 +568,9 @@ export default function SpotlightGuidedTour() {
                 width: '32px',
                 height: '32px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                color: '#CBD5E1',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #F1F5F9)',
+                border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid var(--cru-border, #CBD5E1)',
+                color: isDark ? '#CBD5E1' : '#475569',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -578,9 +584,9 @@ export default function SpotlightGuidedTour() {
                 e.currentTarget.style.color = '#FFFFFF';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.color = '#CBD5E1';
+                e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #F1F5F9)';
+                e.currentTarget.style.borderColor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'var(--cru-border, #CBD5E1)';
+                e.currentTarget.style.color = isDark ? '#CBD5E1' : '#475569';
               }}
             >
               <X size={16} />
@@ -590,8 +596,8 @@ export default function SpotlightGuidedTour() {
           {/* Fila 2: Subtítulo Dinámico en Tiempo Real (Audiotranscripción Accesible) */}
           <div
             style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.45)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              backgroundColor: isDark ? 'rgba(0, 0, 0, 0.45)' : 'var(--cru-surface-muted, #F1F5F9)',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid var(--cru-border, #CBD5E1)',
               borderRadius: '12px',
               padding: '0.65rem 0.85rem',
               marginBottom: '0.85rem',
@@ -615,7 +621,7 @@ export default function SpotlightGuidedTour() {
                 style={{
                   width: '3px',
                   height: isSpeakingLive && !isPaused ? '14px' : '4px',
-                  backgroundColor: '#38BDF8',
+                  backgroundColor: isDark ? '#38BDF8' : '#002B7F',
                   borderRadius: '2px',
                   transition: 'height 0.2s ease'
                 }}
@@ -624,7 +630,7 @@ export default function SpotlightGuidedTour() {
                 style={{
                   width: '3px',
                   height: isSpeakingLive && !isPaused ? '9px' : '6px',
-                  backgroundColor: '#34D399',
+                  backgroundColor: isDark ? '#34D399' : '#05853B',
                   borderRadius: '2px',
                   transition: 'height 0.2s ease'
                 }}
@@ -633,7 +639,7 @@ export default function SpotlightGuidedTour() {
                 style={{
                   width: '3px',
                   height: isSpeakingLive && !isPaused ? '12px' : '4px',
-                  backgroundColor: '#38BDF8',
+                  backgroundColor: isDark ? '#38BDF8' : '#002B7F',
                   borderRadius: '2px',
                   transition: 'height 0.2s ease'
                 }}
@@ -644,7 +650,7 @@ export default function SpotlightGuidedTour() {
               style={{
                 margin: 0,
                 fontSize: '0.86rem',
-                color: isSpeakingLive ? '#F8FAFC' : '#CBD5E1',
+                color: isDark ? (isSpeakingLive ? '#F8FAFC' : '#CBD5E1') : '#0F172A',
                 lineHeight: 1.45,
                 fontWeight: 500,
                 flex: 1
@@ -658,8 +664,8 @@ export default function SpotlightGuidedTour() {
           {showAiDrawer && (
             <div
               style={{
-                backgroundColor: 'rgba(0, 20, 50, 0.85)',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
+                backgroundColor: isDark ? 'rgba(0, 20, 50, 0.85)' : '#F8FAFC',
+                border: isDark ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid var(--cru-border, #CBD5E1)',
                 borderRadius: '16px',
                 padding: '0.85rem',
                 marginBottom: '0.85rem',
@@ -673,7 +679,7 @@ export default function SpotlightGuidedTour() {
                   gap: '0.45rem',
                   fontSize: '0.78rem',
                   fontWeight: 800,
-                  color: '#38BDF8',
+                  color: isDark ? '#38BDF8' : '#002B7F',
                   marginBottom: '0.5rem',
                   textTransform: 'uppercase'
                 }}
@@ -694,11 +700,11 @@ export default function SpotlightGuidedTour() {
                   disabled={isAiLoading}
                   style={{
                     flex: 1,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    backgroundColor: isDark ? 'rgba(0, 0, 0, 0.5)' : '#FFFFFF',
+                    border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid var(--cru-border, #CBD5E1)',
                     borderRadius: '10px',
                     padding: '0.5rem 0.75rem',
-                    color: '#FFFFFF',
+                    color: isDark ? '#FFFFFF' : '#0F172A',
                     fontSize: '0.82rem',
                     outline: 'none'
                   }}
@@ -709,7 +715,7 @@ export default function SpotlightGuidedTour() {
                   aria-label="Enviar pregunta a la IA"
                   style={{
                     backgroundColor: isAiLoading ? '#475569' : '#002B7F',
-                    border: '1px solid rgba(56, 189, 248, 0.4)',
+                    border: isDark ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid #002B7F',
                     color: '#FFFFFF',
                     borderRadius: '10px',
                     padding: '0.5rem 0.85rem',
@@ -739,15 +745,15 @@ export default function SpotlightGuidedTour() {
                   style={{
                     marginTop: '0.65rem',
                     padding: '0.65rem',
-                    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+                    backgroundColor: isDark ? 'rgba(0, 0, 0, 0.35)' : '#ECFDF5',
                     borderRadius: '10px',
-                    border: '1px solid rgba(52, 211, 153, 0.3)',
+                    border: isDark ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid #A7F3D0',
                     fontSize: '0.82rem',
                     lineHeight: 1.45,
-                    color: '#E2E8F0'
+                    color: isDark ? '#E2E8F0' : '#064E3B'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#34D399', fontWeight: 700, marginBottom: '0.2rem', fontSize: '0.72rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: isDark ? '#34D399' : '#05853B', fontWeight: 700, marginBottom: '0.2rem', fontSize: '0.72rem' }}>
                     <CheckCircle2 size={12} />
                     <span>Respuesta de Gemini:</span>
                   </div>
@@ -778,9 +784,9 @@ export default function SpotlightGuidedTour() {
                 style={{
                   padding: '0.45rem 0.75rem',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.14)',
-                  color: '#FFFFFF',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #F1F5F9)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.14)' : '1px solid var(--cru-border, #CBD5E1)',
+                  color: isDark ? '#FFFFFF' : 'var(--cru-text, #0F172A)',
                   fontSize: '0.78rem',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -789,10 +795,10 @@ export default function SpotlightGuidedTour() {
                   gap: '0.35rem',
                   transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)')}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.15)' : 'var(--cru-surface-alt, #E2E8F0)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #F1F5F9)')}
               >
-                {isPaused ? <Play size={13} color="#34D399" /> : <Pause size={13} color="#38BDF8" />}
+                {isPaused ? <Play size={13} color={isDark ? '#34D399' : '#05853B'} /> : <Pause size={13} color={isDark ? '#38BDF8' : '#002B7F'} />}
                 <span>{isPaused ? 'Reanudar' : 'Pausar'}</span>
               </button>
 
@@ -805,9 +811,9 @@ export default function SpotlightGuidedTour() {
                 style={{
                   padding: '0.45rem 0.75rem',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.14)',
-                  color: '#FFFFFF',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #F1F5F9)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.14)' : '1px solid var(--cru-border, #CBD5E1)',
+                  color: isDark ? '#FFFFFF' : 'var(--cru-text, #0F172A)',
                   fontSize: '0.78rem',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -816,8 +822,8 @@ export default function SpotlightGuidedTour() {
                   gap: '0.35rem',
                   transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)')}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.15)' : 'var(--cru-surface-alt, #E2E8F0)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #F1F5F9)')}
               >
                 <RotateCcw size={13} />
                 <span>Repetir</span>
@@ -835,9 +841,11 @@ export default function SpotlightGuidedTour() {
                 style={{
                   padding: '0.45rem 0.75rem',
                   borderRadius: '10px',
-                  backgroundColor: showAiDrawer ? 'rgba(0, 20, 137, 0.6)' : 'rgba(0, 20, 137, 0.3)',
-                  border: '1px solid rgba(56, 189, 248, 0.45)',
-                  color: '#79A6FF',
+                  backgroundColor: isDark
+                    ? (showAiDrawer ? 'rgba(0, 20, 137, 0.6)' : 'rgba(0, 20, 137, 0.3)')
+                    : (showAiDrawer ? '#002B7F' : 'var(--cru-accent-sky-bg, #E0F2FE)'),
+                  border: isDark ? '1px solid rgba(56, 189, 248, 0.45)' : '1px solid #002B7F',
+                  color: isDark ? '#79A6FF' : (showAiDrawer ? '#FFFFFF' : '#002B7F'),
                   fontSize: '0.78rem',
                   fontWeight: 700,
                   cursor: 'pointer',
@@ -851,8 +859,10 @@ export default function SpotlightGuidedTour() {
                   e.currentTarget.style.color = '#FFFFFF';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = showAiDrawer ? 'rgba(0, 20, 137, 0.6)' : 'rgba(0, 20, 137, 0.3)';
-                  e.currentTarget.style.color = '#79A6FF';
+                  e.currentTarget.style.backgroundColor = isDark
+                    ? (showAiDrawer ? 'rgba(0, 20, 137, 0.6)' : 'rgba(0, 20, 137, 0.3)')
+                    : (showAiDrawer ? '#002B7F' : 'var(--cru-accent-sky-bg, #E0F2FE)');
+                  e.currentTarget.style.color = isDark ? '#79A6FF' : (showAiDrawer ? '#FFFFFF' : '#002B7F');
                 }}
               >
                 <Sparkles size={13} />
@@ -871,9 +881,9 @@ export default function SpotlightGuidedTour() {
                   style={{
                     padding: '0.48rem 0.85rem',
                     borderRadius: '10px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.16)',
-                    color: '#FFFFFF',
+                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #F1F5F9)',
+                    border: isDark ? '1px solid rgba(255, 255, 255, 0.16)' : '1px solid var(--cru-border, #CBD5E1)',
+                    color: isDark ? '#FFFFFF' : 'var(--cru-text, #0F172A)',
                     fontSize: '0.82rem',
                     fontWeight: 700,
                     cursor: 'pointer',
@@ -882,8 +892,8 @@ export default function SpotlightGuidedTour() {
                     gap: '0.35rem',
                     transition: 'all 0.2s ease'
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)')}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.16)' : 'var(--cru-surface-alt, #E2E8F0)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'var(--cru-surface-muted, #F1F5F9)')}
                 >
                   <ArrowLeft size={14} />
                   <span>Anterior</span>

@@ -88,15 +88,15 @@ const SECTORES_FERIA = [
 const obtenerCuadrillaAutomatica = (categoria) => {
   const cat = (categoria || '').toUpperCase();
   if (cat === 'INFRAESTRUCTURA_VIAL_HUECO' || cat === 'VIAL' || cat.includes('HUECO') || cat.includes('ASFALTO') || cat.includes('VIAL')) {
-    return { nombre: 'Cuadrilla 01 · Vías y Asfalto', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' };
+    return { nombre: 'Cuadrilla 01 · Vías y Asfalto', color: 'text-cru-accent-amber bg-cru-accent-amber-bg border-cru-accent-amber-border' };
   }
   if (cat === 'LUMINARIA' || cat === 'LUMINARIA_PUBLICA' || cat.includes('LUMIN') || cat.includes('ALUMBR') || cat.includes('ELECTR')) {
-    return { nombre: 'Cuadrilla 02 · Alumbrado y Red Eléctrica', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20' };
+    return { nombre: 'Cuadrilla 02 · Alumbrado y Red Eléctrica', color: 'text-cru-accent-amber bg-cru-accent-amber-bg border-cru-accent-amber-border' };
   }
   if (cat === 'FUGA_AGUA' || cat === 'FUGA_AGUA_ALCANTARILLA' || cat.includes('AGUA') || cat.includes('ALCANTAR') || cat.includes('PLUVIAL') || cat.includes('FONTANER')) {
-    return { nombre: 'Cuadrilla 03 · Fontanería y Red Pluvial', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' };
+    return { nombre: 'Cuadrilla 03 · Fontanería y Red Pluvial', color: 'text-cru-accent-sky bg-cru-accent-sky-bg border-cru-accent-sky-border' };
   }
-  return { nombre: 'Cuadrilla 04 · Saneamiento y Gestión Ambiental', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' };
+  return { nombre: 'Cuadrilla 04 · Saneamiento y Gestión Ambiental', color: 'text-cru-accent-green bg-cru-accent-green-bg border-cru-accent-green-border' };
 };
 
 // Extractor resiliente de coordenadas geográficas
@@ -1408,7 +1408,7 @@ export default function Dashboard() {
             style={{ pointerEvents: 'auto' }}
             className="flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-[#00040D]/95 text-white border border-white/20 shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-4 duration-200"
           >
-            <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" strokeWidth={2} />
+            <CheckCircle2 className="w-5 h-5 text-cru-accent-green flex-shrink-0" strokeWidth={2} />
             <span className="text-xs font-bold tracking-wide">{toastMessage}</span>
           </div>
         </div>
@@ -1432,17 +1432,17 @@ export default function Dashboard() {
         } ${mobileSidebarOpen ? 'mobile-open' : ''}`}
       >
         {/* Encabezado del Sidebar con botón de alternar colapso */}
-        <div className="flex items-center justify-between p-3.5 border-b border-white/10 shrink-0">
+        <div className="flex items-center justify-between p-3.5 border-b border-cru-border shrink-0">
           {!sidebarColapsado ? (
             <div className="flex items-center gap-2 overflow-hidden">
-              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse shrink-0" />
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-300 truncate admin-sidebar-title-text">
+              <span className="w-2 h-2 rounded-full bg-cru-accent-sky animate-pulse shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-wider text-cru-text-soft truncate admin-sidebar-title-text">
                 Panel de Mando
               </span>
             </div>
           ) : (
             <div className="w-full flex justify-center py-0.5">
-              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-cru-accent-sky animate-pulse shrink-0" />
             </div>
           )}
 
@@ -1451,7 +1451,7 @@ export default function Dashboard() {
             <button
               type="button"
               onClick={() => setSidebarColapsado(!sidebarColapsado)}
-              className="sidebar-collapse-toggle-btn hidden md:flex p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors items-center justify-center shrink-0"
+              className="sidebar-collapse-toggle-btn hidden md:flex p-1.5 rounded-xl hover:bg-cru-surface-muted text-cru-text-muted hover:text-cru-text transition-colors items-center justify-center shrink-0"
               title={sidebarColapsado ? "Expandir menú" : "Minimizar menú"}
               aria-label={sidebarColapsado ? "Expandir menú" : "Minimizar menú"}
             >
@@ -1468,7 +1468,7 @@ export default function Dashboard() {
             <button
               type="button"
               onClick={() => setMobileSidebarOpen(false)}
-              className="md:hidden p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors flex items-center justify-center shrink-0"
+              className="md:hidden p-1.5 rounded-xl hover:bg-cru-surface-muted text-cru-text-muted hover:text-cru-text transition-colors flex items-center justify-center shrink-0"
               title="Cerrar menú"
               aria-label="Cerrar menú"
             >
@@ -1517,14 +1517,14 @@ export default function Dashboard() {
                 title={sidebarColapsado ? mod.label : undefined}
                 className={`nav-item-btn w-full py-2.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center border ${
                   isActive
-                    ? 'bg-sky-500/15 border-sky-400/40 border-l-4 border-l-sky-400 text-white shadow-[0_0_20px_rgba(56,189,248,0.18)]'
-                    : 'border-transparent text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                    ? 'bg-cru-accent-sky-bg border-cru-accent-sky-border border-l-4 border-l-cru-accent-sky text-cru-text shadow-sm'
+                    : 'border-transparent text-cru-text-muted hover:text-cru-text hover:bg-cru-surface-muted'
                 } ${sidebarColapsado ? 'justify-center px-0' : 'px-3 gap-3'}`}
               >
                 <span className="nav-icon-slot flex items-center justify-center shrink-0">
                   <IconoMod
                     className={`w-5 h-5 transition-colors ${
-                      isActive ? 'text-sky-400' : 'text-slate-400'
+                      isActive ? 'text-cru-accent-sky' : 'text-cru-text-muted'
                     }`}
                     strokeWidth={1.75}
                   />
@@ -1543,12 +1543,12 @@ export default function Dashboard() {
             to="/"
             onClick={() => setMobileSidebarOpen(false)}
             title={sidebarColapsado ? "Ir al Portal Público" : undefined}
-            className={`flex items-center rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors ${
+            className={`flex items-center rounded-xl text-xs font-medium text-cru-text-muted hover:text-cru-text hover:bg-cru-surface-muted transition-colors ${
               sidebarColapsado ? 'justify-center px-0 py-2' : 'px-3 py-2 gap-2.5'
             }`}
           >
             <span className="nav-icon-slot flex items-center justify-center shrink-0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" className="text-sky-400">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" className="text-cru-accent-sky">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <polyline points="9 22 9 12 15 12 15 22" />
               </svg>
@@ -1563,7 +1563,7 @@ export default function Dashboard() {
               handleLogout();
             }}
             title={sidebarColapsado ? "Cerrar Sesión" : undefined}
-            className={`nav-logout-btn w-full flex items-center rounded-xl text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors cursor-pointer ${
+            className={`nav-logout-btn w-full flex items-center rounded-xl text-xs font-bold text-cru-accent-red hover:text-cru-accent-red hover:bg-cru-accent-red-bg border border-transparent hover:border-cru-accent-red-border transition-colors cursor-pointer ${
               sidebarColapsado ? 'justify-center px-0 py-2' : 'px-3 py-2 gap-2.5'
             }`}
           >
@@ -1578,7 +1578,7 @@ export default function Dashboard() {
           </button>
 
           {!sidebarColapsado && (
-            <div className="px-3 pt-1 text-[10px] text-slate-500 leading-tight admin-hide-on-collapse">
+            <div className="px-3 pt-1 text-[10px] text-cru-text-muted leading-tight admin-hide-on-collapse">
               Control de acceso RBAC bajo Ley N° 8292.
             </div>
           )}
@@ -1598,17 +1598,17 @@ export default function Dashboard() {
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)'
           }}
-          className="bg-[var(--theme-bg,#00040D)]/95 border-b border-[var(--cru-border,rgba(255,255,255,0.1))] px-6 py-3.5 transition-all shrink-0"
+          className="bg-cru-surface border-b border-cru-border px-6 py-3.5 transition-all shrink-0"
         >
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
             {/* Título institucional y botón hamburguesa móvil */}
             <div className="flex items-center justify-between w-full md:w-auto gap-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[var(--cru-text,#FFFFFF)] font-bold text-sm tracking-wide">
+                <div className="w-2.5 h-2.5 rounded-full bg-cru-accent-green animate-pulse" />
+                <span className="text-cru-text font-bold text-sm tracking-wide">
                   Soberanía Cívica Digital
                 </span>
-                <span className="text-slate-400 text-xs hidden sm:inline">
+                <span className="text-cru-text-muted text-xs hidden sm:inline">
                   | Consola de Mando y Auditoría Territorial · Costa Rica Unidos
                 </span>
               </div>
@@ -1617,7 +1617,7 @@ export default function Dashboard() {
               <button
                 type="button"
                 onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-                className="md:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors flex items-center justify-center shrink-0"
+                className="md:hidden p-2 rounded-xl bg-cru-surface-muted hover:bg-cru-surface text-cru-text-muted hover:text-cru-text border border-cru-border transition-colors flex items-center justify-center shrink-0"
                 title="Abrir menú de navegación"
                 aria-label="Abrir menú de navegación"
               >
@@ -1631,15 +1631,15 @@ export default function Dashboard() {
 
             {/* Badges de Estado (SYS, VERIF, ESTADO, AUDIT) */}
             <div className="flex items-center gap-2 flex-wrap text-xs">
-              <span className="px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
+              <span className="px-2.5 py-1 rounded-lg bg-cru-accent-blue-bg text-cru-accent-blue border border-cru-accent-blue-border font-mono">
                 {(currentUser?.rol === 'SUPER_ADMIN' || currentUser?.rol === 'SUPERADMIN_NACIONAL' || currentUser?.nivelAcceso === 5)
                   ? '[SYS] SUPER-ADMIN'
                   : '[NIVEL 2] JURISDICCIÓN PROVINCIAL | COSTA RICA UNIDOS'}
               </span>
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
+              <span className="px-2.5 py-1 rounded-lg bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border font-mono">
                 [VERIF] Ley 8968
               </span>
-              <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 font-mono">
+              <span className="px-2.5 py-1 rounded-lg bg-cru-accent-amber-bg text-cru-accent-amber border border-cru-accent-amber-border font-mono">
                 [ESTADO] Operativo 100%
               </span>
             </div>
@@ -1655,7 +1655,7 @@ export default function Dashboard() {
             1. CABECERA INSTITUCIONAL DE CONTROL
             Membrete oficial de la República, ficha del administrador y RBAC
             ==================================================================== */}
-        <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-slate-900/90 via-[#000d26]/90 to-slate-900/90 border border-white/10 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
+        <div className="surface-dark rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-slate-900/90 via-[#000d26]/90 to-slate-900/90 border border-white/10 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
           {/* Acento tricolor nacional sutil en el borde superior */}
           <div
             className="absolute top-0 left-0 right-0 h-1"
@@ -1667,13 +1667,13 @@ export default function Dashboard() {
 
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 consola-banner-header">
             <div className="flex items-start gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center flex-shrink-0 text-sky-400 shadow-inner">
+              <div className="w-14 h-14 rounded-2xl bg-cru-accent-sky-bg border border-cru-accent-sky-border flex items-center justify-center flex-shrink-0 text-cru-accent-sky shadow-inner">
                 <Building2 className="w-7 h-7" strokeWidth={1.75} />
               </div>
 
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-sky-400">
-                  <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+                <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-cru-accent-sky">
+                  <span className="w-2 h-2 rounded-full bg-cru-accent-sky animate-pulse" />
                   <span>República de Costa Rica • Poder Ejecutivo y Régimen Municipal</span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
@@ -1688,7 +1688,7 @@ export default function Dashboard() {
             {/* Ficha del Administrador (Limpia, sin botón redundante) */}
             <div className="flex flex-wrap items-center gap-3 bg-white/[0.04] p-3.5 rounded-2xl border border-white/10 admin-user-card w-full lg:w-auto">
               <div className="flex items-start sm:items-center gap-3 w-full">
-                <div className="w-10 h-10 rounded-xl bg-blue-900/40 border border-blue-500/40 flex items-center justify-center text-blue-300 font-bold shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-cru-accent-blue-bg border border-cru-accent-blue-border flex items-center justify-center text-cru-accent-blue font-bold shrink-0">
                   <User className="w-5 h-5" strokeWidth={1.75} />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -1696,15 +1696,15 @@ export default function Dashboard() {
                     <span className="text-xs font-bold text-white leading-tight">
                       {currentUser.nombre}
                     </span>
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 badge-rol">
-                      <ShieldCheck className="w-3 h-3 text-amber-400 shrink-0" strokeWidth={2} />
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-cru-accent-amber-bg text-cru-accent-amber border border-cru-accent-amber-border badge-rol">
+                      <ShieldCheck className="w-3 h-3 text-cru-accent-amber shrink-0" strokeWidth={2} />
                       <span>{currentRol}</span>
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-slate-400 mt-1">
                     <span>Cédula: <strong className="text-slate-200 font-mono">{currentUser.cedula}</strong></span>
                     <span className="hidden sm:inline">•</span>
-                    <span className="text-emerald-400 flex items-center gap-1 font-semibold">
+                    <span className="text-cru-accent-green flex items-center gap-1 font-semibold">
                       <CheckCircle2 className="w-3 h-3" strokeWidth={2} /> Hacienda OK
                     </span>
                     <span className="hidden sm:inline">•</span>
@@ -1728,115 +1728,115 @@ export default function Dashboard() {
             {/* Las tarjetas de métricas solo se renderizan en la pestaña Dashboard */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               {/* 1. Solicitudes Comerciales */}
-              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-amber-400/30 transition-all">
-                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              <div className="p-5 rounded-2xl bg-cru-surface border border-cru-border hover:border-cru-accent-amber-border transition-all">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-cru-text-muted uppercase tracking-wider">
                   <span>Solicitudes Comerciales</span>
-                  <Store className="w-4 h-4 text-amber-400" strokeWidth={1.75} />
+                  <Store className="w-4 h-4 text-cru-accent-amber" strokeWidth={1.75} />
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-amber-400 mt-2">{metricas.solicitudesPendientes}</div>
-                <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
+                <div className="text-2xl sm:text-3xl font-black text-cru-accent-amber mt-2">{metricas.solicitudesPendientes}</div>
+                <div className="text-xs text-cru-text-muted mt-1 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-cru-accent-amber" />
                   <span>{metricas.comerciosActivos} patentes activas</span>
                 </div>
               </div>
 
               {/* 2. Averías Municipales */}
-              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-sky-400/30 transition-all">
-                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              <div className="p-5 rounded-2xl bg-cru-surface border border-cru-border hover:border-cru-accent-sky-border transition-all">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-cru-text-muted uppercase tracking-wider">
                   <span>Averías Municipales</span>
-                  <AlertTriangle className="w-4 h-4 text-sky-400" strokeWidth={1.75} />
+                  <AlertTriangle className="w-4 h-4 text-cru-accent-sky" strokeWidth={1.75} />
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-sky-400 mt-2">{metricas.ticketsPendientes}</div>
-                <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="text-2xl sm:text-3xl font-black text-cru-accent-sky mt-2">{metricas.ticketsPendientes}</div>
+                <div className="text-xs text-cru-text-muted mt-1 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-cru-accent-green" />
                   <span>{metricas.ticketsResueltos} reparadas con éxito</span>
                 </div>
               </div>
 
               {/* 3. Alerta Nacional CNE (conecta con alertaActiva) */}
-              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-red-400/30 transition-all">
-                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              <div className="p-5 rounded-2xl bg-cru-surface border border-cru-border hover:border-cru-accent-red-border transition-all">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-cru-text-muted uppercase tracking-wider">
                   <span>Alerta Nacional CNE</span>
-                  <ShieldAlert className="w-4 h-4 text-red-400" strokeWidth={1.75} />
+                  <ShieldAlert className="w-4 h-4 text-cru-accent-red" strokeWidth={1.75} />
                 </div>
-                <div className="text-xl sm:text-2xl font-black text-white mt-2 flex items-center gap-2">
+                <div className="text-xl sm:text-2xl font-black text-cru-text mt-2 flex items-center gap-2">
                   <span
                     className={`w-3.5 h-3.5 rounded-full ${
                       alertaActiva === 'VERDE'
-                        ? 'bg-emerald-500 shadow-[0_0_12px_#10b981]'
+                        ? 'bg-cru-accent-green'
                         : alertaActiva === 'AMARILLA'
-                        ? 'bg-amber-400 shadow-[0_0_12px_#fbbf24]'
+                        ? 'bg-cru-accent-amber'
                         : alertaActiva === 'NARANJA'
-                        ? 'bg-orange-500 shadow-[0_0_12px_#f97316]'
-                        : 'bg-red-500 shadow-[0_0_12px_#ef4444]'
+                        ? 'bg-cru-accent-amber'
+                        : 'bg-cru-accent-red'
                     }`}
                   />
                   <span>Nivel {alertaActiva}</span>
                 </div>
-                <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <div className="text-xs text-cru-text-muted mt-1 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-cru-accent-green" />
                   <span>{metricas.alberguesHabilitados} albergues operativos</span>
                 </div>
               </div>
 
               {/* 4. Gobernanza de IA */}
-              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-purple-400/30 transition-all">
-                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              <div className="p-5 rounded-2xl bg-cru-surface border border-cru-border hover:border-cru-accent-purple-border transition-all">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-cru-text-muted uppercase tracking-wider">
                   <span>Gobernanza de IA</span>
-                  <Cpu className="w-4 h-4 text-purple-400" strokeWidth={1.75} />
+                  <Cpu className="w-4 h-4 text-cru-accent-purple" strokeWidth={1.75} />
                 </div>
                 <div className="text-xl sm:text-2xl font-black mt-2 flex items-center gap-2">
                   <span
                     className={`text-xs px-2.5 py-1 rounded-lg font-black tracking-wide ${
-                      configIA.killSwitchActivo ? 'bg-red-500/20 text-red-400 border border-red-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                      configIA.killSwitchActivo ? 'bg-cru-accent-red-bg text-cru-accent-red border border-cru-accent-red-border' : 'bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border'
                     }`}
                   >
                     {configIA.killSwitchActivo ? 'Kill-Switch ON' : 'Operativa'}
                   </span>
                 </div>
-                <div className="text-xs text-slate-400 mt-1">Filtro {configIA.sensibilidadModeracion}</div>
+                <div className="text-xs text-cru-text-muted mt-1">Filtro {configIA.sensibilidadModeracion}</div>
               </div>
             </div>
 
             {/* SECCIONES ANALÍTICAS: FILA 1 (Obras Públicas & Participación Ciudadana) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* A) GESTIÓN DE OBRAS PÚBLICAS Y AVERÍAS MUNICIPALES (M07) */}
-              <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-5 hover:border-white/20 transition-all">
+              <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-5 hover:border-cru-border transition-all">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <AlertTriangle className="w-5 h-5 text-sky-400" strokeWidth={1.75} />
+                    <h3 className="text-base font-bold text-cru-text flex items-center gap-2">
+                      <AlertTriangle className="w-5 h-5 text-cru-accent-sky" strokeWidth={1.75} />
                       <span>Gestión de Obras Públicas y Averías Municipales</span>
                     </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-cru-text-muted mt-0.5">
                       Fiscalización y resolución de incidencias en vías, acueductos y luminarias cantonales.
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-300 border border-sky-500/20 font-bold whitespace-nowrap">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cru-accent-sky-bg text-cru-accent-sky border border-cru-accent-sky-border font-bold whitespace-nowrap">
                     Ley N° 7794
                   </span>
                 </div>
 
                 {/* Indicador de Eficiencia Municipal */}
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-500/10 via-sky-500/5 to-transparent border border-sky-400/20">
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-cru-accent-sky-bg via-cru-surface-muted to-transparent border border-cru-accent-sky-border">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-300">Indicador de Eficiencia Municipal</span>
-                    <span className="text-xs font-mono font-bold text-emerald-400 flex items-center gap-1">
+                    <span className="text-xs font-semibold text-cru-text-soft">Indicador de Eficiencia Municipal</span>
+                    <span className="text-xs font-mono font-bold text-cru-accent-green flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} /> Conforme
                     </span>
                   </div>
-                  <div className="text-2xl font-black text-white mt-1">87.5%</div>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <div className="text-2xl font-black text-cru-accent-sky mt-1">87.5%</div>
+                  <p className="text-xs text-cru-text-muted mt-0.5">
                     87.5% de expedientes atendidos dentro del plazo normado de 72 horas.
                   </p>
-                  <div className="w-full bg-white/10 h-2 rounded-full mt-2.5 overflow-hidden">
-                    <div className="bg-gradient-to-r from-sky-400 to-emerald-400 h-full rounded-full" style={{ width: '87.5%' }} />
+                  <div className="w-full bg-cru-track h-2 rounded-full mt-2.5 overflow-hidden">
+                    <div className="bg-gradient-to-r from-cru-accent-sky to-cru-accent-green h-full rounded-full" style={{ width: '87.5%' }} />
                   </div>
                 </div>
 
                 {/* Desglose Visual de Incidencias por Categoría */}
                 <div className="space-y-3">
-                  <div className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  <div className="text-xs font-bold text-cru-text-soft uppercase tracking-wider">
                     Desglose de Incidencias por Categoría:
                   </div>
 
@@ -1848,76 +1848,76 @@ export default function Dashboard() {
                   ].map((inc) => (
                     <div key={inc.label} className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-300 font-medium">{inc.label}</span>
-                        <span className="font-mono font-bold text-white">{inc.pct}%</span>
+                        <span className="text-cru-text-soft font-medium">{inc.label}</span>
+                        <span className="font-mono font-bold text-cru-text">{inc.pct}%</span>
                       </div>
-                      <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-cru-track h-2 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{ width: `${inc.pct}%`, backgroundColor: inc.color }}
                         />
                       </div>
-                      <div className="text-[10px] text-slate-500">{inc.desc}</div>
+                      <div className="text-[10px] text-cru-text-muted">{inc.desc}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* B) PARTICIPACIÓN CIUDADANA Y PRESUPUESTOS PARTICIPATIVOS (M11) */}
-              <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-5 hover:border-white/20 transition-all">
+              <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-5 hover:border-cru-border transition-all">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <Vote className="w-5 h-5 text-emerald-400" strokeWidth={1.75} />
+                    <h3 className="text-base font-bold text-cru-text flex items-center gap-2">
+                      <Vote className="w-5 h-5 text-cru-accent-green" strokeWidth={1.75} />
                       <span>Participación Ciudadana y Presupuestos Participativos</span>
                     </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-cru-text-muted mt-0.5">
                       Votación cantonal inmutable con verificación del Padrón Nacional y Hacienda.
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-bold whitespace-nowrap">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border font-bold whitespace-nowrap">
                     Padrón Verificado
                   </span>
                 </div>
 
                 {/* Métricas Destacadas de Participación */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
-                    <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Total Votos Cívicos</span>
-                    <div className="text-2xl font-black text-emerald-400">861 votos</div>
-                    <p className="text-[11px] text-slate-400">Registrados con Cédula verificada</p>
+                  <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-1">
+                    <span className="text-[11px] text-cru-text-muted font-semibold uppercase tracking-wider">Total Votos Cívicos</span>
+                    <div className="text-2xl font-black text-cru-accent-green">861 votos</div>
+                    <p className="text-[11px] text-cru-text-muted">Registrados con Cédula verificada</p>
                   </div>
-                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
-                    <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Auditoría Electoral</span>
-                    <div className="text-2xl font-black text-sky-400">100%</div>
-                    <p className="text-[11px] text-slate-400">Validados sin duplicados</p>
+                  <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-1">
+                    <span className="text-[11px] text-cru-text-muted font-semibold uppercase tracking-wider">Auditoría Electoral</span>
+                    <div className="text-2xl font-black text-cru-accent-sky">100%</div>
+                    <p className="text-[11px] text-cru-text-muted">Validados sin duplicados</p>
                   </div>
                 </div>
 
                 {/* Proyecto con Mayor Respaldo */}
-                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-1.5">
+                <div className="p-4 rounded-2xl bg-cru-accent-green-bg border border-cru-accent-green-border space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-emerald-400 font-bold flex items-center gap-1.5">
+                    <span className="text-cru-accent-green font-bold flex items-center gap-1.5">
                       <TrendingUp className="w-4 h-4" strokeWidth={2} />
                       <span>Proyecto con Mayor Respaldo</span>
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border font-bold">
                       60.3% del total
                     </span>
                   </div>
-                  <div className="text-sm font-extrabold text-white">
+                  <div className="text-sm font-extrabold text-cru-text">
                     Ciclovía y Aceras Inclusivas en Pavas (519 votos)
                   </div>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-xs text-cru-text-soft">
                     Inversión asignada para movilidad peatonal segura, arborización y ciclovía cantonal inclusiva.
                   </p>
                 </div>
 
                 {/* Auditoría Electoral Detallada */}
-                <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center gap-3">
-                  <ShieldCheck className="w-6 h-6 text-emerald-400 flex-shrink-0" strokeWidth={1.75} />
-                  <div className="text-xs text-slate-300">
-                    <strong className="text-white font-semibold">Auditoría Electoral:</strong> 100% de votos validados contra el Padrón Nacional y Hacienda (0 duplicados detectados).
+                <div className="p-3.5 rounded-2xl bg-cru-surface border border-cru-border flex items-center gap-3">
+                  <ShieldCheck className="w-6 h-6 text-cru-accent-green flex-shrink-0" strokeWidth={1.75} />
+                  <div className="text-xs text-cru-text-soft">
+                    <strong className="text-cru-text font-semibold">Auditoría Electoral:</strong> 100% de votos validados contra el Padrón Nacional y Hacienda (0 duplicados detectados).
                   </div>
                 </div>
               </div>
@@ -1926,39 +1926,39 @@ export default function Dashboard() {
             {/* SECCIONES ANALÍTICAS: FILA 2 (Albergues CNE & Fomento Comercial) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* C) RED DE ALBERGUES Y CAPACIDAD DE EMERGENCIA CNE (M10) */}
-              <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-5 hover:border-white/20 transition-all">
+              <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-5 hover:border-cru-border-hover transition-all">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <ShieldAlert className="w-5 h-5 text-red-500" strokeWidth={1.75} />
+                    <h3 className="text-base font-bold text-cru-text flex items-center gap-2">
+                      <ShieldAlert className="w-5 h-5 text-cru-accent-red" strokeWidth={1.75} />
                       <span>Red de Albergues y Capacidad de Emergencia CNE</span>
                     </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-cru-text-muted mt-0.5">
                       Censo en tiempo real de capacidad instalada y refugios cantonales operativos.
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-500/10 text-red-300 border border-red-500/20 font-bold whitespace-nowrap">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cru-accent-red-bg text-cru-accent-red border border-cru-accent-red-border font-bold whitespace-nowrap">
                     COE Activo
                   </span>
                 </div>
 
                 {/* Resumen de Capacidad y Ocupación */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
-                    <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Capacidad Total Habilitada</span>
-                    <div className="text-2xl font-black text-white">550 personas</div>
-                    <p className="text-[11px] text-slate-400">En 3 albergues cantonales</p>
+                  <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-1">
+                    <span className="text-[11px] text-cru-text-muted font-semibold uppercase tracking-wider">Capacidad Total Habilitada</span>
+                    <div className="text-2xl font-black text-cru-text">550 personas</div>
+                    <p className="text-[11px] text-cru-text-muted">En 3 albergues cantonales</p>
                   </div>
-                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
-                    <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Ocupación Actual</span>
-                    <div className="text-2xl font-black text-orange-400">380 personas</div>
-                    <p className="text-[11px] text-slate-400">69.0% de ocupación global</p>
+                  <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-1">
+                    <span className="text-[11px] text-cru-text-muted font-semibold uppercase tracking-wider">Ocupación Actual</span>
+                    <div className="text-2xl font-black text-cru-accent-amber">380 personas</div>
+                    <p className="text-[11px] text-cru-text-muted">69.0% de ocupación global</p>
                   </div>
                 </div>
 
                 {/* Estado Individual de los Albergues */}
                 <div className="space-y-2.5">
-                  <div className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  <div className="text-xs font-bold text-cru-text-soft uppercase tracking-wider">
                     Estado Operativo por Albergue Cantonal:
                   </div>
 
@@ -1967,41 +1967,41 @@ export default function Dashboard() {
                       nombre: 'Polideportivo Puntarenas',
                       canton: 'Puntarenas',
                       estado: 'Habilitado',
-                      badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                      badgeBg: 'bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border',
                       ocupacion: '45/180',
                       pct: 25,
-                      barColor: '#10B981'
+                      barColor: 'var(--cru-accent-green)'
                     },
                     {
                       nombre: 'Gimnasio Santa Cruz',
                       canton: 'Santa Cruz, Guanacaste',
                       estado: 'Lleno al 100%',
-                      badgeBg: 'bg-red-500/20 text-red-300 border-red-500/40',
+                      badgeBg: 'bg-cru-accent-red-bg text-cru-accent-red border border-cru-accent-red-border',
                       ocupacion: '250/250',
                       pct: 100,
-                      barColor: '#EF4444'
+                      barColor: 'var(--cru-accent-red)'
                     },
                     {
                       nombre: 'Salón Parroquial Turrialba',
                       canton: 'Turrialba, Cartago',
                       estado: 'Ocupación Alta',
-                      badgeBg: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
+                      badgeBg: 'bg-cru-accent-amber-bg text-cru-accent-amber border border-cru-accent-amber-border',
                       ocupacion: '85/120',
                       pct: 71,
-                      barColor: '#F97316'
+                      barColor: 'var(--cru-accent-amber)'
                     }
                   ].map((alb) => (
-                    <div key={alb.nombre} className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1.5">
+                    <div key={alb.nombre} className="p-3 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
                         <div>
-                          <span className="font-bold text-white">{alb.nombre}</span>
-                          <span className="text-[10px] text-slate-400 ml-2">({alb.canton})</span>
+                          <span className="font-bold text-cru-text">{alb.nombre}</span>
+                          <span className="text-[10px] text-cru-text-muted ml-2">({alb.canton})</span>
                         </div>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${alb.badgeBg}`}>
                           {alb.estado} - {alb.ocupacion}
                         </span>
                       </div>
-                      <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                      <div className="w-full bg-cru-track h-1.5 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{ width: `${alb.pct}%`, backgroundColor: alb.barColor }}
@@ -2013,39 +2013,39 @@ export default function Dashboard() {
               </div>
 
               {/* D) FOMENTO ECONÓMICO Y COMERCIO LOCAL (M08) */}
-              <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-5 hover:border-white/20 transition-all">
+              <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-5 hover:border-cru-border-hover transition-all">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <Store className="w-5 h-5 text-amber-400" strokeWidth={1.75} />
+                    <h3 className="text-base font-bold text-cru-text flex items-center gap-2">
+                      <Store className="w-5 h-5 text-cru-accent-amber" strokeWidth={1.75} />
                       <span>Fomento Económico y Comercio Local</span>
                     </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-cru-text-muted mt-0.5">
                       Patentes comerciales fiscalizadas ante Hacienda y distribución en ferias del agricultor.
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-bold whitespace-nowrap">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cru-accent-amber-bg text-cru-accent-amber border border-cru-accent-amber-border font-bold whitespace-nowrap">
                     Hacienda OK
                   </span>
                 </div>
 
                 {/* Métricas de Comercio y Ferias */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
-                    <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Patentes Activas</span>
-                    <div className="text-2xl font-black text-amber-400">18 patentes</div>
-                    <p className="text-[11px] text-slate-400">Verificadas por Hacienda</p>
+                  <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-1">
+                    <span className="text-[11px] text-cru-text-muted font-semibold uppercase tracking-wider">Patentes Activas</span>
+                    <div className="text-2xl font-black text-cru-accent-amber">18 patentes</div>
+                    <p className="text-[11px] text-cru-text-muted">Verificadas por Hacienda</p>
                   </div>
-                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
-                    <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Puestos de Feria</span>
-                    <div className="text-2xl font-black text-sky-400">84 puestos</div>
-                    <p className="text-[11px] text-slate-400">Asignados en Sectores A a F</p>
+                  <div className="p-3.5 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-1">
+                    <span className="text-[11px] text-cru-text-muted font-semibold uppercase tracking-wider">Puestos de Feria</span>
+                    <div className="text-2xl font-black text-cru-accent-sky">84 puestos</div>
+                    <p className="text-[11px] text-cru-text-muted">Asignados en Sectores A a F</p>
                   </div>
                 </div>
 
                 {/* Desglose de Sectores de Feria */}
                 <div className="space-y-2">
-                  <div className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  <div className="text-xs font-bold text-cru-text-soft uppercase tracking-wider">
                     Distribución de Puestos en el Croquis Oficial (Sectores A - F):
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs">
@@ -2057,12 +2057,12 @@ export default function Dashboard() {
                       { sector: 'Sector E', label: 'Cadena de Frío', puestos: '8 puestos' },
                       { sector: 'Sector F', label: 'Plazoleta Comidas', puestos: '10 puestos' }
                     ].map((s) => (
-                      <div key={s.sector} className="p-2 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between">
+                      <div key={s.sector} className="p-2 rounded-xl bg-cru-surface-muted border border-cru-border flex items-center justify-between">
                         <div>
-                          <div className="font-bold text-white text-[11px]">{s.sector}</div>
-                          <div className="text-[10px] text-slate-400">{s.label}</div>
+                          <div className="font-bold text-cru-text text-[11px]">{s.sector}</div>
+                          <div className="text-[10px] text-cru-text-muted">{s.label}</div>
                         </div>
-                        <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] font-mono font-bold text-cru-accent-amber bg-cru-accent-amber-bg px-1.5 py-0.5 rounded">
                           {s.puestos}
                         </span>
                       </div>
@@ -2073,23 +2073,23 @@ export default function Dashboard() {
             </div>
 
             {/* E) RESUMEN TERRITORIAL */}
-            <div className="rounded-3xl p-6 bg-gradient-to-r from-slate-900/90 via-[#000d26]/80 to-slate-900/90 border border-white/10 space-y-4">
+            <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center text-sky-400 flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-cru-accent-sky-bg border border-cru-accent-sky-border flex items-center justify-center text-cru-accent-sky flex-shrink-0">
                     <MapPin className="w-5 h-5" strokeWidth={1.75} />
                   </div>
                   <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white">
+                    <h3 className="text-sm sm:text-base font-bold text-cru-text">
                       Despliegue Territorial y Descentralización Soberana
                     </h3>
-                    <p className="text-xs text-sky-400 font-medium">
+                    <p className="text-xs text-cru-accent-sky font-medium">
                       7 Provincias · 84 Cantones Autónomos · 492 Distritos · Sistema Sovereign Civic Glass v2.1
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <div className="flex items-center gap-1.5 text-xs text-cru-text-muted">
+                  <CheckCircle2 className="w-4 h-4 text-cru-accent-green" />
                   <span>Red Cantonal 100% Operativa</span>
                 </div>
               </div>
@@ -2105,11 +2105,11 @@ export default function Dashboard() {
                   { nombre: 'Puntarenas', cantones: '13 Cantones' },
                   { nombre: 'Limón', cantones: '6 Cantones' }
                 ].map((prov) => (
-                  <div key={prov.nombre} className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-                    <div className="text-xs font-bold text-white">{prov.nombre}</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">{prov.cantones}</div>
-                    <div className="text-[9px] font-mono text-emerald-400 mt-1 flex items-center justify-center gap-1 font-semibold">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Activo
+                  <div key={prov.nombre} className="p-3 rounded-2xl bg-cru-surface-muted border border-cru-border text-center">
+                    <div className="text-xs font-bold text-cru-text">{prov.nombre}</div>
+                    <div className="text-[10px] text-cru-text-muted mt-0.5">{prov.cantones}</div>
+                    <div className="text-[9px] font-mono text-cru-accent-green mt-1 flex items-center justify-center gap-1 font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cru-accent-green" /> Activo
                     </div>
                   </div>
                 ))}
@@ -2136,14 +2136,14 @@ export default function Dashboard() {
             />
 
             {/* Sección B: Muro de la Bitácora de Auditoría Legal */}
-            <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-4">
+            <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-amber-400" strokeWidth={1.75} />
+                  <h3 className="text-lg font-bold text-cru-text flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-cru-accent-amber" strokeWidth={1.75} />
                     <span>Muro de la Bitácora de Auditoría Legal Inmutable</span>
                   </h3>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-cru-text-muted">
                     Historial cronológico de actos de autoridad ejecutados en la plataforma bajo marco de Ley N° 8292.
                   </p>
                 </div>
@@ -2152,47 +2152,47 @@ export default function Dashboard() {
                   <button
                     type="button"
                     onClick={exportarBitacoraCSV}
-                    className="py-2 px-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white text-xs font-bold flex items-center gap-2 transition-colors"
+                    className="py-2 px-3.5 rounded-xl bg-cru-surface-muted hover:bg-cru-surface border border-cru-border text-cru-text text-xs font-bold flex items-center gap-2 transition-colors"
                   >
-                    <FileSpreadsheet className="w-4 h-4 text-emerald-400" strokeWidth={1.75} />
+                    <FileSpreadsheet className="w-4 h-4 text-cru-accent-green" strokeWidth={1.75} />
                     <span>Descargar Reporte CSV</span>
                   </button>
                   <button
                     type="button"
                     onClick={generarInformeAuditoriaPDF}
-                    className="py-2 px-3.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white text-xs font-bold flex items-center gap-2 transition-colors"
+                    className="py-2 px-3.5 rounded-xl bg-cru-surface-muted hover:bg-cru-surface border border-cru-border text-cru-text text-xs font-bold flex items-center gap-2 transition-colors"
                     title="Generar y descargar informe oficial de auditoría en PDF"
                   >
-                    <FileText className="w-4 h-4 text-sky-400" strokeWidth={1.75} />
+                    <FileText className="w-4 h-4 text-cru-accent-sky" strokeWidth={1.75} />
                     <span>Descargar Informe de Auditoría (PDF)</span>
                   </button>
                 </div>
               </div>
 
               {/* Lista Scrolleable de Eventos de Auditoría */}
-              <div className="max-h-96 overflow-y-auto space-y-2.5 pr-1 border border-white/5 rounded-2xl p-2 bg-black/40">
+              <div className="max-h-96 overflow-y-auto space-y-2.5 pr-1 border border-cru-border rounded-2xl p-2 bg-cru-surface-muted">
                 {bitacora.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors space-y-1.5"
+                    className="p-3.5 rounded-xl bg-cru-surface border border-cru-border hover:border-cru-border-hover transition-colors space-y-1.5"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-amber-400 font-bold">{item.id}</span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                        <span className="font-mono text-cru-accent-amber font-bold">{item.id}</span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-cru-accent-sky-bg text-cru-accent-sky border border-cru-accent-sky-border">
                           {item.accion}
                         </span>
-                        <span className="text-white font-semibold">{item.entidadAfectada}</span>
+                        <span className="text-cru-text font-semibold">{item.entidadAfectada}</span>
                       </div>
-                      <span className="font-mono text-[11px] text-slate-400">{item.fechaHoraCst}</span>
+                      <span className="font-mono text-[11px] text-cru-text-muted">{item.fechaHoraCst}</span>
                     </div>
 
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-xs text-cru-text-soft leading-relaxed">
                       {item.justificante}
                     </p>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 border-t border-white/5 pt-1.5">
-                      <span>Ejecutado por: <strong className="text-slate-200">{item.adminNombre}</strong> ({item.adminCedula})</span>
+                    <div className="flex items-center justify-between text-[11px] text-cru-text-muted border-t border-cru-border pt-1.5">
+                      <span>Ejecutado por: <strong className="text-cru-text">{item.adminNombre}</strong> ({item.adminCedula})</span>
                       <span className="font-mono text-[10px]">{item.ipOrigen}</span>
                     </div>
                   </div>
@@ -2207,14 +2207,14 @@ export default function Dashboard() {
             -------------------------------------------------------------------- */}
         {activeTab === 'comercio' && (
           <div className="space-y-6 animate-fadeIn">
-            <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-4">
+            <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Store className="w-5 h-5 text-amber-400" strokeWidth={1.75} />
+                  <h3 className="text-lg font-bold text-cru-text flex items-center gap-2">
+                    <Store className="w-5 h-5 text-cru-accent-amber" strokeWidth={1.75} />
                     <span>Bandeja de Solicitudes Comerciales, Patentes y Ferias</span>
                   </h3>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-cru-text-muted">
                     Resolución de solicitudes de comercios cantonales, agricultura familiar y asignación de croquis de feria.
                   </p>
                 </div>
@@ -2227,8 +2227,8 @@ export default function Dashboard() {
                       onClick={() => setFiltroComercio(st)}
                       className={`px-3 py-1.5 rounded-xl font-bold transition-colors ${
                         filtroComercio === st
-                          ? 'bg-amber-500 text-slate-950 shadow-md'
-                          : 'bg-white/[0.04] text-slate-400 hover:text-white'
+                          ? 'bg-cru-accent-amber text-slate-950 shadow-md'
+                          : 'bg-cru-surface-muted border border-cru-border text-cru-text-muted hover:text-cru-text'
                       }`}
                     >
                       {st === 'TODAS' ? 'Todas' : st}
@@ -2240,25 +2240,25 @@ export default function Dashboard() {
               {/* Lista de Solicitudes Comerciales */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {solicitudesFiltradas.length === 0 ? (
-                  <div className="col-span-2 py-8 text-center text-slate-500 text-xs">
+                  <div className="col-span-2 py-8 text-center text-cru-text-muted text-xs">
                     No hay solicitudes comerciales con el filtro seleccionado.
                   </div>
                 ) : (
                   solicitudesFiltradas.map((sol) => (
                     <div
                       key={sol.id}
-                      className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col justify-between space-y-4"
+                      className="p-5 rounded-2xl bg-cru-surface border border-cru-border flex flex-col justify-between space-y-4"
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="font-mono text-xs font-bold text-sky-400">{sol.id}</span>
+                          <span className="font-mono text-xs font-bold text-cru-accent-sky">{sol.id}</span>
                           <span
                             className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
                               String(sol.estado || '').toUpperCase() === 'APROBADO'
-                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                ? 'bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border'
                                 : String(sol.estado || '').toUpperCase() === 'PENDIENTE'
-                                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                                : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                                ? 'bg-cru-accent-amber-bg text-cru-accent-amber border border-cru-accent-amber-border'
+                                : 'bg-cru-accent-red-bg text-cru-accent-red border border-cru-accent-red-border'
                             }`}
                           >
                             {String(sol.estado || '').toUpperCase()}
@@ -2266,31 +2266,31 @@ export default function Dashboard() {
                         </div>
 
                         <div>
-                          <h4 className="text-white font-bold text-base leading-tight">
+                          <h4 className="text-cru-text font-bold text-base leading-tight">
                             {sol.nombreNegocio || sol.nombreComercio}
                           </h4>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            Solicitante: <strong className="text-slate-200">{sol.nombreSolicitante || sol.nombreCompleto}</strong> • Cédula: <span className="font-mono">{sol.cedula}</span>
+                          <p className="text-xs text-cru-text-muted mt-0.5">
+                            Solicitante: <strong className="text-cru-text">{sol.nombreSolicitante || sol.nombreCompleto}</strong> • Cédula: <span className="font-mono">{sol.cedula}</span>
                           </p>
                         </div>
 
-                        <div className="p-3 rounded-xl bg-black/30 border border-white/5 space-y-1 text-xs text-slate-300">
+                        <div className="p-3 rounded-xl bg-cru-surface-muted border border-cru-border space-y-1 text-xs text-cru-text-soft">
                           <div>
-                            <span className="text-slate-400">Actividad Económica: </span>
-                            <span className="text-slate-200">{sol.actividadEconomicaHacienda || sol.actividadHacienda || 'Comercio General'}</span>
+                            <span className="text-cru-text-muted">Actividad Económica: </span>
+                            <span className="text-cru-text">{sol.actividadEconomicaHacienda || sol.actividadHacienda || 'Comercio General'}</span>
                           </div>
                           <div>
-                            <span className="text-slate-400">Ubicación: </span>
+                            <span className="text-cru-text-muted">Ubicación: </span>
                             <span>{sol.canton}{sol.distrito ? `, ${sol.distrito}` : ''} ({sol.provincia})</span>
                           </div>
                           {(sol.sectorFeria || sol.asignacion) && (
-                            <div className="text-amber-300 font-semibold flex items-center gap-1.5 pt-1">
+                            <div className="text-cru-accent-amber font-semibold flex items-center gap-1.5 pt-1">
                               <MapPin className="w-3.5 h-3.5" />
                               <span>Asignación: {sol.asignacion || sol.sectorFeria}</span>
                             </div>
                           )}
                           {(sol.notas || sol.detalleAsignacion || sol.justificacion) && (
-                            <div className="text-slate-400 text-[11px] italic pt-0.5">
+                            <div className="text-cru-text-muted text-[11px] italic pt-0.5">
                               "{sol.detalleAsignacion || sol.notas || sol.justificacion}"
                             </div>
                           )}
@@ -2298,11 +2298,11 @@ export default function Dashboard() {
                       </div>
 
                       {/* Botones de Acción */}
-                      <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-white/5">
+                      <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-cru-border">
                         <button
                           type="button"
                           onClick={() => handleOtorgarSelloVerificado(sol.id)}
-                          className="flex-1 py-2 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                          className="flex-1 py-2 px-3 rounded-xl bg-cru-accent-green-bg hover:opacity-90 border border-cru-accent-green-border text-cru-accent-green text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} />
                           <span>Otorgar Sello Verificado</span>
@@ -2311,7 +2311,7 @@ export default function Dashboard() {
                         <button
                           type="button"
                           onClick={() => handleAsignarPuestoFeria(sol.id, sol.sectorFeria || 'Sector A')}
-                          className="py-2 px-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                          className="py-2 px-3 rounded-xl bg-cru-accent-amber-bg hover:opacity-90 border border-cru-accent-amber-border text-cru-accent-amber text-xs font-bold flex items-center gap-1.5 transition-colors"
                         >
                           <MapPin className="w-3.5 h-3.5" strokeWidth={2} />
                           <span>Asignar Puesto Feria</span>
@@ -2320,7 +2320,7 @@ export default function Dashboard() {
                         <button
                           type="button"
                           onClick={() => handleRechazarSolicitud(sol.id)}
-                          className="py-2 px-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-semibold transition-colors"
+                          className="py-2 px-3 rounded-xl bg-cru-accent-red-bg hover:opacity-90 border border-cru-accent-red-border text-cru-accent-red text-xs font-semibold transition-colors"
                         >
                           Rechazar
                         </button>
@@ -2333,23 +2333,23 @@ export default function Dashboard() {
 
             {/* Modal para Asignar Sector de Feria */}
             {modalSectorId && (
-              <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-                <div className="max-w-md w-full rounded-3xl bg-[#000d26] border border-amber-400/40 p-6 space-y-4 shadow-2xl">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                    <h4 className="font-bold text-white text-base flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-amber-400" />
+              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="max-w-md w-full rounded-3xl bg-cru-surface-card border border-cru-border p-6 space-y-4 shadow-2xl">
+                  <div className="flex items-center justify-between border-b border-cru-border pb-3">
+                    <h4 className="font-bold text-cru-text text-base flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-cru-accent-amber" />
                       <span>Asignación de Puesto de Feria del Agricultor</span>
                     </h4>
                     <button
                       type="button"
                       onClick={() => setModalSectorId(null)}
-                      className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white"
+                      className="w-8 h-8 rounded-lg bg-cru-surface-muted hover:bg-cru-surface flex items-center justify-center text-cru-text-muted hover:text-cru-text transition-colors"
                     >
                       <XCircle className="w-4 h-4" />
                     </button>
                   </div>
 
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-cru-text-soft leading-relaxed">
                     Seleccione el sector del croquis oficial cantonal donde se ubicará el comerciante para el próximo ciclo ferial:
                   </p>
 
@@ -2359,8 +2359,8 @@ export default function Dashboard() {
                         key={sec.id}
                         className={`p-3 rounded-xl border flex items-start gap-3 cursor-pointer transition-all ${
                           sectorSeleccionado === sec.id
-                            ? 'bg-amber-500/20 border-amber-400 text-white'
-                            : 'bg-white/[0.02] border-white/10 text-slate-300 hover:bg-white/[0.05]'
+                            ? 'bg-cru-accent-amber-bg border-cru-accent-amber text-cru-text'
+                            : 'bg-cru-surface-muted border-cru-border text-cru-text-soft hover:bg-cru-surface'
                         }`}
                       >
                         <input
@@ -2369,7 +2369,7 @@ export default function Dashboard() {
                           value={sec.id}
                           checked={sectorSeleccionado === sec.id}
                           onChange={() => setSectorSeleccionado(sec.id)}
-                          className="mt-0.5 accent-amber-400"
+                          className="mt-0.5 accent-amber-500"
                         />
                         <span className="text-xs font-semibold leading-snug">{sec.label}</span>
                       </label>
@@ -2380,7 +2380,7 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => handleGuardarSectorFeria(modalSectorId)}
-                      className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2.5 rounded-xl bg-cru-accent-amber hover:opacity-90 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
                     >
                       <Check className="w-4 h-4" strokeWidth={2} />
                       <span>Confirmar Asignación</span>
@@ -2388,7 +2388,7 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => setModalSectorId(null)}
-                      className="py-2.5 px-4 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white text-xs font-semibold"
+                      className="py-2.5 px-4 rounded-xl bg-cru-surface-muted hover:bg-cru-surface text-cru-text text-xs font-semibold border border-cru-border transition-colors"
                     >
                       Cancelar
                     </button>
@@ -2404,13 +2404,13 @@ export default function Dashboard() {
             -------------------------------------------------------------------- */}
         {activeTab === 'obras' && (
           <div className="space-y-6 animate-fadeIn">
-            <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-5">
+            <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-5">
               <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-sky-400" strokeWidth={1.75} />
+                <h3 className="text-lg font-bold text-cru-text flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-cru-accent-sky" strokeWidth={1.75} />
                   <span>Ventanilla de Fiscalización y Obras Públicas</span>
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-cru-text-muted mt-0.5">
                   Monitoreo cartográfico geoespacial y despacho automatizado de cuadrillas municipales para la resolución de averías viales, pluviales y alumbrado.
                 </p>
               </div>
@@ -2418,33 +2418,33 @@ export default function Dashboard() {
               {/* 1. VISOR CARTOGRÁFICO INTERACTIVO DE INCIDENCIAS (LEAFLET) */}
               <div className="space-y-2">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-sky-400" />
+                  <div className="text-xs font-bold text-cru-text-soft uppercase tracking-wider flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4 text-cru-accent-sky" />
                     <span>Mapa Cantonal de Georreferenciación de Incidencias:</span>
                   </div>
                   {/* Leyenda de Prioridad y Estado */}
-                  <div className="flex items-center gap-3 text-[11px] bg-white/[0.03] px-3 py-1.5 rounded-xl border border-white/5">
-                    <span className="flex items-center gap-1 text-red-400 font-semibold">
-                      <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]" /> Alta
+                  <div className="flex items-center gap-3 text-[11px] bg-cru-surface-muted px-3 py-1.5 rounded-xl border border-cru-border">
+                    <span className="flex items-center gap-1 text-cru-accent-red font-semibold">
+                      <span className="w-2 h-2 rounded-full bg-cru-accent-red" /> Alta
                     </span>
-                    <span className="flex items-center gap-1 text-amber-400 font-semibold">
-                      <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24]" /> Media
+                    <span className="flex items-center gap-1 text-cru-accent-amber font-semibold">
+                      <span className="w-2 h-2 rounded-full bg-cru-accent-amber" /> Media
                     </span>
-                    <span className="flex items-center gap-1 text-emerald-400 font-semibold">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" /> Solucionado
+                    <span className="flex items-center gap-1 text-cru-accent-green font-semibold">
+                      <span className="w-2 h-2 rounded-full bg-cru-accent-green" /> Solucionado
                     </span>
                   </div>
                 </div>
 
-                <div className="h-64 md:h-80 rounded-2xl overflow-hidden border border-white/10 relative z-0 shadow-2xl">
+                <div className="h-64 md:h-80 rounded-2xl overflow-hidden border border-cru-border relative z-0 shadow-sm">
                   <div ref={mapObrasContainerRef} className="w-full h-full" />
                 </div>
               </div>
 
               {/* 2. TABLA DE EXPEDIENTES Y DESPACHO AUTOMATIZADO */}
-              <div className="overflow-x-auto rounded-2xl border border-white/10">
+              <div className="overflow-x-auto rounded-2xl border border-cru-border">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-white/[0.04] text-slate-400 uppercase tracking-wider font-semibold border-b border-white/10">
+                  <thead className="bg-cru-surface-muted text-cru-text-soft uppercase tracking-wider font-semibold border-b border-cru-border">
                     <tr>
                       <th className="py-3 px-4">EVIDENCIA</th>
                       <th className="py-3 px-4">Expediente</th>
@@ -2455,7 +2455,7 @@ export default function Dashboard() {
                       <th className="py-3 px-4">Estado del Ticket</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-cru-border">
                     {tickets.map((tck) => {
                       const foto = obtenerFotoEvidencia(tck);
                       const cuadrilla = obtenerCuadrillaAutomatica(tck.categoria);
@@ -2467,8 +2467,8 @@ export default function Dashboard() {
                           onClick={() => handleSeleccionarAveriaEnTabla(tck)}
                           className={`transition-colors cursor-pointer ${
                             esSeleccionado
-                              ? 'bg-sky-500/15 border-l-4 border-l-sky-400'
-                              : 'hover:bg-white/[0.03]'
+                              ? 'bg-cru-accent-sky-bg border-l-4 border-l-cru-accent-sky'
+                              : 'hover:bg-cru-surface-muted'
                           }`}
                         >
                           {/* Columna EVIDENCIA */}
@@ -2484,33 +2484,33 @@ export default function Dashboard() {
                                 e.stopPropagation();
                                 setTicketInspeccion(tck);
                               }}
-                              className="w-12 h-12 rounded-xl object-cover border border-white/20 hover:scale-105 transition-transform cursor-pointer shadow-md"
+                              className="w-12 h-12 rounded-xl object-cover border border-cru-border hover:scale-105 transition-transform cursor-pointer shadow-sm"
                               title="Click para inspeccionar evidencia en alta resolución"
                             />
                           </td>
 
                           {/* Expediente */}
-                          <td className="py-3 px-4 font-mono font-bold text-sky-300 whitespace-nowrap">
+                          <td className="py-3 px-4 font-mono font-bold text-cru-accent-sky whitespace-nowrap">
                             <div className="flex items-center gap-1.5">
-                              <MapPin className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
+                              <MapPin className="w-3.5 h-3.5 text-cru-accent-sky flex-shrink-0" />
                               <span>{tck.id}</span>
                             </div>
                           </td>
 
                           {/* Descripción */}
-                          <td className="py-3 px-4 text-white font-medium max-w-xs">
-                            <div className="font-bold text-white text-xs truncate" title={tck.titulo}>
+                          <td className="py-3 px-4 text-cru-text font-medium max-w-xs">
+                            <div className="font-bold text-cru-text text-xs truncate" title={tck.titulo}>
                               {tck.titulo}
                             </div>
-                            <div className="text-[11px] text-slate-400 truncate mt-0.5">
+                            <div className="text-[11px] text-cru-text-muted truncate mt-0.5">
                               {tck.categoriaTitulo || tck.categoria}
                             </div>
                           </td>
 
                           {/* Ubicación Exacta */}
-                          <td className="py-3 px-4 text-slate-300">
-                            <div className="font-semibold text-white">{tck.canton}, {tck.distrito}</div>
-                            <div className="text-[10px] text-slate-400 max-w-[200px] truncate">{tck.direccionExacta}</div>
+                          <td className="py-3 px-4 text-cru-text-soft">
+                            <div className="font-semibold text-cru-text">{tck.canton}, {tck.distrito}</div>
+                            <div className="text-[10px] text-cru-text-muted max-w-[200px] truncate">{tck.direccionExacta}</div>
                           </td>
 
                           {/* Prioridad */}
@@ -2518,10 +2518,10 @@ export default function Dashboard() {
                             <span
                               className={`px-2.5 py-0.5 rounded text-[10px] font-black uppercase ${
                                 tck.prioridad === 'ALTA'
-                                  ? 'bg-red-500/20 text-red-300 border border-red-500/40'
+                                  ? 'bg-cru-accent-red-bg text-cru-accent-red border border-cru-accent-red-border'
                                   : tck.prioridad === 'MEDIA'
-                                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                                  : 'bg-sky-500/20 text-sky-300 border border-sky-500/40'
+                                  ? 'bg-cru-accent-amber-bg text-cru-accent-amber border border-cru-accent-amber-border'
+                                  : 'bg-cru-accent-sky-bg text-cru-accent-sky border border-cru-accent-sky-border'
                               }`}
                             >
                               {tck.prioridad}
@@ -2542,16 +2542,16 @@ export default function Dashboard() {
                               onChange={(e) => handleCambiarEstadoAveria(tck.id, e.target.value, cuadrilla.nombre)}
                               className={`py-1.5 px-3 rounded-xl text-xs font-bold border focus:outline-none transition-all cursor-pointer ${
                                 tck.estado === 'RESUELTO'
-                                  ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                                  ? 'bg-cru-accent-green-bg border-cru-accent-green-border text-cru-accent-green'
                                   : tck.estado === 'EN_PROCESO'
-                                  ? 'bg-sky-500/20 border-sky-500/40 text-sky-300'
-                                  : 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                                  ? 'bg-cru-accent-sky-bg border-cru-accent-sky-border text-cru-accent-sky'
+                                  : 'bg-cru-accent-amber-bg border-cru-accent-amber-border text-cru-accent-amber'
                               }`}
                             >
-                              <option value="REPORTADO" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Recibido</option>
-                              <option value="EN_INSPECCION" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>En Inspección</option>
-                              <option value="EN_PROCESO" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>En Trámite</option>
-                              <option value="RESUELTO" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Solucionado</option>
+                              <option value="REPORTADO">Recibido</option>
+                              <option value="EN_INSPECCION">En Inspección</option>
+                              <option value="EN_PROCESO">En Trámite</option>
+                              <option value="RESUELTO">Solucionado</option>
                             </select>
                           </td>
                         </tr>
@@ -2565,26 +2565,26 @@ export default function Dashboard() {
             {/* 3. MODAL DE INSPECCIÓN CÍVICA Y EVIDENCIA FOTOGRÁFICA EN ALTA RESOLUCIÓN */}
             {ticketInspeccion && (
               <div
-                className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn"
+                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="modal-inspeccion-title"
               >
-                <div className="max-w-2xl w-full rounded-3xl bg-[#000d26] border border-sky-400/30 p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+                <div className="max-w-2xl w-full rounded-3xl bg-cru-surface-card border border-cru-border p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
                   {/* Encabezado */}
-                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <div className="flex items-center justify-between border-b border-cru-border pb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center text-sky-400">
+                      <div className="w-10 h-10 rounded-xl bg-cru-accent-sky-bg border border-cru-accent-sky-border flex items-center justify-center text-cru-accent-sky">
                         <Camera className="w-5 h-5" strokeWidth={1.75} />
                       </div>
                       <div>
-                        <h3 id="modal-inspeccion-title" className="text-lg font-bold text-white flex items-center gap-2">
+                        <h3 id="modal-inspeccion-title" className="text-lg font-bold text-cru-text flex items-center gap-2">
                           <span>Inspección Cívica de Evidencia</span>
-                          <span className="text-xs font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40">
+                          <span className="text-xs font-mono px-2 py-0.5 rounded bg-cru-accent-sky-bg text-cru-accent-sky border border-cru-accent-sky-border">
                             {ticketInspeccion.id || ticketInspeccion.reportId}
                           </span>
                         </h3>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-cru-text-muted">
                           Expediente técnico oficial radicado por el ciudadano ante la Municipalidad.
                         </p>
                       </div>
@@ -2592,7 +2592,7 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => setTicketInspeccion(null)}
-                      className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                      className="p-2 rounded-xl bg-cru-surface-muted hover:bg-cru-surface text-cru-text-muted hover:text-cru-text transition-colors"
                       aria-label="Cerrar modal"
                       title="Cerrar (Escape)"
                     >
@@ -2601,7 +2601,7 @@ export default function Dashboard() {
                   </div>
 
                   {/* Imagen en Alta Resolución */}
-                  <div className="rounded-2xl overflow-hidden border border-white/10 bg-black/60 relative flex items-center justify-center max-h-80">
+                  <div className="rounded-2xl overflow-hidden border border-cru-border bg-cru-surface-muted relative flex items-center justify-center max-h-80">
                     <img
                       src={ticketInspeccion.imagenUrl || ticketInspeccion.fotoUrl}
                       alt={`Evidencia fotográfica ${ticketInspeccion.id}`}
@@ -2615,18 +2615,18 @@ export default function Dashboard() {
 
                   {/* Ficha Técnica del Expediente */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
-                      <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Tipología de Daño</div>
-                      <div className="font-bold text-white text-sm">{ticketInspeccion.categoriaTitulo || ticketInspeccion.titulo}</div>
-                      <div className="text-slate-400 text-[11px]">{ticketInspeccion.descripcion || ticketInspeccion.direccionExacta}</div>
+                    <div className="p-3.5 rounded-xl bg-cru-surface-muted border border-cru-border space-y-1">
+                      <div className="text-[10px] text-cru-text-muted uppercase font-bold tracking-wider">Tipología de Daño</div>
+                      <div className="font-bold text-cru-text text-sm">{ticketInspeccion.categoriaTitulo || ticketInspeccion.titulo}</div>
+                      <div className="text-cru-text-soft text-[11px]">{ticketInspeccion.descripcion || ticketInspeccion.direccionExacta}</div>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
-                      <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Ubicación y Coordenadas GPS</div>
-                      <div className="font-bold text-white">
+                    <div className="p-3.5 rounded-xl bg-cru-surface-muted border border-cru-border space-y-1">
+                      <div className="text-[10px] text-cru-text-muted uppercase font-bold tracking-wider">Ubicación y Coordenadas GPS</div>
+                      <div className="font-bold text-cru-text">
                         {ticketInspeccion.canton}, {ticketInspeccion.distrito || ticketInspeccion.provincia}
                       </div>
-                      <div className="font-mono text-[11px] text-sky-400">
+                      <div className="font-mono text-[11px] text-cru-accent-sky">
                         {Array.isArray(ticketInspeccion.coordenadas)
                           ? `GPS: ${ticketInspeccion.coordenadas[0].toFixed(5)}, ${ticketInspeccion.coordenadas[1].toFixed(5)}`
                           : ticketInspeccion.coordenadas?.lat
@@ -2635,18 +2635,18 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
-                      <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Fecha y Radicación</div>
-                      <div className="font-mono text-slate-200">
+                    <div className="p-3.5 rounded-xl bg-cru-surface-muted border border-cru-border space-y-1">
+                      <div className="text-[10px] text-cru-text-muted uppercase font-bold tracking-wider">Fecha y Radicación</div>
+                      <div className="font-mono text-cru-text">
                         {ticketInspeccion.fechaRadicado
                           ? new Date(ticketInspeccion.fechaRadicado).toLocaleString('es-CR')
                           : '25/09/2026, 08:15 CST'}
                       </div>
-                      <div className="text-slate-400 text-[11px]">Cédula denunciante: <strong className="text-slate-300 font-mono">{ticketInspeccion.reportadoPor || '1-1823-0456'}</strong></div>
+                      <div className="text-cru-text-muted text-[11px]">Cédula denunciante: <strong className="text-cru-text-soft font-mono">{ticketInspeccion.reportadoPor || '1-1823-0456'}</strong></div>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
-                      <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Despacho de Cuadrilla</div>
+                    <div className="p-3.5 rounded-xl bg-cru-surface-muted border border-cru-border space-y-1">
+                      <div className="text-[10px] text-cru-text-muted uppercase font-bold tracking-wider">Despacho de Cuadrilla</div>
                       <div>
                         {(() => {
                           const c = obtenerCuadrillaAutomatica(ticketInspeccion.categoria);
@@ -2657,29 +2657,29 @@ export default function Dashboard() {
                           );
                         })()}
                       </div>
-                      <div className="text-[11px] text-slate-400 mt-1">
-                        Prioridad: <strong className={ticketInspeccion.prioridad === 'ALTA' ? 'text-red-400' : 'text-amber-400'}>{ticketInspeccion.prioridad}</strong>
+                      <div className="text-[11px] text-cru-text-muted mt-1">
+                        Prioridad: <strong className={ticketInspeccion.prioridad === 'ALTA' ? 'text-cru-accent-red font-bold' : 'text-cru-accent-amber font-bold'}>{ticketInspeccion.prioridad}</strong>
                       </div>
                     </div>
                   </div>
 
                   {/* Declaración Jurada */}
-                  <div className="p-3.5 rounded-2xl bg-sky-500/10 border border-sky-400/20 text-xs text-sky-200 space-y-1">
-                    <div className="font-bold flex items-center gap-1.5 text-sky-300">
-                      <ShieldCheck className="w-4 h-4 text-sky-400" />
+                  <div className="p-3.5 rounded-2xl bg-cru-accent-sky-bg border border-cru-accent-sky-border text-xs text-cru-text space-y-1">
+                    <div className="font-bold flex items-center gap-1.5 text-cru-accent-sky">
+                      <ShieldCheck className="w-4 h-4 text-cru-accent-sky" />
                       <span>Declaración Jurada de Veracidad Cívica</span>
                     </div>
-                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                    <p className="text-[11px] text-cru-text-soft leading-relaxed">
                       "Declaro bajo la fe de juramento que la información y evidencia fotográfica proporcionada corresponden a hechos reales observados en el espacio público del cantón, autorizando a la Municipalidad a utilizar las coordenadas geográficas para la inspección y reparación oficial."
                     </p>
                   </div>
 
                   {/* Botón Cerrar */}
-                  <div className="flex justify-end gap-3 pt-2 border-t border-white/10">
+                  <div className="flex justify-end gap-3 pt-2 border-t border-cru-border">
                     <button
                       type="button"
                       onClick={() => setTicketInspeccion(null)}
-                      className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors"
+                      className="px-5 py-2.5 rounded-xl bg-cru-surface-muted hover:bg-cru-surface text-cru-text border border-cru-border text-xs font-bold transition-colors"
                     >
                       Cerrar Inspección
                     </button>
@@ -2696,20 +2696,20 @@ export default function Dashboard() {
         {activeTab === 'cne' && (
           <div className="space-y-6 animate-fadeIn">
             {/* Conmutador Cromático del Nivel de Alerta */}
-            <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-6">
+            <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <ShieldAlert className="w-5 h-5 text-red-500" strokeWidth={1.75} />
+                <h3 className="text-lg font-bold text-cru-text flex items-center gap-2">
+                  <ShieldAlert className="w-5 h-5 text-cru-accent-red" strokeWidth={1.75} />
                   <span>Centro de Operaciones de Emergencia (COE · CNE)</span>
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-cru-text-muted">
                   Control oficial del semáforo nacional de alerta temprana y red cantonal de albergues para evacuación.
                 </p>
               </div>
 
               {/* Botonera de Niveles de Alerta */}
               <div className="space-y-2">
-                <div className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                <div className="text-xs font-bold text-cru-text-soft uppercase tracking-wider">
                   Nivel de Alerta Soberana Nacional / Cantonal:
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -2726,17 +2726,17 @@ export default function Dashboard() {
                         type="button"
                         onClick={() => handleCambiarAlerta(a.nivel)}
                         style={{
-                          backgroundColor: activo ? `${a.color}30` : 'rgba(255,255,255,0.04)',
-                          borderColor: activo ? a.color : 'rgba(255,255,255,0.1)',
-                          color: activo ? a.color : '#FFFFFF',
+                          backgroundColor: activo ? `${a.color}25` : 'transparent',
+                          borderColor: activo ? a.color : 'var(--cru-border)',
+                          color: activo ? a.color : 'var(--cru-text)',
                           borderWidth: activo ? '2px' : '1px'
                         }}
-                        className="p-3.5 rounded-xl border text-left transition-all cursor-pointer"
+                        className="p-3.5 rounded-xl border text-left transition-all cursor-pointer bg-cru-surface-muted"
                       >
                         <span className="font-bold text-xs flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: a.color }} />
                           {a.label}
-                          {activo && <span className="ml-auto text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10">ACTIVO</span>}
+                          {activo && <span className="ml-auto text-[10px] font-mono px-2 py-0.5 rounded-full bg-cru-surface">ACTIVO</span>}
                         </span>
                       </button>
                     );
@@ -2746,7 +2746,7 @@ export default function Dashboard() {
 
               {/* Redactor del Comunicado Oficial */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-cru-text-soft uppercase tracking-wider">
                   Comunicado Oficial de la Presidencia de la República y CNE:
                 </label>
                 <textarea
@@ -2754,13 +2754,13 @@ export default function Dashboard() {
                   value={comunicadoTexto}
                   onChange={(e) => setComunicadoTexto(e.target.value)}
                   placeholder="Redactar aviso oficial de emergencia para difusión en toda la plataforma..."
-                  className="w-full p-3.5 text-xs rounded-2xl bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 focus:border-red-500 focus:outline-none leading-relaxed"
+                  className="w-full p-3.5 text-xs rounded-2xl bg-theme-input-bg border border-theme-input-border text-theme-input-text placeholder:text-cru-text-muted focus:border-cru-accent-sky focus:outline-none leading-relaxed"
                 />
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '0.5rem', flexWrap: 'wrap' }}>
                   <button
                     type="button"
                     onClick={handleGuardarAlertaCNE}
-                    className="py-2.5 px-5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-2 transition-colors shadow-lg shadow-red-600/30 cursor-pointer"
+                    className="py-2.5 px-5 rounded-xl bg-cru-accent-red hover:opacity-90 text-white font-bold text-xs flex items-center gap-2 transition-colors shadow-lg cursor-pointer"
                   >
                     <Send className="w-4 h-4" strokeWidth={2} />
                     <span>Publicar y Actualizar Nivel de Alerta</span>
@@ -2776,9 +2776,9 @@ export default function Dashboard() {
                       gap: '8px',
                       padding: '10px 18px',
                       borderRadius: '10px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#CBD5E1',
+                      backgroundColor: 'var(--cru-surface-muted)',
+                      border: '1px solid var(--cru-border)',
+                      color: 'var(--cru-text)',
                       fontWeight: 600,
                       fontSize: '0.85rem',
                       cursor: isDeactivatingAlerta ? 'not-allowed' : 'pointer',
@@ -2786,7 +2786,7 @@ export default function Dashboard() {
                     }}
                     title="Quitar la alerta activa de toda la plataforma web"
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                       <line x1="1" y1="1" x2="23" y2="23" />
                     </svg>
@@ -2796,8 +2796,8 @@ export default function Dashboard() {
               </div>
 
               {/* Catálogo y Estado de Albergues */}
-              <div className="space-y-3 pt-4 border-t border-white/10">
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+              <div className="space-y-3 pt-4 border-t border-cru-border">
+                <h4 className="text-sm font-bold text-cru-text uppercase tracking-wider">
                   Red Cantonal de Albergues de Emergencia
                 </h4>
 
@@ -2805,37 +2805,28 @@ export default function Dashboard() {
                   {albergues.map((alb) => (
                     <div
                       key={alb.id}
-                      className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 space-y-2.5"
+                      className="p-4 rounded-2xl bg-cru-surface-muted border border-cru-border space-y-2.5"
                     >
                       <div className="flex items-start justify-between">
                         <div>
-                          <div className="font-bold text-white text-sm">{alb.nombre}</div>
-                          <div className="text-xs text-slate-400">{alb.canton}, {alb.provincia}</div>
+                          <div className="font-bold text-cru-text text-sm">{alb.nombre}</div>
+                          <div className="text-xs text-cru-text-muted">{alb.canton}, {alb.provincia}</div>
                         </div>
                         <select
                           value={alb.estado}
                           onChange={(e) => handleCambiarEstadoAlbergue(alb.id, e.target.value)}
-                          style={{
-                            backgroundColor: '#000814',
-                            color: '#FFFFFF',
-                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                            borderRadius: '10px',
-                            padding: '0.45rem 0.8rem',
-                            outline: 'none',
-                            fontSize: '0.85rem'
-                          }}
-                          className="focus:border-red-500 font-bold cursor-pointer"
+                          className="py-1.5 px-3 rounded-xl bg-theme-input-bg border border-theme-input-border text-theme-input-text text-xs font-bold outline-none focus:border-cru-accent-sky cursor-pointer transition-colors"
                         >
-                          <option value="Habilitado" style={{ backgroundColor: '#000814', color: '#10B981', fontWeight: 'bold' }}>
+                          <option value="Habilitado" className="text-cru-accent-green font-bold">
                             ● Habilitado
                           </option>
-                          <option value="Ocupación Alta" style={{ backgroundColor: '#000814', color: '#F59E0B', fontWeight: 'bold' }}>
+                          <option value="Ocupación Alta" className="text-cru-accent-amber font-bold">
                             ● Ocupación Alta
                           </option>
-                          <option value="Lleno al 100%" style={{ backgroundColor: '#000814', color: '#EF4444', fontWeight: 'bold' }}>
+                          <option value="Lleno al 100%" className="text-cru-accent-red font-bold">
                             ● Lleno al 100%
                           </option>
-                          <option value="En Reserva" style={{ backgroundColor: '#000814', color: '#3B82F6', fontWeight: 'bold' }}>
+                          <option value="En Reserva" className="text-cru-accent-sky font-bold">
                             ● En Reserva
                           </option>
                         </select>
@@ -2843,27 +2834,27 @@ export default function Dashboard() {
 
                       {/* Barra de Aforo */}
                       <div className="space-y-1">
-                        <div className="flex justify-between text-[11px] text-slate-400">
+                        <div className="flex justify-between text-[11px] text-cru-text-muted">
                           <span>Aforo actual: {alb.ocupacionActual} de {alb.capacidadTotal} personas</span>
                           <span>{Math.round((alb.ocupacionActual / alb.capacidadTotal) * 100)}%</span>
                         </div>
-                        <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+                        <div className="w-full h-2 rounded-full bg-cru-track overflow-hidden">
                           <div
                             className={`h-full transition-all ${
                               alb.ocupacionActual >= alb.capacidadTotal
-                                ? 'bg-red-500'
+                                ? 'bg-cru-accent-red'
                                 : alb.ocupacionActual / alb.capacidadTotal > 0.7
-                                ? 'bg-amber-400'
-                                : 'bg-emerald-400'
+                                ? 'bg-cru-accent-amber'
+                                : 'bg-cru-accent-green'
                             }`}
                             style={{ width: `${Math.min(100, (alb.ocupacionActual / alb.capacidadTotal) * 100)}%` }}
                           />
                         </div>
                       </div>
 
-                      <div className="text-[11px] text-slate-400 border-t border-white/5 pt-1.5 flex justify-between items-center">
+                      <div className="text-[11px] text-cru-text-muted border-t border-cru-border pt-1.5 flex justify-between items-center">
                         <span>Contacto: {alb.responsableContacto}</span>
-                        <span className="text-sky-400 font-semibold">Ley 7600 OK</span>
+                        <span className="text-cru-accent-sky font-semibold">Ley 7600 OK</span>
                       </div>
                     </div>
                   ))}
@@ -2879,13 +2870,13 @@ export default function Dashboard() {
         {activeTab === 'ia' && (
           <div className="space-y-6 animate-fadeIn">
             {/* Kill-Switch e Inferencia de IA */}
-            <div className="rounded-3xl p-6 bg-white/[0.02] border border-white/10 space-y-6">
+            <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Cpu className="w-5 h-5 text-sky-400" strokeWidth={1.75} />
+                <h3 className="text-lg font-bold text-cru-text flex items-center gap-2">
+                  <Cpu className="w-5 h-5 text-cru-accent-sky" strokeWidth={1.75} />
                   <span>Gobernanza del Motor de Inteligencia Artificial Cívica</span>
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-cru-text-muted">
                   Control soberano del modelo generativo, sensibilidad del clasificador y control estricto de acceso a colecciones.
                 </p>
               </div>
@@ -2894,24 +2885,24 @@ export default function Dashboard() {
               <div
                 className={`p-5 rounded-2xl border flex items-center justify-between transition-all ${
                   configIA.killSwitchActivo
-                    ? 'bg-red-500/15 border-red-500'
-                    : 'bg-white/[0.03] border-white/10'
+                    ? 'bg-cru-accent-red-bg border-cru-accent-red-border'
+                    : 'bg-cru-surface-muted border-cru-border'
                 }`}
               >
                 <div>
-                  <div className="text-sm font-extrabold text-white flex items-center gap-2">
+                  <div className="text-sm font-extrabold text-cru-text flex items-center gap-2">
                     <span>Interruptor Maestro de IA (Kill-Switch)</span>
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${
                         configIA.killSwitchActivo
-                          ? 'bg-red-500 text-white'
-                          : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                          ? 'bg-cru-accent-red text-white'
+                          : 'bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border'
                       }`}
                     >
                       {configIA.killSwitchActivo ? 'ACTIVADO (APAGADO)' : 'OPERATIVO'}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1 max-w-lg leading-relaxed">
+                  <p className="text-xs text-cru-text-muted mt-1 max-w-lg leading-relaxed">
                     {configIA.killSwitchActivo
                       ? 'El motor de IA se encuentra totalmente inhabilitado para evitar alucinaciones o en caso de contingencia cibernética.'
                       : 'La IA opera normalmente brindando asistencia de itinerarios, moderación predictiva y búsqueda semántica.'}
@@ -2923,8 +2914,8 @@ export default function Dashboard() {
                   onClick={handleToggleKillSwitch}
                   className={`py-2 px-5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
                     configIA.killSwitchActivo
-                      ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-600/40'
-                      : 'bg-white/[0.08] hover:bg-white/[0.14] text-white'
+                      ? 'bg-cru-accent-red hover:opacity-90 text-white shadow-lg'
+                      : 'bg-cru-surface hover:bg-cru-surface-muted border border-cru-border text-cru-text'
                   }`}
                 >
                   {configIA.killSwitchActivo ? (
@@ -2934,7 +2925,7 @@ export default function Dashboard() {
                     </>
                   ) : (
                     <>
-                      <ToggleLeft className="w-5 h-5 text-slate-400" />
+                      <ToggleLeft className="w-5 h-5 text-cru-text-muted" />
                       <span>Activar Kill-Switch</span>
                     </>
                   )}
@@ -2943,7 +2934,7 @@ export default function Dashboard() {
 
               {/* Selector de Sensibilidad de Moderación */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-cru-text-soft uppercase tracking-wider">
                   Sensibilidad del Filtro Automático de Contenidos:
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -2958,8 +2949,8 @@ export default function Dashboard() {
                       onClick={() => handleCambiarSensibilidad(s.id)}
                       className={`p-3.5 rounded-2xl text-left border transition-all ${
                         configIA.sensibilidadModeracion === s.id
-                          ? 'bg-sky-500/20 border-sky-400 text-white font-bold'
-                          : 'bg-white/[0.02] border-white/10 text-slate-400 hover:bg-white/[0.05]'
+                          ? 'bg-cru-accent-sky-bg border-cru-accent-sky-border text-cru-accent-sky font-bold'
+                          : 'bg-cru-surface-muted border-cru-border text-cru-text-muted hover:bg-cru-surface hover:text-cru-text'
                       }`}
                     >
                       <div className="text-xs font-black">{s.label}</div>
@@ -2971,7 +2962,7 @@ export default function Dashboard() {
 
               {/* Checkboxes de Colecciones Autorizadas */}
               <div className="space-y-2.5">
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-cru-text-soft uppercase tracking-wider">
                   Colecciones de Datos Autorizadas para Lectura por la IA:
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
@@ -2989,10 +2980,10 @@ export default function Dashboard() {
                         key={col.id}
                         className={`p-3 rounded-xl border flex items-center justify-between ${
                           col.locked
-                            ? 'bg-red-500/5 border-red-500/20 text-slate-500 cursor-not-allowed opacity-60'
+                            ? 'bg-cru-accent-red-bg border-cru-accent-red-border text-cru-text-muted cursor-not-allowed opacity-60'
                             : isChecked
-                            ? 'bg-sky-500/10 border-sky-500/40 text-white cursor-pointer'
-                            : 'bg-white/[0.02] border-white/10 text-slate-400 hover:bg-white/[0.05] cursor-pointer'
+                            ? 'bg-cru-accent-sky-bg border-cru-accent-sky-border text-cru-accent-sky cursor-pointer'
+                            : 'bg-cru-surface-muted border-cru-border text-cru-text-muted hover:text-cru-text cursor-pointer'
                         }`}
                       >
                         <span className="font-semibold">{col.label}</span>
@@ -3010,8 +3001,8 @@ export default function Dashboard() {
               </div>
 
               {/* Herramientas de Respaldo y Mantenimiento del Sistema */}
-              <div className="pt-6 border-t border-white/10 space-y-3">
-                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+              <div className="pt-6 border-t border-cru-border space-y-3">
+                <h4 className="text-xs font-bold text-cru-text-soft uppercase tracking-wider">
                   Mantenimiento Soberano y Respaldo Institucional
                 </h4>
 
@@ -3019,18 +3010,18 @@ export default function Dashboard() {
                   <button
                     type="button"
                     onClick={descargarRespaldoDbJson}
-                    className="py-3 px-5 rounded-2xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-200 text-xs font-bold flex items-center gap-2 transition-colors shadow-lg"
+                    className="py-3 px-5 rounded-2xl bg-cru-accent-sky-bg hover:opacity-80 border border-cru-accent-sky-border text-cru-accent-sky text-xs font-bold flex items-center gap-2 transition-colors shadow-sm"
                   >
-                    <Download className="w-4 h-4 text-sky-400" strokeWidth={1.75} />
+                    <Download className="w-4 h-4 text-cru-accent-sky" strokeWidth={1.75} />
                     <span>Descargar Copia de Seguridad</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleRestablecerSemilla}
-                    className="py-3 px-5 rounded-2xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-300 text-xs font-bold flex items-center gap-2 transition-colors"
+                    className="py-3 px-5 rounded-2xl bg-cru-accent-red-bg hover:opacity-80 border border-cru-accent-red-border text-cru-accent-red text-xs font-bold flex items-center gap-2 transition-colors"
                   >
-                    <RotateCcw className="w-4 h-4 text-red-400" strokeWidth={1.75} />
+                    <RotateCcw className="w-4 h-4 text-cru-accent-red" strokeWidth={1.75} />
                     <span>Restablecer Datos Semilla de Fábrica</span>
                   </button>
                 </div>

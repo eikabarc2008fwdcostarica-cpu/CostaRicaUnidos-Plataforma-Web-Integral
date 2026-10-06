@@ -61,7 +61,7 @@ export default function AdminNavbar({
   return (
     <>
     <header
-      className="admin-top-navbar"
+      className="admin-top-navbar surface-dark"
       style={{
         position: 'sticky',
         top: 0,

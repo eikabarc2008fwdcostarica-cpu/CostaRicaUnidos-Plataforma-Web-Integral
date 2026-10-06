@@ -361,9 +361,9 @@ export default function ModeracionForoPanel() {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn text-slate-100">
+    <div className="space-y-6 animate-fadeIn text-cru-text">
       {/* 1. ENCABEZADO Y ESTADO DEL SUPERVISOR IA */}
-      <div className="rounded-3xl p-6 bg-gradient-to-r from-[#070D1B] via-[#0A1226] to-[#070D1B] border border-sky-400/20 shadow-xl relative overflow-hidden">
+      <div className="rounded-3xl p-6 bg-cru-surface border border-cru-border shadow-sm relative overflow-hidden">
         <div
           className="absolute top-0 left-0 right-0 h-[2px]"
           style={{
@@ -375,43 +375,43 @@ export default function ModeracionForoPanel() {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-[11px] font-extrabold tracking-wider uppercase text-sky-400 bg-sky-500/10 px-2.5 py-0.5 rounded-full border border-sky-400/30 flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-sky-400" />
+              <span className="text-[11px] font-extrabold tracking-wider uppercase text-cru-accent-sky bg-cru-accent-sky-bg px-2.5 py-0.5 rounded-full border border-cru-accent-sky-border flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-cru-accent-sky" />
                 M04 · SUPERVISOR IA DEL FORO TICO
               </span>
-              <span className="text-[11px] font-semibold text-slate-400">
+              <span className="text-[11px] font-semibold text-cru-text-muted">
                 Nivel 5 · Super Administrador Nacional
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-black text-cru-text tracking-tight">
               {t('moderacion.panelTitulo', 'Consola de Moderación Soberana y Sanciones')}
             </h2>
-            <p className="text-xs text-slate-400 max-w-2xl mt-1 leading-relaxed">
+            <p className="text-xs text-cru-text-muted max-w-2xl mt-1 leading-relaxed">
               Supervisión de convivencia ciudadana, resolución de apelaciones, gestión de suspensiones graduales y auditoría inmutable de intervenciones administrativas.
             </p>
           </div>
 
           {/* Badge del Estado de Gobernanza de IA */}
-          <div className="flex items-center gap-3 bg-slate-900/80 p-3 rounded-2xl border border-white/10 shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center text-sky-400">
+          <div className="flex items-center gap-3 bg-cru-surface-muted p-3 rounded-2xl border border-cru-border shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-cru-accent-sky-bg border border-cru-accent-sky-border flex items-center justify-center text-cru-accent-sky">
               <Cpu className="w-5 h-5" />
             </div>
             <div className="text-xs">
               <div className="flex items-center gap-2">
-                <span className="text-slate-400">Supervisor IA:</span>
+                <span className="text-cru-text-muted">Supervisor IA:</span>
                 <span
                   className={`font-black uppercase text-[10px] px-2 py-0.5 rounded ${
                     configIA.killSwitchActivo
-                      ? 'bg-red-500 text-white'
-                      : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      ? 'bg-cru-accent-red text-white'
+                      : 'bg-cru-accent-green-bg text-cru-accent-green border border-cru-accent-green-border'
                   }`}
                 >
                   {configIA.killSwitchActivo ? 'KILL-SWITCH ACTIVO' : 'OPERATIVO'}
                 </span>
               </div>
-              <div className="text-slate-300 font-semibold mt-0.5">
+              <div className="text-cru-text-soft font-semibold mt-0.5">
                 Sensibilidad:{' '}
-                <strong className="text-sky-300 font-bold">
+                <strong className="text-cru-accent-sky font-bold">
                   {configIA.sensibilidadModeracion || 'MODERADA'}
                 </strong>
               </div>
@@ -420,7 +420,7 @@ export default function ModeracionForoPanel() {
         </div>
 
         {mensajeExito && (
-          <div className="mt-4 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-2 animate-fadeIn">
+          <div className="mt-4 p-3 rounded-xl bg-cru-accent-green-bg border border-cru-accent-green-border text-cru-accent-green text-xs font-semibold flex items-center gap-2 animate-fadeIn">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{mensajeExito}</span>
           </div>
@@ -430,64 +430,64 @@ export default function ModeracionForoPanel() {
       {/* 2. TARJETAS DE MÉTRICAS */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Bloqueados Hoy */}
-        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-cru-surface border border-cru-border shadow-sm relative overflow-hidden">
+          <div className="flex items-center justify-between text-xs text-cru-text-muted font-bold uppercase tracking-wider">
             <span>Bloqueados Hoy</span>
-            <ShieldAlert className="w-4 h-4 text-rose-400" />
+            <ShieldAlert className="w-4 h-4 text-cru-accent-red" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-rose-400 mt-2 font-mono">
+          <div className="text-2xl sm:text-3xl font-black text-cru-accent-red mt-2 font-mono">
             {metricas.bloqueadosHoy}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Intentos infractores interceptados hoy</p>
+          <p className="text-[11px] text-cru-text-muted mt-1">Intentos infractores interceptados hoy</p>
         </div>
 
         {/* Baneos Activos */}
-        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-cru-surface border border-cru-border shadow-sm relative overflow-hidden">
+          <div className="flex items-center justify-between text-xs text-cru-text-muted font-bold uppercase tracking-wider">
             <span>Baneos Activos</span>
-            <UserX className="w-4 h-4 text-amber-400" />
+            <UserX className="w-4 h-4 text-cru-accent-amber" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-amber-400 mt-2 font-mono">
+          <div className="text-2xl sm:text-3xl font-black text-cru-accent-amber mt-2 font-mono">
             {metricas.baneosActivos}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Cuentas con suspensión temporal o indefinida</p>
+          <p className="text-[11px] text-cru-text-muted mt-1">Cuentas con suspensión temporal o indefinida</p>
         </div>
 
         {/* Reincidentes */}
-        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-cru-surface border border-cru-border shadow-sm relative overflow-hidden">
+          <div className="flex items-center justify-between text-xs text-cru-text-muted font-bold uppercase tracking-wider">
             <span>Reincidentes</span>
-            <AlertTriangle className="w-4 h-4 text-sky-400" />
+            <AlertTriangle className="w-4 h-4 text-cru-accent-sky" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-sky-400 mt-2 font-mono">
+          <div className="text-2xl sm:text-3xl font-black text-cru-accent-sky mt-2 font-mono">
             {metricas.reincidentes}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Usuarios con 2 o más strikes acumulados</p>
+          <p className="text-[11px] text-cru-text-muted mt-1">Usuarios con 2 o más strikes acumulados</p>
         </div>
 
         {/* Falsos Positivos */}
-        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
+        <div className="p-5 rounded-2xl bg-cru-surface border border-cru-border shadow-sm relative overflow-hidden">
+          <div className="flex items-center justify-between text-xs text-cru-text-muted font-bold uppercase tracking-wider">
             <span>Falsos Positivos</span>
-            <Scale className="w-4 h-4 text-emerald-400" />
+            <Scale className="w-4 h-4 text-cru-accent-green" />
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-emerald-400 mt-2 font-mono">
+          <div className="text-2xl sm:text-3xl font-black text-cru-accent-green mt-2 font-mono">
             {metricas.falsosPositivos}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Casos rectificados por la administración</p>
+          <p className="text-[11px] text-cru-text-muted mt-1">Casos rectificados por la administración</p>
         </div>
       </div>
 
       {/* 3. SELECTOR DE VISTA: INCIDENTES / BANEOS / AUDITORÍA */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-2 flex-wrap gap-3">
+      <div className="flex items-center justify-between border-b border-cru-border pb-2 flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setSubTab('incidentes')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               subTab === 'incidentes'
-                ? 'bg-sky-500/20 text-sky-300 border border-sky-400/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-white/[0.03]'
+                ? 'bg-cru-accent-sky-bg text-cru-accent-sky border border-cru-accent-sky-border shadow-sm'
+                : 'text-cru-text-muted hover:text-cru-text hover:bg-cru-surface-muted'
             }`}
           >
             <ShieldAlert className="w-4 h-4" />
@@ -499,8 +499,8 @@ export default function ModeracionForoPanel() {
             onClick={() => setSubTab('baneos')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               subTab === 'baneos'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-400/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-white/[0.03]'
+                ? 'bg-cru-accent-amber-bg text-cru-accent-amber border border-cru-accent-amber-border shadow-sm'
+                : 'text-cru-text-muted hover:text-cru-text hover:bg-cru-surface-muted'
             }`}
           >
             <UserX className="w-4 h-4" />
@@ -512,8 +512,8 @@ export default function ModeracionForoPanel() {
             onClick={() => setSubTab('auditoria')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
               subTab === 'auditoria'
-                ? 'bg-purple-500/20 text-purple-300 border border-purple-400/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-white/[0.03]'
+                ? 'bg-cru-accent-purple-bg text-cru-accent-purple border border-cru-accent-purple-border shadow-sm'
+                : 'text-cru-text-muted hover:text-cru-text hover:bg-cru-surface-muted'
             }`}
           >
             <History className="w-4 h-4" />
@@ -525,7 +525,7 @@ export default function ModeracionForoPanel() {
           type="button"
           onClick={cargarDatosModeracion}
           title="Refrescar datos"
-          className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+          className="p-2 rounded-xl bg-cru-surface-muted hover:bg-cru-surface border border-cru-border text-cru-text-muted hover:text-cru-text text-xs font-semibold flex items-center gap-1.5 transition-colors"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${cargando ? 'animate-spin' : ''}`} />
           <span>Refrescar</span>
@@ -536,26 +536,26 @@ export default function ModeracionForoPanel() {
       {subTab === 'incidentes' && (
         <div className="space-y-4">
           {/* Barra de Filtros */}
-          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-between gap-4 flex-wrap text-xs">
+          <div className="p-4 rounded-2xl bg-cru-surface border border-cru-border flex items-center justify-between gap-4 flex-wrap text-xs">
             {/* Buscador */}
             <div className="relative flex-1 min-w-[220px]">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-cru-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 placeholder="Buscar por autor, cédula o contenido..."
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white outline-none focus:border-sky-400"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-cru-surface-muted border border-cru-border text-cru-text placeholder:text-cru-text-muted outline-none focus:border-cru-accent-sky"
               />
             </div>
 
             {/* Filtro Gravedad */}
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 font-semibold">Gravedad:</span>
+              <span className="text-cru-text-muted font-semibold">Gravedad:</span>
               <select
                 value={filtroGravedad}
                 onChange={(e) => setFiltroGravedad(e.target.value)}
-                className="bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-slate-200 outline-none focus:border-sky-400 font-semibold"
+                className="bg-theme-input-bg border border-theme-input-border rounded-xl px-3 py-2 text-theme-input-text outline-none focus:border-cru-accent-sky font-semibold cursor-pointer"
               >
                 <option value="TODAS">Todas</option>
                 <option value="LEVE">Leve</option>
@@ -566,11 +566,11 @@ export default function ModeracionForoPanel() {
 
             {/* Filtro Estado */}
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 font-semibold">Estado:</span>
+              <span className="text-cru-text-muted font-semibold">Estado:</span>
               <select
                 value={filtroEstado}
                 onChange={(e) => setFiltroEstado(e.target.value)}
-                className="bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-slate-200 outline-none focus:border-sky-400 font-semibold"
+                className="bg-theme-input-bg border border-theme-input-border rounded-xl px-3 py-2 text-theme-input-text outline-none focus:border-cru-accent-sky font-semibold cursor-pointer"
               >
                 <option value="TODOS">Todos</option>
                 <option value="PENDIENTE_REVISION">Pendiente Revisión</option>
@@ -583,51 +583,51 @@ export default function ModeracionForoPanel() {
 
           {/* Listado de Incidentes */}
           {incidentesFiltrados.length === 0 ? (
-            <div className="p-8 text-center rounded-2xl bg-white/[0.02] border border-dashed border-white/15 text-slate-400 text-xs">
-              <ShieldCheck className="w-8 h-8 text-emerald-400 mx-auto mb-2 opacity-80" />
-              <p className="font-semibold text-white">No hay incidentes con los filtros seleccionados.</p>
-              <p className="mt-1 text-slate-500">El foro se encuentra en óptima convivencia cívica.</p>
+            <div className="p-8 text-center rounded-2xl bg-cru-surface border border-dashed border-cru-border text-cru-text-muted text-xs">
+              <ShieldCheck className="w-8 h-8 text-cru-accent-green mx-auto mb-2 opacity-80" />
+              <p className="font-semibold text-cru-text">No hay incidentes con los filtros seleccionados.</p>
+              <p className="mt-1 text-cru-text-muted">El foro se encuentra en óptima convivencia cívica.</p>
             </div>
           ) : (
             <div className="space-y-3">
               {incidentesFiltrados.map((inc) => {
                 const gravedadColor =
                   inc.gravedad === 'GRAVE'
-                    ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                    ? 'bg-cru-accent-red-bg text-cru-accent-red border-cru-accent-red-border'
                     : inc.gravedad === 'MEDIA'
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                    : 'bg-sky-500/20 text-sky-300 border-sky-400/40';
+                    ? 'bg-cru-accent-amber-bg text-cru-accent-amber border-cru-accent-amber-border'
+                    : 'bg-cru-accent-sky-bg text-cru-accent-sky border-cru-accent-sky-border';
 
                 return (
                   <div
                     key={inc.id}
-                    className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-white/20 transition-all space-y-3"
+                    className="p-5 rounded-2xl bg-cru-surface border border-cru-border hover:border-cru-border-hover transition-all space-y-3"
                   >
                     {/* Cabecera del Incidente */}
                     <div className="flex items-start justify-between gap-4 flex-wrap">
                       <div className="flex items-center gap-2.5 flex-wrap">
-                        <span className="font-mono text-xs font-bold text-sky-400">{inc.id}</span>
+                        <span className="font-mono text-xs font-bold text-cru-accent-sky">{inc.id}</span>
                         <span
                           className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border ${gravedadColor}`}
                         >
                           Gravedad {inc.gravedad || 'MEDIA'}
                         </span>
-                        <span className="text-[10px] font-bold text-slate-400 bg-slate-900 px-2 py-0.5 rounded-md border border-white/10">
+                        <span className="text-[10px] font-bold text-cru-text-muted bg-cru-surface-muted px-2 py-0.5 rounded-md border border-cru-border">
                           {inc.tipoContenido === 'COMENTARIO' ? 'Comentario' : 'Publicación'}
                         </span>
-                        <span className="text-xs text-slate-400">
+                        <span className="text-xs text-cru-text-muted">
                           {new Date(inc.fechaReporte || Date.now()).toLocaleString('es-CR')}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <span
-                          className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full ${
+                          className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${
                             inc.estado === 'FALSO_POSITIVO'
-                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                              ? 'bg-cru-accent-green-bg text-cru-accent-green border-cru-accent-green-border'
                               : inc.estado === 'SANCIONADO'
-                              ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                              : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                              ? 'bg-cru-accent-red-bg text-cru-accent-red border-cru-accent-red-border'
+                              : 'bg-cru-accent-amber-bg text-cru-accent-amber border-cru-accent-amber-border'
                           }`}
                         >
                           {inc.estado || 'PENDIENTE'}
@@ -636,39 +636,39 @@ export default function ModeracionForoPanel() {
                     </div>
 
                     {/* Autor e Info */}
-                    <div className="text-xs text-slate-300 flex items-center gap-3 flex-wrap">
+                    <div className="text-xs text-cru-text-soft flex items-center gap-3 flex-wrap">
                       <span>
-                        Autor: <strong className="text-white">{inc.autorNombre}</strong>
+                        Autor: <strong className="text-cru-text">{inc.autorNombre}</strong>
                       </span>
                       <span>
-                        Cédula: <span className="font-mono text-slate-400">{inc.autorCedula}</span>
+                        Cédula: <span className="font-mono text-cru-text-muted">{inc.autorCedula}</span>
                       </span>
                       {inc.autorRol && (
                         <span>
-                          Rol: <strong className="text-sky-300">{inc.autorRol}</strong>
+                          Rol: <strong className="text-cru-accent-sky">{inc.autorRol}</strong>
                         </span>
                       )}
                       <span>
                         Sanción:{' '}
-                        <strong className="text-amber-300">{inc.sancionAplicada || 'ADVERTENCIA'}</strong>
+                        <strong className="text-cru-accent-amber">{inc.sancionAplicada || 'ADVERTENCIA'}</strong>
                       </span>
                     </div>
 
                     {/* Texto infractor analizado */}
-                    <div className="p-3.5 rounded-xl bg-slate-950/80 border border-white/5 space-y-1.5">
-                      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                    <div className="p-3.5 rounded-xl bg-cru-surface-muted border border-cru-border space-y-1.5">
+                      <div className="text-[11px] font-bold text-cru-text-muted uppercase tracking-wider flex items-center justify-between">
                         <span>Texto Interceptado:</span>
                         {inc.scoreToxicidadIA !== undefined && (
-                          <span className="text-slate-400">
+                          <span className="text-cru-text-muted">
                             Toxicidad:{' '}
-                            <strong className="text-rose-400">{inc.scoreToxicidadIA}/100</strong>
+                            <strong className="text-cru-accent-red">{inc.scoreToxicidadIA}/100</strong>
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-200 font-mono bg-black/40 p-2.5 rounded-lg border border-white/5 whitespace-pre-wrap">
+                      <p className="text-xs text-cru-text font-mono bg-cru-surface p-2.5 rounded-lg border border-cru-border whitespace-pre-wrap">
                         {inc.textoOriginal}
                       </p>
-                      <div className="text-xs text-rose-300 pt-1">
+                      <div className="text-xs text-cru-accent-red pt-1">
                         <strong>Razón del Supervisor IA:</strong> {inc.razonIA}
                       </div>
                     </div>
@@ -676,11 +676,11 @@ export default function ModeracionForoPanel() {
                     {/* Términos detectados */}
                     {Array.isArray(inc.palabrasDetectadas) && inc.palabrasDetectadas.length > 0 && (
                       <div className="flex items-center gap-1.5 flex-wrap text-xs">
-                        <span className="text-slate-400 text-[11px]">Términos:</span>
+                        <span className="text-cru-text-muted text-[11px]">Términos:</span>
                         {inc.palabrasDetectadas.map((pal, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-rose-500/15 text-rose-300 border border-rose-500/30"
+                            className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-cru-accent-red-bg text-cru-accent-red border border-cru-accent-red-border"
                           >
                             "{pal}"
                           </span>
@@ -690,8 +690,8 @@ export default function ModeracionForoPanel() {
 
                     {/* Nota de Solicitud de Revisión por el Ciudadano si existe */}
                     {inc.solicitudRevisionCiudadano && (
-                      <div className="p-3 rounded-xl bg-sky-950/30 border border-sky-400/30 text-xs text-sky-200 space-y-1">
-                        <div className="font-bold flex items-center gap-1.5 text-sky-300">
+                      <div className="p-3 rounded-xl bg-cru-accent-sky-bg border border-cru-accent-sky-border text-xs text-cru-accent-sky space-y-1">
+                        <div className="font-bold flex items-center gap-1.5 text-cru-accent-sky">
                           <MessageSquare className="w-3.5 h-3.5" />
                           <span>Solicitud de Revisión del Ciudadano:</span>
                         </div>
@@ -700,14 +700,14 @@ export default function ModeracionForoPanel() {
                     )}
 
                     {/* Botonera de Acciones Administrativas */}
-                    <div className="pt-2 border-t border-white/5 flex items-center justify-end gap-2 flex-wrap">
+                    <div className="pt-2 border-t border-cru-border flex items-center justify-end gap-2 flex-wrap">
                       <button
                         type="button"
                         onClick={() => {
                           setModalAccion({ tipo: 'FALSO_POSITIVO', target: inc });
                           setJustificacionTexto('');
                         }}
-                        className="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 text-emerald-300 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                        className="px-3.5 py-1.5 rounded-xl bg-cru-accent-green-bg hover:opacity-90 border border-cru-accent-green-border text-cru-accent-green text-xs font-bold flex items-center gap-1.5 transition-colors"
                       >
                         <Scale className="w-3.5 h-3.5" />
                         <span>Marcar como Falso Positivo</span>
@@ -719,7 +719,7 @@ export default function ModeracionForoPanel() {
                           setModalAccion({ tipo: 'MODIFICAR_DURACION', target: inc });
                           setJustificacionTexto('');
                         }}
-                        className="px-3.5 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/35 text-sky-300 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                        className="px-3.5 py-1.5 rounded-xl bg-cru-accent-sky-bg hover:opacity-90 border border-cru-accent-sky-border text-cru-accent-sky text-xs font-bold flex items-center gap-1.5 transition-colors"
                       >
                         <Clock className="w-3.5 h-3.5" />
                         <span>Modificar Duración</span>
@@ -731,7 +731,7 @@ export default function ModeracionForoPanel() {
                           setModalAccion({ tipo: 'CONFIRMAR', target: inc });
                           setJustificacionTexto('');
                         }}
-                        className="px-3.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/35 text-rose-300 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                        className="px-3.5 py-1.5 rounded-xl bg-cru-accent-red-bg hover:opacity-90 border border-cru-accent-red-border text-cru-accent-red text-xs font-bold flex items-center gap-1.5 transition-colors"
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>Confirmar Sanción</span>
@@ -748,19 +748,19 @@ export default function ModeracionForoPanel() {
       {/* 5. SUB-TAB 2: BANEOS ACTIVOS */}
       {subTab === 'baneos' && (
         <div className="space-y-4">
-          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <UserX className="w-4 h-4 text-amber-400" />
+          <div className="p-4 rounded-2xl bg-cru-surface border border-cru-border flex items-center justify-between">
+            <h3 className="text-sm font-bold text-cru-text flex items-center gap-2">
+              <UserX className="w-4 h-4 text-cru-accent-amber" />
               <span>Lista de Cuentas Ciudadanas con Suspensión Activa</span>
             </h3>
-            <span className="text-xs text-slate-400">Total activos: {usuariosBaneados.length}</span>
+            <span className="text-xs text-cru-text-muted">Total activos: {usuariosBaneados.length}</span>
           </div>
 
           {usuariosBaneados.length === 0 ? (
-            <div className="p-8 text-center rounded-2xl bg-white/[0.02] border border-dashed border-white/15 text-slate-400 text-xs">
-              <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2 opacity-80" />
-              <p className="font-semibold text-white">No existen baneos activos en este momento.</p>
-              <p className="mt-1 text-slate-500">Todas las cuentas ciudadanas tienen acceso habilitado.</p>
+            <div className="p-8 text-center rounded-2xl bg-cru-surface border border-dashed border-cru-border text-cru-text-muted text-xs">
+              <CheckCircle2 className="w-8 h-8 text-cru-accent-green mx-auto mb-2 opacity-80" />
+              <p className="font-semibold text-cru-text">No existen baneos activos en este momento.</p>
+              <p className="mt-1 text-cru-text-muted">Todas las cuentas ciudadanas tienen acceso habilitado.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -775,33 +775,33 @@ export default function ModeracionForoPanel() {
                 return (
                   <div
                     key={u.id}
-                    className="p-5 rounded-2xl bg-slate-900/80 border border-amber-500/25 shadow-lg flex flex-col justify-between space-y-3"
+                    className="p-5 rounded-2xl bg-cru-surface border border-cru-accent-amber-border shadow-sm flex flex-col justify-between space-y-3"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h4 className="font-bold text-white text-base leading-snug">{u.nombre}</h4>
-                          <div className="text-xs text-slate-400">
-                            Cédula: <span className="font-mono text-slate-200">{u.cedula}</span> • Rol: {u.rol}
+                          <h4 className="font-bold text-cru-text text-base leading-snug">{u.nombre}</h4>
+                          <div className="text-xs text-cru-text-muted">
+                            Cédula: <span className="font-mono text-cru-text-soft">{u.cedula}</span> • Rol: {u.rol}
                           </div>
                         </div>
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-cru-accent-amber-bg text-cru-accent-amber border border-cru-accent-amber-border shrink-0">
                           {sancion.nivel || 'Baneo'}
                         </span>
                       </div>
 
-                      <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1.5 text-xs mt-3">
-                        <div className="text-slate-300">
-                          <span className="text-slate-400 font-semibold">Motivo: </span>
+                      <div className="p-3 rounded-xl bg-cru-surface-muted border border-cru-border space-y-1.5 text-xs mt-3">
+                        <div className="text-cru-text-soft">
+                          <span className="text-cru-text-muted font-semibold">Motivo: </span>
                           <span>{sancion.motivo || 'Infracción a las Reglas de Convivencia Cívica'}</span>
                         </div>
-                        <div className="text-slate-300">
-                          <span className="text-slate-400 font-semibold">Strikes acumulados: </span>
-                          <span className="font-bold text-amber-300">{sancion.strikes || 1}</span>
+                        <div className="text-cru-text-soft">
+                          <span className="text-cru-text-muted font-semibold">Strikes acumulados: </span>
+                          <span className="font-bold text-cru-accent-amber">{sancion.strikes || 1}</span>
                         </div>
-                        <div className="text-slate-300">
-                          <span className="text-slate-400 font-semibold">Tiempo restante: </span>
-                          <span className="font-bold text-white">
+                        <div className="text-cru-text-soft">
+                          <span className="text-cru-text-muted font-semibold">Tiempo restante: </span>
+                          <span className="font-bold text-cru-text">
                             {esIndefinida
                               ? 'Indefinido (espera resolución del Super Admin)'
                               : `${horasRestantes} horas restantes (${finFecha.toLocaleString('es-CR')})`}
@@ -816,7 +816,7 @@ export default function ModeracionForoPanel() {
                         setModalAccion({ tipo: 'LEVANTAR_BANEO', target: u });
                         setJustificacionTexto('');
                       }}
-                      className="w-full py-2 px-4 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+                      className="w-full py-2 px-4 rounded-xl bg-cru-accent-green-bg hover:opacity-90 border border-cru-accent-green-border text-cru-accent-green text-xs font-bold flex items-center justify-center gap-2 transition-colors"
                     >
                       <CheckCircle2 className="w-4 h-4" />
                       <span>Levantar Baneo Inmediato</span>
@@ -832,18 +832,18 @@ export default function ModeracionForoPanel() {
       {/* 6. SUB-TAB 3: BITÁCORA DE AUDITORÍA */}
       {subTab === 'auditoria' && (
         <div className="space-y-4">
-          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <History className="w-4 h-4 text-purple-400" />
+          <div className="p-4 rounded-2xl bg-cru-surface border border-cru-border flex items-center justify-between">
+            <h3 className="text-sm font-bold text-cru-text flex items-center gap-2">
+              <History className="w-4 h-4 text-cru-accent-purple" />
               <span>Registro Legal Inmutable de Acciones de Moderación</span>
             </h3>
-            <span className="text-xs text-slate-400">Total registros: {bitacora.length}</span>
+            <span className="text-xs text-cru-text-muted">Total registros: {bitacora.length}</span>
           </div>
 
-          <div className="rounded-2xl bg-white/[0.02] border border-white/10 overflow-hidden text-xs">
+          <div className="rounded-2xl bg-cru-surface border border-cru-border overflow-hidden text-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-900/90 text-slate-400 border-b border-white/10 font-bold uppercase text-[10px]">
+                <thead className="bg-cru-surface-muted text-cru-text-muted border-b border-cru-border font-bold uppercase text-[10px]">
                   <tr>
                     <th className="p-3">Fecha CST</th>
                     <th className="p-3">Acción</th>
@@ -852,7 +852,7 @@ export default function ModeracionForoPanel() {
                     <th className="p-3">Administrador</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-slate-300">
+                <tbody className="divide-y divide-cru-border text-cru-text-soft">
                   {bitacora
                     .filter((reg) =>
                       [
@@ -865,14 +865,14 @@ export default function ModeracionForoPanel() {
                       ].includes(reg.accion)
                     )
                     .map((log) => (
-                      <tr key={log.id} className="hover:bg-white/[0.02]">
-                        <td className="p-3 font-mono text-slate-400 whitespace-nowrap">
+                      <tr key={log.id} className="hover:bg-cru-surface-muted transition-colors">
+                        <td className="p-3 font-mono text-cru-text-muted whitespace-nowrap">
                           {log.fechaHoraCst || new Date(log.fecha || log.timestamp).toLocaleString('es-CR')}
                         </td>
-                        <td className="p-3 font-bold text-sky-300">{log.accion}</td>
-                        <td className="p-3 font-mono text-white">{log.entidadAfectada}</td>
-                        <td className="p-3 text-slate-300 max-w-xs truncate">{log.justificacion || log.justificante}</td>
-                        <td className="p-3 text-slate-400">{log.adminNombre || log.adminCedula}</td>
+                        <td className="p-3 font-bold text-cru-accent-sky">{log.accion}</td>
+                        <td className="p-3 font-mono text-cru-text">{log.entidadAfectada}</td>
+                        <td className="p-3 text-cru-text-soft max-w-xs truncate">{log.justificacion || log.justificante}</td>
+                        <td className="p-3 text-cru-text-muted">{log.adminNombre || log.adminCedula}</td>
                       </tr>
                     ))}
                 </tbody>
@@ -884,11 +884,11 @@ export default function ModeracionForoPanel() {
 
       {/* 7. MODAL DE ACCIÓN ADMINISTRATIVA CON JUSTIFICACIÓN OBLIGATORIA */}
       {modalAccion && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="max-w-lg w-full rounded-3xl bg-[#070D1B] border border-sky-400/40 p-6 space-y-4 shadow-2xl text-slate-100">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h4 className="font-bold text-white text-base flex items-center gap-2">
-                <Scale className="w-5 h-5 text-sky-400" />
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+          <div className="max-w-lg w-full rounded-3xl bg-cru-surface-card border border-cru-border p-6 space-y-4 shadow-2xl text-cru-text">
+            <div className="flex items-center justify-between border-b border-cru-border pb-3">
+              <h4 className="font-bold text-cru-text text-base flex items-center gap-2">
+                <Scale className="w-5 h-5 text-cru-accent-sky" />
                 <span>
                   {modalAccion.tipo === 'FALSO_POSITIVO' && 'Confirmar Falso Positivo'}
                   {modalAccion.tipo === 'LEVANTAR_BANEO' && 'Levantar Suspensión de Cuenta'}
@@ -899,13 +899,14 @@ export default function ModeracionForoPanel() {
               <button
                 type="button"
                 onClick={() => setModalAccion(null)}
-                className="text-slate-400 hover:text-white"
+                className="text-cru-text-muted hover:text-cru-text p-1 transition-colors"
+                title="Cerrar modal"
               >
                 <XCircle className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-cru-text-soft leading-relaxed">
               {modalAccion.tipo === 'FALSO_POSITIVO' &&
                 'Al marcar como falso positivo, el strike será retirado de la cuenta y el usuario podrá volver a participar en el foro inmediatamente. Esta acción quedará registrada en la bitácora legal.'}
               {modalAccion.tipo === 'LEVANTAR_BANEO' &&
@@ -918,11 +919,11 @@ export default function ModeracionForoPanel() {
 
             {modalAccion.tipo === 'MODIFICAR_DURACION' && (
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-300">Nueva duración en horas:</label>
+                <label className="text-xs font-bold text-cru-text">Nueva duración en horas:</label>
                 <select
                   value={duracionExtraHoras}
                   onChange={(e) => setDuracionExtraHoras(Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs outline-none focus:border-sky-400 font-semibold"
+                  className="w-full p-2.5 rounded-xl bg-theme-input-bg border border-theme-input-border text-theme-input-text text-xs outline-none focus:border-cru-accent-sky font-semibold cursor-pointer"
                 >
                   <option value={12}>12 horas</option>
                   <option value={24}>24 horas (1 día)</option>
@@ -934,7 +935,7 @@ export default function ModeracionForoPanel() {
             )}
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-300">
+              <label className="text-xs font-bold text-cru-text">
                 Justificación administrativa obligatoria (Ley N° 8968 / Auditoría):
               </label>
               <textarea
@@ -942,16 +943,16 @@ export default function ModeracionForoPanel() {
                 value={justificacionTexto}
                 onChange={(e) => setJustificacionTexto(e.target.value)}
                 placeholder="Detalla el fundamento de la decisión administrativa..."
-                className="w-full p-3 text-xs rounded-xl bg-slate-900 border border-white/10 text-white placeholder-slate-500 outline-none focus:border-sky-400"
+                className="w-full p-3 text-xs rounded-xl bg-theme-input-bg border border-theme-input-border text-theme-input-text placeholder:text-cru-text-muted outline-none focus:border-cru-accent-sky"
                 required
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-2 border-t border-white/10">
+            <div className="flex items-center justify-end gap-3 pt-2 border-t border-cru-border">
               <button
                 type="button"
                 onClick={() => setModalAccion(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-cru-surface-muted hover:bg-cru-surface text-cru-text border border-cru-border transition-colors"
               >
                 Cancelar
               </button>
@@ -959,7 +960,7 @@ export default function ModeracionForoPanel() {
                 type="button"
                 disabled={procesandoAccion || !justificacionTexto.trim()}
                 onClick={ejecutarAccion}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white disabled:opacity-50 flex items-center gap-2"
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-cru-accent-sky hover:opacity-90 text-white disabled:opacity-50 flex items-center gap-2 shadow-sm transition-all"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{procesandoAccion ? 'Procesando...' : 'Aplicar Decisión'}</span>

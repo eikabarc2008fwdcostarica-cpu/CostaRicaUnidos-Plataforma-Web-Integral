@@ -120,9 +120,9 @@ export default function ItinerarioIAPage() {
           <div
             className="p-8 sm:p-12 text-center space-y-6 shadow-xl"
             style={{
-              background: '#FFFFFF',
+              background: 'var(--cru-surface-card)',
               borderRadius: '24px',
-              border: '1px solid #E2E8F0',
+              border: '1px solid var(--cru-border)',
               borderTop: '4px solid #0053AF'
             }}
           >
@@ -179,9 +179,9 @@ export default function ItinerarioIAPage() {
               <div
                 className="p-5 space-y-2 shadow-sm"
                 style={{
-                  background: '#FFFFFF',
+                  background: 'var(--cru-surface-card)',
                   borderRadius: '16px',
-                  border: '1px solid #E2E8F0',
+                  border: '1px solid var(--cru-border)',
                   borderTop: '4px solid #0053AF'
                 }}
               >
@@ -197,10 +197,10 @@ export default function ItinerarioIAPage() {
               <div
                 className="p-5 space-y-2 shadow-sm"
                 style={{
-                  background: '#FFFFFF',
+                  background: 'var(--cru-surface-card)',
                   borderRadius: '16px',
-                  border: '1px solid #E2E8F0',
-                  borderTop: '4px solid #C22727'
+                  border: '1px solid var(--cru-border)',
+                  borderTop: '4px solid var(--cru-accent-red)'
                 }}
               >
                 <span className="font-bold text-[#C22727] flex items-center gap-1.5 text-sm">
@@ -215,9 +215,9 @@ export default function ItinerarioIAPage() {
               <div
                 className="p-5 space-y-2 shadow-sm"
                 style={{
-                  background: '#FFFFFF',
+                  background: 'var(--cru-surface-card)',
                   borderRadius: '16px',
-                  border: '1px solid #E2E8F0',
+                  border: '1px solid var(--cru-border)',
                   borderTop: '4px solid #059669'
                 }}
               >

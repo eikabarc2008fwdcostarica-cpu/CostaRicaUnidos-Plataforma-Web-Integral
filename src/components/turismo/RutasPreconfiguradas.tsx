@@ -155,7 +155,7 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
                     size="sm"
                     fullWidth
                     onClick={() => abrirEnGoogleMapsRuta(ruta)}
-                    style={{ backgroundColor: '#0053AF', borderColor: '#0053AF', color: '#FFFFFF', fontWeight: 600 }}
+                    style={{ backgroundColor: 'var(--cru-accent-blue)', borderColor: '#0053AF', color: '#FFFFFF', fontWeight: 600 }}
                     leftIcon={<Navigation size={14} />}
                   >
                     Navegar Ruta Completa
@@ -165,7 +165,7 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
                       variant="outline"
                       size="sm"
                       onClick={() => onSeleccionarRutaParaIA(ruta)}
-                      style={{ borderColor: '#062A77', color: '#062A77' }}
+                      style={{ borderColor: '#062A77', color: 'var(--cru-text)' }}
                     >
                       Adaptar con IA
                     </CivicButton>

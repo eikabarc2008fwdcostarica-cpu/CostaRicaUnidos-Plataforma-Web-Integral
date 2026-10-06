@@ -86,7 +86,7 @@ export default function NlpResultsDrawer({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#94A3B8',
+              color: 'var(--cru-text-muted)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -97,13 +97,13 @@ export default function NlpResultsDrawer({
           </button>
         </div>
 
-        <p style={{ fontSize: '0.86rem', color: '#CBD5E1', margin: '0 0 1rem', lineHeight: 1.5 }}>
+        <p style={{ fontSize: '0.86rem', color: 'var(--cru-border-strong)', margin: '0 0 1rem', lineHeight: 1.5 }}>
           {nlpResult.mensaje}
         </p>
 
         {nlpResult.sugerencias && nlpResult.sugerencias.length > 0 && (
           <div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--cru-text-muted)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
               Pruebe alguna de estas consultas cívicas:
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -125,7 +125,7 @@ export default function NlpResultsDrawer({
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.4rem',
-                    transition: 'all 0.15s ease'
+                    transition: 'var(--transition-smooth)'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.4)';
@@ -248,7 +248,7 @@ export default function NlpResultsDrawer({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#94A3B8',
+              color: 'var(--cru-text-muted)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -270,7 +270,7 @@ export default function NlpResultsDrawer({
               padding: '0.85rem 1rem',
               borderRadius: '0 12px 12px 0',
               fontSize: '0.88rem',
-              color: '#E2E8F0',
+              color: 'var(--cru-border)',
               lineHeight: 1.5,
               fontWeight: 500
             }}
@@ -287,7 +287,7 @@ export default function NlpResultsDrawer({
               padding: '0.6rem 0.85rem',
               fontFamily: 'var(--font-telemetry, monospace)',
               fontSize: '0.74rem',
-              color: '#94A3B8',
+              color: 'var(--cru-text-muted)',
               display: 'flex',
               flexWrap: 'wrap',
               gap: '0.75rem'
@@ -301,7 +301,7 @@ export default function NlpResultsDrawer({
 
           {/* Pastillas de Capas Activadas */}
           <div>
-            <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+            <div style={{ fontSize: '0.74rem', fontWeight: 700, color: 'var(--cru-text-muted)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
               Capas Conmutadas Automáticamente:
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
@@ -339,7 +339,7 @@ export default function NlpResultsDrawer({
               justifyContent: 'space-between',
               marginBottom: '0.5rem'
             }}>
-              <span style={{ fontSize: '0.76rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--cru-text-muted)', textTransform: 'uppercase' }}>
                 Puntos Identificados ({poisEncontrados.length}):
               </span>
             </div>
@@ -355,7 +355,7 @@ export default function NlpResultsDrawer({
                       border: '1px solid rgba(255, 255, 255, 0.1)',
                       borderRadius: '12px',
                       padding: '0.75rem 0.9rem',
-                      transition: 'all 0.2s ease',
+                      transition: 'var(--transition-smooth)',
                       position: 'relative',
                       overflow: 'hidden'
                     }}
@@ -377,7 +377,7 @@ export default function NlpResultsDrawer({
                             {renderLayerIcon(poi.layer, conf?.color, 14)}
                             <span>{poi.nombre}</span>
                           </div>
-                          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>
                             {poi.categoria} &bull; {poi.canton}, {poi.provincia}
                           </div>
                         </div>
@@ -408,7 +408,7 @@ export default function NlpResultsDrawer({
                       </div>
 
                       {poi.telefono && (
-                        <div style={{ fontSize: '0.75rem', color: '#CBD5E1', marginTop: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--cru-border-strong)', marginTop: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                           <Phone size={12} color="#94A3B8" />
                           <span>{poi.telefono}</span>
                         </div>

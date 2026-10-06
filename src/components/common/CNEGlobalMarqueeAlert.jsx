@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function CNEGlobalMarqueeAlert() {
+  const { isDark } = useTheme?.() || { isDark: false };
   const [alerta, setAlerta] = useState(() => {
     try {
       const cache = localStorage.getItem("cru_alerta_cne_cache");
@@ -60,15 +62,23 @@ export default function CNEGlobalMarqueeAlert() {
 
   if (!alerta || !alerta.activa || !alerta.mensaje) return null;
 
-  // Configuración de colores oficiales según nivel CNE
-  const estilosPorNivel = {
-    verde: { border: "#10B981", bg: "rgba(16, 185, 129, 0.15)", text: "#6EE7B7", badge: "#10B981" },
-    amarilla: { border: "#F59E0B", bg: "rgba(245, 158, 11, 0.18)", text: "#FDE68A", badge: "#F59E0B" },
-    naranja: { border: "#EA580C", bg: "rgba(234, 88, 12, 0.20)", text: "#FED7AA", badge: "#EA580C" },
-    roja: { border: "#EF4444", bg: "rgba(239, 68, 68, 0.25)", text: "#FCA5A5", badge: "#EF4444" }
+  // Configuración de colores oficiales según nivel CNE y modo de tema (WCAG AA >= 4.5:1)
+  const estilosOscuro = {
+    verde: { border: "#10B981", bg: "rgba(16, 185, 129, 0.20)", text: "#6EE7B7", badge: "#10B981", badgeBg: "rgba(5, 12, 28, 0.95)" },
+    amarilla: { border: "#F59E0B", bg: "rgba(245, 158, 11, 0.20)", text: "#FDE68A", badge: "#F59E0B", badgeBg: "rgba(5, 12, 28, 0.95)" },
+    naranja: { border: "#EA580C", bg: "rgba(234, 88, 12, 0.22)", text: "#FED7AA", badge: "#FB923C", badgeBg: "rgba(5, 12, 28, 0.95)" },
+    roja: { border: "#EF4444", bg: "rgba(239, 68, 68, 0.25)", text: "#FCA5A5", badge: "#EF4444", badgeBg: "rgba(5, 12, 28, 0.95)" }
   };
 
-  const conf = estilosPorNivel[alerta.nivel] || estilosPorNivel.amarilla;
+  const estilosClaro = {
+    verde: { border: "#059669", bg: "#ECFDF5", text: "#065F46", badge: "#065F46", badgeBg: "#D1FAE5" },
+    amarilla: { border: "#D97706", bg: "#FFFBEB", text: "#92400E", badge: "#92400E", badgeBg: "#FEF3C7" },
+    naranja: { border: "#EA580C", bg: "#FFF7ED", text: "#9A3412", badge: "#9A3412", badgeBg: "#FFEDD5" },
+    roja: { border: "#DC2626", bg: "#FEF2F2", text: "#991B1B", badge: "#991B1B", badgeBg: "#FEE2E2" }
+  };
+
+  const estilos = isDark ? estilosOscuro : estilosClaro;
+  const conf = estilos[alerta.nivel] || estilos.amarilla;
 
   return (
     <div 
@@ -104,7 +114,7 @@ export default function CNEGlobalMarqueeAlert() {
           alignItems: "center",
           gap: "8px",
           padding: "0 16px",
-          backgroundColor: "rgba(5, 12, 28, 0.95)",
+          backgroundColor: conf.badgeBg,
           borderRight: `1px solid ${conf.border}`,
           zIndex: 2,
           fontFamily: "'JetBrains Mono', monospace",
@@ -126,7 +136,7 @@ export default function CNEGlobalMarqueeAlert() {
 
       {/* Pista del Texto Desplazable */}
       <div className="cne-marquee-track">
-        <div className="cne-marquee-text" style={{ color: conf.text }}>
+        <div className="cne-marquee-text" style={{ color: conf.text, fontWeight: 600 }}>
           COMUNICADO OFICIAL PRESIDENCIA & CNE: {alerta.mensaje} — [EMISIÓN OFICIAL CNE: REPÚBLICA DE COSTA RICA]
         </div>
       </div>

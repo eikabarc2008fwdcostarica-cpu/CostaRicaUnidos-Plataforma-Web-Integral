@@ -114,7 +114,7 @@ export default function PointDetailCard({ point, onClose }) {
 
         <p style={{
           fontSize: '0.85rem',
-          color: '#CBD5E1',
+          color: 'var(--cru-border-strong)',
           lineHeight: 1.5,
           marginBottom: '1rem'
         }}>
@@ -127,7 +127,7 @@ export default function PointDetailCard({ point, onClose }) {
           flexDirection: 'column',
           gap: '0.45rem',
           fontSize: '0.8rem',
-          color: '#94A3B8',
+          color: 'var(--cru-text-muted)',
           backgroundColor: 'rgba(255, 255, 255, 0.04)',
           padding: '0.75rem',
           borderRadius: '10px',
@@ -135,7 +135,7 @@ export default function PointDetailCard({ point, onClose }) {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Clock size={14} color="#79a6ff" />
-            <span style={{ color: '#E2E8F0' }}>{point.horario}</span>
+            <span style={{ color: 'var(--cru-border)' }}>{point.horario}</span>
           </div>
 
           {point.telefono && (
