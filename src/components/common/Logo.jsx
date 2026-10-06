@@ -4,6 +4,14 @@ import { Link } from 'react-router-dom';
 /**
  * Logotipo Oficial de Costa Rica Unidos
  * 100% Estático (sin rotación) y con navegación directa a la pantalla principal (/)
+ * 
+ * Semántica del prop `variant`:
+ * Describe el FONDO o sustrato donde se renderiza el componente:
+ * - 'auto' (predeterminado): Sigue reactivamente el tema activo (html.light o html.dark).
+ * - 'dark': Forzado para superficies oscuras fijas (ej. navbar noche, modal oscuro, banners oscuros).
+ *           Genera texto blanco cívico (#FFFFFF) y celeste cielo (#38BDF8).
+ * - 'light': Forzado para superficies claras fijas (ej. tarjetas bancarias blancas en cualquier tema).
+ *            Genera texto azul soberano (#062A77) y rojo patrio (#C22727).
  */
 export default function Logo({ size = '40px', showText = true, variant = 'auto', spin = false }) {
   const pixelHeight = typeof size === 'number' ? `${size}px` : (typeof size === 'string' && (size.endsWith('px') || size.endsWith('rem')) ? size : '40px');

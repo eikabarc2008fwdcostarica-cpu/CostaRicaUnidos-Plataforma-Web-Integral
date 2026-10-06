@@ -4,6 +4,7 @@ import { useSpeechSynthesis } from './useSpeechSynthesis';
 import { getCantonInstitutionalSummary } from './cantonSummaryHelper';
 import { useAuth } from '../../context/AuthContext';
 import { useAccessibility } from '../accessibility/AccessibilityContext';
+// @ts-ignore - ThemeContext is defined in JSX
 import { useTheme } from '../../context/ThemeContext';
 
 export interface VoiceGuideWidgetProps {

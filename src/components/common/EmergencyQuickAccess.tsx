@@ -20,15 +20,6 @@ import { Link } from 'react-router-dom';
 export default function EmergencyQuickAccess() {
   const [modalAbierto, setModalAbierto] = useState(false);
 
-  React.useEffect(() => {
-    if (!modalAbierto) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setModalAbierto(false);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [modalAbierto]);
-
   const DIRECTORIO_EMERGENCIAS = [
     {
       servicio: 'Sistema Nacional de Emergencias 9-1-1',
