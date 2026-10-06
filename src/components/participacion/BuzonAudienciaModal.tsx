@@ -91,8 +91,8 @@ export const BuzonAudienciaModal: React.FC<BuzonAudienciaModalProps> = ({
       isOpen={isOpen}
       onClose={handleCerrar}
       title={
-        <div className="flex items-center gap-2 text-cyan-400 font-bold">
-          <Mail size={22} />
+        <div className="flex items-center gap-2 text-[#062A77] font-bold">
+          <Mail size={22} className="text-[#0053AF]" />
           <span>Buzón de Audiencias del Concejo Municipal</span>
         </div>
       }

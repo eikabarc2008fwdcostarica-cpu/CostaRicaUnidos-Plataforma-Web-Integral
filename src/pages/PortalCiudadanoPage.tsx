@@ -18,12 +18,15 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { obtenerNombrePublico } from '../utils/privacyUtils';
 
 export default function PortalCiudadanoPage() {
   const { user, usuarioActual } = useAuth();
-  const currentUser = usuarioActual || user;
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
+  const currentUser = usuarioActual || user;
   const nombreCompleto = currentUser?.nombre || 'Eiker Manuel Abarca Murillo';
   const nombrePublico = obtenerNombrePublico(nombreCompleto);
   const canton = currentUser?.canton || 'San José';
@@ -33,10 +36,11 @@ export default function PortalCiudadanoPage() {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: 'var(--theme-bg, #00040D)',
-        color: 'var(--theme-text-primary, #FFFFFF)',
+        backgroundColor: isDark ? '#030712' : '#F8FAFC',
+        color: isDark ? '#F8FAFC' : '#0F172A',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        transition: 'background-color 0.3s ease, color 0.3s ease'
       }}
     >
       <Navbar />
@@ -50,20 +54,23 @@ export default function PortalCiudadanoPage() {
           padding: '2.5rem 1.25rem 4rem'
         }}
       >
-        {/* Banner de Bienvenida Soberana */}
+        {/* Banner de Bienvenida Soberana (Luminoso, institucional y sin recuadro oscuro) */}
         <div
           style={{
             position: 'relative',
             borderRadius: '24px',
-            backgroundColor: 'rgba(7, 13, 27, 0.9)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
+            backgroundColor: isDark ? 'rgba(7, 13, 27, 0.9)' : '#FFFFFF',
+            border: isDark ? '1px solid rgba(56, 189, 248, 0.3)' : '1px solid rgba(6, 42, 119, 0.12)',
             padding: '2.25rem 2rem',
             overflow: 'hidden',
-            boxShadow: '0 20px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 43, 127, 0.25)',
-            marginBottom: '2.5rem'
+            boxShadow: isDark
+              ? '0 20px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 43, 127, 0.25)'
+              : '0 10px 30px -5px rgba(6, 42, 119, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04)',
+            marginBottom: '2.5rem',
+            transition: 'all 0.3s ease'
           }}
         >
-          {/* Cinta Tricolor */}
+          {/* Cinta Tricolor Oficial de Costa Rica */}
           <div
             style={{
               position: 'absolute',
@@ -77,16 +84,16 @@ export default function PortalCiudadanoPage() {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem' }}>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                 <span
                   style={{
                     fontSize: '0.72rem',
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                    color: '#38BDF8',
-                    border: '1px solid rgba(56, 189, 248, 0.35)',
+                    backgroundColor: isDark ? 'rgba(56, 189, 248, 0.15)' : '#EFF6FF',
+                    color: isDark ? '#38BDF8' : '#0053AF',
+                    border: isDark ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid #BFDBFE',
                     padding: '3px 10px',
                     borderRadius: '20px',
                     display: 'inline-flex',
@@ -94,18 +101,18 @@ export default function PortalCiudadanoPage() {
                     gap: '4px'
                   }}
                 >
-                  <ShieldCheck className="w-3.5 h-3.5 text-sky-400" />
+                  <ShieldCheck className={`w-3.5 h-3.5 ${isDark ? 'text-sky-400' : 'text-[#0053AF]'}`} />
                   Plataforma Cívica Soberana
                 </span>
-                <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                <span style={{ fontSize: '0.75rem', color: isDark ? '#94A3B8' : '#64748B' }}>
                   Cantón de {canton}, {provincia}
                 </span>
               </div>
 
-              <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-                Bienvenido(a), <span style={{ color: '#38BDF8' }}>{nombrePublico}</span>
+              <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 800, color: isDark ? '#FFFFFF' : '#062A77', letterSpacing: '-0.02em' }}>
+                Bienvenido(a), <span style={{ color: isDark ? '#38BDF8' : '#0053AF' }}>{nombrePublico}</span>
               </h1>
-              <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem', color: '#94A3B8', maxWidth: '650px', lineHeight: 1.5 }}>
+              <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem', color: isDark ? '#94A3B8' : '#475569', maxWidth: '650px', lineHeight: 1.5 }}>
                 Tu portal cívico costarricense para consultar noticias oficiales de tu municipalidad, debatir en el Foro Tico, apoyar el comercio local y solicitar tu acreditación como emprendedor.
               </p>
             </div>
@@ -119,14 +126,15 @@ export default function PortalCiudadanoPage() {
                   gap: '0.5rem',
                   padding: '0.75rem 1.4rem',
                   borderRadius: '12px',
-                  backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                  border: '1px solid rgba(56, 189, 248, 0.4)',
-                  color: '#38BDF8',
+                  backgroundColor: isDark ? 'rgba(56, 189, 248, 0.15)' : '#EFF6FF',
+                  border: isDark ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid #BAE6FD',
+                  color: isDark ? '#38BDF8' : '#0053AF',
                   textDecoration: 'none',
                   fontSize: '0.88rem',
                   fontWeight: 700,
                   transition: 'all 0.2s ease'
                 }}
+                className="hover:opacity-90 hover:scale-[1.02]"
               >
                 <User className="w-4 h-4" />
                 <span>Mi Perfil & Trámites</span>
@@ -149,6 +157,7 @@ export default function PortalCiudadanoPage() {
                   boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                   transition: 'all 0.2s ease'
                 }}
+                className="hover:bg-amber-600 hover:scale-[1.02]"
               >
                 <Store className="w-4 h-4" />
                 <span>Comercios & PyMES</span>
@@ -162,33 +171,44 @@ export default function PortalCiudadanoPage() {
               marginTop: '1.5rem',
               padding: '0.75rem 1rem',
               borderRadius: '12px',
-              backgroundColor: 'rgba(0, 43, 127, 0.25)',
-              border: '1px solid rgba(121, 166, 255, 0.25)',
+              backgroundColor: isDark ? 'rgba(0, 43, 127, 0.25)' : '#F1F5F9',
+              border: isDark ? '1px solid rgba(121, 166, 255, 0.25)' : '1px solid #CBD5E1',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              fontSize: '0.76rem',
-              color: '#CBD5E1',
+              fontSize: '0.78rem',
+              color: isDark ? '#CBD5E1' : '#334155',
               flexWrap: 'wrap',
               gap: '0.5rem'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Lock className="w-3.5 h-3.5 text-sky-400" />
+              <Lock className={`w-3.5 h-3.5 shrink-0 ${isDark ? 'text-sky-400' : 'text-[#0053AF]'}`} />
               <span>
-                <strong>Privacidad Ciudadana (Ley N° 8968):</strong> Tu cédula oficial permanece protegida y nunca se expone en tus comentarios públicos ni participaciones en la plataforma.
+                <strong style={{ color: isDark ? '#FFFFFF' : '#062A77' }}>Privacidad Ciudadana (Ley N° 8968):</strong> Tu cédula oficial permanece protegida y nunca se expone en tus comentarios públicos ni participaciones en la plataforma.
               </span>
             </div>
-            <Link to="/perfil" style={{ color: '#38BDF8', fontWeight: 600, textDecoration: 'none' }}>
+            <Link to="/perfil" style={{ color: isDark ? '#38BDF8' : '#0053AF', fontWeight: 600, textDecoration: 'none' }}>
               Ver mi expediente &rarr;
             </Link>
           </div>
         </div>
 
         {/* ====================================================================
-            MÓDULOS CÍVICOS HABILITADOS PARA EL CIUDADANO (REQUERIMIENTO 5)
+            MÓDULOS CÍVICOS HABILITADOS PARA EL CIUDADANO
+            Tarjetas luminosas y claras, 100% integradas a la paleta institucional
             ==================================================================== */}
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h2
+          style={{
+            fontSize: '1.35rem',
+            fontWeight: 800,
+            color: isDark ? '#FFFFFF' : '#062A77',
+            marginBottom: '1.25rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}
+        >
           <span>Servicios e Interacciones Disponibles</span>
         </h2>
 
@@ -198,16 +218,19 @@ export default function PortalCiudadanoPage() {
             to="/noticias"
             style={{
               textDecoration: 'none',
-              backgroundColor: '#070D1B',
+              backgroundColor: isDark ? '#0F172A' : '#FFFFFF',
               borderRadius: '20px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #E2E8F0',
               padding: '1.75rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
+              boxShadow: isDark
+                ? '0 8px 24px rgba(0, 0, 0, 0.4)'
+                : '0 4px 16px -2px rgba(6, 42, 119, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04)',
               transition: 'all 0.25s ease'
             }}
-            className="hover:border-sky-500/40 hover:-translate-y-1"
+            className="hover:border-sky-500/50 hover:shadow-lg hover:-translate-y-1"
           >
             <div>
               <div
@@ -215,27 +238,27 @@ export default function PortalCiudadanoPage() {
                   width: '46px',
                   height: '46px',
                   borderRadius: '12px',
-                  backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                  backgroundColor: isDark ? 'rgba(56, 189, 248, 0.15)' : '#EFF6FF',
+                  border: isDark ? '1px solid rgba(56, 189, 248, 0.3)' : '1px solid #BFDBFE',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#38BDF8',
+                  color: isDark ? '#38BDF8' : '#0284C7',
                   marginBottom: '1rem'
                 }}
               >
                 <Newspaper className="w-5 h-5" />
               </div>
 
-              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF' }}>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: isDark ? '#FFFFFF' : '#062A77' }}>
                 Noticias & Comunicados Municipales
               </h3>
-              <p style={{ margin: '0.5rem 0 0', fontSize: '0.84rem', color: '#94A3B8', lineHeight: 1.5 }}>
+              <p style={{ margin: '0.5rem 0 0', fontSize: '0.86rem', color: isDark ? '#94A3B8' : '#475569', lineHeight: 1.55 }}>
                 Visualiza los comunicados oficiales del Concejo Municipal de {canton}, opina cívicamente y reacciona con sellos de apoyo o alerta.
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#38BDF8', fontSize: '0.82rem', fontWeight: 600, marginTop: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: isDark ? '#38BDF8' : '#0284C7', fontSize: '0.84rem', fontWeight: 600, marginTop: '1.25rem' }}>
               <span>Explorar noticias</span>
               <ChevronRight className="w-4 h-4" />
             </div>
@@ -246,16 +269,19 @@ export default function PortalCiudadanoPage() {
             to="/foro"
             style={{
               textDecoration: 'none',
-              backgroundColor: '#070D1B',
+              backgroundColor: isDark ? '#0F172A' : '#FFFFFF',
               borderRadius: '20px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #E2E8F0',
               padding: '1.75rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
+              boxShadow: isDark
+                ? '0 8px 24px rgba(0, 0, 0, 0.4)'
+                : '0 4px 16px -2px rgba(6, 42, 119, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04)',
               transition: 'all 0.25s ease'
             }}
-            className="hover:border-sky-500/40 hover:-translate-y-1"
+            className="hover:border-purple-500/50 hover:shadow-lg hover:-translate-y-1"
           >
             <div>
               <div
@@ -263,27 +289,27 @@ export default function PortalCiudadanoPage() {
                   width: '46px',
                   height: '46px',
                   borderRadius: '12px',
-                  backgroundColor: 'rgba(168, 85, 247, 0.15)',
-                  border: '1px solid rgba(168, 85, 247, 0.3)',
+                  backgroundColor: isDark ? 'rgba(168, 85, 247, 0.15)' : '#FAF5FF',
+                  border: isDark ? '1px solid rgba(168, 85, 247, 0.3)' : '1px solid #E9D5FF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#C084FC',
+                  color: isDark ? '#C084FC' : '#7E22CE',
                   marginBottom: '1rem'
                 }}
               >
                 <MessageSquare className="w-5 h-5" />
               </div>
 
-              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF' }}>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: isDark ? '#FFFFFF' : '#062A77' }}>
                 Foro Tico & Debate Comunal
               </h3>
-              <p style={{ margin: '0.5rem 0 0', fontSize: '0.84rem', color: '#94A3B8', lineHeight: 1.5 }}>
+              <p style={{ margin: '0.5rem 0 0', fontSize: '0.86rem', color: isDark ? '#94A3B8' : '#475569', lineHeight: 1.55 }}>
                 Participa en hilos cívicos, responde propuestas vecinales y vota iniciativas cantonales con identidad protegida (Primer Nombre y Apellido).
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#C084FC', fontSize: '0.82rem', fontWeight: 600, marginTop: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: isDark ? '#C084FC' : '#7E22CE', fontSize: '0.84rem', fontWeight: 600, marginTop: '1.25rem' }}>
               <span>Entrar al foro</span>
               <ChevronRight className="w-4 h-4" />
             </div>
@@ -294,16 +320,19 @@ export default function PortalCiudadanoPage() {
             to="/comercio"
             style={{
               textDecoration: 'none',
-              backgroundColor: '#070D1B',
+              backgroundColor: isDark ? '#0F172A' : '#FFFFFF',
               borderRadius: '20px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #E2E8F0',
               padding: '1.75rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
+              boxShadow: isDark
+                ? '0 8px 24px rgba(0, 0, 0, 0.4)'
+                : '0 4px 16px -2px rgba(6, 42, 119, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04)',
               transition: 'all 0.25s ease'
             }}
-            className="hover:border-amber-500/40 hover:-translate-y-1"
+            className="hover:border-amber-500/50 hover:shadow-lg hover:-translate-y-1"
           >
             <div>
               <div
@@ -311,27 +340,27 @@ export default function PortalCiudadanoPage() {
                   width: '46px',
                   height: '46px',
                   borderRadius: '12px',
-                  backgroundColor: 'rgba(245, 158, 11, 0.15)',
-                  border: '1px solid rgba(245, 158, 11, 0.3)',
+                  backgroundColor: isDark ? 'rgba(245, 158, 11, 0.15)' : '#FFFBEB',
+                  border: isDark ? '1px solid rgba(245, 158, 11, 0.3)' : '1px solid #FDE68A',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#FBBF24',
+                  color: isDark ? '#FBBF24' : '#B45309',
                   marginBottom: '1rem'
                 }}
               >
                 <Store className="w-5 h-5" />
               </div>
 
-              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF' }}>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: isDark ? '#FFFFFF' : '#062A77' }}>
                 Comercios Locales & PyMES
               </h3>
-              <p style={{ margin: '0.5rem 0 0', fontSize: '0.84rem', color: '#94A3B8', lineHeight: 1.5 }}>
+              <p style={{ margin: '0.5rem 0 0', fontSize: '0.86rem', color: isDark ? '#94A3B8' : '#475569', lineHeight: 1.55 }}>
                 Descubre emprendimientos con patente cantonal, consulta productos de la feria del agricultor y contacta por WhatsApp o Waze.
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#FBBF24', fontSize: '0.82rem', fontWeight: 600, marginTop: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: isDark ? '#FBBF24' : '#B45309', fontSize: '0.84rem', fontWeight: 600, marginTop: '1.25rem' }}>
               <span>Ver comercios</span>
               <ChevronRight className="w-4 h-4" />
             </div>
@@ -342,16 +371,19 @@ export default function PortalCiudadanoPage() {
             to="/mapa-gis"
             style={{
               textDecoration: 'none',
-              backgroundColor: '#070D1B',
+              backgroundColor: isDark ? '#0F172A' : '#FFFFFF',
               borderRadius: '20px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #E2E8F0',
               padding: '1.75rem',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
+              boxShadow: isDark
+                ? '0 8px 24px rgba(0, 0, 0, 0.4)'
+                : '0 4px 16px -2px rgba(6, 42, 119, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04)',
               transition: 'all 0.25s ease'
             }}
-            className="hover:border-emerald-500/40 hover:-translate-y-1"
+            className="hover:border-emerald-500/50 hover:shadow-lg hover:-translate-y-1"
           >
             <div>
               <div
@@ -359,27 +391,27 @@ export default function PortalCiudadanoPage() {
                   width: '46px',
                   height: '46px',
                   borderRadius: '12px',
-                  backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                  border: '1px solid rgba(52, 211, 153, 0.3)',
+                  backgroundColor: isDark ? 'rgba(16, 185, 129, 0.15)' : '#ECFDF5',
+                  border: isDark ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid #A7F3D0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#34D399',
+                  color: isDark ? '#34D399' : '#047857',
                   marginBottom: '1rem'
                 }}
               >
                 <Map className="w-5 h-5" />
               </div>
 
-              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF' }}>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: isDark ? '#FFFFFF' : '#062A77' }}>
                 Visor Cartográfico & GIS Cantonal
               </h3>
-              <p style={{ margin: '0.5rem 0 0', fontSize: '0.84rem', color: '#94A3B8', lineHeight: 1.5 }}>
+              <p style={{ margin: '0.5rem 0 0', fontSize: '0.86rem', color: isDark ? '#94A3B8' : '#475569', lineHeight: 1.55 }}>
                 Explora el territorio en 3D, puntos de interés, rutas de servicio, albergues de la CNE y delimitación de los 84 cantones.
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#34D399', fontSize: '0.82rem', fontWeight: 600, marginTop: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: isDark ? '#34D399' : '#047857', fontSize: '0.84rem', fontWeight: 600, marginTop: '1.25rem' }}>
               <span>Abrir mapa GIS</span>
               <ChevronRight className="w-4 h-4" />
             </div>

@@ -699,21 +699,21 @@ export default function MapaGIS() {
   };
 
   return (
-    <div style={{ backgroundColor: 'var(--theme-bg, #00040D)', minHeight: '100vh', color: 'var(--theme-text-primary, #FFFFFF)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ backgroundColor: 'var(--theme-bg, #F8FAFC)', minHeight: '100vh', color: 'var(--theme-text-primary, #131313)', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
 
       <main style={{ padding: '2rem 1.5rem 4rem', maxWidth: '1320px', margin: '0 auto', width: '100%', flex: 1, boxSizing: 'border-box' }}>
         {/* Cabecera Editorial Limpia */}
         <header style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
-          <h1 style={{ fontSize: '2.2rem', fontWeight: '300', letterSpacing: '-0.02em', margin: 0 }}>
+          <h1 style={{ fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0, color: 'var(--cru-text, #062A77)', fontFamily: 'var(--font-headline, "Poppins", sans-serif)' }}>
             Cartografía y Territorio 3D
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.95rem', marginTop: '0.4rem' }}>
+          <p style={{ color: 'var(--cru-text-secondary, #334155)', fontSize: '0.95rem', marginTop: '0.4rem', fontWeight: 500 }}>
             Exploración geoespacial satelital interactiva con perspectiva tridimensional y 35+ infraestructuras cívicas
           </p>
         </header>
 
-        {/* Visor 3D Oficial de Google Maps con Enfoque Soberano y Vidrio Oscuro */}
+        {/* Visor 3D Oficial de Google Maps con Enfoque Soberano */}
         <div style={{
           position: 'relative',
           height: '70vh',
@@ -721,8 +721,8 @@ export default function MapaGIS() {
           width: '100%',
           borderRadius: '24px',
           overflow: 'hidden',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.7)',
+          border: '1px solid var(--cru-border, #CBD5E1)',
+          boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.08), 0 2px 6px -1px rgba(6, 42, 119, 0.04))',
           backgroundColor: '#00040D'
         }}>
           {/* Contenedor del Mapa Canvas de Google Maps (100% nítido y despejado) */}
@@ -953,23 +953,21 @@ export default function MapaGIS() {
                   position: 'absolute',
                   top: '110%',
                   right: 0,
-                  width: '230px',
-                  backgroundColor: 'rgba(0, 4, 13, 0.96)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  width: '240px',
+                  backgroundColor: '#FFFFFF',
+                  border: '2px solid rgba(6, 42, 119, 0.15)',
                   borderRadius: '16px',
-                  padding: '0.75rem',
+                  padding: '1rem',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '0.5rem',
-                  boxShadow: '0 12px 35px rgba(0,0,0,0.85)'
+                  gap: '0.65rem',
+                  boxShadow: '0 12px 35px rgba(6, 42, 119, 0.16)'
                 }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#79a6ff', textTransform: 'uppercase', marginBottom: '0.2rem' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#062A77', textTransform: 'uppercase', marginBottom: '0.2rem', letterSpacing: '0.05em' }}>
                     Capas Cívicas Activas
                   </div>
                   {Object.entries(CATEGORIAS_CONFIG).map(([key, info]) => (
-                    <label key={key} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.84rem', cursor: 'pointer', color: capasVisibles[key] ? '#FFFFFF' : '#94A3B8' }}>
+                    <label key={key} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.84rem', cursor: 'pointer', color: capasVisibles[key] ? '#062A77' : '#475569', fontWeight: capasVisibles[key] ? 700 : 500 }}>
                       <input
                         type="checkbox"
                         checked={capasVisibles[key]}
@@ -977,8 +975,8 @@ export default function MapaGIS() {
                         style={{ accentColor: '#002B7F', cursor: 'pointer' }}
                       />
                       <span style={{
-                        width: '8px',
-                        height: '8px',
+                        width: '10px',
+                        height: '10px',
                         borderRadius: '50%',
                         backgroundColor: info.color
                       }} />
@@ -1132,7 +1130,7 @@ export default function MapaGIS() {
           </div>
         </div>
 
-        {/* 3 Tarjetas Editoriales de Información Cívica (Sin textos truncados) */}
+        {/* 3 Tarjetas Editoriales de Información Cívica (Sin textos truncados, WCAG 2.1 AA Compliant) */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
@@ -1140,44 +1138,50 @@ export default function MapaGIS() {
           marginTop: '2.5rem'
         }}>
           <div style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
+            border: '1px solid var(--cru-border, #E2E8F0)',
+            borderTop: '4px solid #0053AF',
             borderRadius: '16px',
             padding: '1.5rem',
-            overflow: 'visible'
+            overflow: 'visible',
+            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', margin: '0 0 0.5rem 0', color: '#60A5FA' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#062A77' }}>
               01 &bull; Geofencing Soberano
             </h3>
-            <p style={{ fontSize: '0.88rem', color: '#94A3B8', margin: 0, lineHeight: 1.6, whiteSpace: 'normal', wordBreak: 'normal', overflow: 'visible' }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-secondary, #334155)', margin: 0, lineHeight: 1.6, whiteSpace: 'normal', wordBreak: 'normal', overflow: 'visible', fontWeight: 500 }}>
               Límites precisos circunscritos a las 7 provincias de Costa Rica, resguardando la soberanía territorial y la geolocalización segura.
             </p>
           </div>
           <div style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
+            border: '1px solid var(--cru-border, #E2E8F0)',
+            borderTop: '4px solid #C22727',
             borderRadius: '16px',
             padding: '1.5rem',
-            overflow: 'visible'
+            overflow: 'visible',
+            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', margin: '0 0 0.5rem 0', color: '#34D399' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#062A77' }}>
               02 &bull; Capas Cívicas Activas
             </h3>
-            <p style={{ fontSize: '0.88rem', color: '#94A3B8', margin: 0, lineHeight: 1.6, whiteSpace: 'normal', wordBreak: 'normal', overflow: 'visible' }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-secondary, #334155)', margin: 0, lineHeight: 1.6, whiteSpace: 'normal', wordBreak: 'normal', overflow: 'visible', fontWeight: 500 }}>
               Puntos críticos de atención médica (CCSS), albergues temporales (CNE), educación y conectividad vial en tiempo real.
             </p>
           </div>
           <div style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
+            border: '1px solid var(--cru-border, #E2E8F0)',
+            borderTop: '4px solid #0053AF',
             borderRadius: '16px',
             padding: '1.5rem',
-            overflow: 'visible'
+            overflow: 'visible',
+            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', margin: '0 0 0.5rem 0', color: '#FBBF24' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#062A77' }}>
               03 &bull; Navegación Directa
             </h3>
-            <p style={{ fontSize: '0.88rem', color: '#94A3B8', margin: 0, lineHeight: 1.6, whiteSpace: 'normal', wordBreak: 'normal', overflow: 'visible' }}>
+            <p style={{ fontSize: '0.88rem', color: 'var(--cru-text-secondary, #334155)', margin: 0, lineHeight: 1.6, whiteSpace: 'normal', wordBreak: 'normal', overflow: 'visible', fontWeight: 500 }}>
               Interoperabilidad inmediata con Waze y Google Maps para trazado de rutas de emergencia y transporte comunitario.
             </p>
           </div>

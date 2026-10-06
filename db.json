@@ -59,6 +59,20 @@
       "verificadoHacienda": true,
       "estado": "ACTIVO",
       "forzarCambioPassword": false
+    },
+    {
+      "id": "USR-CIUD-2241",
+      "cedula": "155801422721",
+      "nombre": "BELKIS YULIETH RUIZ VICTOR RUIZ VICTOR",
+      "correo": "alanie@gmail.com",
+      "password": "1234567",
+      "rol": "CIUDADANO",
+      "nivelAcceso": 2,
+      "provincia": "Puntarenas",
+      "canton": "Puntarenas",
+      "distrito": "Puntarenas",
+      "fechaRegistro": "2026-10-06T02:37:42.241Z",
+      "verificadoHacienda": true
     }
   ],
   "solicitudesComercio": [
@@ -498,6 +512,15 @@
       "accion": "ACTUALIZACION_USUARIO",
       "detalles": "Actualización de usuario EIKER MANUEL ABARCA MURILLO (Rol: Ciudadano Residente, Nivel: 2).",
       "timestamp": "2026-10-03T09:59:02.798Z"
+    },
+    {
+      "id": "LOG-2241",
+      "usuarioId": "USR-CIUD-2241",
+      "usuarioNombre": "BELKIS YULIETH RUIZ VICTOR RUIZ VICTOR",
+      "rol": "CIUDADANO",
+      "accion": "REGISTRO_USUARIO",
+      "detalles": "Registro exitoso para BELKIS YULIETH RUIZ VICTOR RUIZ VICTOR en cantón Puntarenas.",
+      "timestamp": "2026-10-06T02:37:42.241Z"
     }
   ],
   "foro_posts": [

@@ -238,14 +238,13 @@ export default function ReportarIncidencia() {
             ========================================================================== */}
         <section
           style={{
-            backgroundColor: 'rgba(0, 15, 45, 0.72)',
-            backdropFilter: 'blur(28px)',
-            WebkitBackdropFilter: 'blur(28px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
+            backgroundColor: '#062A77',
+            backgroundImage: 'linear-gradient(135deg, #062A77 0%, #01004E 100%)',
+            border: '1.5px solid rgba(255, 255, 255, 0.18)',
             borderRadius: '24px',
-            padding: 'clamp(1.25rem, 4vw, 2.5rem)',
+            padding: 'clamp(1.5rem, 4vw, 2.75rem)',
             marginBottom: '2.5rem',
-            boxShadow: '0 20px 60px rgba(0, 4, 13, 0.8), 0 0 35px rgba(0, 20, 137, 0.35)',
+            boxShadow: '0 12px 35px rgba(6, 42, 119, 0.25)',
             position: 'relative',
             overflow: 'hidden'
           }}
@@ -257,8 +256,8 @@ export default function ReportarIncidencia() {
               top: 0,
               left: 0,
               right: 0,
-              height: '3px',
-              background: 'linear-gradient(90deg, #001489 0%, #001489 20%, #FFFFFF 20%, #FFFFFF 30%, #DA291C 30%, #DA291C 70%, #FFFFFF 70%, #FFFFFF 80%, #001489 80%, #001489 100%)'
+              height: '4px',
+              background: 'linear-gradient(90deg, #001489 0%, #001489 20%, #FFFFFF 20%, #FFFFFF 30%, #C22727 30%, #C22727 70%, #FFFFFF 70%, #FFFFFF 80%, #001489 80%, #001489 100%)'
             }}
           />
 
@@ -275,14 +274,14 @@ export default function ReportarIncidencia() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.6rem', flexWrap: 'wrap' }}>
                 <span
                   style={{
-                    backgroundColor: 'rgba(0, 20, 137, 0.45)',
-                    border: '1px solid rgba(121, 166, 255, 0.35)',
-                    color: '#79a6ff',
+                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    color: '#FFFFFF',
                     fontSize: '0.74rem',
                     fontWeight: 800,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
-                    padding: '0.25rem 0.75rem',
+                    padding: '0.28rem 0.85rem',
                     borderRadius: '9999px',
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -292,9 +291,9 @@ export default function ReportarIncidencia() {
                   <Building2 size={13} />
                   <span>GESTIÓN DE OBRAS PÚBLICAS Y VIALIDAD</span>
                 </span>
-                <span style={{ color: '#475569' }}>•</span>
-                <span style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>
-                  CANTON DE {cantonNombre.toUpperCase()} · DTA {cantonObj ? cantonObj.codigoDta : '101'}
+                <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
+                <span style={{ fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 700 }}>
+                  CANTON DE {cantonNombre.toUpperCase()}
                 </span>
               </div>
 
@@ -312,7 +311,7 @@ export default function ReportarIncidencia() {
                 Ventanilla de Fiscalización Ciudadana y Averías Comunales - Ley N° 8968
               </h1>
 
-              <p style={{ fontSize: '0.98rem', color: '#CBD5E1', lineHeight: 1.65, margin: 0 }}>
+              <p style={{ fontSize: '1rem', color: '#F1F5F9', lineHeight: 1.65, margin: 0 }}>
                 Canal soberano para radicar averías viales, fallas de luminarias, fugas de acueducto y botaderos clandestinos con <strong>compresión WebP en cliente</strong>, georreferenciación oficial y trazabilidad pública vinculante ante la Unidad Técnica de Gestión Vial (UTGV) o entidad estatal competente.
               </p>
             </div>
@@ -322,8 +321,8 @@ export default function ReportarIncidencia() {
               style={{
                 display: 'inline-flex',
                 padding: '0.35rem',
-                backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                border: '1px solid rgba(255, 255, 255, 0.16)',
+                backgroundColor: 'rgba(2, 6, 23, 0.45)',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
                 borderRadius: '14px',
                 gap: '0.35rem'
               }}
@@ -332,9 +331,9 @@ export default function ReportarIncidencia() {
                 type="button"
                 onClick={() => setActiveTab('stepper')}
                 style={{
-                  padding: '0.6rem 1.25rem',
-                  fontSize: '0.84rem',
-                  fontWeight: 700,
+                  padding: '0.65rem 1.35rem',
+                  fontSize: '0.86rem',
+                  fontWeight: 800,
                   border: 'none',
                   borderRadius: '10px',
                   cursor: 'pointer',
@@ -342,8 +341,9 @@ export default function ReportarIncidencia() {
                   alignItems: 'center',
                   gap: '0.45rem',
                   transition: 'all 0.2s ease',
-                  backgroundColor: activeTab === 'stepper' ? '#002B7F' : 'transparent',
-                  color: activeTab === 'stepper' ? '#FFFFFF' : '#94A3B8'
+                  backgroundColor: activeTab === 'stepper' ? '#C22727' : 'transparent',
+                  color: '#FFFFFF',
+                  boxShadow: activeTab === 'stepper' ? '0 4px 15px rgba(194, 39, 39, 0.45)' : 'none'
                 }}
               >
                 <ClipboardEdit size={16} />
@@ -354,9 +354,9 @@ export default function ReportarIncidencia() {
                 type="button"
                 onClick={() => setActiveTab('tablero')}
                 style={{
-                  padding: '0.6rem 1.25rem',
-                  fontSize: '0.84rem',
-                  fontWeight: 700,
+                  padding: '0.65rem 1.35rem',
+                  fontSize: '0.86rem',
+                  fontWeight: 800,
                   border: 'none',
                   borderRadius: '10px',
                   cursor: 'pointer',
@@ -364,8 +364,9 @@ export default function ReportarIncidencia() {
                   alignItems: 'center',
                   gap: '0.45rem',
                   transition: 'all 0.2s ease',
-                  backgroundColor: activeTab === 'tablero' ? '#002B7F' : 'transparent',
-                  color: activeTab === 'tablero' ? '#FFFFFF' : '#94A3B8'
+                  backgroundColor: activeTab === 'tablero' ? '#0053AF' : 'transparent',
+                  color: activeTab === 'tablero' ? '#FFFFFF' : '#CBD5E1',
+                  boxShadow: activeTab === 'tablero' ? '0 4px 15px rgba(0, 83, 175, 0.4)' : 'none'
                 }}
               >
                 <BarChart3 size={16} />
@@ -539,13 +540,11 @@ export default function ReportarIncidencia() {
               /* Asistente Guiado de 4 Pasos */
               <div
                 style={{
-                  backgroundColor: 'rgba(0, 15, 45, 0.65)',
-                  backdropFilter: 'blur(28px)',
-                  WebkitBackdropFilter: 'blur(28px)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  backgroundColor: '#FFFFFF',
+                  border: '2px solid rgba(6, 42, 119, 0.15)',
                   borderRadius: '24px',
-                  padding: 'clamp(1.25rem, 4vw, 2.5rem)',
-                  boxShadow: '0 20px 60px rgba(0, 4, 13, 0.75)'
+                  padding: 'clamp(1.5rem, 4vw, 2.75rem)',
+                  boxShadow: '0 10px 30px -3px rgba(6, 42, 119, 0.08), 0 4px 12px -2px rgba(6, 42, 119, 0.04)'
                 }}
               >
                 {/* Barra de Progreso del Stepper */}
@@ -574,7 +573,7 @@ export default function ReportarIncidencia() {
                           flexDirection: 'column',
                           gap: '0.45rem',
                           borderTop: `3px solid ${
-                            isCompleted ? '#34D399' : isActive ? '#79a6ff' : 'rgba(255, 255, 255, 0.12)'
+                            isCompleted ? '#059669' : isActive ? '#C22727' : 'rgba(6, 42, 119, 0.12)'
                           }`,
                           paddingTop: '0.75rem'
                         }}
@@ -583,8 +582,8 @@ export default function ReportarIncidencia() {
                           <span
                             style={{
                               fontSize: '0.75rem',
-                              fontWeight: 800,
-                              color: isCompleted ? '#34D399' : isActive ? '#79a6ff' : '#64748B'
+                              fontWeight: 900,
+                              color: isCompleted ? '#059669' : isActive ? '#C22727' : '#94A3B8'
                             }}
                           >
                             0{p.num}
@@ -592,8 +591,8 @@ export default function ReportarIncidencia() {
                           <span
                             style={{
                               fontSize: '0.8rem',
-                              fontWeight: isActive ? 700 : 500,
-                              color: isActive ? '#FFFFFF' : '#94A3B8'
+                              fontWeight: isActive ? 800 : 600,
+                              color: isActive ? '#062A77' : '#64748B'
                             }}
                           >
                             {p.label}
@@ -694,9 +693,9 @@ export default function ReportarIncidencia() {
                       {/* Cláusula de Declaración Jurada */}
                       <div
                         style={{
-                          backgroundColor: 'rgba(0, 4, 13, 0.65)',
-                          border: '1px solid rgba(255, 255, 255, 0.14)',
-                          borderRadius: '14px',
+                          backgroundColor: '#F8FAFC',
+                          border: '1.5px solid rgba(6, 42, 119, 0.16)',
+                          borderRadius: '16px',
                           padding: '1.25rem 1.5rem',
                           marginTop: '1.5rem',
                           display: 'flex',
@@ -721,9 +720,9 @@ export default function ReportarIncidencia() {
                         />
                         <label
                           htmlFor="check-declaracion-jurada"
-                          style={{ fontSize: '0.84rem', color: '#E2E8F0', cursor: 'pointer', lineHeight: 1.55 }}
+                          style={{ fontSize: '0.88rem', color: '#1E293B', cursor: 'pointer', lineHeight: 1.55 }}
                         >
-                          <strong>Declaración Jurada de Veracidad Cívica:</strong> Declaro bajo la fe de juramento que la información y evidencia fotográfica proporcionada corresponden a hechos reales observados en el espacio público del cantón de {cantonNombre}, y autorizo a la Municipalidad y entidades técnicas a utilizar las coordenadas geográficas para la inspección oficial.
+                          <strong style={{ color: '#062A77' }}>Declaración Jurada de Veracidad Cívica:</strong> Declaro bajo la fe de juramento que la información y evidencia fotográfica proporcionada corresponden a hechos reales observados en el espacio público del cantón de {cantonNombre}, y autorizo a la Municipalidad y entidades técnicas a utilizar las coordenadas geográficas para la inspección oficial.
                         </label>
                       </div>
                     </div>
@@ -738,7 +737,7 @@ export default function ReportarIncidencia() {
                     justifyContent: 'space-between',
                     marginTop: '2.5rem',
                     paddingTop: '1.5rem',
-                    borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                    borderTop: '1px solid rgba(6, 42, 119, 0.12)'
                   }}
                 >
                   <button
@@ -746,9 +745,9 @@ export default function ReportarIncidencia() {
                     onClick={handlePrevStep}
                     disabled={currentStep === 1}
                     style={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.14)',
-                      color: currentStep === 1 ? '#475569' : '#CBD5E1',
+                      backgroundColor: '#F1F5F9',
+                      border: '1px solid rgba(6, 42, 119, 0.18)',
+                      color: currentStep === 1 ? '#94A3B8' : '#062A77',
                       padding: '0.65rem 1.4rem',
                       borderRadius: '10px',
                       fontSize: '0.86rem',
@@ -769,19 +768,20 @@ export default function ReportarIncidencia() {
                       type="button"
                       onClick={handleNextStep}
                       style={{
-                        backgroundColor: '#002B7F',
-                        backgroundImage: 'linear-gradient(135deg, #002B7F 0%, #001489 100%)',
-                        border: '1px solid rgba(121, 166, 255, 0.5)',
+                        backgroundColor: '#0053AF',
+                        backgroundImage: 'linear-gradient(135deg, #0053AF 0%, #062A77 100%)',
+                        border: 'none',
                         color: '#FFFFFF',
-                        padding: '0.65rem 1.6rem',
+                        padding: '0.75rem 1.75rem',
                         borderRadius: '10px',
-                        fontSize: '0.86rem',
-                        fontWeight: 700,
+                        fontSize: '0.88rem',
+                        fontWeight: 800,
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.45rem',
-                        boxShadow: '0 4px 14px rgba(0, 20, 137, 0.5)'
+                        boxShadow: '0 4px 14px rgba(0, 83, 175, 0.35)',
+                        transition: 'all 0.2s ease'
                       }}
                     >
                       <span>Siguiente Paso</span>
@@ -793,27 +793,28 @@ export default function ReportarIncidencia() {
                       onClick={handleSubmitReport}
                       disabled={isSubmitting}
                       style={{
-                        backgroundColor: '#002B7F',
-                        backgroundImage: 'linear-gradient(135deg, #002B7F 0%, #001489 100%)',
-                        border: '1px solid rgba(121, 166, 255, 0.5)',
+                        backgroundColor: '#C22727',
+                        backgroundImage: 'linear-gradient(135deg, #C22727 0%, #990001 100%)',
+                        border: 'none',
                         color: '#FFFFFF',
-                        padding: '0.75rem 2rem',
+                        padding: '0.75rem 2.2rem',
                         borderRadius: '10px',
-                        fontSize: '0.9rem',
-                        fontWeight: 800,
+                        fontSize: '0.92rem',
+                        fontWeight: 900,
                         cursor: isSubmitting ? 'wait' : 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.55rem',
-                        boxShadow: '0 6px 20px rgba(0, 20, 137, 0.6)'
+                        boxShadow: '0 6px 20px rgba(194, 39, 39, 0.45)',
+                        transition: 'all 0.2s ease'
                       }}
                     >
                       {isSubmitting ? (
                         <span>Radicando Expediente...</span>
                       ) : (
                         <>
-                          <FileCheck size={18} />
-                          <span>Radicar Expediente Oficial</span>
+                          <CheckCircle2 size={18} />
+                          <span>Radicar Avería Oficial</span>
                         </>
                       )}
                     </button>
@@ -833,20 +834,19 @@ export default function ReportarIncidencia() {
             {/* Barra de Trazabilidad Explicativa */}
             <div
               style={{
-                backgroundColor: 'rgba(0, 15, 45, 0.65)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: '18px',
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(6, 42, 119, 0.15)',
+                borderRadius: '24px',
                 padding: '1.5rem 2rem',
+                boxShadow: '0 4px 16px rgba(6, 42, 119, 0.05)',
                 marginBottom: '2rem'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#79a6ff', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#062A77', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                   FLUJO OFICIAL DE ATENCIÓN DE OBRAS PÚBLICAS Y AVERÍAS
                 </span>
-                <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
+                <span style={{ fontSize: '0.82rem', color: '#475569', fontWeight: 500 }}>
                   Cumplimiento del Código Municipal y Ley de Control Interno
                 </span>
               </div>
@@ -860,28 +860,28 @@ export default function ReportarIncidencia() {
                 }}
               >
                 {[
-                  { paso: '01', estado: 'Radicado', desc: 'Asignación de expediente EXP-MUNI y georreferenciación.', color: '#3B82F6' },
-                  { paso: '02', estado: 'Inspección de Campo', desc: 'Peritaje in situ por la Unidad Técnica de Gestión Vial.', color: '#F59E0B' },
-                  { paso: '03', estado: 'En Ejecución Presupuestaria', desc: 'Cuadrilla operativa desplegada con partida SICOP / Ley 8114.', color: '#8B5CF6' },
-                  { paso: '04', estado: 'Subsanado', desc: 'Obra concluida satisfactoriamente con acta de fiscalización.', color: '#00D166' }
+                  { paso: '01', estado: 'Radicado', desc: 'Asignación de expediente EXP-MUNI y georreferenciación.', color: '#0053AF' },
+                  { paso: '02', estado: 'Inspección de Campo', desc: 'Peritaje in situ por la Unidad Técnica de Gestión Vial.', color: '#D97706' },
+                  { paso: '03', estado: 'En Ejecución Presupuestaria', desc: 'Cuadrilla operativa desplegada con partida SICOP / Ley 8114.', color: '#7C3AED' },
+                  { paso: '04', estado: 'Subsanado', desc: 'Obra concluida satisfactoriamente con acta de fiscalización.', color: '#059669' }
                 ].map((e) => (
                   <div
                     key={e.paso}
                     style={{
-                      backgroundColor: 'rgba(0, 4, 13, 0.55)',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: '12px',
-                      padding: '1rem',
+                      backgroundColor: '#F8FAFC',
+                      border: '1.5px solid rgba(6, 42, 119, 0.12)',
+                      borderRadius: '14px',
+                      padding: '1.1rem',
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '0.35rem'
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 800, color: e.color }}>ETAPA {e.paso}</span>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 800, color: e.color }}>ETAPA {e.paso}</span>
                     </div>
-                    <strong style={{ fontSize: '0.92rem', color: '#FFFFFF' }}>{e.estado}</strong>
-                    <span style={{ fontSize: '0.78rem', color: '#94A3B8', lineHeight: 1.45 }}>{e.desc}</span>
+                    <strong style={{ fontSize: '0.95rem', color: '#062A77' }}>{e.estado}</strong>
+                    <span style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.45, fontWeight: 500 }}>{e.desc}</span>
                   </div>
                 ))}
               </div>

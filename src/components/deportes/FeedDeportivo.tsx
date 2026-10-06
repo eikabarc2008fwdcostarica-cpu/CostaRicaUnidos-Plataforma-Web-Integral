@@ -46,15 +46,24 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Formulario de Publicación Comunitaria */}
-      <CivicCard level={1}>
+      <div
+        style={{
+          backgroundColor: '#FFFFFF',
+          border: '1px solid #E2E8F0',
+          borderTop: '4px solid #0053AF',
+          borderRadius: '16px',
+          padding: '1.35rem',
+          boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))'
+        }}
+      >
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#FFFFFF', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <MessageSquare size={18} color="#7DD3FC" />
+            <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#062A77', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <MessageSquare size={18} color="#0053AF" />
               Publicar Convocatoria Deportiva Vecinal
             </h4>
-            <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <ShieldAlert size={14} color="#34D399" />
+            <span style={{ fontSize: '0.75rem', color: '#059669', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
+              <ShieldAlert size={14} color="#059669" />
               Feed con moderación ética comunitaria
             </span>
           </div>
@@ -67,14 +76,15 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
             style={{
               width: '100%',
               padding: '0.75rem',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              background: '#F8FAFC',
+              border: '1px solid #CBD5E1',
               borderRadius: '8px',
-              color: '#FFFFFF',
+              color: '#0F172A',
               fontSize: '0.875rem',
-              fontFamily: "var(--font-body, sans-serif)",
+              fontFamily: "inherit",
               outline: 'none',
-              resize: 'vertical'
+              resize: 'vertical',
+              fontWeight: 500
             }}
           />
 
@@ -84,12 +94,13 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
                 value={disciplina}
                 onChange={(e) => setDisciplina(e.target.value)}
                 style={{
-                  background: 'rgba(0, 4, 13, 0.85)',
-                  color: '#CBD5E1',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: '#F8FAFC',
+                  color: '#0F172A',
+                  border: '1px solid #CBD5E1',
                   borderRadius: '6px',
                   padding: '0.4rem 0.65rem',
-                  fontSize: '0.8rem'
+                  fontSize: '0.8rem',
+                  fontWeight: 600
                 }}
               >
                 <option value="Fútbol Comunitario">Fútbol</option>
@@ -103,12 +114,13 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
                 value={distrito}
                 onChange={(e) => setDistrito(e.target.value)}
                 style={{
-                  background: 'rgba(0, 4, 13, 0.85)',
-                  color: '#CBD5E1',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: '#F8FAFC',
+                  color: '#0F172A',
+                  border: '1px solid #CBD5E1',
                   borderRadius: '6px',
                   padding: '0.4rem 0.65rem',
-                  fontSize: '0.8rem'
+                  fontSize: '0.8rem',
+                  fontWeight: 600
                 }}
               >
                 <option value="San José Centro">San José Centro</option>
@@ -125,57 +137,66 @@ export const FeedDeportivo: FC<FeedDeportivoProps> = ({ postsIniciales }) => {
           </div>
 
           {enviadoExitoso && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#6EE7B7', fontSize: '0.825rem' }}>
-              <CheckCircle2 size={16} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#059669', fontSize: '0.825rem', fontWeight: 600 }}>
+              <CheckCircle2 size={16} color="#059669" />
               <span>Convocatoria publicada con éxito en el feed comunitario.</span>
             </div>
           )}
         </form>
-      </CivicCard>
+      </div>
 
       {/* Lista de Publicaciones */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {posts.map((post) => (
-          <CivicCard key={post.id} level={1}>
+          <div
+            key={post.id}
+            style={{
+              backgroundColor: '#FFFFFF',
+              border: '1px solid #E2E8F0',
+              borderRadius: '16px',
+              padding: '1.25rem',
+              boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))'
+            }}
+          >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <CivicBadge variant="provincial" size="sm">
                     {post.disciplina}
                   </CivicBadge>
-                  <strong style={{ fontSize: '0.9rem', color: '#FFFFFF' }}>{post.autor}</strong>
-                  <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>&bull; {post.distrito}</span>
+                  <strong style={{ fontSize: '0.9rem', color: '#062A77' }}>{post.autor}</strong>
+                  <span style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 500 }}>&bull; {post.distrito}</span>
                 </div>
 
-                <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{post.fecha}</span>
+                <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>{post.fecha}</span>
               </div>
 
-              <p style={{ fontSize: '0.875rem', color: '#CBD5E1', lineHeight: 1.5, margin: '0.25rem 0' }}>
+              <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: 1.55, margin: '0.25rem 0', fontWeight: 500 }}>
                 {post.contenido}
               </p>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingTop: '0.4rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingTop: '0.4rem', borderTop: '1px solid #F1F5F9' }}>
                 <button
                   type="button"
                   onClick={() => handleLike(post.id)}
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: '#F472B6',
+                    color: '#C22727',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.35rem',
                     fontSize: '0.8rem',
-                    fontFamily: "var(--font-telemetry, monospace)"
+                    fontWeight: 700
                   }}
                 >
-                  <Heart size={14} fill="#F472B6" />
+                  <Heart size={14} fill="#C22727" />
                   <span>{post.likes} apoyos</span>
                 </button>
               </div>
             </div>
-          </CivicCard>
+          </div>
         ))}
       </div>
     </div>

@@ -60,10 +60,10 @@ export default function PerfilPublicoModal({
         style={{
           width: '100%',
           maxWidth: '480px',
-          borderRadius: '20px',
-          backgroundColor: '#070D1B',
-          border: '1px solid rgba(56, 189, 248, 0.35)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.15)',
+          borderRadius: '24px',
+          backgroundColor: 'var(--cru-surface, #FFFFFF)',
+          border: '1px solid var(--cru-border, #E2E8F0)',
+          boxShadow: 'var(--cru-card-shadow-hover, 0 25px 50px rgba(6, 42, 119, 0.12))',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column'

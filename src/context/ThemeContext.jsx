@@ -16,14 +16,10 @@ export function ThemeProvider({ children }) {
       if (savedTheme === 'light' || savedTheme === 'dark') {
         return savedTheme;
       }
-      // Si el sistema del usuario prefiere claro (desactivado temporalmente para asegurar arranque en oscuro)
-      // if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-      //   return 'light';
-      // }
     } catch (_e) {
       // Ignorar error de acceso a localStorage
     }
-    return 'dark';
+    return 'light';
   });
 
   useEffect(() => {

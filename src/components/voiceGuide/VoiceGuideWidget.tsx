@@ -372,130 +372,66 @@ export const VoiceGuideWidget: React.FC<VoiceGuideWidgetProps> = ({
         type="button"
         onClick={() => setIsSettingsOpen(!isSettingsOpen)}
         style={{
-          width: '34px',
-          height: '34px',
+          width: '36px',
+          height: '36px',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.10)',
-          color: '#94A3B8',
-          cursor: 'pointer'
+          backgroundColor: isSettingsOpen ? 'rgba(56, 189, 248, 0.20)' : 'rgba(255, 255, 255, 0.08)',
+          border: isSettingsOpen ? '1px solid rgba(56, 189, 248, 0.60)' : '1px solid rgba(255, 255, 255, 0.15)',
+          color: isSettingsOpen ? '#38BDF8' : '#94A3B8',
+          cursor: 'pointer',
+          transition: 'all 0.2s ease'
         }}
-        aria-label="Ajustes de voz"
+        aria-label="Ajustes de accesibilidad y voz"
+        title="Ajustes de accesibilidad y voz"
       >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="3" />
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
         </svg>
       </button>
 
-      {/* 2. Pastilla de Guía por Voz */}
+      {/* 2. Botón de Guía (Destello + "Guía") */}
       <button
         type="button"
-        onClick={handleToggleVoice}
+        onClick={ejecutarGuiaDeRecuadros}
         disabled={isAnalyzing}
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
-          padding: '6px 14px 6px 8px',
+          gap: '7px',
+          padding: '8px 18px',
           borderRadius: '9999px',
-          backgroundColor: isSpeaking ? 'rgba(14, 116, 144, 0.35)' : 'rgba(30, 136, 229, 0.18)',
-          border: isSpeaking ? '1px solid rgba(56, 189, 248, 0.70)' : '1px solid rgba(56, 189, 248, 0.40)',
+          backgroundColor: isSpeaking ? 'rgba(14, 116, 144, 0.45)' : 'rgba(30, 136, 229, 0.22)',
+          border: isSpeaking ? '1px solid rgba(56, 189, 248, 0.85)' : '1px solid rgba(56, 189, 248, 0.45)',
           color: '#FFFFFF',
-          cursor: isAnalyzing ? 'wait' : 'pointer'
+          cursor: isAnalyzing ? 'wait' : 'pointer',
+          fontSize: '0.85rem',
+          fontWeight: 700,
+          boxShadow: isSpeaking ? '0 0 18px rgba(56, 189, 248, 0.45)' : 'none',
+          transition: 'all 0.22s ease'
         }}
-        title={isSpeaking ? "Reproduciendo Guía... (Click para pausar)" : "Activar Guía por Voz"}
-        aria-label={isSpeaking ? "Reproduciendo Guía... (Click para pausar)" : "Activar Guía por Voz"}
+        title="Iniciar recorrido guiado interactivo por voz"
+        aria-label="Iniciar recorrido guiado interactivo por voz"
       >
-        <div style={{
-          width: '26px',
-          height: '26px',
-          borderRadius: '50%',
-          backgroundColor: 'rgba(30, 136, 229, 0.35)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#38BDF8',
-          flexShrink: 0
-        }}>
-          {isSpeaking ? (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="voice-audio-bars" aria-label="Audio activo">
-              <rect className="sound-wave-bar bar-1" x="4" y="4" width="3.2" height="16" rx="1.6" />
-              <rect className="sound-wave-bar bar-2" x="10.4" y="4" width="3.2" height="16" rx="1.6" />
-              <rect className="sound-wave-bar bar-3" x="16.8" y="4" width="3.2" height="16" rx="1.6" />
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-            </svg>
-          )}
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-          <span style={{ fontSize: '0.825rem', fontWeight: 600, color: '#F8FAFC', lineHeight: 1.1 }}>
-            {isSpeaking ? 'Reproduciendo Guía...' : 'Guía por Voz'}
-          </span>
-          <span style={{ fontSize: '0.675rem', color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace" }}>
-            Gemini 3.8 Flash • {cantonActivo || 'Territorial'}
-          </span>
-        </div>
-      </button>
-
-      {/* 3. Botón de Guía Interactiva (Trasladado desde el Panel Cívico) */}
-      <button
-        type="button"
-        onClick={ejecutarGuiaDeRecuadros}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          padding: '7px 14px',
-          borderRadius: '9999px',
-          backgroundColor: 'rgba(255, 255, 255, 0.08)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          color: '#F8FAFC',
-          cursor: 'pointer',
-          fontSize: '0.8rem',
-          fontWeight: 600,
-          transition: 'all 0.2s ease'
-        }}
-        title="Iniciar recorrido guiado de recuadros"
-      >
-        {/* Icono SVG Destellos de Guía */}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
-          <path d="M5 3v4" />
-          <path d="M19 17v4" />
-          <path d="M3 5h4" />
-          <path d="M17 19h4" />
-        </svg>
+        {isSpeaking ? (
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="#38BDF8" className="voice-audio-bars" aria-label="Audio activo">
+            <rect className="sound-wave-bar bar-1" x="4" y="4" width="3.2" height="16" rx="1.6" />
+            <rect className="sound-wave-bar bar-2" x="10.4" y="4" width="3.2" height="16" rx="1.6" />
+            <rect className="sound-wave-bar bar-3" x="16.8" y="4" width="3.2" height="16" rx="1.6" />
+          </svg>
+        ) : (
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+            <path d="M5 3v4" />
+            <path d="M19 17v4" />
+            <path d="M3 5h4" />
+            <path d="M17 19h4" />
+          </svg>
+        )}
         <span>Guía</span>
-      </button>
-
-      {/* 4. Botón de Cierre / Minimizar */}
-      <button
-        type="button"
-        onClick={() => setIsMinimized(true)}
-        style={{
-          width: '28px',
-          height: '28px',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'transparent',
-          border: 'none',
-          color: '#64748B',
-          cursor: 'pointer'
-        }}
-        title="Minimizar"
-      >
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
       </button>
     </div>
   );

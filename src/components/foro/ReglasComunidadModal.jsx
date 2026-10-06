@@ -38,9 +38,9 @@ export default function ReglasComunidadModal({ isOpen, onClose, onAceptar }) {
       }}
     >
       <div
-        className="w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl border border-sky-400/25 bg-[#070D1B] text-slate-100 shadow-2xl relative overflow-hidden"
+        className="w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl border border-[var(--cru-border,#E2E8F0)] bg-[var(--cru-surface,#FFFFFF)] text-[var(--cru-text,#062A77)] shadow-2xl relative overflow-hidden"
         style={{
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(56, 189, 248, 0.12)'
+          boxShadow: 'var(--cru-card-shadow-hover, 0 25px 60px rgba(6, 42, 119, 0.12))'
         }}
         onClick={(e) => e.stopPropagation()}
       >

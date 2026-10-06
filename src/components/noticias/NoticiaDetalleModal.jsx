@@ -280,10 +280,10 @@ export default function NoticiaDetalleModal({
           width: '100%',
           maxWidth: '840px',
           maxHeight: '92vh',
-          backgroundColor: '#050B17',
-          borderRadius: '20px',
-          border: '1px solid rgba(56, 189, 248, 0.25)',
-          boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 40px rgba(56, 189, 248, 0.1)',
+          backgroundColor: 'var(--cru-surface, #FFFFFF)',
+          borderRadius: '24px',
+          border: '1px solid var(--cru-border, #E2E8F0)',
+          boxShadow: 'var(--cru-card-shadow-hover, 0 25px 60px rgba(6, 42, 119, 0.12))',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden'
@@ -293,8 +293,8 @@ export default function NoticiaDetalleModal({
         <div
           style={{
             padding: '1.25rem 1.75rem',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-            backgroundColor: 'rgba(15, 23, 42, 0.75)',
+            borderBottom: '1px solid var(--cru-border, #E2E8F0)',
+            backgroundColor: 'var(--cru-surface-hover, #F8FAFC)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -505,7 +505,7 @@ export default function NoticiaDetalleModal({
               fontSize: '1.65rem',
               lineHeight: 1.3,
               fontWeight: 800,
-              color: '#F8FAFC',
+              color: 'var(--cru-text, #062A77)',
               margin: 0
             }}
           >
@@ -516,8 +516,8 @@ export default function NoticiaDetalleModal({
           {noticiaActual.resumen && (
             <div
               style={{
-                backgroundColor: 'rgba(30, 41, 59, 0.6)',
-                borderLeft: '4px solid #38BDF8',
+                backgroundColor: 'var(--cru-surface-muted, #F1F5F9)',
+                borderLeft: '4px solid var(--blue, #0053AF)',
                 borderRadius: '0 12px 12px 0',
                 padding: '1rem 1.25rem',
                 fontSize: '0.98rem',

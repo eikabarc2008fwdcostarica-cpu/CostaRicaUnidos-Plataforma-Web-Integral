@@ -208,7 +208,7 @@ export default function OrganigramaModule({
                   ESTRUCTURA ADMINISTRATIVA
                 </span>
                 <span style={{ fontSize: '0.76rem', color: '#94A3B8', fontWeight: 600 }}>
-                  PROVINCIA DE {provinciaObj.nombre.toUpperCase()} • DTA {cantonActual.codigoDta}
+                  PROVINCIA DE {provinciaObj.nombre.toUpperCase()} • CANTÓN {cantonActual.nombre.toUpperCase()}
                 </span>
                 <span style={{ color: '#475569' }}>•</span>
                 <span style={{ fontSize: '0.76rem', color: '#38BDF8', fontWeight: 700 }}>
@@ -287,7 +287,7 @@ export default function OrganigramaModule({
             >
               {cantones.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.nombre} (DTA {c.codigoDta})
+                  {c.nombre} (Cantón {c.codigoDta})
                 </option>
               ))}
             </select>

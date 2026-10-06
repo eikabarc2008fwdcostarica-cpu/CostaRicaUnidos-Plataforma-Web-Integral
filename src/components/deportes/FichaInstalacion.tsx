@@ -15,15 +15,35 @@ export const FichaInstalacion: FC<FichaInstalacionProps> = ({ instalacion, onRes
   const tieneLey7600 = instalacion.servicios.some((s) => s.toLowerCase().includes('7600') || s.toLowerCase().includes('accesible'));
 
   return (
-    <CivicCard level={1} interactive>
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        border: '1px solid #E2E8F0',
+        borderTop: '4px solid #0053AF',
+        borderRadius: '16px',
+        padding: '1.35rem',
+        boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = '0 10px 25px -3px rgba(6, 42, 119, 0.12)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))';
+      }}
+    >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
         {/* Cabecera de la Instalación con StatusPill Dinámico */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem', flexWrap: 'wrap' }}>
           <div>
-            <span style={{ fontSize: '0.78rem', color: '#7DD3FC', fontWeight: 600, display: 'block', marginBottom: '0.2rem' }}>
+            <span style={{ fontSize: '0.78rem', color: '#0053AF', fontWeight: 700, display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>
               {instalacion.disciplinaPrincipal}
             </span>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#062A77', margin: 0 }}>
               {instalacion.nombre}
             </h3>
           </div>
@@ -32,25 +52,25 @@ export const FichaInstalacion: FC<FichaInstalacionProps> = ({ instalacion, onRes
         </div>
 
         {/* Ubicación y Capacidad */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.85rem', color: '#CBD5E1' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.85rem', color: '#334155' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <MapPin size={15} color="#94A3B8" />
-            <span>{instalacion.direccion}, <strong>{instalacion.distrito}</strong></span>
+            <MapPin size={15} color="#0053AF" />
+            <span>{instalacion.direccion}, <strong style={{ color: '#0F172A' }}>{instalacion.distrito}</strong></span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <Users size={15} color="#94A3B8" />
-            <span>Aforo: <strong style={{ color: '#FFFFFF' }}>{instalacion.capacidad}</strong></span>
+            <Users size={15} color="#64748B" />
+            <span>Aforo: <strong style={{ color: '#0F172A' }}>{instalacion.capacidad}</strong></span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <Clock size={15} color="#94A3B8" />
+            <Clock size={15} color="#64748B" />
             <span>{instalacion.horario}</span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <DollarSign size={15} color="#FBBF24" />
-            <span style={{ color: '#FEF3C7', fontWeight: 600 }}>{instalacion.tarifaAlquiler}</span>
+            <DollarSign size={15} color="#D97706" />
+            <span style={{ color: '#92400E', fontWeight: 700 }}>{instalacion.tarifaAlquiler}</span>
           </div>
         </div>
 
@@ -64,15 +84,16 @@ export const FichaInstalacion: FC<FichaInstalacionProps> = ({ instalacion, onRes
                 fontSize: '0.72rem',
                 padding: '0.2rem 0.55rem',
                 borderRadius: '6px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#E2E8F0',
+                background: '#F1F5F9',
+                border: '1px solid #CBD5E1',
+                color: '#1E293B',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.3rem'
+                gap: '0.3rem',
+                fontWeight: 600
               }}
             >
-              <CheckCircle2 size={12} color="#34D399" />
+              <CheckCircle2 size={12} color="#059669" />
               {servicio}
             </span>
           ))}
@@ -81,7 +102,7 @@ export const FichaInstalacion: FC<FichaInstalacionProps> = ({ instalacion, onRes
         {/* Footer con Acciones */}
         <div
           style={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            borderTop: '1px solid #E2E8F0',
             paddingTop: '0.75rem',
             display: 'flex',
             alignItems: 'center',
@@ -90,9 +111,9 @@ export const FichaInstalacion: FC<FichaInstalacionProps> = ({ instalacion, onRes
             gap: '0.5rem'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', color: '#94A3B8' }}>
-            <Phone size={14} color="#7DD3FC" />
-            <span style={{ fontFamily: "var(--font-telemetry, monospace)" }}>{instalacion.telefonoContacto}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>
+            <Phone size={14} color="#0053AF" />
+            <span style={{ fontFamily: "monospace" }}>{instalacion.telefonoContacto}</span>
           </div>
 
           <CivicButton
@@ -104,7 +125,7 @@ export const FichaInstalacion: FC<FichaInstalacionProps> = ({ instalacion, onRes
           </CivicButton>
         </div>
       </div>
-    </CivicCard>
+    </div>
   );
 };
 

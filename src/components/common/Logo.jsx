@@ -3,15 +3,19 @@ import { Link } from 'react-router-dom';
 
 /**
  * Logotipo Oficial de Costa Rica Unidos
- * Dimensiones estrictas, compactas y proporcionales (altura máxima 40px)
+ * 100% Estático (sin rotación) y con navegación directa a la pantalla principal (/)
  */
-export default function Logo({ size = '40px', showText = true }) {
+export default function Logo({ size = '40px', showText = true, variant = 'light', spin = false }) {
   const pixelHeight = typeof size === 'number' ? `${size}px` : (typeof size === 'string' && (size.endsWith('px') || size.endsWith('rem')) ? size : '40px');
+
+  const primaryTextColor = variant === 'dark' ? '#FFFFFF' : '#062A77';
+  const secondaryTextColor = variant === 'dark' ? '#38BDF8' : '#C22727';
 
   return (
     <Link
       to="/"
-      className="flex items-center gap-3 no-underline group"
+      className="flex items-center gap-3 cursor-pointer select-none group no-underline"
+      aria-label="Ir a la página principal de Costa Rica Unidos"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -20,22 +24,22 @@ export default function Logo({ size = '40px', showText = true }) {
         flexShrink: 0
       }}
     >
-      {/* Isotipo Oficial (Corazón y Manos) */}
+      {/* Isotipo Oficial (100% Estático - Sin animación de rotación) */}
       <img
         src="/logo.png"
-        alt="Costa Rica Unidos"
+        alt="Logo Costa Rica Unidos"
         style={{
           height: pixelHeight,
           maxHeight: pixelHeight,
           width: 'auto',
           objectFit: 'contain',
-          filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.5))'
+          filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))'
         }}
-        className="h-10 w-auto object-contain transition-transform duration-200 hover:scale-105"
+        className="h-10 w-10 object-contain"
       />
       {showText && (
         <div
-          className="logo-text-civic flex flex-col leading-tight"
+          className="flex flex-col select-none"
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -44,26 +48,25 @@ export default function Logo({ size = '40px', showText = true }) {
           }}
         >
           <span
-            className="text-white font-black text-lg md:text-xl tracking-wider"
+            className={`font-extrabold text-lg tracking-tight leading-none ${variant === 'dark' ? 'text-white' : 'text-[#062A77]'}`}
             style={{
-              color: '#FFFFFF',
-              fontWeight: 900,
+              color: primaryTextColor,
+              fontWeight: 800,
               fontSize: '1.15rem',
-              letterSpacing: '0.04em',
-              fontFamily: 'var(--font-main, system-ui, sans-serif)'
+              letterSpacing: '-0.01em',
+              fontFamily: 'var(--font-main, "Poppins", sans-serif)'
             }}
           >
             COSTA RICA
           </span>
           <span
-            className="text-sky-400 font-bold text-xs tracking-widest"
+            className={`font-bold text-xs tracking-widest leading-tight mt-0.5 ${variant === 'dark' ? 'text-[#38BDF8]' : 'text-[#C22727]'}`}
             style={{
-              color: '#38BDF8',
-              fontWeight: 800,
+              color: secondaryTextColor,
+              fontWeight: 700,
               fontSize: '0.72rem',
               letterSpacing: '0.24em',
-              marginTop: '1px',
-              fontFamily: 'var(--font-main, system-ui, sans-serif)'
+              fontFamily: 'var(--font-main, "Poppins", sans-serif)'
             }}
           >
             UNIDOS
@@ -85,9 +88,9 @@ export function Isotipo({ size = '40px', className = '' }) {
         maxHeight: pixelHeight,
         width: 'auto',
         objectFit: 'contain',
-        filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.5))'
+        filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))'
       }}
-      className={`h-10 w-auto object-contain transition-transform duration-200 hover:scale-105 ${className}`}
+      className={`h-10 w-10 object-contain ${className}`}
     />
   );
 }

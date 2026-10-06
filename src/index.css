@@ -2,8 +2,64 @@
    COSTA RICA UNIDOS — SOVEREIGN CIVIC GLASS v2.1 DESIGN SYSTEM
    República de Costa Rica • Portal Nacional y Dashboard Central
    ========================================================================== */
+@import './styles/heroAnimations.css';
 
 :root {
+  /* Identidad Nacional e Institucional */
+  --red: #C22727;
+  --red-dark: #990001;
+  --ink: #131313;
+  --white: #FDFDFF;
+  --navy: #062A77;
+  --blue: #0053AF;
+  --night: #01004E;
+  --periwinkle: #7D7DFF;
+
+  /* Naturaleza y Tradición Costarricense */
+  --cream: #F3E8CC;
+  --sun: #FFCA26;
+  --green: #19532B;
+  --kiwi: #9ABC04;
+  --carrot: #FB6015;
+  --guaria: #9B59D0;
+  --guaria-dark: #6A2C91;
+  --wood: #6B3E1F;
+
+  /* Parámetros de Diseño */
+  --font-main: 'Poppins', sans-serif;
+  --font-headline: 'Poppins', sans-serif;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 10px 30px rgba(6, 42, 119, 0.08);
+  --shadow-card: 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04);
+  --shadow-hover: 0 10px 25px -3px rgba(6, 42, 119, 0.1);
+
+  /* Tema Limpio Municipal Predeterminado */
+  --theme-bg: #FFFFFF;
+  --theme-text-primary: #131313;
+  --theme-text-secondary: #475569;
+  --theme-card-bg: #FFFFFF;
+  --theme-card-border: #E2E8F0;
+  --theme-header-bg: #FFFFFF;
+
+  /* Tokens Identidad Limpia Costa Rica Unidos */
+  --cru-surface: #FFFFFF;
+  --cru-surface-hover: #F8FAFC;
+  --cru-surface-card: #FFFFFF;
+  --cru-surface-muted: #F1F5F9;
+  --cru-border: #E2E8F0;
+  --cru-border-subtle: #EDF2F7;
+  --cru-text: #062A77;
+  --cru-text-secondary: #334155;
+  --cru-text-soft: #64748B;
+  --cru-card-shadow: 0 10px 30px rgba(6, 42, 119, 0.06);
+  --cru-card-shadow-hover: 0 20px 45px rgba(6, 42, 119, 0.12);
+  --theme-bg-gradient: linear-gradient(180deg, #FDFDFF 0%, #F5F7FB 100%);
+  --theme-input-bg: #FFFFFF;
+  --theme-input-border: #CBD5E1;
+  --theme-input-text: #0F172A;
+  --cru-badge-neutral-bg: #F1F5F9;
+
   /* Sustrato Base Soberano */
   --color-obsidian: #00040D;
   --color-obsidian-sovereign: #00040D;
@@ -74,28 +130,72 @@
   /* Motor de Accesibilidad Universal (RNF-05.1 / Ley 7600) */
   --text-scale: 1;
 
-  /* Variables del Tema Activo (Default: Dark) */
-  --theme-bg: #00040D;
-  --theme-bg-gradient: radial-gradient(circle at 15% 20%, rgba(0, 43, 127, 0.28) 0%, transparent 45%),
-    radial-gradient(circle at 85% 80%, rgba(206, 17, 38, 0.16) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(0, 4, 13, 0.95) 0%, rgba(0, 4, 13, 1) 100%);
+  /* Variables del Tema Activo (Default: Limpio Institucional) */
+  --theme-bg: #FFFFFF;
+  --theme-bg-gradient: linear-gradient(180deg, #FDFDFF 0%, #F5F7FB 100%);
+  --theme-text-primary: #0F172A;
+  --theme-text-secondary: #334155;
+  --theme-text-muted: #64748B;
+  --theme-card-bg: #FFFFFF;
+  --theme-card-border: #E2E8F0;
+  --theme-card-shadow: 0 10px 30px rgba(6, 42, 119, 0.06);
+  --theme-input-bg: #FFFFFF;
+  --theme-input-border: #CBD5E1;
+  --theme-input-text: #0F172A;
+  --theme-header-bg: #FFFFFF;
+  --theme-header-border: #E2E8F0;
+  --theme-topbar-bg: #062A77;
+  --theme-topbar-text: #FFFFFF;
+
+  /* Tokens Semánticos Soberanos Costa Rica Unidos (CRU Tokens) - Modo Limpio */
+  --cru-surface: #FFFFFF;
+  --cru-surface-card: #FFFFFF;
+  --cru-surface-hover: #F8FAFC;
+  --cru-border: #E2E8F0;
+  --cru-border-hover: #CBD5E1;
+  --cru-text: #062A77;
+  --cru-text-soft: #334155;
+  --cru-text-muted: #64748B;
+  --cru-accent-blue: #002B7F;
+  --cru-accent-blue-bg: rgba(0, 43, 127, 0.08);
+  --cru-accent-blue-border: rgba(0, 43, 127, 0.25);
+  --cru-accent-sky: #0284C7;
+  --cru-accent-sky-bg: rgba(2, 132, 199, 0.08);
+  --cru-accent-sky-border: rgba(2, 132, 199, 0.25);
+  --cru-accent-red: #DA291C;
+  --cru-accent-red-bg: rgba(218, 41, 28, 0.08);
+  --cru-accent-red-border: rgba(218, 41, 28, 0.25);
+  --cru-accent-green: #19532B;
+  --cru-accent-green-bg: rgba(25, 83, 43, 0.08);
+  --cru-accent-green-border: rgba(25, 83, 43, 0.25);
+  --cru-badge-neutral-bg: #F1F5F9;
+  --cru-badge-neutral-text: #475569;
+  --cru-badge-neutral-border: #CBD5E1;
+  --cru-card-shadow-hover: 0 16px 36px rgba(6, 42, 119, 0.12);
+}
+
+/* Modo Oscuro (Noche Soberana) */
+html.dark, :root.dark, .dark {
+  --theme-bg: #01004E;
+  --theme-bg-gradient: radial-gradient(circle at 15% 20%, rgba(0, 43, 127, 0.35) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(206, 17, 38, 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(1, 0, 78, 0.95) 0%, #00040D 100%);
   --theme-text-primary: #FFFFFF;
   --theme-text-secondary: #94A3B8;
   --theme-text-muted: #64748B;
-  --theme-card-bg: rgba(255, 255, 255, 0.05);
+  --theme-card-bg: rgba(10, 15, 29, 0.85);
   --theme-card-border: rgba(255, 255, 255, 0.12);
-  --theme-card-shadow: 0 10px 30px rgba(0, 4, 13, 0.6);
-  --theme-input-bg: rgba(0, 4, 13, 0.75);
+  --theme-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --theme-input-bg: rgba(10, 15, 29, 0.85);
   --theme-input-border: rgba(255, 255, 255, 0.2);
   --theme-input-text: #FFFFFF;
-  --theme-header-bg: rgba(0, 4, 13, 0.85);
+  --theme-header-bg: rgba(1, 0, 78, 0.92);
   --theme-header-border: rgba(255, 255, 255, 0.12);
   --theme-topbar-bg: #000818;
   --theme-topbar-text: #94A3B8;
-
-  /* Tokens Semánticos Soberanos Costa Rica Unidos (CRU Tokens) - Modo Oscuro */
-  --cru-surface: rgba(0, 15, 45, 0.65);
-  --cru-surface-hover: rgba(0, 20, 60, 0.85);
+  --cru-surface: rgba(10, 15, 29, 0.85);
+  --cru-surface-card: #0D1527;
+  --cru-surface-hover: rgba(19, 28, 49, 0.95);
   --cru-border: rgba(255, 255, 255, 0.12);
   --cru-border-hover: rgba(255, 255, 255, 0.24);
   --cru-text: #FFFFFF;
@@ -238,6 +338,14 @@ html.light a {
 
 html.light .civic-container {
   color: var(--theme-text-primary);
+}
+
+.shadow-card {
+  box-shadow: var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04)) !important;
+}
+
+.shadow-hover {
+  box-shadow: var(--shadow-hover, 0 10px 25px -3px rgba(6, 42, 119, 0.1)) !important;
 }
 
 html {
@@ -2428,6 +2536,346 @@ body[data-colorblind="achromatopsia"],
   animation-play-state: paused;
   cursor: default;
 }
+
+/* ==========================================================================
+   COSTA RICA UNIDOS — NUEVA IDENTIDAD MUNICIPAL & NATURAL (escazu.go.cr + FLORA/FAUNA)
+   ========================================================================== */
+
+body {
+  font-family: var(--font-main, 'Poppins', sans-serif);
+  background-color: var(--white, #FDFDFF);
+  color: var(--ink, #131313);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* 1. Scroll Fade-In & Blur (0.75s, blur 10px, translateY 24px) */
+.reveal-on-scroll {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(24px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+.reveal-delay-0 { transition-delay: 0s; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* 2. Rotación lenta (Logo Oficial y Rueda decorativa) */
+@keyframes spinSlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 20s linear infinite;
+  transform-origin: center;
+}
+
+.animate-wheel-slow {
+  animation: spinSlow 30s linear infinite;
+  transform-origin: center;
+}
+
+/* 3. Sol pulsante y Estrellas titilantes */
+@keyframes sunPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 25px rgba(255, 202, 38, 0.7));
+  }
+  50% {
+    transform: scale(1.06);
+    filter: drop-shadow(0 0 45px rgba(255, 202, 38, 0.95));
+  }
+}
+
+.animate-sun-pulse {
+  animation: sunPulse 6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.95));
+  }
+}
+
+.animate-star-twinkle-1 {
+  animation: starTwinkle 2.5s ease-in-out infinite;
+}
+
+.animate-star-twinkle-2 {
+  animation: starTwinkle 3.4s ease-in-out infinite 0.7s;
+}
+
+.animate-star-twinkle-3 {
+  animation: starTwinkle 2.9s ease-in-out infinite 1.4s;
+}
+
+/* 4. Nubes flotantes */
+@keyframes cloudDrift {
+  0% { transform: translateX(-4%); }
+  50% { transform: translateX(4%); }
+  100% { transform: translateX(-4%); }
+}
+
+.animate-cloud-drift {
+  animation: cloudDrift 18s ease-in-out infinite;
+}
+
+/* 5. Hojas cayendo en deriva diagonal con rotación (bucle de 9s) */
+@keyframes leafDrift1 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  15% { opacity: 0.9; }
+  85% { opacity: 0.9; }
+  100% {
+    transform: translate(-140px, 240px) rotate(240deg);
+    opacity: 0;
+  }
+}
+
+@keyframes leafDrift2 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  15% { opacity: 0.85; }
+  85% { opacity: 0.85; }
+  100% {
+    transform: translate(-110px, 260px) rotate(-240deg);
+    opacity: 0;
+  }
+}
+
+.animate-leaf-1 {
+  animation: leafDrift1 9s ease-in-out infinite;
+}
+
+.animate-leaf-2 {
+  animation: leafDrift2 9s ease-in-out infinite 3s;
+}
+
+.animate-leaf-3 {
+  animation: leafDrift1 9s ease-in-out infinite 6s;
+}
+
+/* 6. Tucán: la cabeza se inclina en bucle de 3s */
+@keyframes toucanTilt {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(-7deg); }
+  70% { transform: rotate(4deg); }
+}
+
+.animate-toucan-head {
+  animation: toucanTilt 3s ease-in-out infinite;
+  transform-origin: 32px 42px;
+}
+
+/* 7. Lapa roja (Ara macao): cruza el hero en 24s con ondulación vertical y aleteo de 0.5s */
+@keyframes macawCross {
+  0% {
+    transform: translate(-160px, 25px);
+  }
+  25% {
+    transform: translate(25vw, 10px);
+  }
+  50% {
+    transform: translate(50vw, 35px);
+  }
+  75% {
+    transform: translate(75vw, 15px);
+  }
+  100% {
+    transform: translate(calc(100vw + 160px), 30px);
+  }
+}
+
+@keyframes macawWingFlap {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.42); }
+}
+
+.animate-macaw-cross {
+  animation: macawCross 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-macaw-wing {
+  animation: macawWingFlap 0.5s ease-in-out infinite;
+  transform-origin: center top;
+}
+
+/* 8. Enredaderas: balanceo de ±2° en 5s con desfase entre lados */
+@keyframes vineSwayLeft {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes vineSwayRight {
+  0%, 100% { transform: rotate(2deg); }
+  50% { transform: rotate(-2deg); }
+}
+
+.animate-vine-left {
+  animation: vineSwayLeft 5s ease-in-out infinite;
+  transform-origin: top left;
+}
+
+.animate-vine-right {
+  animation: vineSwayRight 5s ease-in-out infinite 2.5s;
+  transform-origin: top right;
+}
+
+/* 9. Guarias que florecen (scale 0.88 a 1.1 y rotación ±6° en 4s con desfase) */
+@keyframes guariaBloom {
+  0%, 100% { transform: scale(0.88) rotate(-6deg); }
+  50% { transform: scale(1.1) rotate(6deg); }
+}
+
+.animate-guaria-1 { animation: guariaBloom 4s ease-in-out infinite; transform-origin: center; }
+.animate-guaria-2 { animation: guariaBloom 4s ease-in-out infinite 1s; transform-origin: center; }
+.animate-guaria-3 { animation: guariaBloom 4s ease-in-out infinite 2s; transform-origin: center; }
+.animate-guaria-4 { animation: guariaBloom 4s ease-in-out infinite 3s; transform-origin: center; }
+
+/* 10. Tradición del Boyeo y Carreta Típica: cruce natural continuo con suave vaivén */
+@keyframes oxcartCross {
+  0% {
+    transform: translateX(-400px);
+  }
+  100% {
+    transform: translateX(calc(100vw + 400px));
+  }
+}
+
+@keyframes oxcartSway {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(0.35deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-2px) rotate(-0.35deg);
+  }
+}
+
+.animate-oxcart-cross {
+  animation: oxcartCross 22s linear infinite;
+  will-change: transform;
+}
+
+.animate-oxcart-sway {
+  animation: oxcartSway 1.8s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* 11. Tarjetas de trámites: elevación y leve giro en hover, brote se agranda y gira */
+.service-card-clean {
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+}
+
+.service-card-clean:hover {
+  transform: translateY(-8px) rotate(-0.5deg);
+  box-shadow: 0 18px 45px rgba(6, 42, 119, 0.16);
+}
+
+.service-card-clean .national-symbol-corner,
+.service-card-clean .sprout-icon {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
+}
+
+.service-card-clean:hover .national-symbol-corner {
+  transform: scale(1.18) rotate(6deg);
+}
+
+.service-card-clean:hover .sprout-icon {
+  transform: scale(1.3) rotate(15deg);
+}
+
+/* 12. Subrayado animado que se dibuja */
+.title-underline-draw {
+  position: relative;
+  display: inline-block;
+}
+
+.title-underline-draw::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 48px;
+  height: 4px;
+  background-color: var(--red, #C22727);
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.title-underline-draw:hover::after {
+  width: 100%;
+}
+
+/* 13. Respeto estricto a prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+  .animate-spin-slow,
+  .animate-wheel-slow,
+  .animate-sun-pulse,
+  .animate-cloud-drift,
+  .animate-leaf-1,
+  .animate-leaf-2,
+  .animate-leaf-3,
+  .animate-toucan-head,
+  .animate-macaw-cross,
+  .animate-macaw-wing,
+  .animate-vine-left,
+  .animate-vine-right,
+  .animate-guaria-1,
+  .animate-guaria-2,
+  .animate-guaria-3,
+  .animate-guaria-4,
+  .animate-oxcart-cross,
+  .animate-oxcart-wheel {
+    animation: none !important;
+  }
+}
+
 
 
 

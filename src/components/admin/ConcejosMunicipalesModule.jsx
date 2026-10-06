@@ -493,7 +493,7 @@ export default function ConcejosMunicipalesModule({
                   GOBIERNO LOCAL AUTÓNOMO
                 </span>
                 <span style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: 600 }}>
-                  DTA {fichaTecnica.codigoDta} • CÓDIGO MUNICIPAL LEY N° 7794
+                  CANTÓN OFICIAL • CÓDIGO MUNICIPAL LEY N° 7794
                 </span>
               </div>
 

@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="/logo.png?v=2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -19,11 +19,49 @@
         theme: {
           extend: {
             colors: {
+              red: {
+                DEFAULT: '#C22727',
+                dark: '#990001',
+              },
+              ink: '#131313',
+              white: '#FDFDFF',
+              navy: '#062A77',
+              blue: {
+                DEFAULT: '#0053AF',
+                light: '#7D7DFF',
+              },
+              night: '#01004E',
+              periwinkle: '#7D7DFF',
+              cream: '#F3E8CC',
+              sun: '#FFCA26',
+              green: {
+                DEFAULT: '#19532B',
+                forest: '#19532B',
+              },
+              kiwi: '#9ABC04',
+              carrot: '#FB6015',
+              guaria: {
+                DEFAULT: '#9B59D0',
+                dark: '#6A2C91',
+              },
+              wood: '#6B3E1F',
               obsidian: '#00040D',
               'sovereign-blue': '#002B7F',
               'institutional-blue': '#001489',
               'solidarity-red': '#CE1126',
               'national-red': '#DA291C',
+            },
+            fontFamily: {
+              sans: ['Poppins', 'Plus Jakarta Sans', 'sans-serif'],
+              poppins: ['Poppins', 'sans-serif'],
+              main: ['Poppins', 'sans-serif'],
+            },
+            borderRadius: {
+              card: '24px',
+              pill: '999px',
+            },
+            boxShadow: {
+              soft: '0 10px 30px rgba(6, 42, 119, 0.08)',
             }
           }
         }

@@ -282,10 +282,10 @@ export default function CrearPostModal({
           maxWidth: '640px',
           maxHeight: '90vh',
           overflowY: 'auto',
-          backgroundColor: '#070D1B',
-          borderRadius: '20px',
-          border: '1px solid rgba(56, 189, 248, 0.25)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.1)',
+          backgroundColor: 'var(--cru-surface, #FFFFFF)',
+          borderRadius: '24px',
+          border: '1px solid var(--cru-border, #E2E8F0)',
+          boxShadow: 'var(--cru-card-shadow-hover, 0 25px 50px rgba(6, 42, 119, 0.12))',
           padding: '1.75rem',
           display: 'flex',
           flexDirection: 'column',
@@ -304,16 +304,16 @@ export default function CrearPostModal({
             width: '36px',
             height: '36px',
             borderRadius: '10px',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: '#94A3B8',
+            backgroundColor: 'var(--cru-surface-muted, #F1F5F9)',
+            border: '1px solid var(--cru-border, #E2E8F0)',
+            color: 'var(--cru-text-soft, #64748B)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
             transition: 'all 0.2s ease'
           }}
-          className="hover:bg-white/10 hover:text-white"
+          className="hover:bg-slate-200"
         >
           <X className="w-5 h-5" />
         </button>
@@ -345,7 +345,7 @@ export default function CrearPostModal({
             style={{
               fontSize: '1.35rem',
               fontWeight: 800,
-              color: '#FFFFFF',
+              color: 'var(--cru-text, #062A77)',
               margin: 0
             }}
           >

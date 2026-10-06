@@ -185,10 +185,10 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
   return (
     <article
       style={{
-        backgroundColor: '#070D1B',
-        borderRadius: '16px',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
+        borderRadius: '20px',
+        border: '1px solid var(--cru-border, #E2E8F0)',
+        boxShadow: 'var(--cru-card-shadow, 0 10px 30px rgba(6, 42, 119, 0.06))',
         padding: '1.5rem',
         transition: 'all 0.25s ease',
         display: 'flex',
@@ -235,7 +235,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
 
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#F8FAFC' }}>
+              <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--cru-text, #062A77)' }}>
                 {obtenerNombrePublico(post.autorNombre)}
               </span>
               <span title="Ciudadano Verificado" style={{ display: 'flex', alignItems: 'center' }}>
@@ -315,7 +315,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
             fontSize: '1.15rem',
             fontWeight: 700,
             lineHeight: 1.4,
-            color: '#FFFFFF',
+            color: 'var(--cru-text, #062A77)',
             marginBottom: '0.65rem'
           }}
         >
@@ -326,7 +326,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
           style={{
             fontSize: '0.925rem',
             lineHeight: 1.6,
-            color: '#CBD5E1',
+            color: 'var(--cru-text-secondary, #334155)',
             margin: 0,
             whiteSpace: 'pre-wrap'
           }}
@@ -343,7 +343,7 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
           gap: '0.5rem',
           paddingBottom: '0.85rem',
           marginBottom: '0.85rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          borderBottom: '1px solid var(--cru-border, #E2E8F0)',
           flexWrap: 'wrap'
         }}
       >

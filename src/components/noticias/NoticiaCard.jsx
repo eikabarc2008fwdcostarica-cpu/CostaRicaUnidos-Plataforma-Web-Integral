@@ -91,27 +91,27 @@ export default function NoticiaCard({
   return (
     <article
       style={{
-        backgroundColor: 'rgba(15, 23, 42, 0.7)',
+        backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        borderRadius: '16px',
+        border: '1px solid var(--cru-border, #E2E8F0)',
+        borderRadius: '20px',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-        boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.4)'
+        boxShadow: 'var(--cru-card-shadow, 0 10px 30px rgba(6, 42, 119, 0.06))'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-3px)';
-        e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.35)';
-        e.currentTarget.style.boxShadow = '0 12px 30px -4px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.12)';
+        e.currentTarget.style.borderColor = 'var(--cru-border-hover, #CBD5E1)';
+        e.currentTarget.style.boxShadow = 'var(--cru-card-shadow-hover, 0 16px 36px rgba(6, 42, 119, 0.12))';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-        e.currentTarget.style.boxShadow = '0 4px 20px -2px rgba(0, 0, 0, 0.4)';
+        e.currentTarget.style.borderColor = 'var(--cru-border, #E2E8F0)';
+        e.currentTarget.style.boxShadow = 'var(--cru-card-shadow, 0 10px 30px rgba(6, 42, 119, 0.06))';
       }}
     >
       {/* Contenido Superior */}
@@ -178,15 +178,15 @@ export default function NoticiaCard({
             fontSize: '1.15rem',
             lineHeight: 1.4,
             fontWeight: 700,
-            color: '#F8FAFC',
+            color: 'var(--cru-text, #062A77)',
             cursor: 'pointer',
             transition: 'color 0.2s'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = '#38BDF8';
+            e.currentTarget.style.color = 'var(--blue, #0053AF)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = '#F8FAFC';
+            e.currentTarget.style.color = 'var(--cru-text, #062A77)';
           }}
         >
           {noticia.titulo}
@@ -198,7 +198,7 @@ export default function NoticiaCard({
             margin: 0,
             fontSize: '0.86rem',
             lineHeight: 1.55,
-            color: '#94A3B8',
+            color: 'var(--cru-text-secondary, #475569)',
             display: '-webkit-box',
             WebkitLineClamp: 3,
             WebkitBoxOrient: 'vertical',
@@ -216,12 +216,12 @@ export default function NoticiaCard({
             justifyContent: 'space-between',
             gap: '0.5rem',
             fontSize: '0.75rem',
-            color: '#64748B',
+            color: 'var(--cru-text-soft, #64748B)',
             paddingTop: '0.35rem',
-            borderTop: '1px solid rgba(255, 255, 255, 0.04)'
+            borderTop: '1px solid var(--cru-border, #E2E8F0)'
           }}
         >
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#94A3B8' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: 'var(--cru-text-soft, #64748B)' }}>
             <ShieldCheck size={13} color="#10B981" />
             {noticia.autorNombre || 'Municipalidad'}
           </span>
@@ -237,8 +237,8 @@ export default function NoticiaCard({
       <div
         style={{
           padding: '0.85rem 1.25rem',
-          backgroundColor: 'rgba(5, 11, 23, 0.65)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+          backgroundColor: 'var(--cru-surface-hover, #F8FAFC)',
+          borderTop: '1px solid var(--cru-border, #E2E8F0)',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.75rem'
