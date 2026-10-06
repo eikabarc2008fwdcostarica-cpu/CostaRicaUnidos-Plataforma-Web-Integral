@@ -77,14 +77,14 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
           padding: '1.25rem 1.5rem',
           borderRadius: '18px',
           border: '1px solid var(--cru-border, #E2E8F0)',
-          boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))'
+          boxShadow: 'var(--cru-card-shadow)'
         }}
       >
         {/* Buscador por Número de Acta o Materia */}
         <div style={{ position: 'relative', flex: '1 1 280px' }}>
           <Search
             size={18}
-            color="#0053AF"
+            color="var(--cru-accent-blue)"
             style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
           />
           <input
@@ -99,14 +99,14 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
             style={{
               width: '100%',
               padding: '0.65rem 1rem 0.65rem 2.6rem',
-              backgroundColor: '#F8FAFC',
-              border: '1px solid #CBD5E1',
+              backgroundColor: 'var(--cru-surface-muted)',
+              border: '1px solid var(--cru-border-strong)',
               borderRadius: '10px',
-              color: '#0F172A',
+              color: 'var(--theme-text-primary)',
               fontSize: '0.9rem',
               outline: 'none',
               fontFamily: 'inherit',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           />
         </div>
@@ -115,7 +115,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           {/* Selector de Tipo de Sesión */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Filter size={15} color="#64748B" />
+            <Filter size={15} color="var(--cru-text-muted)" />
             <select
               value={filtroTipo}
               onChange={(e) => {
@@ -124,9 +124,9 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
               }}
               aria-label="Filtrar por tipo de sesión municipal"
               style={{
-                backgroundColor: '#F8FAFC',
-                color: '#0F172A',
-                border: '1px solid #CBD5E1',
+                backgroundColor: 'var(--cru-surface-muted)',
+                color: 'var(--theme-text-primary)',
+                border: '1px solid var(--cru-border-strong)',
                 borderRadius: '10px',
                 padding: '0.6rem 0.95rem',
                 fontSize: '0.85rem',
@@ -151,9 +151,9 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
             }}
             aria-label="Filtrar por año de la gaceta de actas"
             style={{
-              backgroundColor: '#F8FAFC',
-              color: '#0F172A',
-              border: '1px solid #CBD5E1',
+              backgroundColor: 'var(--cru-surface-muted)',
+              color: 'var(--theme-text-primary)',
+              border: '1px solid var(--cru-border-strong)',
               borderRadius: '10px',
               padding: '0.6rem 0.95rem',
               fontSize: '0.85rem',
@@ -181,7 +181,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: '#DA291C',
+                color: 'var(--cru-accent-red)',
                 fontSize: '0.82rem',
                 cursor: 'pointer',
                 fontWeight: 600,
@@ -200,13 +200,13 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
           style={{
             padding: '3.5rem 1.5rem',
             textAlign: 'center',
-            backgroundColor: '#F8FAFC',
+            backgroundColor: 'var(--cru-surface-muted)',
             borderRadius: '18px',
             border: '1px dashed #CBD5E1',
-            color: '#64748B'
+            color: 'var(--cru-text-muted)'
           }}
         >
-          <FileText size={44} color="#0053AF" style={{ marginBottom: '0.85rem' }} />
+          <FileText size={44} color="var(--cru-accent-blue)" style={{ marginBottom: '0.85rem' }} />
           <h4 style={{ color: 'var(--cru-text, #062A77)', fontSize: '1.15rem', marginBottom: '0.4rem', fontWeight: 700 }}>
             No se encontraron actas con los criterios especificados
           </h4>
@@ -222,7 +222,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
             borderRadius: '18px',
             border: '1px solid var(--cru-border, #E2E8F0)',
             backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
-            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))',
+            boxShadow: 'var(--cru-card-shadow)',
             width: '100%',
             WebkitOverflowScrolling: 'touch'
           }}
@@ -234,13 +234,13 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
               borderCollapse: 'collapse',
               textAlign: 'left',
               fontSize: '0.88rem',
-              color: '#0F172A'
+              color: 'var(--theme-text-primary)'
             }}
           >
             <thead>
               <tr
                 style={{
-                  backgroundColor: '#F8FAFC',
+                  backgroundColor: 'var(--cru-surface-muted)',
                   borderBottom: '1.5px solid var(--cru-border, #E2E8F0)'
                 }}
               >
@@ -268,7 +268,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                   style={{
                     borderBottom: '1px solid var(--cru-border, #E2E8F0)',
                     backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAFCFF',
-                    transition: 'all 0.2s ease'
+                    transition: 'var(--transition-smooth)'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = '#EFF6FF';
@@ -283,7 +283,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                       <strong style={{ color: 'var(--cru-text, #062A77)', fontSize: '0.9rem', fontFamily: 'monospace' }}>
                         {acta.fecha}
                       </strong>
-                      <span style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: 600 }}>
+                      <span style={{ fontSize: '0.76rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>
                         {acta.hora}
                       </span>
                     </div>
@@ -318,7 +318,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                               : '#0369A1',
                           border: `1px solid ${
                             acta.tipo === 'Solemne'
-                              ? '#FDE68A'
+                              ? 'var(--cru-accent-amber-border)'
                               : acta.tipo === 'Extraordinaria'
                               ? '#FECACA'
                               : '#BAE6FD'
@@ -347,9 +347,9 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                               fontFamily: 'monospace',
                               padding: '0.2rem 0.5rem',
                               borderRadius: '6px',
-                              backgroundColor: 'rgba(0, 83, 175, 0.08)',
-                              color: '#0053AF',
-                              border: '1px solid rgba(0, 83, 175, 0.2)',
+                              backgroundColor: 'var(--cru-accent-blue-bg)',
+                              color: 'var(--cru-accent-blue)',
+                              border: '1px solid var(--cru-accent-blue-border)',
                               fontWeight: 600
                             }}
                             title={a.descripcion}
@@ -364,7 +364,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                   {/* Columna 4: Estado de Aprobación */}
                   <td style={{ padding: '1.15rem 1rem', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <CheckCircle2 size={15} color="#059669" />
+                      <CheckCircle2 size={15} color="var(--cru-accent-green)" />
                       <span
                         style={{
                           fontSize: '0.76rem',
@@ -372,7 +372,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                           padding: '0.2rem 0.65rem',
                           borderRadius: '9999px',
                           backgroundColor: 'rgba(5, 150, 105, 0.1)',
-                          color: '#059669',
+                          color: 'var(--cru-accent-green)',
                           border: '1px solid rgba(5, 150, 105, 0.25)'
                         }}
                       >
@@ -390,7 +390,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                         onClick={() => setActaSeleccionada(acta)}
                         aria-label={`Previsualizar Documento Oficial del ${acta.numeroActa}`}
                         style={{
-                          backgroundColor: '#0053AF',
+                          backgroundColor: 'var(--cru-accent-blue)',
                           border: 'none',
                           color: '#FFFFFF',
                           padding: '0.48rem 0.95rem',
@@ -401,7 +401,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '0.45rem',
-                          transition: 'all 0.2s ease',
+                          transition: 'var(--transition-smooth)',
                           boxShadow: 'var(--shadow-card, 0 2px 6px -1px rgba(6, 42, 119, 0.08))'
                         }}
                         onMouseEnter={(e) => {
@@ -423,16 +423,16 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                         rel="noopener noreferrer"
                         aria-label={`Descargar archivo PDF del ${acta.numeroActa}`}
                         style={{
-                          backgroundColor: '#F1F5F9',
-                          border: '1px solid #CBD5E1',
-                          color: '#062A77',
+                          backgroundColor: 'var(--cru-surface-muted)',
+                          border: '1px solid var(--cru-border-strong)',
+                          color: 'var(--cru-text)',
                           padding: '0.48rem 0.65rem',
                           borderRadius: '10px',
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          transition: 'all 0.2s ease',
+                          transition: 'var(--transition-smooth)',
                           textDecoration: 'none'
                         }}
                         onMouseEnter={(e) => {
@@ -461,9 +461,9 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
               flexWrap: 'wrap',
               gap: '1rem',
               borderTop: '1px solid var(--cru-border, #E2E8F0)',
-              backgroundColor: '#F8FAFC',
+              backgroundColor: 'var(--cru-surface-muted)',
               fontSize: '0.82rem',
-              color: '#64748B'
+              color: 'var(--cru-text-muted)'
             }}
           >
             <div>
@@ -477,8 +477,8 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                 disabled={paginaActual === 1}
                 aria-label="Página anterior de actas"
                 style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #CBD5E1',
+                  backgroundColor: 'var(--cru-surface-card)',
+                  border: '1px solid var(--cru-border-strong)',
                   color: paginaActual === 1 ? '#94A3B8' : '#062A77',
                   padding: '0.4rem 0.85rem',
                   borderRadius: '8px',
@@ -488,14 +488,14 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                   gap: '0.35rem',
                   fontSize: '0.8rem',
                   fontWeight: 600,
-                  transition: 'all 0.15s ease'
+                  transition: 'var(--transition-smooth)'
                 }}
               >
                 <ChevronLeft size={14} />
                 <span>Anterior</span>
               </button>
 
-              <span style={{ padding: '0 0.5rem', color: '#334155', fontWeight: 600 }}>
+              <span style={{ padding: '0 0.5rem', color: 'var(--cru-text-soft)', fontWeight: 600 }}>
                 Página {paginaActual} de {totalPaginas}
               </span>
 
@@ -505,8 +505,8 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                 disabled={paginaActual === totalPaginas}
                 aria-label="Página siguiente de actas"
                 style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #CBD5E1',
+                  backgroundColor: 'var(--cru-surface-card)',
+                  border: '1px solid var(--cru-border-strong)',
                   color: paginaActual === totalPaginas ? '#94A3B8' : '#062A77',
                   padding: '0.4rem 0.85rem',
                   borderRadius: '8px',
@@ -516,7 +516,7 @@ export const TablaActas: FC<TablaActasProps> = ({ actas, isLoading = false }) =>
                   gap: '0.35rem',
                   fontSize: '0.8rem',
                   fontWeight: 600,
-                  transition: 'all 0.15s ease'
+                  transition: 'var(--transition-smooth)'
                 }}
               >
                 <span>Siguiente</span>

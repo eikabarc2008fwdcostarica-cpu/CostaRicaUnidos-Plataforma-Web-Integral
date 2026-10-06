@@ -78,13 +78,13 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
           width: '100%',
           maxWidth: '960px',
           maxHeight: '90vh',
-          backgroundColor: '#FFFFFF',
+          backgroundColor: 'var(--cru-surface-card)',
           border: '1px solid var(--cru-border, #E2E8F0)',
           borderRadius: '24px',
           boxShadow: 'var(--shadow-hover, 0 20px 50px rgba(6, 42, 119, 0.15))',
           display: 'flex',
           flexDirection: 'column',
-          color: '#0F172A',
+          color: 'var(--theme-text-primary)',
           overflow: 'hidden',
           outline: 'none'
         }}
@@ -98,7 +98,7 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
             alignItems: 'flex-start',
             justifyContent: 'space-between',
             gap: '1rem',
-            background: '#F8FAFC'
+            background: 'var(--cru-surface-muted)'
           }}
         >
           <div>
@@ -109,12 +109,12 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
                   fontWeight: 800,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
-                  color: '#0053AF'
+                  color: 'var(--cru-accent-blue)'
                 }}
               >
                 REPÚBLICA DE COSTA RICA · CONCEJO MUNICIPAL
               </span>
-              <span style={{ color: '#CBD5E1' }}>•</span>
+              <span style={{ color: 'var(--cru-border-strong)' }}>•</span>
               <CivicBadge variant={acta.tipo === 'Solemne' ? 'warning' : acta.tipo === 'Extraordinaria' ? 'danger' : 'default'} size="sm">
                 Sesión {acta.tipo}
               </CivicBadge>
@@ -133,11 +133,11 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
                 gap: '0.6rem'
               }}
             >
-              <FileCheck size={24} color="#0053AF" />
+              <FileCheck size={24} color="var(--cru-accent-blue)" />
               <span>{acta.numeroActa}</span>
             </h2>
 
-            <p id="modal-acta-desc" style={{ fontSize: '0.85rem', color: '#64748B', margin: 0 }}>
+            <p id="modal-acta-desc" style={{ fontSize: '0.85rem', color: 'var(--cru-text-muted)', margin: 0 }}>
               Periodo Constitucional {acta.periodo} · Fe Pública Municipal Art. 41 del Código Municipal
             </p>
           </div>
@@ -147,9 +147,9 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
             onClick={onClose}
             aria-label="Cerrar visor de documento oficial"
             style={{
-              background: '#F1F5F9',
-              border: '1px solid #CBD5E1',
-              color: '#64748B',
+              background: 'var(--cru-surface-muted)',
+              border: '1px solid var(--cru-border-strong)',
+              color: 'var(--cru-text-muted)',
               width: '36px',
               height: '36px',
               borderRadius: '50%',
@@ -157,7 +157,7 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              transition: 'all 0.2s ease',
+              transition: 'var(--transition-smooth)',
               flexShrink: 0
             }}
             onMouseEnter={(e) => {
@@ -192,41 +192,41 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
               gap: '0.85rem',
-              background: '#F8FAFC',
+              background: 'var(--cru-surface-muted)',
               border: '1px solid var(--cru-border, #E2E8F0)',
               borderRadius: '16px',
               padding: '1.15rem'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <Calendar size={18} color="#0053AF" />
+              <Calendar size={18} color="var(--cru-accent-blue)" />
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748B', textTransform: 'uppercase', display: 'block' }}>Fecha Oficial:</span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', textTransform: 'uppercase', display: 'block' }}>Fecha Oficial:</span>
                 <strong style={{ fontSize: '0.88rem', color: 'var(--cru-text, #062A77)' }}>{acta.fecha}</strong>
               </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <Clock size={18} color="#0053AF" />
+              <Clock size={18} color="var(--cru-accent-blue)" />
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748B', textTransform: 'uppercase', display: 'block' }}>Hora Reglamentaria:</span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', textTransform: 'uppercase', display: 'block' }}>Hora Reglamentaria:</span>
                 <strong style={{ fontSize: '0.88rem', color: 'var(--cru-text, #062A77)' }}>{acta.hora}</strong>
               </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <UserCheck size={18} color="#059669" />
+              <UserCheck size={18} color="var(--cru-accent-green)" />
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748B', textTransform: 'uppercase', display: 'block' }}>Preside la Sesión:</span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', textTransform: 'uppercase', display: 'block' }}>Preside la Sesión:</span>
                 <strong style={{ fontSize: '0.88rem', color: 'var(--cru-text, #062A77)' }}>{acta.presidenteSesion}</strong>
               </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <ShieldCheck size={18} color="#D97706" />
+              <ShieldCheck size={18} color="var(--cru-accent-amber)" />
               <div>
-                <span style={{ fontSize: '0.72rem', color: '#64748B', textTransform: 'uppercase', display: 'block' }}>Estado Legal:</span>
-                <strong style={{ fontSize: '0.88rem', color: '#059669' }}>{acta.estado}</strong>
+                <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-muted)', textTransform: 'uppercase', display: 'block' }}>Estado Legal:</span>
+                <strong style={{ fontSize: '0.88rem', color: 'var(--cru-accent-green)' }}>{acta.estado}</strong>
               </div>
             </div>
           </div>
@@ -235,7 +235,7 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
           <div
             style={{
               backgroundColor: 'rgba(0, 83, 175, 0.06)',
-              border: '1px solid rgba(0, 83, 175, 0.2)',
+              border: '1px solid var(--cru-accent-blue-border)',
               borderRadius: '14px',
               padding: '1rem 1.25rem',
               display: 'flex',
@@ -252,20 +252,20 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
                   height: '38px',
                   borderRadius: '10px',
                   backgroundColor: 'rgba(0, 83, 175, 0.12)',
-                  border: '1px solid rgba(0, 83, 175, 0.25)',
+                  border: '1px solid var(--cru-accent-blue-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}
               >
-                <ShieldCheck size={20} color="#0053AF" />
+                <ShieldCheck size={20} color="var(--cru-accent-blue)" />
               </div>
               <div>
                 <span style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--cru-text, #062A77)', display: 'block' }}>
                   CERTIFICACIÓN DIGITAL DE FE PÚBLICA · SECRETARÍA DEL CONCEJO
                 </span>
-                <span style={{ fontSize: '0.75rem', color: '#475569' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>
                   Documento emitido y resguardado conforme a la Ley N° 8454 de Certificados y Firmas Digitales de Costa Rica.
                 </span>
               </div>
@@ -275,11 +275,11 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
               style={{
                 fontFamily: 'monospace',
                 fontSize: '0.72rem',
-                color: '#0053AF',
-                backgroundColor: '#FFFFFF',
+                color: 'var(--cru-accent-blue)',
+                backgroundColor: 'var(--cru-surface-card)',
                 padding: '0.35rem 0.65rem',
                 borderRadius: '6px',
-                border: '1px solid #CBD5E1',
+                border: '1px solid var(--cru-border-strong)',
                 fontWeight: 600
               }}
             >
@@ -299,7 +299,7 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
 
           {/* Temas Clave Tratados */}
           <div>
-            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontWeight: 700, textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
               Temas y Dictámenes de Comisión
             </span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
@@ -311,9 +311,9 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
                     fontWeight: 600,
                     padding: '0.25rem 0.75rem',
                     borderRadius: '9999px',
-                    backgroundColor: '#F1F5F9',
+                    backgroundColor: 'var(--cru-surface-muted)',
                     color: 'var(--cru-text, #062A77)',
-                    border: '1px solid #CBD5E1'
+                    border: '1px solid var(--cru-border-strong)'
                   }}
                 >
                   {tema}
@@ -332,21 +332,21 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
                 <div
                   key={acuerdo.numeroAcuerdo}
                   style={{
-                    backgroundColor: '#F8FAFC',
+                    backgroundColor: 'var(--cru-surface-muted)',
                     border: '1px solid var(--cru-border, #E2E8F0)',
                     borderRadius: '12px',
                     padding: '0.85rem 1.15rem'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                    <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#0053AF', fontSize: '0.85rem' }}>
+                    <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--cru-accent-blue)', fontSize: '0.85rem' }}>
                       {acuerdo.numeroAcuerdo}
                     </span>
                     <span
                       style={{
                         fontSize: '0.72rem',
                         fontWeight: 700,
-                        color: '#059669',
+                        color: 'var(--cru-accent-green)',
                         backgroundColor: 'rgba(5, 150, 105, 0.1)',
                         border: '1px solid rgba(5, 150, 105, 0.25)',
                         padding: '0.15rem 0.55rem',
@@ -370,7 +370,7 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
               <h3 style={{ fontSize: '0.98rem', fontWeight: 700, color: 'var(--cru-text, #062A77)', margin: 0 }}>
                 Previsualización del Documento PDF Oficial
               </h3>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>
                 Formato Oficial PDF/A · Certificación Ley 8454
               </span>
             </div>
@@ -381,8 +381,8 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
                 height: '380px',
                 borderRadius: '14px',
                 overflow: 'hidden',
-                border: '1px solid #CBD5E1',
-                backgroundColor: '#F1F5F9',
+                border: '1px solid var(--cru-border-strong)',
+                backgroundColor: 'var(--cru-surface-muted)',
                 position: 'relative'
               }}
             >
@@ -403,14 +403,14 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
                     height: '100%',
                     padding: '2rem',
                     textAlign: 'center',
-                    color: '#334155'
+                    color: 'var(--cru-text-soft)'
                   }}
                 >
-                  <FileText size={44} color="#0053AF" style={{ marginBottom: '0.75rem' }} />
-                  <h4 style={{ fontSize: '1.05rem', color: '#062A77', marginBottom: '0.4rem', fontWeight: 700 }}>
+                  <FileText size={44} color="var(--cru-accent-blue)" style={{ marginBottom: '0.75rem' }} />
+                  <h4 style={{ fontSize: '1.05rem', color: 'var(--cru-text)', marginBottom: '0.4rem', fontWeight: 700 }}>
                     {acta.numeroActa}
                   </h4>
-                  <p style={{ fontSize: '0.85rem', color: '#64748B', maxWidth: '460px', marginBottom: '1.25rem' }}>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--cru-text-muted)', maxWidth: '460px', marginBottom: '1.25rem' }}>
                     Visualizador de documentos oficiales listo para descarga directa en formato estandarizado PDF/A.
                   </p>
                   <a
@@ -420,7 +420,7 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
                     rel="noopener noreferrer"
                     style={{
                       textDecoration: 'none',
-                      backgroundColor: '#0053AF',
+                      backgroundColor: 'var(--cru-accent-blue)',
                       border: 'none',
                       color: '#FFFFFF',
                       padding: '0.65rem 1.4rem',
@@ -444,8 +444,8 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
           {/* Advertencia Legal de Transparencia y Rendición de Cuentas */}
           <div
             style={{
-              backgroundColor: '#FFFBEB',
-              border: '1px solid #FDE68A',
+              backgroundColor: 'var(--cru-accent-amber-bg)',
+              border: '1px solid var(--cru-accent-amber-border)',
               borderRadius: '12px',
               padding: '0.85rem 1.15rem',
               display: 'flex',
@@ -456,7 +456,7 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
               lineHeight: 1.55
             }}
           >
-            <AlertCircle size={18} color="#D97706" style={{ flexShrink: 0, marginTop: '2px' }} />
+            <AlertCircle size={18} color="var(--cru-accent-amber)" style={{ flexShrink: 0, marginTop: '2px' }} />
             <span>
               <strong>Advertencia Legal de Transparencia:</strong> Este documento es de acceso público irrestricto de conformidad con los artículos 11, 27 y 30 de la Constitución Política de la República de Costa Rica y los artículos 13 y 41 del Código Municipal (Ley N° 7794). Los datos sensibles han sido resguardados conforme a la Ley N° 8968.
             </span>
@@ -468,7 +468,7 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
           style={{
             padding: '1.25rem 2rem',
             borderTop: '1px solid var(--cru-border, #E2E8F0)',
-            backgroundColor: '#F8FAFC',
+            backgroundColor: 'var(--cru-surface-muted)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -476,8 +476,8 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
             gap: '1rem'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.8rem', color: '#475569' }}>
-            <CheckCircle2 size={16} color="#059669" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.8rem', color: 'var(--cru-text-muted)' }}>
+            <CheckCircle2 size={16} color="var(--cru-accent-green)" />
             <span>Documento cotejado con el Libro de Actas de la Secretaría Municipal</span>
           </div>
 
@@ -486,15 +486,15 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
               type="button"
               onClick={onClose}
               style={{
-                background: '#FFFFFF',
-                border: '1px solid #CBD5E1',
-                color: '#334155',
+                background: 'var(--cru-surface-card)',
+                border: '1px solid var(--cru-border-strong)',
+                color: 'var(--cru-text-soft)',
                 padding: '0.55rem 1.25rem',
                 borderRadius: '10px',
                 fontSize: '0.85rem',
                 fontWeight: 600,
                 cursor: 'pointer',
-                transition: 'all 0.2s ease'
+                transition: 'var(--transition-smooth)'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = '#F1F5F9';
@@ -513,8 +513,8 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
               rel="noopener noreferrer"
               style={{
                 textDecoration: 'none',
-                backgroundColor: '#0053AF',
-                backgroundImage: 'linear-gradient(135deg, #0053AF 0%, #062A77 100%)',
+                backgroundColor: 'var(--cru-accent-blue)',
+                backgroundImage: 'linear-gradient(135deg, var(--blue, #0053AF) 0%, var(--navy, #062A77) 100%)',
                 border: 'none',
                 color: '#FFFFFF',
                 padding: '0.55rem 1.35rem',
@@ -525,7 +525,7 @@ export const VisorActaModal: FC<VisorActaModalProps> = ({ acta, isOpen, onClose 
                 alignItems: 'center',
                 gap: '0.45rem',
                 cursor: 'pointer',
-                transition: 'all 0.2s ease',
+                transition: 'var(--transition-smooth)',
                 boxShadow: 'var(--shadow-hover)'
               }}
             >

@@ -204,7 +204,7 @@ export const ComercioPage: FC = () => {
             <CivicBadge variant="provincial" size="md">
               MUNICIPALIDAD DE {cantonActivo.toUpperCase()} &bull; DEPARTAMENTO DE PATENTES
             </CivicBadge>
-            <span style={{ fontSize: '0.825rem', color: '#475569', fontWeight: 500 }}>
+            <span style={{ fontSize: '0.825rem', color: 'var(--cru-text-muted)', fontWeight: 500 }}>
               Fiscalización Legal bajo la Ley N° 7794 (Código Municipal) e Interoperabilidad Tributaria
             </span>
           </div>
@@ -214,7 +214,7 @@ export const ComercioPage: FC = () => {
               fontFamily: "var(--font-headline, 'Mistical Spring', serif)",
               fontSize: 'clamp(1.9rem, 4vw, 2.9rem)',
               fontWeight: 800,
-              color: '#062A77',
+              color: 'var(--cru-text)',
               letterSpacing: '-0.02em',
               margin: '0 0 0.85rem 0'
             }}
@@ -222,7 +222,7 @@ export const ComercioPage: FC = () => {
             Directorio Oficial de Emprendimientos y Comercios con Patente Cantonal
           </h1>
 
-          <p style={{ fontSize: '1.05rem', color: '#334155', maxWidth: '900px', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: '1.05rem', color: 'var(--cru-text-soft)', maxWidth: '900px', lineHeight: 1.6, margin: 0 }}>
             Plataforma pública de fomento al comercio local y formalización ciudadana. Verifique la condición tributaria y vigencia de patente municipal de cada negocio en {cantonActivo}, apoyando a productores directos con seguridad jurídica.
           </p>
         </div>
@@ -231,9 +231,9 @@ export const ComercioPage: FC = () => {
         <div style={{ marginBottom: '2.5rem' }}>
           <div
             style={{
-              background: '#FFFFFF',
+              background: 'var(--cru-surface-card)',
               borderRadius: '16px',
-              border: '1px solid #E2E8F0',
+              border: '1px solid var(--cru-border)',
               borderTop: '4px solid #0053AF',
               padding: '1.5rem',
               boxShadow: '0 4px 16px rgba(6, 42, 119, 0.06)'
@@ -247,37 +247,37 @@ export const ComercioPage: FC = () => {
                       width: '44px',
                       height: '44px',
                       borderRadius: '10px',
-                      background: '#ECFDF5',
-                      border: '1px solid #A7F3D0',
+                      background: 'var(--cru-accent-green-bg)',
+                      border: '1px solid var(--cru-accent-green-border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <ShieldCheck size={24} color="#059669" />
+                    <ShieldCheck size={24} color="var(--cru-accent-green)" />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#062A77', margin: 0 }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--cru-text)', margin: 0 }}>
                       Verificador Tributario y de Patente Municipal (API Ministerio de Hacienda)
                     </h3>
-                    <span style={{ fontSize: '0.825rem', color: '#475569', fontWeight: 500 }}>
+                    <span style={{ fontSize: '0.825rem', color: 'var(--cru-text-muted)', fontWeight: 500 }}>
                       Certificación en tiempo real del Régimen Simplificado / Tradicional y situación fiscal al día
                     </span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 600 }}>Cédulas de prueba:</span>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>Cédulas de prueba:</span>
                   <button
                     type="button"
                     onClick={() => setTestCedula('3101894521')}
                     style={{
                       background: '#EFF6FF',
-                      border: '1px solid #BFDBFE',
+                      border: '1px solid var(--cru-accent-blue-border)',
                       borderRadius: '6px',
                       padding: '0.25rem 0.55rem',
                       fontSize: '0.75rem',
-                      color: '#0053AF',
+                      color: 'var(--cru-accent-blue)',
                       fontWeight: 600,
                       cursor: 'pointer'
                     }}
@@ -289,11 +289,11 @@ export const ComercioPage: FC = () => {
                     onClick={() => setTestCedula('3105748291')}
                     style={{
                       background: '#EFF6FF',
-                      border: '1px solid #BFDBFE',
+                      border: '1px solid var(--cru-accent-blue-border)',
                       borderRadius: '6px',
                       padding: '0.25rem 0.55rem',
                       fontSize: '0.75rem',
-                      color: '#0053AF',
+                      color: 'var(--cru-accent-blue)',
                       fontWeight: 600,
                       cursor: 'pointer'
                     }}
@@ -322,10 +322,10 @@ export const ComercioPage: FC = () => {
                     style={{
                       width: '100%',
                       padding: '0.75rem 1rem',
-                      background: '#FFFFFF',
+                      background: 'var(--cru-surface-card)',
                       border: '1.5px solid #CBD5E1',
                       borderRadius: '10px',
-                      color: '#0F172A',
+                      color: 'var(--theme-text-primary)',
                       fontFamily: "var(--font-telemetry, monospace)",
                       fontSize: '0.95rem',
                       outline: 'none'
@@ -339,7 +339,7 @@ export const ComercioPage: FC = () => {
                         top: '50%',
                         transform: 'translateY(-50%)',
                         fontSize: '0.8rem',
-                        color: '#0053AF',
+                        color: 'var(--cru-accent-blue)',
                         fontWeight: 600
                       }}
                     >
@@ -390,34 +390,34 @@ export const ComercioPage: FC = () => {
                       display: 'grid',
                       gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
                       gap: '0.85rem',
-                      background: '#FFFFFF',
+                      background: 'var(--cru-surface-card)',
                       padding: '1rem',
                       borderRadius: '8px',
                       border: '1px solid #BBF7D0'
                     }}
                   >
                     <div>
-                      <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Nombre Legal / Razón Social:</span>
-                      <strong style={{ fontSize: '0.95rem', color: '#0F172A' }}>{resultadoHacienda.nombre}</strong>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Nombre Legal / Razón Social:</span>
+                      <strong style={{ fontSize: '0.95rem', color: 'var(--theme-text-primary)' }}>{resultadoHacienda.nombre}</strong>
                     </div>
 
                     <div>
-                      <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Identificación Tributaria:</span>
-                      <strong style={{ fontSize: '0.95rem', color: '#0053AF', fontFamily: "var(--font-telemetry, monospace)" }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Identificación Tributaria:</span>
+                      <strong style={{ fontSize: '0.95rem', color: 'var(--cru-accent-blue)', fontFamily: "var(--font-telemetry, monospace)" }}>
                         {(cedulaConsulta || '').replace(/[-\s]/g, '')}
                       </strong>
                     </div>
 
                     <div>
-                      <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Situación Tributaria:</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Situación Tributaria:</span>
                       <strong style={{ fontSize: '0.95rem', color: '#166534' }}>
                         {resultadoHacienda.situacion}
                       </strong>
                     </div>
 
                     <div>
-                      <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Patente Cantonal Vinculada:</span>
-                      <strong style={{ fontSize: '0.95rem', color: '#C22727', fontFamily: "var(--font-telemetry, monospace)" }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', fontWeight: 600 }}>Patente Cantonal Vinculada:</span>
+                      <strong style={{ fontSize: '0.95rem', color: 'var(--cru-accent-red)', fontFamily: "var(--font-telemetry, monospace)" }}>
                         {patenteAsignada}
                       </strong>
                     </div>
@@ -428,7 +428,7 @@ export const ComercioPage: FC = () => {
                       variant="secondary"
                       size="sm"
                       onClick={() => setMostrarCertificadoModal(true)}
-                      leftIcon={<FileCheck2 size={16} color="#0053AF" />}
+                      leftIcon={<FileCheck2 size={16} color="var(--cru-accent-blue)" />}
                     >
                       Emitir Constancia de Cumplimiento Tributario y Patente Municipal
                     </CivicButton>
@@ -483,7 +483,7 @@ export const ComercioPage: FC = () => {
                 Micrositio Oficial de la Feria del Agricultor Cantonal
               </h3>
             </div>
-            <p style={{ fontSize: '0.9rem', color: '#E2E8F0', maxWidth: '650px', margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: '0.9rem', color: 'var(--cru-border)', maxWidth: '650px', margin: 0, lineHeight: 1.5 }}>
               Consulte el <strong>Catálogo Semanal de Precios de Referencia del CNP</strong> (ahorros del 30% al 50%), conozca la zonificación de puestos en el croquis formal y compre sin intermediarios a productores de {cantonActivo}.
             </p>
           </div>
@@ -512,17 +512,17 @@ export const ComercioPage: FC = () => {
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
-            background: '#FFFFFF',
+            background: 'var(--cru-surface-card)',
             padding: '1.25rem',
             borderRadius: '14px',
-            border: '1px solid #E2E8F0',
+            border: '1px solid var(--cru-border)',
             boxShadow: '0 4px 16px rgba(6, 42, 119, 0.05)',
             marginBottom: '2rem'
           }}
         >
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ position: 'relative', flex: '1 1 300px' }}>
-              <Search size={18} color="#64748B" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+              <Search size={18} color="var(--cru-text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
               <input
                 type="text"
                 value={busqueda}
@@ -532,10 +532,10 @@ export const ComercioPage: FC = () => {
                 style={{
                   width: '100%',
                   padding: '0.65rem 1rem 0.65rem 2.4rem',
-                  background: '#F8FAFC',
-                  border: '1px solid #CBD5E1',
+                  background: 'var(--cru-surface-muted)',
+                  border: '1px solid var(--cru-border-strong)',
                   borderRadius: '8px',
-                  color: '#0F172A',
+                  color: 'var(--theme-text-primary)',
                   fontSize: '0.875rem',
                   outline: 'none'
                 }}
@@ -544,7 +544,7 @@ export const ComercioPage: FC = () => {
 
             {/* Filtro de Régimen Tributario */}
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>Régimen:</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>Régimen:</span>
               <button
                 type="button"
                 onClick={() => setFiltroRegimen('todos')}
@@ -612,7 +612,7 @@ export const ComercioPage: FC = () => {
                   fontSize: '0.8rem',
                   fontWeight: 600,
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  transition: 'var(--transition-smooth)'
                 }}
               >
                 {cat === 'todas' ? 'Todas las Categorías' : cat}
@@ -624,10 +624,10 @@ export const ComercioPage: FC = () => {
         {/* Listado de Comercios Patentados */}
         <section aria-label="Directorio de Comercios con Patente Cantonal">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-            <span style={{ fontSize: '0.875rem', color: '#475569' }}>
-              Se muestran <strong style={{ color: '#062A77' }}>{comerciosFiltrados.length}</strong> comercios con patente cantonal activa en {cantonActivo}
+            <span style={{ fontSize: '0.875rem', color: 'var(--cru-text-muted)' }}>
+              Se muestran <strong style={{ color: 'var(--cru-text)' }}>{comerciosFiltrados.length}</strong> comercios con patente cantonal activa en {cantonActivo}
             </span>
-            <span style={{ fontSize: '0.78rem', color: '#64748B' }}>
+            <span style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)' }}>
               Fiscalizados por la Sección de Rentas y Patentes
             </span>
           </div>
@@ -662,8 +662,8 @@ export const ComercioPage: FC = () => {
           >
             <div
               style={{
-                background: '#FFFFFF',
-                border: '1px solid #CBD5E1',
+                background: 'var(--cru-surface-card)',
+                border: '1px solid var(--cru-border-strong)',
                 borderTop: '5px solid #062A77',
                 borderRadius: '18px',
                 maxWidth: '620px',
@@ -682,7 +682,7 @@ export const ComercioPage: FC = () => {
                   right: '16px',
                   background: 'transparent',
                   border: 'none',
-                  color: '#64748B',
+                  color: 'var(--cru-text-muted)',
                   cursor: 'pointer'
                 }}
               >
@@ -690,53 +690,53 @@ export const ComercioPage: FC = () => {
               </button>
 
               <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                <div style={{ fontSize: '0.8rem', letterSpacing: '0.1em', color: '#64748B', textTransform: 'uppercase', marginBottom: '0.25rem', fontWeight: 600 }}>
+                <div style={{ fontSize: '0.8rem', letterSpacing: '0.1em', color: 'var(--cru-text-muted)', textTransform: 'uppercase', marginBottom: '0.25rem', fontWeight: 600 }}>
                   REPÚBLICA DE COSTA RICA &bull; GOBIERNO LOCAL
                 </div>
-                <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#062A77', margin: '0 0 0.5rem 0' }}>
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--cru-text)', margin: '0 0 0.5rem 0' }}>
                   Municipalidad de {cantonActivo}
                 </h2>
-                <div style={{ fontSize: '0.85rem', color: '#C22727', fontWeight: 700 }}>
+                <div style={{ fontSize: '0.85rem', color: 'var(--cru-accent-red)', fontWeight: 700 }}>
                   CONSTANCIA OFICIAL DE PATENTE MUNICIPAL Y CUMPLIMIENTO TRIBUTARIO
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#64748B', fontFamily: "var(--font-telemetry, monospace)" }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontFamily: "var(--font-telemetry, monospace)" }}>
                   EXP-PAT-2026-{((cedulaConsulta || '').replace(/[-\s]/g, '') || '0000').slice(-6)}
                 </div>
               </div>
 
               <div
                 style={{
-                  background: '#F8FAFC',
-                  border: '1px solid #E2E8F0',
+                  background: 'var(--cru-surface-muted)',
+                  border: '1px solid var(--cru-border)',
                   borderRadius: '12px',
                   padding: '1.25rem',
                   fontSize: '0.875rem',
-                  color: '#1E293B',
+                  color: 'var(--theme-text-primary)',
                   lineHeight: 1.6,
                   marginBottom: '1.5rem'
                 }}
               >
-                <p style={{ margin: '0 0 0.75rem 0', color: '#334155' }}>
+                <p style={{ margin: '0 0 0.75rem 0', color: 'var(--cru-text-soft)' }}>
                   El Departamento de Patentes e Ingresos de la <strong>Municipalidad de {cantonActivo}</strong> hace constar que el contribuyente:
                 </p>
-                <div style={{ padding: '0.85rem', background: '#FFFFFF', border: '1px solid #CBD5E1', borderRadius: '8px', marginBottom: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                  <div><strong style={{ color: '#062A77' }}>Razón Social:</strong> <span style={{ color: '#0F172A' }}>{resultadoHacienda?.nombre || 'Comercio Registrado'}</span></div>
-                  <div><strong style={{ color: '#062A77' }}>Cédula:</strong> <span style={{ color: '#0F172A', fontFamily: 'monospace' }}>{(cedulaConsulta || '').replace(/[-\s]/g, '')}</span></div>
-                  <div><strong style={{ color: '#062A77' }}>Régimen DGT:</strong> <span style={{ color: '#0F172A' }}>{resultadoHacienda?.regimen || 'Régimen Tradicional'}</span></div>
-                  <div><strong style={{ color: '#062A77' }}>N° de Patente:</strong> <span style={{ color: '#C22727', fontWeight: 700, fontFamily: 'monospace' }}>{patenteAsignada} (VIGENTE)</span></div>
-                  <div><strong style={{ color: '#062A77' }}>Estado Fiscal:</strong> <span style={{ color: '#166534', fontWeight: 600 }}>{resultadoHacienda?.situacion || 'Al Día con la Hacienda Pública y Aranceles Municipales'}</span></div>
+                <div style={{ padding: '0.85rem', background: 'var(--cru-surface-card)', border: '1px solid var(--cru-border-strong)', borderRadius: '8px', marginBottom: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                  <div><strong style={{ color: 'var(--cru-text)' }}>Razón Social:</strong> <span style={{ color: 'var(--theme-text-primary)' }}>{resultadoHacienda?.nombre || 'Comercio Registrado'}</span></div>
+                  <div><strong style={{ color: 'var(--cru-text)' }}>Cédula:</strong> <span style={{ color: 'var(--theme-text-primary)', fontFamily: 'monospace' }}>{(cedulaConsulta || '').replace(/[-\s]/g, '')}</span></div>
+                  <div><strong style={{ color: 'var(--cru-text)' }}>Régimen DGT:</strong> <span style={{ color: 'var(--theme-text-primary)' }}>{resultadoHacienda?.regimen || 'Régimen Tradicional'}</span></div>
+                  <div><strong style={{ color: 'var(--cru-text)' }}>N° de Patente:</strong> <span style={{ color: 'var(--cru-accent-red)', fontWeight: 700, fontFamily: 'monospace' }}>{patenteAsignada} (VIGENTE)</span></div>
+                  <div><strong style={{ color: 'var(--cru-text)' }}>Estado Fiscal:</strong> <span style={{ color: '#166534', fontWeight: 600 }}>{resultadoHacienda?.situacion || 'Al Día con la Hacienda Pública y Aranceles Municipales'}</span></div>
                 </div>
-                <p style={{ margin: 0, fontSize: '0.78rem', color: '#64748B' }}>
+                <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--cru-text-muted)' }}>
                   Emitido al amparo de los Artículos 79 al 88 del Código Municipal (Ley N° 7794) y validación interoperable con la Dirección General de Tributación Directa.
                 </p>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#475569' }}>
-                  <QrCode size={36} color="#062A77" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>
+                  <QrCode size={36} color="var(--cru-text)" />
                   <div>
-                    <span style={{ color: '#64748B' }}>Firma Digital Ley N° 8454</span>
-                    <strong style={{ display: 'block', color: '#062A77' }}>Certificado Auténtico</strong>
+                    <span style={{ color: 'var(--cru-text-muted)' }}>Firma Digital Ley N° 8454</span>
+                    <strong style={{ display: 'block', color: 'var(--cru-text)' }}>Certificado Auténtico</strong>
                   </div>
                 </div>
 

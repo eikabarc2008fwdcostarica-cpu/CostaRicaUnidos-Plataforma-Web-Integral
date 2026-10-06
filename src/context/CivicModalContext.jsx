@@ -98,6 +98,15 @@ export function CivicModalProvider({ children }) {
     setErrorInput('');
   };
 
+  React.useEffect(() => {
+    if (!modalConfig.abierto) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') cerrarModal();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [modalConfig.abierto]);
+
   const confirmarAccion = () => {
     if (modalConfig.tipo === 'motivo') {
       if (!valorInput.trim()) {

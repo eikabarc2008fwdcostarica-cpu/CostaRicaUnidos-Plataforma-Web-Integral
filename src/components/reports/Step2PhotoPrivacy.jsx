@@ -186,9 +186,9 @@ export default function Step2PhotoPrivacy({
         <span
           className="telemetry-badge"
           style={{
-            backgroundColor: 'rgba(6, 42, 119, 0.08)',
+            backgroundColor: 'var(--cru-accent-blue-bg)',
             border: '1px solid rgba(6, 42, 119, 0.22)',
-            color: '#062A77',
+            color: 'var(--cru-text)',
             fontWeight: 800
           }}
         >
@@ -197,14 +197,14 @@ export default function Step2PhotoPrivacy({
         <h3 style={{
           fontSize: '1.5rem',
           fontWeight: 800,
-          color: '#062A77',
+          color: 'var(--cru-text)',
           marginTop: '0.6rem',
           marginBottom: '0.35rem',
           fontFamily: 'var(--font-headline, "Plus Jakarta Sans", serif)'
         }}>
           Evidencia Digital y Cumplimiento Normativo Ley N° 8968
         </h3>
-        <p style={{ color: '#334155', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', lineHeight: 1.55 }}>
+        <p style={{ color: 'var(--cru-text-soft)', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', lineHeight: 1.55 }}>
           Capture en vivo con su cámara o cargue una fotografía de su galería. La compresión es 100% segura en el navegador a formato WebP optimizado (&lt; 1 MB).
         </p>
       </div>
@@ -246,7 +246,7 @@ export default function Step2PhotoPrivacy({
             <h4 style={{ fontSize: '1.15rem', color: '#FFFFFF', fontWeight: 800 }}>
               Optimizando y Comprimiendo Evidencia en el Navegador...
             </h4>
-            <p style={{ color: '#94A3B8', fontSize: '0.85rem', marginTop: '0.4rem', fontFamily: 'var(--font-telemetry)' }}>
+            <p style={{ color: 'var(--cru-text-muted)', fontSize: '0.85rem', marginTop: '0.4rem', fontFamily: 'var(--font-telemetry)' }}>
               HTML5 Canvas API &bull; Formato WebP/JPEG &bull; Resolución Máx 1920x1080 &bull; &lt; 1 MB
             </p>
           </div>
@@ -309,7 +309,7 @@ export default function Step2PhotoPrivacy({
                 alignItems: 'center',
                 gap: '6px'
               }}>
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#FFFFFF', animation: 'pulse 1s infinite' }} />
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--cru-surface-card)', animation: 'pulse 1s infinite' }} />
                 <span>CÁMARA EN VIVO</span>
               </div>
 
@@ -372,14 +372,14 @@ export default function Step2PhotoPrivacy({
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  transition: 'var(--transition-smooth)'
                 }}
               >
                 <div style={{
                   width: '24px',
                   height: '24px',
                   borderRadius: '50%',
-                  backgroundColor: '#FFFFFF'
+                  backgroundColor: 'var(--cru-surface-card)'
                 }} />
               </button>
 
@@ -416,10 +416,10 @@ export default function Step2PhotoPrivacy({
               <Camera size={34} color="#79a6ff" />
             </div>
 
-            <h4 style={{ fontSize: '1.25rem', color: '#062A77', fontWeight: 800, marginBottom: '0.5rem' }}>
+            <h4 style={{ fontSize: '1.25rem', color: 'var(--cru-text)', fontWeight: 800, marginBottom: '0.5rem' }}>
               Adjuntar Fotografía de la Avería
             </h4>
-            <p style={{ color: '#334155', fontSize: '0.9rem', maxWidth: '520px', margin: '0 auto 1.75rem', lineHeight: 1.55 }}>
+            <p style={{ color: 'var(--cru-text-soft)', fontSize: '0.9rem', maxWidth: '520px', margin: '0 auto 1.75rem', lineHeight: 1.55 }}>
               Active la cámara para capturar la incidencia en el sitio o seleccione una imagen de sus archivos. La compresión automática preserva la nitidez del daño.
             </p>
 
@@ -433,8 +433,8 @@ export default function Step2PhotoPrivacy({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  backgroundColor: '#0053AF',
-                  backgroundImage: 'linear-gradient(135deg, #0053AF 0%, #062A77 100%)',
+                  backgroundColor: 'var(--cru-accent-blue)',
+                  backgroundImage: 'linear-gradient(135deg, var(--blue, #0053AF) 0%, var(--navy, #062A77) 100%)',
                   color: '#FFFFFF',
                   borderRadius: '12px',
                   border: 'none',
@@ -456,8 +456,8 @@ export default function Step2PhotoPrivacy({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  backgroundColor: '#F1F5F9',
-                  color: '#062A77',
+                  backgroundColor: 'var(--cru-surface-muted)',
+                  color: 'var(--cru-text)',
                   borderRadius: '12px',
                   border: '1px solid rgba(6, 42, 119, 0.2)',
                   fontWeight: 700,
@@ -550,7 +550,7 @@ export default function Step2PhotoPrivacy({
                   <Check size={13} strokeWidth={2.5} />
                   <span>&lt; 1 MB ({photoData.compressedSizeFormatted})</span>
                 </span>
-                <span style={{ fontSize: '0.75rem', color: '#94A3B8', fontFamily: 'var(--font-telemetry)' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', fontFamily: 'var(--font-telemetry)' }}>
                   {photoData.dimensiones} &bull; {photoData.formato?.split('/')[1]?.toUpperCase() || 'WEBP'}
                 </span>
               </div>
@@ -571,8 +571,8 @@ export default function Step2PhotoPrivacy({
                 borderRadius: '10px',
                 border: '1px solid rgba(255, 255, 255, 0.08)'
               }}>
-                <div style={{ fontSize: '0.68rem', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>PESO ORIGINAL</div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#E2E8F0', fontFamily: 'var(--font-telemetry)', marginTop: '2px' }}>
+                <div style={{ fontSize: '0.68rem', color: 'var(--cru-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>PESO ORIGINAL</div>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--cru-border)', fontFamily: 'var(--font-telemetry)', marginTop: '2px' }}>
                   {photoData.originalSizeFormatted}
                 </div>
               </div>
@@ -595,7 +595,7 @@ export default function Step2PhotoPrivacy({
                 borderRadius: '10px',
                 border: '1px solid rgba(255, 255, 255, 0.08)'
               }}>
-                <div style={{ fontSize: '0.68rem', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>COMPRESIÓN</div>
+                <div style={{ fontSize: '0.68rem', color: 'var(--cru-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>COMPRESIÓN</div>
                 <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#79a6ff', fontFamily: 'var(--font-telemetry)', marginTop: '2px' }}>
                   {photoData.compressionRatio}
                 </div>
@@ -737,7 +737,7 @@ export default function Step2PhotoPrivacy({
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#94A3B8',
+                  color: 'var(--cru-text-muted)',
                   cursor: 'pointer',
                   padding: '4px'
                 }}
@@ -759,7 +759,7 @@ export default function Step2PhotoPrivacy({
         style={{
           padding: '1.5rem',
           borderLeft: '4px solid #D97706',
-          backgroundColor: '#FFFBEB',
+          backgroundColor: 'var(--cru-accent-amber-bg)',
           border: '1.5px solid #FDE68A',
           borderLeftWidth: '4px',
           borderRadius: '16px',
@@ -789,10 +789,10 @@ export default function Step2PhotoPrivacy({
             cursor: 'pointer',
             padding: '0.9rem 1.1rem',
             borderRadius: '12px',
-            backgroundColor: consentLaw8968 ? '#ECFDF5' : '#FFFFFF',
+            backgroundColor: consentLaw8968 ? 'var(--cru-accent-green-bg)' : '#FFFFFF',
             border: consentLaw8968 ? '2px solid #059669' : '1.5px solid #CBD5E1',
             boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
-            transition: 'all 0.2s ease'
+            transition: 'var(--transition-smooth)'
           }}
         >
           <input

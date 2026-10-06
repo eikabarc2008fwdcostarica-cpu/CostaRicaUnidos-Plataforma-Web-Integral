@@ -149,14 +149,14 @@ export const GaleriaSimbolos: FC<GaleriaSimbolosProps> = ({ simbolos }) => {
               <CivicBadge variant="provincial" size="sm">
                 {simboloSeleccionado.epoca}
               </CivicBadge>
-              <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>Análisis Heráldico e Histórico</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)' }}>Análisis Heráldico e Histórico</span>
             </div>
 
             <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.65rem 0' }}>
               {simboloSeleccionado.nombre}
             </h3>
 
-            <p style={{ fontSize: '0.95rem', color: '#CBD5E1', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+            <p style={{ fontSize: '0.95rem', color: 'var(--cru-border-strong)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
               {simboloSeleccionado.descripcion}
             </p>
 
@@ -192,7 +192,7 @@ export const GaleriaSimbolos: FC<GaleriaSimbolosProps> = ({ simbolos }) => {
                   />
                   <div style={{ fontSize: '0.85rem' }}>
                     <strong style={{ color: '#FFFFFF' }}>{elem.elemento}: </strong>
-                    <span style={{ color: '#CBD5E1' }}>{elem.significado}</span>
+                    <span style={{ color: 'var(--cru-border-strong)' }}>{elem.significado}</span>
                   </div>
                 </div>
               ))}

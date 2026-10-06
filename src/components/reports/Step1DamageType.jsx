@@ -47,9 +47,9 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
         <span
           className="telemetry-badge"
           style={{
-            backgroundColor: 'rgba(6, 42, 119, 0.08)',
+            backgroundColor: 'var(--cru-accent-blue-bg)',
             border: '1px solid rgba(6, 42, 119, 0.22)',
-            color: '#062A77',
+            color: 'var(--cru-text)',
             fontWeight: 800
           }}
         >
@@ -58,14 +58,14 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
         <h3 style={{
           fontSize: '1.5rem',
           fontWeight: 800,
-          color: '#062A77',
+          color: 'var(--cru-text)',
           marginTop: '0.6rem',
           marginBottom: '0.35rem',
           fontFamily: 'var(--font-headline, "Plus Jakarta Sans", serif)'
         }}>
           Seleccione la Naturaleza de la Avería o Incidencia
         </h3>
-        <p style={{ color: '#334155', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', lineHeight: 1.55 }}>
+        <p style={{ color: 'var(--cru-text-soft)', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', lineHeight: 1.55 }}>
           La categorización precisa permite al sistema dirigir el ticket de forma inmediata a la cuadrilla técnica municipal o entidad estatal correspondiente.
         </p>
       </div>
@@ -146,7 +146,7 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginBottom: '1rem',
-                  transition: 'all 0.2s ease'
+                  transition: 'var(--transition-smooth)'
                 }}>
                   {React.createElement(tipo.icono, { size: 28, color: isSelected ? '#FFFFFF' : '#0053AF' })}
                 </div>
@@ -162,7 +162,7 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                 </h4>
 
                 <p style={{
-                  color: '#334155',
+                  color: 'var(--cru-text-soft)',
                   fontSize: '0.86rem',
                   lineHeight: 1.5,
                   marginBottom: '1rem'
@@ -183,9 +183,9 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                 fontSize: '0.75rem',
                 fontFamily: 'var(--font-telemetry)'
               }}>
-                <span style={{ color: '#0053AF', fontWeight: 700 }}>{tipo.entidad}</span>
+                <span style={{ color: 'var(--cru-accent-blue)', fontWeight: 700 }}>{tipo.entidad}</span>
                 <span style={{
-                  color: '#047857',
+                  color: 'var(--cru-accent-green)',
                   backgroundColor: 'rgba(4, 120, 87, 0.1)',
                   border: '1px solid rgba(4, 120, 87, 0.25)',
                   padding: '0.2rem 0.5rem',

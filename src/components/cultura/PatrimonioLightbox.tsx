@@ -53,7 +53,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
         role="group"
         aria-label="Filtrar patrimonio por categoría"
       >
-        <span style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 600, marginRight: '0.25rem' }}>
+        <span style={{ fontSize: '0.85rem', color: 'var(--cru-text-muted)', fontWeight: 600, marginRight: '0.25rem' }}>
           Categoría:
         </span>
         {categorias.map((cat) => (
@@ -70,7 +70,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
               fontSize: '0.8rem',
               fontWeight: 600,
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             {cat === 'todas' ? 'Todo el Patrimonio' : cat}
@@ -146,7 +146,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
                       padding: '0.75rem'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#E2E8F0', fontSize: '0.8rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--cru-border)', fontSize: '0.8rem' }}>
                       <MapPin size={14} color="#7DD3FC" />
                       <span>{item.canton}</span>
                     </div>
@@ -161,7 +161,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
                 <p
                   style={{
                     fontSize: '0.875rem',
-                    color: '#94A3B8',
+                    color: 'var(--cru-text-muted)',
                     lineHeight: 1.5,
                     margin: '0 0 1rem 0',
                     flex: '1 1 auto',
@@ -189,7 +189,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
                     <Eye size={14} />
                     Ver en Lightbox
                   </span>
-                  <span style={{ color: '#94A3B8' }}>{item.provincia}</span>
+                  <span style={{ color: 'var(--cru-text-muted)' }}>{item.provincia}</span>
                 </div>
               </div>
             </CivicCard>
@@ -242,7 +242,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
               <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.4rem' }}>
                 Manifestación y Descripción Cultural
               </h4>
-              <p style={{ fontSize: '0.9rem', color: '#CBD5E1', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: '0.9rem', color: 'var(--cru-border-strong)', lineHeight: 1.6, margin: 0 }}>
                 {elementoActivo.descripcion}
               </p>
             </div>
@@ -262,7 +262,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
                 <strong style={{ color: '#7DD3FC', fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem' }}>
                   Origen Histórico:
                 </strong>
-                <span style={{ fontSize: '0.875rem', color: '#E2E8F0' }}>
+                <span style={{ fontSize: '0.875rem', color: 'var(--cru-border)' }}>
                   {elementoActivo.origenHistorico}
                 </span>
               </div>
@@ -271,7 +271,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
                 <strong style={{ color: '#FBBF24', fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem' }}>
                   Importancia y Reconocimiento Nacional:
                 </strong>
-                <span style={{ fontSize: '0.875rem', color: '#E2E8F0' }}>
+                <span style={{ fontSize: '0.875rem', color: 'var(--cru-border)' }}>
                   {elementoActivo.importanciaCultural}
                 </span>
               </div>
@@ -280,7 +280,7 @@ export const PatrimonioLightbox: FC<PatrimonioLightboxProps> = ({ elementos }) =
                 <strong style={{ color: '#34D399', fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem' }}>
                   Comunidades y Portadores de Tradición:
                 </strong>
-                <span style={{ fontSize: '0.875rem', color: '#E2E8F0' }}>
+                <span style={{ fontSize: '0.875rem', color: 'var(--cru-border)' }}>
                   {elementoActivo.portadoresTradicion}
                 </span>
               </div>

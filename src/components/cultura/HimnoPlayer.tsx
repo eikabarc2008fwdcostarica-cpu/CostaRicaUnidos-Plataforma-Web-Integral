@@ -134,7 +134,7 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
               <CivicBadge variant="provincial" size="sm">
                 HIMNO OFICIAL CANTONAL
               </CivicBadge>
-              <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
+              <span style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)' }}>
                 Declaratoria: {himno.annoDeclaratoria}
               </span>
             </div>
@@ -149,7 +149,7 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
             >
               {himno.titulo} &bull; Cantón de {himno.cantonNombre}
             </h3>
-            <p style={{ fontSize: '0.85rem', color: '#CBD5E1', margin: '0.35rem 0 0 0' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--cru-border-strong)', margin: '0.35rem 0 0 0' }}>
               <strong>Letra: </strong> {himno.autorLetra} &bull; <strong>Música: </strong> {himno.autorMusica}
             </p>
           </div>
@@ -179,7 +179,7 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
         >
           {/* Barra de Progreso / Scrubber */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#94A3B8', marginBottom: '0.4rem', fontFamily: "var(--font-telemetry, monospace)" }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--cru-text-muted)', marginBottom: '0.4rem', fontFamily: "var(--font-telemetry, monospace)" }}>
               <span style={{ color: '#FFFFFF' }}>{formatTime(currentTime)}</span>
               <span>{formatTime(duration)}</span>
             </div>
@@ -245,14 +245,14 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#CBD5E1',
+                  color: 'var(--cru-border-strong)',
                   cursor: 'pointer'
                 }}
               >
                 <RotateCcw size={16} />
               </button>
 
-              <span style={{ fontSize: '0.85rem', color: '#CBD5E1', marginLeft: '0.5rem' }}>
+              <span style={{ fontSize: '0.85rem', color: 'var(--cru-border-strong)', marginLeft: '0.5rem' }}>
                 {isPlaying ? 'Reproduciendo audio oficial...' : 'Listo para reproducir'}
               </span>
             </div>
@@ -266,7 +266,7 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#94A3B8',
+                  color: 'var(--cru-text-muted)',
                   cursor: 'pointer'
                 }}
               >
@@ -298,7 +298,7 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
               <Music size={18} color="#7DD3FC" />
               Letra Sincronizada en Tiempo Real
             </h4>
-            <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
+            <span style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)' }}>
               Haga clic en cualquier estrofa para saltar en el audio
             </span>
           </div>
@@ -326,7 +326,7 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
                     borderRadius: '12px',
                     padding: '1.25rem',
                     cursor: 'pointer',
-                    transition: 'all 0.25s ease',
+                    transition: 'var(--transition-smooth)',
                     boxShadow: estaActiva ? '0 0 25px rgba(125, 211, 252, 0.35)' : 'none',
                     transform: estaActiva ? 'scale(1.02)' : 'scale(1)'
                   }}
@@ -343,7 +343,7 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
                     <CivicBadge variant={estrofa.tipo === 'coro' ? 'warning' : 'default'} size="sm">
                       {estrofa.tipo.toUpperCase()}
                     </CivicBadge>
-                    <span style={{ fontFamily: "var(--font-telemetry, monospace)", fontSize: '0.75rem', color: '#94A3B8' }}>
+                    <span style={{ fontFamily: "var(--font-telemetry, monospace)", fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>
                       {formatTime(estrofa.inicioSegundos)}
                     </span>
                   </div>
@@ -358,7 +358,7 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
                           fontWeight: estaActiva ? 700 : 500,
                           color: estaActiva ? '#FFFFFF' : '#CBD5E1',
                           lineHeight: 1.5,
-                          transition: 'all 0.2s ease'
+                          transition: 'var(--transition-smooth)'
                         }}
                       >
                         {verso}
@@ -395,19 +395,19 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
             }}
           >
             <div>
-              <span style={{ color: '#94A3B8', display: 'block', fontSize: '0.72rem' }}>Tonalidad:</span>
+              <span style={{ color: 'var(--cru-text-muted)', display: 'block', fontSize: '0.72rem' }}>Tonalidad:</span>
               <strong style={{ color: '#7DD3FC' }}>Sol Mayor (G Maj)</strong>
             </div>
             <div>
-              <span style={{ color: '#94A3B8', display: 'block', fontSize: '0.72rem' }}>Compás:</span>
+              <span style={{ color: 'var(--cru-text-muted)', display: 'block', fontSize: '0.72rem' }}>Compás:</span>
               <strong style={{ color: '#FFFFFF' }}>4/4 (C)</strong>
             </div>
             <div>
-              <span style={{ color: '#94A3B8', display: 'block', fontSize: '0.72rem' }}>Tempo:</span>
-              <strong style={{ color: '#A7F3D0' }}>Maestoso &bull; 108 BPM</strong>
+              <span style={{ color: 'var(--cru-text-muted)', display: 'block', fontSize: '0.72rem' }}>Tempo:</span>
+              <strong style={{ color: 'var(--cru-accent-green-border)' }}>Maestoso &bull; 108 BPM</strong>
             </div>
             <div>
-              <span style={{ color: '#94A3B8', display: 'block', fontSize: '0.72rem' }}>Instrumentación:</span>
+              <span style={{ color: 'var(--cru-text-muted)', display: 'block', fontSize: '0.72rem' }}>Instrumentación:</span>
               <strong style={{ color: '#FFFFFF' }}>Banda Municipal & Coro</strong>
             </div>
           </div>
@@ -426,7 +426,7 @@ export const HimnoPlayer: FC<HimnoPlayerProps> = ({ himno }) => {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
+            <span style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)' }}>
               Archivo Histórico Cantonal &bull; Custodia bajo la Ley N° 7210 de Archivo Nacional.
             </span>
 

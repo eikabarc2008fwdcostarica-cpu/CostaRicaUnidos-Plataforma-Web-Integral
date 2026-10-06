@@ -64,15 +64,6 @@
   --cru-tab-active-bg: rgba(255, 255, 255, 0.12);
   --cru-tab-active-border: rgba(255, 255, 255, 0.20);
   --cru-tab-inactive-bg: rgba(255, 255, 255, 0.03);
-  --cru-surface-alt: rgba(255, 255, 255, 0.08);
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-  --prov-glow: 0 0 25px rgba(0, 43, 127, 0.45), 0 0 50px rgba(206, 17, 38, 0.25);
-  --prov-primary: #002B7F;
-  --province-primary: #002B7F;
-  --hover-glow: rgba(0, 43, 127, 0.5);
-  --chip-active-bg: rgba(0, 43, 127, 0.45);
-  --chip-active-border: #79a6ff;
-  --chip-active-glow: rgba(0, 43, 127, 0.5);
 
   /* Sustrato Base Soberano */
   --color-obsidian: #00040D;
@@ -274,24 +265,6 @@ html.dark, :root.dark, .dark {
   --cru-tab-active-bg: rgba(255, 255, 255, 0.12);
   --cru-tab-active-border: rgba(255, 255, 255, 0.20);
   --cru-tab-inactive-bg: rgba(255, 255, 255, 0.03);
-  --cru-surface-alt: rgba(255, 255, 255, 0.08);
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-  --glass-level-1-bg: rgba(255, 255, 255, 0.04);
-  --glass-level-1-border: rgba(255, 255, 255, 0.08);
-  --glass-level-1-blur: 16px;
-  --glass-level-2-bg: rgba(255, 255, 255, 0.07);
-  --glass-level-2-border: rgba(255, 255, 255, 0.15);
-  --glass-level-2-blur: 24px;
-  --glass-level-3-bg: rgba(0, 4, 13, 0.88);
-  --glass-level-3-border: rgba(255, 255, 255, 0.22);
-  --glass-level-3-blur: 32px;
-  --chip-active-bg: rgba(0, 43, 127, 0.45);
-  --chip-active-border: #79a6ff;
-  --chip-active-glow: rgba(0, 43, 127, 0.5);
-  --hover-glow: rgba(0, 43, 127, 0.5);
-  --prov-glow: 0 0 25px rgba(0, 43, 127, 0.45), 0 0 50px rgba(206, 17, 38, 0.25);
-  --prov-primary: #002B7F;
-  --province-primary: #002B7F;
 }
 
 /* Modo Claro (Sede Electrónica Oficial - WCAG 2.1 AA) */
@@ -375,18 +348,6 @@ html.light {
   --cru-tab-active-bg: #FFFFFF;
   --cru-tab-active-border: #CBD5E1;
   --cru-tab-inactive-bg: #F8FAFC;
-  --cru-surface-alt: #E2E8F0;
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-  --glass-level-1-blur: 16px;
-  --glass-level-2-blur: 24px;
-  --glass-level-3-blur: 32px;
-  --chip-active-bg: rgba(0, 43, 127, 0.08);
-  --chip-active-border: #002B7F;
-  --chip-active-glow: rgba(0, 43, 127, 0.15);
-  --hover-glow: rgba(0, 43, 127, 0.20);
-  --prov-glow: 0 4px 20px rgba(0, 43, 127, 0.15);
-  --prov-primary: #002B7F;
-  --province-primary: #002B7F;
 }
 
 /* Transición suave global durante cambio de tema interactivo (≈200ms, WCAG 2.1 AA Motion) */
@@ -476,17 +437,6 @@ html body #root .hero-crossfade-layer.is-hidden * {
   --cru-tab-active-bg: rgba(255, 255, 255, 0.12);
   --cru-tab-active-border: rgba(255, 255, 255, 0.20);
   --cru-tab-inactive-bg: rgba(255, 255, 255, 0.03);
-  --cru-surface-alt: rgba(255, 255, 255, 0.08);
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-  --glass-level-1-bg: rgba(255, 255, 255, 0.04);
-  --glass-level-1-border: rgba(255, 255, 255, 0.08);
-  --glass-level-1-blur: 16px;
-  --glass-level-2-bg: rgba(255, 255, 255, 0.07);
-  --glass-level-2-border: rgba(255, 255, 255, 0.15);
-  --glass-level-2-blur: 24px;
-  --glass-level-3-bg: rgba(0, 4, 13, 0.88);
-  --glass-level-3-border: rgba(255, 255, 255, 0.22);
-  --glass-level-3-blur: 32px;
 
   background-color: var(--cru-surface);
   color: var(--cru-text);
@@ -555,18 +505,6 @@ html body #root .hero-crossfade-layer.is-hidden * {
   --theme-text-primary: #FFFFFF;
   --theme-text-secondary: rgba(255, 255, 255, 0.85);
   --theme-text-muted: rgba(255, 255, 255, 0.75);
-
-  --cru-surface-alt: rgba(255, 255, 255, 0.15);
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-  --glass-level-1-bg: rgba(255, 255, 255, 0.10);
-  --glass-level-1-border: rgba(255, 255, 255, 0.20);
-  --glass-level-1-blur: 16px;
-  --glass-level-2-bg: rgba(255, 255, 255, 0.15);
-  --glass-level-2-border: rgba(255, 255, 255, 0.30);
-  --glass-level-2-blur: 24px;
-  --glass-level-3-bg: rgba(0, 20, 137, 0.85);
-  --glass-level-3-border: rgba(255, 255, 255, 0.40);
-  --glass-level-3-blur: 32px;
 
   color: #FFFFFF;
 }

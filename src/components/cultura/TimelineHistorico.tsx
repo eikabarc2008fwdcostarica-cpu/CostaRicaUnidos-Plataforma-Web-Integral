@@ -46,7 +46,7 @@ export const TimelineHistorico: FC<TimelineHistoricoProps> = ({ hitos }) => {
         role="group"
         aria-label="Filtrar por época histórica"
       >
-        <span style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 600, marginRight: '0.25rem' }}>
+        <span style={{ fontSize: '0.85rem', color: 'var(--cru-text-muted)', fontWeight: 600, marginRight: '0.25rem' }}>
           Filtrar época:
         </span>
         {epocas.map((ep) => (
@@ -63,7 +63,7 @@ export const TimelineHistorico: FC<TimelineHistoricoProps> = ({ hitos }) => {
               fontSize: '0.8rem',
               fontWeight: 600,
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'var(--transition-smooth)'
             }}
           >
             {ep === 'todas' ? 'Toda la Historia' : ep}
@@ -116,7 +116,7 @@ export const TimelineHistorico: FC<TimelineHistoricoProps> = ({ hitos }) => {
                 }}
                 aria-hidden="true"
               >
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FFFFFF' }} />
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--cru-surface-card)' }} />
               </div>
 
               {/* Tarjeta del Hito */}
@@ -143,7 +143,7 @@ export const TimelineHistorico: FC<TimelineHistoricoProps> = ({ hitos }) => {
                       </CivicBadge>
                     </div>
 
-                    <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>
                       Hito N° {idx + 1}
                     </span>
                   </div>
@@ -158,7 +158,7 @@ export const TimelineHistorico: FC<TimelineHistoricoProps> = ({ hitos }) => {
                     </div>
                   )}
 
-                  <p style={{ fontSize: '0.9rem', color: '#CBD5E1', lineHeight: 1.6, margin: 0 }}>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--cru-border-strong)', lineHeight: 1.6, margin: 0 }}>
                     {hito.descripcion}
                   </p>
 
@@ -178,7 +178,7 @@ export const TimelineHistorico: FC<TimelineHistoricoProps> = ({ hitos }) => {
                   >
                     <div><strong>Legado Institucional: </strong> {hito.impacto}</div>
                     {hito.impactoDistrital && (
-                      <div style={{ color: '#A7F3D0', fontSize: '0.8rem' }}>
+                      <div style={{ color: 'var(--cru-accent-green-border)', fontSize: '0.8rem' }}>
                         <strong>Impacto Territorial: </strong> {hito.impactoDistrital}
                       </div>
                     )}

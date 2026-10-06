@@ -137,7 +137,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <MessageSquare className="w-4 h-4 text-sky-400" />
-          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#E2E8F0' }}>
+          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--cru-border)' }}>
             Aportes y Respuestas Ciudadanas ({comentarios.length})
           </span>
         </div>
@@ -155,7 +155,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
             marginBottom: '1.25rem'
           }}
         >
-          <p style={{ fontSize: '0.85rem', color: '#94A3B8', margin: 0 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--cru-text-muted)', margin: 0 }}>
             Aún no hay comentarios en este debate. Sé el primero en aportar una propuesta u opinión comunal.
           </p>
         </div>
@@ -211,7 +211,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#64748B', fontSize: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--cru-text-muted)', fontSize: '0.75rem' }}>
                   <Clock className="w-3 h-3" />
                   <span>{formatearFechaComentario(c.fecha)}</span>
                 </div>
@@ -221,7 +221,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
                 style={{
                   fontSize: '0.85rem',
                   lineHeight: 1.5,
-                  color: '#CBD5E1',
+                  color: 'var(--cru-border-strong)',
                   margin: 0,
                   whiteSpace: 'pre-wrap'
                 }}
@@ -270,7 +270,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
                 gap: '0.5rem',
                 cursor: 'pointer',
                 fontSize: '0.78rem',
-                color: '#CBD5E1',
+                color: 'var(--cru-border-strong)',
                 padding: '0.5rem 0.75rem',
                 borderRadius: '8px',
                 backgroundColor: 'rgba(56, 189, 248, 0.05)',
@@ -325,7 +325,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
                   background: 'none',
                   border: 'none',
                   padding: 0,
-                  color: '#94A3B8',
+                  color: 'var(--cru-text-muted)',
                   fontSize: '0.72rem',
                   textDecoration: 'underline',
                   cursor: 'pointer',
@@ -384,7 +384,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
             gap: '0.5rem'
           }}
         >
-          <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)' }}>
             Comentando como: <strong style={{ color: '#38BDF8' }}>{nombrePublicoAutor}</strong> <span style={{ opacity: 0.7 }}>(Identidad protegida · Ley N° 8968)</span>
           </span>
 
@@ -403,7 +403,7 @@ export default function ComentariosSection({ post, onPostActualizado }) {
               fontSize: '0.8rem',
               fontWeight: 600,
               cursor: enviando || !contenido.trim() ? 'not-allowed' : 'pointer',
-              transition: 'all 0.2s ease',
+              transition: 'var(--transition-smooth)',
               opacity: enviando ? 0.7 : 1
             }}
           >

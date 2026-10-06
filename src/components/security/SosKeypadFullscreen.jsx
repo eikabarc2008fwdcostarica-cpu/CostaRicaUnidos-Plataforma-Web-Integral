@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Siren, Shield, Flame, HeartPulse, Scale, Maximize2, PhoneCall, Flashlight, Megaphone, MapPin, Check, X } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -76,6 +76,19 @@ export default function SosKeypadFullscreen() {
   const [beaconFlash, setBeaconFlash] = useState(false);
   const [isSirenOn, setIsSirenOn] = useState(false);
   const [copiedCoords, setCopiedCoords] = useState(false);
+
+  // Escuchar tecla Escape para cerrar modo pantalla completa
+  useEffect(() => {
+    if (!isFullscreenMode) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsFullscreenMode(false);
+        setBeaconFlash(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreenMode]);
 
   // Sintetizador Web Audio API para simulación sonora de baliza SOS
   const toggleSirenSound = () => {

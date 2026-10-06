@@ -166,7 +166,7 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
                 size="sm"
                 fullWidth
                 onClick={abrirGoogleMaps}
-                style={{ borderColor: '#CBD5E1', color: '#0F172A', backgroundColor: '#F8FAFC' }}
+                style={{ borderColor: '#CBD5E1', color: 'var(--theme-text-primary)', backgroundColor: 'var(--cru-surface-muted)' }}
                 leftIcon={<ExternalLink size={13} />}
               >
                 Maps
@@ -176,7 +176,7 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
                 size="sm"
                 fullWidth
                 onClick={abrirWaze}
-                style={{ borderColor: '#BFDBFE', color: '#0053AF', backgroundColor: '#EFF6FF' }}
+                style={{ borderColor: '#BFDBFE', color: 'var(--cru-accent-blue)', backgroundColor: 'var(--cru-accent-blue-bg)' }}
                 leftIcon={<ExternalLink size={13} />}
               >
                 Waze

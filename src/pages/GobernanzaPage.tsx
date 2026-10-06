@@ -191,7 +191,7 @@ export const GobernanzaPage: FC = () => {
             borderRadius: '24px',
             padding: '2.5rem 2.5rem 2.25rem',
             marginBottom: '3rem',
-            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))',
+            boxShadow: 'var(--cru-card-shadow)',
             position: 'relative',
             overflow: 'hidden'
           }}
@@ -204,7 +204,7 @@ export const GobernanzaPage: FC = () => {
               left: 0,
               right: 0,
               height: '4px',
-              background: 'linear-gradient(90deg, #001489 0%, #001489 20%, #FFFFFF 20%, #FFFFFF 30%, #DA291C 30%, #DA291C 70%, #FFFFFF 70%, #FFFFFF 80%, #001489 80%, #001489 100%)'
+              background: 'linear-gradient(90deg, var(--color-institutional-blue, #001489) 0%, var(--color-institutional-blue) 20%, #FFFFFF 20%, #FFFFFF 30%, var(--color-solidarity-red, #CE1126) 30%, var(--color-solidarity-red) 70%, #FFFFFF 70%, #FFFFFF 80%, var(--color-institutional-blue) 80%, var(--color-institutional-blue) 100%)'
             }}
           />
 
@@ -225,16 +225,16 @@ export const GobernanzaPage: FC = () => {
                   width: '72px',
                   height: '72px',
                   borderRadius: '18px',
-                  backgroundColor: 'rgba(0, 83, 175, 0.08)',
-                  border: '1.5px solid rgba(0, 83, 175, 0.2)',
+                  backgroundColor: 'var(--cru-accent-blue-bg)',
+                  border: '1.5px solid var(--cru-accent-blue-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(6, 42, 119, 0.06)',
+                  boxShadow: 'var(--cru-card-shadow)',
                   flexShrink: 0
                 }}
               >
-                <Landmark size={36} color="#062A77" />
+                <Landmark size={36} color="var(--cru-text)" />
               </div>
 
               <div>
@@ -242,11 +242,11 @@ export const GobernanzaPage: FC = () => {
                   <CivicBadge variant="provincial" size="md">
                     GOBIERNO LOCAL AUTÓNOMO
                   </CivicBadge>
-                  <span style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 600 }}>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>
                     PROVINCIA DE {provinciaActual.nombre.toUpperCase()} · CANTÓN {cantonActual.nombre.toUpperCase()}
                   </span>
-                  <span style={{ color: '#CBD5E1' }}>•</span>
-                  <span style={{ fontSize: '0.78rem', color: '#0053AF', fontWeight: 700 }}>
+                  <span style={{ color: 'var(--cru-border-strong)' }}>•</span>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--cru-accent-blue)', fontWeight: 700 }}>
                     CABECERA: {cantonActual.cabecera.toUpperCase()}
                   </span>
                 </div>
@@ -294,16 +294,16 @@ export const GobernanzaPage: FC = () => {
                 boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.04))'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1E293B', fontWeight: 600 }}>
-                <ShieldCheck size={16} color="#059669" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--theme-text-primary)', fontWeight: 600 }}>
+                <ShieldCheck size={16} color="var(--cru-accent-green)" />
                 <span>Régimen Municipal Ley N° 7794</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1E293B', fontWeight: 600 }}>
-                <CheckCircle2 size={16} color="#0053AF" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--theme-text-primary)', fontWeight: 600 }}>
+                <CheckCircle2 size={16} color="var(--cru-accent-blue)" />
                 <span>Fiscalización Contraloría (CGR)</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1E293B', fontWeight: 600 }}>
-                <FileCheck size={16} color="#D97706" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--theme-text-primary)', fontWeight: 600 }}>
+                <FileCheck size={16} color="var(--cru-accent-amber)" />
                 <span>Fe Pública y Firma Digital Ley N° 8454</span>
               </div>
             </div>
@@ -334,12 +334,12 @@ export const GobernanzaPage: FC = () => {
                   gap: '0.65rem'
                 }}
               >
-                <Users size={24} color="#0053AF" />
+                <Users size={24} color="var(--cru-accent-blue)" />
                 <span>Autoridades Electas del Cantón</span>
               </h2>
             </div>
 
-            <div style={{ fontSize: '0.84rem', color: '#64748B' }}>
+            <div style={{ fontSize: '0.84rem', color: 'var(--cru-text-muted)' }}>
               Periodo Constitucional Oficial: <strong style={{ color: 'var(--cru-text, #062A77)' }}>2024 - 2028</strong>
             </div>
           </div>
@@ -362,19 +362,19 @@ export const GobernanzaPage: FC = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))',
-                  transition: 'all 0.3s ease',
+                  boxShadow: 'var(--cru-card-shadow)',
+                  transition: 'var(--transition-smooth)',
                   position: 'relative'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = '#93C5FD';
                   e.currentTarget.style.transform = 'translateY(-3px)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-hover, 0 10px 25px -3px rgba(6, 42, 119, 0.1))';
+                  e.currentTarget.style.boxShadow = 'var(--cru-card-shadow-hover)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderColor = 'var(--cru-border, #E2E8F0)';
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))';
+                  e.currentTarget.style.boxShadow = 'var(--cru-card-shadow)';
                 }}
               >
                 <div>
@@ -387,10 +387,10 @@ export const GobernanzaPage: FC = () => {
                         height: '84px',
                         borderRadius: '16px',
                         overflow: 'hidden',
-                        border: '2px solid #E2E8F0',
-                        boxShadow: '0 4px 12px rgba(6, 42, 119, 0.08)',
+                        border: '2px solid var(--cru-border)',
+                        boxShadow: 'var(--cru-card-shadow)',
                         flexShrink: 0,
-                        backgroundColor: '#F1F5F9'
+                        backgroundColor: 'var(--cru-surface-muted)'
                       }}
                     >
                       <img
@@ -411,9 +411,9 @@ export const GobernanzaPage: FC = () => {
                           fontWeight: 800,
                           padding: '0.2rem 0.65rem',
                           borderRadius: '9999px',
-                          backgroundColor: 'rgba(0, 83, 175, 0.08)',
-                          color: '#0053AF',
-                          border: '1px solid rgba(0, 83, 175, 0.2)',
+                          backgroundColor: 'var(--cru-accent-blue-bg)',
+                          color: 'var(--cru-accent-blue)',
+                          border: '1px solid var(--cru-accent-blue-border)',
                           textTransform: 'uppercase',
                           display: 'inline-block',
                           marginBottom: '0.35rem'
@@ -432,7 +432,7 @@ export const GobernanzaPage: FC = () => {
                       >
                         {autoridad.nombre}
                       </h3>
-                      <span style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '0.2rem', display: 'block' }}>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)', marginTop: '0.2rem', display: 'block' }}>
                         Periodo Constitucional {autoridad.periodo}
                       </span>
                     </div>
@@ -450,29 +450,29 @@ export const GobernanzaPage: FC = () => {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <Mail size={15} color="#0053AF" />
-                      <span style={{ color: '#64748B' }}>Correo Despacho:</span>
+                      <Mail size={15} color="var(--cru-accent-blue)" />
+                      <span style={{ color: 'var(--cru-text-muted)' }}>Correo Despacho:</span>
                       <a
                         href={`mailto:${autoridad.correo}`}
-                        style={{ color: '#062A77', textDecoration: 'none', fontWeight: 600 }}
+                        style={{ color: 'var(--cru-text)', textDecoration: 'none', fontWeight: 600 }}
                       >
                         {autoridad.correo}
                       </a>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <Phone size={15} color="#059669" />
-                      <span style={{ color: '#64748B' }}>Teléfono Central:</span>
-                      <span style={{ color: '#062A77', fontFamily: 'monospace', fontWeight: 600 }}>
+                      <Phone size={15} color="var(--cru-accent-green)" />
+                      <span style={{ color: 'var(--cru-text-muted)' }}>Teléfono Central:</span>
+                      <span style={{ color: 'var(--cru-text)', fontFamily: 'monospace', fontWeight: 600 }}>
                         {autoridad.telefono}
                       </span>
                     </div>
 
                     {autoridad.despacho && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        <Building2 size={15} color="#D97706" />
-                        <span style={{ color: '#64748B' }}>Sede:</span>
-                        <span style={{ color: '#334155', fontWeight: 500 }}>{autoridad.despacho}</span>
+                        <Building2 size={15} color="var(--cru-accent-amber)" />
+                        <span style={{ color: 'var(--cru-text-muted)' }}>Sede:</span>
+                        <span style={{ color: 'var(--cru-text-soft)', fontWeight: 500 }}>{autoridad.despacho}</span>
                       </div>
                     )}
                   </div>
@@ -486,7 +486,7 @@ export const GobernanzaPage: FC = () => {
                     aria-label={`Ver agenda pública y rendición de cuentas de ${autoridad.nombre}`}
                     style={{
                       width: '100%',
-                      backgroundColor: '#F8FAFC',
+                      backgroundColor: 'var(--cru-surface-muted)',
                       border: '1px solid var(--cru-border, #CBD5E1)',
                       color: 'var(--cru-text, #062A77)',
                       padding: '0.6rem 1rem',
@@ -498,7 +498,7 @@ export const GobernanzaPage: FC = () => {
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '0.45rem',
-                      transition: 'all 0.2s ease'
+                      transition: 'var(--transition-smooth)'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = '#0053AF';
@@ -546,31 +546,31 @@ export const GobernanzaPage: FC = () => {
               style={{
                 width: '100%',
                 maxWidth: '560px',
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--cru-surface-card)',
                 border: '1px solid var(--cru-border, #E2E8F0)',
                 borderRadius: '20px',
                 padding: '2rem',
-                color: '#0F172A',
-                boxShadow: 'var(--shadow-hover, 0 10px 25px -3px rgba(6, 42, 119, 0.15))'
+                color: 'var(--theme-text-primary)',
+                boxShadow: 'var(--cru-card-shadow-hover)'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
                 <div>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0053AF', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--cru-accent-blue)', textTransform: 'uppercase' }}>
                     AGENDA PÚBLICA DE FISCALIZACIÓN
                   </span>
-                  <h3 style={{ fontSize: '1.3rem', fontWeight: 800, margin: '0.2rem 0 0 0', color: '#062A77' }}>
+                  <h3 style={{ fontSize: '1.3rem', fontWeight: 800, margin: '0.2rem 0 0 0', color: 'var(--cru-text)' }}>
                     {autoridadAgenda.nombre}
                   </h3>
-                  <span style={{ fontSize: '0.8rem', color: '#64748B' }}>{autoridadAgenda.cargo}</span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)' }}>{autoridadAgenda.cargo}</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setAutoridadAgenda(null)}
                   style={{
-                    background: '#F1F5F9',
+                    background: 'var(--cru-surface-muted)',
                     border: 'none',
-                    color: '#64748B',
+                    color: 'var(--cru-text-muted)',
                     width: '32px',
                     height: '32px',
                     borderRadius: '50%',
@@ -585,20 +585,20 @@ export const GobernanzaPage: FC = () => {
                 </button>
               </div>
 
-              <div style={{ backgroundColor: '#F8FAFC', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem', border: '1px solid #E2E8F0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#0053AF', fontWeight: 700, fontSize: '0.88rem' }}>
+              <div style={{ backgroundColor: 'var(--cru-surface-muted)', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem', border: '1px solid var(--cru-border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: 'var(--cru-accent-blue)', fontWeight: 700, fontSize: '0.88rem' }}>
                   <Clock size={16} />
                   <span>Horarios Oficiales de Despacho Comunal:</span>
                 </div>
-                <p style={{ margin: '0 0 0.85rem 0', color: '#334155', fontSize: '0.88rem', lineHeight: 1.6 }}>
+                <p style={{ margin: '0 0 0.85rem 0', color: 'var(--cru-text-soft)', fontSize: '0.88rem', lineHeight: 1.6 }}>
                   {autoridadAgenda.agendaPublica || 'Lunes a Viernes de 08:00 a 16:00 hrs mediante cita formal.'}
                 </p>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#059669', fontWeight: 700, fontSize: '0.88rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--cru-accent-green)', fontWeight: 700, fontSize: '0.88rem' }}>
                   <ShieldCheck size={16} />
                   <span>Transparencia y Declaración Jurada:</span>
                 </div>
-                <p style={{ margin: '0.25rem 0 0 0', color: '#64748B', fontSize: '0.82rem' }}>
+                <p style={{ margin: '0.25rem 0 0 0', color: 'var(--cru-text-muted)', fontSize: '0.82rem' }}>
                   Declaración de bienes y patrimonio al día ante la Contraloría General de la República (Ley N° 8422 contra la Corrupción y el Enriquecimiento Ilícito).
                 </p>
               </div>
@@ -608,7 +608,7 @@ export const GobernanzaPage: FC = () => {
                 onClick={() => setAutoridadAgenda(null)}
                 style={{
                   width: '100%',
-                  backgroundColor: '#0053AF',
+                  backgroundColor: 'var(--cru-accent-blue)',
                   color: '#FFFFFF',
                   border: 'none',
                   padding: '0.7rem',
@@ -656,7 +656,7 @@ export const GobernanzaPage: FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '0.55rem',
-              transition: 'all 0.2s ease',
+              transition: 'var(--transition-smooth)',
               whiteSpace: 'nowrap'
             }}
           >
@@ -665,11 +665,11 @@ export const GobernanzaPage: FC = () => {
             <span
               style={{
                 fontSize: '0.72rem',
-                backgroundColor: 'rgba(0, 83, 175, 0.08)',
-                color: '#0053AF',
+                backgroundColor: 'var(--cru-accent-blue-bg)',
+                color: 'var(--cru-accent-blue)',
                 padding: '0.15rem 0.55rem',
                 borderRadius: '9999px',
-                border: '1px solid rgba(0, 83, 175, 0.2)'
+                border: '1px solid var(--cru-accent-blue-border)'
               }}
             >
               {actas.length}
@@ -693,7 +693,7 @@ export const GobernanzaPage: FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '0.55rem',
-              transition: 'all 0.2s ease',
+              transition: 'var(--transition-smooth)',
               whiteSpace: 'nowrap'
             }}
           >
@@ -718,7 +718,7 @@ export const GobernanzaPage: FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '0.55rem',
-              transition: 'all 0.2s ease',
+              transition: 'var(--transition-smooth)',
               whiteSpace: 'nowrap'
             }}
           >
@@ -753,7 +753,7 @@ export const GobernanzaPage: FC = () => {
                 border: '1px solid var(--cru-border, #E2E8F0)',
                 borderRadius: '24px',
                 padding: '2.5rem',
-                boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))'
+                boxShadow: 'var(--cru-card-shadow)'
               }}
             >
               {radicadoExitoso ? (
@@ -771,7 +771,7 @@ export const GobernanzaPage: FC = () => {
                       width: '68px',
                       height: '68px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(5, 150, 105, 0.12)',
+                      backgroundColor: 'var(--cru-accent-green-bg)',
                       border: '2px solid #059669',
                       display: 'flex',
                       alignItems: 'center',
@@ -779,10 +779,10 @@ export const GobernanzaPage: FC = () => {
                       margin: '0 auto 1.5rem'
                     }}
                   >
-                    <CheckCircle2 size={36} color="#059669" />
+                    <CheckCircle2 size={36} color="var(--cru-accent-green)" />
                   </div>
 
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#059669', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--cru-accent-green)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                     PETICIÓN CÍVICA RADICADA SATISFACTORIAMENTE
                   </span>
                   <h3
@@ -803,7 +803,7 @@ export const GobernanzaPage: FC = () => {
 
                   <div
                     style={{
-                      backgroundColor: '#F8FAFC',
+                      backgroundColor: 'var(--cru-surface-muted)',
                       border: '1px solid var(--cru-border, #E2E8F0)',
                       borderRadius: '16px',
                       padding: '1.5rem',
@@ -815,10 +815,10 @@ export const GobernanzaPage: FC = () => {
                       gap: '0.65rem'
                     }}
                   >
-                    <div><span style={{ color: '#64748B' }}>Ciudadano Peticionario:</span> <strong style={{ color: '#0F172A' }}>{radicadoExitoso.ciudadano}</strong></div>
-                    <div><span style={{ color: '#64748B' }}>Tipo de Diligencia:</span> <strong style={{ color: '#0053AF' }}>{radicadoExitoso.tipoSolicitudTexto}</strong></div>
-                    <div><span style={{ color: '#64748B' }}>Fecha y Hora de Radicación:</span> <strong style={{ color: '#0F172A' }}>{radicadoExitoso.fechaHora}</strong></div>
-                    <div><span style={{ color: '#64748B' }}>Estado Administrativo:</span> <strong style={{ color: '#059669' }}>Radicado para Sesión Ordinaria</strong></div>
+                    <div><span style={{ color: 'var(--cru-text-muted)' }}>Ciudadano Peticionario:</span> <strong style={{ color: 'var(--theme-text-primary)' }}>{radicadoExitoso.ciudadano}</strong></div>
+                    <div><span style={{ color: 'var(--cru-text-muted)' }}>Tipo de Diligencia:</span> <strong style={{ color: 'var(--cru-accent-blue)' }}>{radicadoExitoso.tipoSolicitudTexto}</strong></div>
+                    <div><span style={{ color: 'var(--cru-text-muted)' }}>Fecha y Hora de Radicación:</span> <strong style={{ color: 'var(--theme-text-primary)' }}>{radicadoExitoso.fechaHora}</strong></div>
+                    <div><span style={{ color: 'var(--cru-text-muted)' }}>Estado Administrativo:</span> <strong style={{ color: 'var(--cru-accent-green)' }}>Radicado para Sesión Ordinaria</strong></div>
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
@@ -826,9 +826,9 @@ export const GobernanzaPage: FC = () => {
                       type="button"
                       onClick={() => window.print()}
                       style={{
-                        backgroundColor: '#F8FAFC',
-                        border: '1px solid #CBD5E1',
-                        color: '#062A77',
+                        backgroundColor: 'var(--cru-surface-muted)',
+                        border: '1px solid var(--cru-border-strong)',
+                        color: 'var(--cru-text)',
                         padding: '0.65rem 1.5rem',
                         borderRadius: '10px',
                         fontWeight: 700,
@@ -857,7 +857,7 @@ export const GobernanzaPage: FC = () => {
                         });
                       }}
                       style={{
-                        backgroundColor: '#0053AF',
+                        backgroundColor: 'var(--cru-accent-blue)',
                         border: 'none',
                         color: '#FFFFFF',
                         padding: '0.65rem 1.5rem',
@@ -874,7 +874,7 @@ export const GobernanzaPage: FC = () => {
                 /* Formulario Formal de Audiencia */
                 <div>
                   <div style={{ marginBottom: '2rem' }}>
-                    <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#0053AF', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                    <span style={{ fontSize: '0.74rem', fontWeight: 800, color: 'var(--cru-accent-blue)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                       MECANISMO FORMAL DE PARTICIPACIÓN CIUDADANA
                     </span>
                     <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--cru-text, #062A77)', margin: '0.35rem 0 0.5rem 0', fontFamily: 'var(--font-headline, sans-serif)' }}>
@@ -898,9 +898,9 @@ export const GobernanzaPage: FC = () => {
                       <div>
                         <label
                           htmlFor="campo-cedula"
-                          style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#1E293B', marginBottom: '0.45rem' }}
+                          style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.45rem' }}
                         >
-                          Cédula de Identidad o DIMEX <span style={{ color: '#DA291C' }}>*</span>
+                          Cédula de Identidad o DIMEX <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                         </label>
                         <input
                           id="campo-cedula"
@@ -912,16 +912,16 @@ export const GobernanzaPage: FC = () => {
                           style={{
                             width: '100%',
                             padding: '0.7rem 1rem',
-                            backgroundColor: '#FFFFFF',
+                            backgroundColor: 'var(--cru-surface-card)',
                             border: erroresFormulario.cedula ? '1px solid #DA291C' : '1px solid #CBD5E1',
                             borderRadius: '10px',
-                            color: '#0F172A',
+                            color: 'var(--theme-text-primary)',
                             fontSize: '0.9rem',
                             outline: 'none'
                           }}
                         />
                         {erroresFormulario.cedula && (
-                          <span id="error-cedula" style={{ color: '#DA291C', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
+                          <span id="error-cedula" style={{ color: 'var(--cru-accent-red)', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
                             {erroresFormulario.cedula}
                           </span>
                         )}
@@ -931,9 +931,9 @@ export const GobernanzaPage: FC = () => {
                       <div>
                         <label
                           htmlFor="campo-nombre"
-                          style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#1E293B', marginBottom: '0.45rem' }}
+                          style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.45rem' }}
                         >
-                          Nombre y Apellidos Completos <span style={{ color: '#DA291C' }}>*</span>
+                          Nombre y Apellidos Completos <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                         </label>
                         <input
                           id="campo-nombre"
@@ -945,16 +945,16 @@ export const GobernanzaPage: FC = () => {
                           style={{
                             width: '100%',
                             padding: '0.7rem 1rem',
-                            backgroundColor: '#FFFFFF',
+                            backgroundColor: 'var(--cru-surface-card)',
                             border: erroresFormulario.nombreCompleto ? '1px solid #DA291C' : '1px solid #CBD5E1',
                             borderRadius: '10px',
-                            color: '#0F172A',
+                            color: 'var(--theme-text-primary)',
                             fontSize: '0.9rem',
                             outline: 'none'
                           }}
                         />
                         {erroresFormulario.nombreCompleto && (
-                          <span id="error-nombre" style={{ color: '#DA291C', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
+                          <span id="error-nombre" style={{ color: 'var(--cru-accent-red)', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
                             {erroresFormulario.nombreCompleto}
                           </span>
                         )}
@@ -964,9 +964,9 @@ export const GobernanzaPage: FC = () => {
                       <div>
                         <label
                           htmlFor="campo-correo"
-                          style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#1E293B', marginBottom: '0.45rem' }}
+                          style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.45rem' }}
                         >
-                          Correo Electrónico de Notificaciones <span style={{ color: '#DA291C' }}>*</span>
+                          Correo Electrónico de Notificaciones <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                         </label>
                         <input
                           id="campo-correo"
@@ -978,16 +978,16 @@ export const GobernanzaPage: FC = () => {
                           style={{
                             width: '100%',
                             padding: '0.7rem 1rem',
-                            backgroundColor: '#FFFFFF',
+                            backgroundColor: 'var(--cru-surface-card)',
                             border: erroresFormulario.correo ? '1px solid #DA291C' : '1px solid #CBD5E1',
                             borderRadius: '10px',
-                            color: '#0F172A',
+                            color: 'var(--theme-text-primary)',
                             fontSize: '0.9rem',
                             outline: 'none'
                           }}
                         />
                         {erroresFormulario.correo && (
-                          <span id="error-correo" style={{ color: '#DA291C', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
+                          <span id="error-correo" style={{ color: 'var(--cru-accent-red)', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
                             {erroresFormulario.correo}
                           </span>
                         )}
@@ -997,9 +997,9 @@ export const GobernanzaPage: FC = () => {
                       <div>
                         <label
                           htmlFor="campo-telefono"
-                          style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#1E293B', marginBottom: '0.45rem' }}
+                          style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.45rem' }}
                         >
-                          Teléfono de Contacto <span style={{ color: '#DA291C' }}>*</span>
+                          Teléfono de Contacto <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                         </label>
                         <input
                           id="campo-telefono"
@@ -1011,16 +1011,16 @@ export const GobernanzaPage: FC = () => {
                           style={{
                             width: '100%',
                             padding: '0.7rem 1rem',
-                            backgroundColor: '#FFFFFF',
+                            backgroundColor: 'var(--cru-surface-card)',
                             border: erroresFormulario.telefono ? '1px solid #DA291C' : '1px solid #CBD5E1',
                             borderRadius: '10px',
-                            color: '#0F172A',
+                            color: 'var(--theme-text-primary)',
                             fontSize: '0.9rem',
                             outline: 'none'
                           }}
                         />
                         {erroresFormulario.telefono && (
-                          <span id="error-telefono" style={{ color: '#DA291C', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
+                          <span id="error-telefono" style={{ color: 'var(--cru-accent-red)', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
                             {erroresFormulario.telefono}
                           </span>
                         )}
@@ -1031,7 +1031,7 @@ export const GobernanzaPage: FC = () => {
                     <div style={{ marginBottom: '1.5rem' }}>
                       <label
                         htmlFor="campo-tipo"
-                        style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#1E293B', marginBottom: '0.45rem' }}
+                        style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.45rem' }}
                       >
                         Naturaleza de la Audiencia o Petición
                       </label>
@@ -1042,10 +1042,10 @@ export const GobernanzaPage: FC = () => {
                         style={{
                           width: '100%',
                           padding: '0.7rem 1rem',
-                          backgroundColor: '#FFFFFF',
-                          border: '1px solid #CBD5E1',
+                          backgroundColor: 'var(--cru-surface-card)',
+                          border: '1px solid var(--cru-border-strong)',
                           borderRadius: '10px',
-                          color: '#0F172A',
+                          color: 'var(--theme-text-primary)',
                           fontSize: '0.9rem',
                           outline: 'none'
                         }}
@@ -1060,9 +1060,9 @@ export const GobernanzaPage: FC = () => {
                     <div style={{ marginBottom: '2rem' }}>
                       <label
                         htmlFor="campo-fundamentacion"
-                        style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#1E293B', marginBottom: '0.45rem' }}
+                        style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: 'var(--theme-text-primary)', marginBottom: '0.45rem' }}
                       >
-                        Fundamentación del Asunto Comunitario de Interés Público <span style={{ color: '#DA291C' }}>*</span>
+                        Fundamentación del Asunto Comunitario de Interés Público <span style={{ color: 'var(--cru-accent-red)' }}>*</span>
                       </label>
                       <textarea
                         id="campo-fundamentacion"
@@ -1074,17 +1074,17 @@ export const GobernanzaPage: FC = () => {
                         style={{
                           width: '100%',
                           padding: '0.75rem 1rem',
-                          backgroundColor: '#FFFFFF',
+                          backgroundColor: 'var(--cru-surface-card)',
                           border: erroresFormulario.fundamentacion ? '1px solid #DA291C' : '1px solid #CBD5E1',
                           borderRadius: '10px',
-                          color: '#0F172A',
+                          color: 'var(--theme-text-primary)',
                           fontSize: '0.9rem',
                           outline: 'none',
                           lineHeight: 1.6
                         }}
                       />
                       {erroresFormulario.fundamentacion && (
-                        <span id="error-fundamentacion" style={{ color: '#DA291C', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
+                        <span id="error-fundamentacion" style={{ color: 'var(--cru-accent-red)', fontSize: '0.75rem', marginTop: '0.35rem', display: 'block' }}>
                           {erroresFormulario.fundamentacion}
                         </span>
                       )}
@@ -1092,15 +1092,15 @@ export const GobernanzaPage: FC = () => {
 
                     {/* Botón de Envío y Respaldo Legal */}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-                      <span style={{ fontSize: '0.78rem', color: '#64748B', maxWidth: '520px' }}>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)', maxWidth: '520px' }}>
                         Al enviar, se generará un número de expediente oficial con trazabilidad pública bajo la Ley N° 8968 de Protección de Datos Personales.
                       </span>
 
                       <button
                         type="submit"
                         style={{
-                          backgroundColor: '#0053AF',
-                          backgroundImage: 'linear-gradient(135deg, #0053AF 0%, #062A77 100%)',
+                          backgroundColor: 'var(--cru-accent-blue)',
+                          backgroundImage: 'linear-gradient(135deg, var(--blue, #0053AF) 0%, var(--navy, #062A77) 100%)',
                           border: 'none',
                           color: '#FFFFFF',
                           padding: '0.75rem 2rem',
@@ -1111,8 +1111,8 @@ export const GobernanzaPage: FC = () => {
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '0.5rem',
-                          transition: 'all 0.2s ease',
-                          boxShadow: 'var(--shadow-hover, 0 10px 25px -3px rgba(6, 42, 119, 0.15))'
+                          transition: 'var(--transition-smooth)',
+                          boxShadow: 'var(--cru-card-shadow-hover)'
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.transform = 'translateY(-2px)';
@@ -1148,7 +1148,7 @@ export const GobernanzaPage: FC = () => {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '2rem',
-            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06), 0 2px 6px -1px rgba(6, 42, 119, 0.04))'
+            boxShadow: 'var(--cru-card-shadow)'
           }}
         >
           <div style={{ maxWidth: '780px' }}>
@@ -1167,7 +1167,7 @@ export const GobernanzaPage: FC = () => {
                   fontWeight: 800,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
-                  color: '#059669'
+                  color: 'var(--cru-accent-green)'
                 }}
               >
                 DEMOCRACIA DIRECTA Y FISCALIZACIÓN DEL GASTO PÚBLICO
@@ -1195,8 +1195,8 @@ export const GobernanzaPage: FC = () => {
             to="/participacion"
             style={{
               textDecoration: 'none',
-              backgroundColor: '#0053AF',
-              backgroundImage: 'linear-gradient(135deg, #0053AF 0%, #062A77 100%)',
+              backgroundColor: 'var(--cru-accent-blue)',
+              backgroundImage: 'linear-gradient(135deg, var(--blue, #0053AF) 0%, var(--navy, #062A77) 100%)',
               border: 'none',
               color: '#FFFFFF',
               padding: '0.85rem 1.75rem',
@@ -1206,8 +1206,8 @@ export const GobernanzaPage: FC = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.55rem',
-              boxShadow: 'var(--shadow-hover, 0 10px 25px -3px rgba(6, 42, 119, 0.15))',
-              transition: 'all 0.25s ease',
+              boxShadow: 'var(--cru-card-shadow-hover)',
+              transition: 'var(--transition-smooth)',
               flexShrink: 0
             }}
             onMouseEnter={(e) => {

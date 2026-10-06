@@ -91,7 +91,7 @@ export const EducacionPage: FC = () => {
             <CivicBadge variant="provincial" size="md">
               INFRAESTRUCTURA EDUCATIVA &bull; COLEGIOS TÉCNICOS (CTP)
             </CivicBadge>
-            <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>
               Ministerio de Educación Pública (MEP) &bull; Formación Técnica Vocacional
             </span>
           </div>
@@ -117,7 +117,7 @@ export const EducacionPage: FC = () => {
         {/* Tarjeta de Coordinación GIS con Eiker */}
         <div
           style={{
-            background: '#FFFFFF',
+            background: 'var(--cru-surface-card)',
             border: '2px solid rgba(6, 42, 119, 0.15)',
             borderLeft: '5px solid #0053AF',
             borderRadius: '16px',
@@ -128,17 +128,17 @@ export const EducacionPage: FC = () => {
             flexWrap: 'wrap',
             gap: '1rem',
             marginBottom: '2rem',
-            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))'
+            boxShadow: 'var(--cru-card-shadow)'
           }}
         >
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-              <Layers size={18} color="#0053AF" />
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#062A77', margin: 0 }}>
+              <Layers size={18} color="var(--cru-accent-blue)" />
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--cru-text)', margin: 0 }}>
                 Interoperabilidad GIS: Dataset POI de Escuelas para Eiker
               </h3>
             </div>
-            <p style={{ fontSize: '0.875rem', color: '#334155', margin: 0 }}>
+            <p style={{ fontSize: '0.875rem', color: 'var(--cru-text-soft)', margin: 0 }}>
               Exportación en formato estándar GeoJSON (WGS84) para el renderizado geoespacial de centros y paradas escolares en Leaflet.
             </p>
           </div>
@@ -147,7 +147,7 @@ export const EducacionPage: FC = () => {
             type="button"
             onClick={handleDescargarGeoJson}
             style={{
-              backgroundColor: '#0053AF',
+              backgroundColor: 'var(--cru-accent-blue)',
               color: '#FFFFFF',
               border: 'none',
               borderRadius: '10px',
@@ -172,18 +172,18 @@ export const EducacionPage: FC = () => {
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
-            background: '#FFFFFF',
+            background: 'var(--cru-surface-card)',
             padding: '1.25rem',
             borderRadius: '16px',
-            border: '1px solid #E2E8F0',
-            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))',
+            border: '1px solid var(--cru-border)',
+            boxShadow: 'var(--cru-card-shadow)',
             marginBottom: '2rem'
           }}
         >
           {/* Fila 1: Búsqueda y Selector de Nivel */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ position: 'relative', flex: '1 1 300px' }}>
-              <Search size={18} color="#0053AF" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+              <Search size={18} color="var(--cru-accent-blue)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
               <input
                 type="text"
                 value={busqueda}
@@ -193,10 +193,10 @@ export const EducacionPage: FC = () => {
                 style={{
                   width: '100%',
                   padding: '0.65rem 1rem 0.65rem 2.4rem',
-                  background: '#F8FAFC',
-                  border: '1px solid #CBD5E1',
+                  background: 'var(--cru-surface-muted)',
+                  border: '1px solid var(--cru-border-strong)',
                   borderRadius: '10px',
-                  color: '#0F172A',
+                  color: 'var(--theme-text-primary)',
                   fontSize: '0.875rem',
                   outline: 'none',
                   fontWeight: 500
@@ -220,7 +220,7 @@ export const EducacionPage: FC = () => {
                     fontSize: '0.8rem',
                     fontWeight: 700,
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease'
+                    transition: 'var(--transition-smooth)'
                   }}
                 >
                   {niv === 'todos' ? 'Todos los Niveles' : niv}
@@ -231,17 +231,17 @@ export const EducacionPage: FC = () => {
 
           {/* Fila 2: Filtro específico por Especialidad CTP */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.82rem', color: '#062A77', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Filter size={14} color="#0053AF" /> Especialidad CTP:
+            <span style={{ fontSize: '0.82rem', color: 'var(--cru-text)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <Filter size={14} color="var(--cru-accent-blue)" /> Especialidad CTP:
             </span>
             <select
               value={filtroEspecialidad}
               onChange={(e) => setFiltroEspecialidad(e.target.value)}
               aria-label="Filtrar por especialidad técnica CTP"
               style={{
-                background: '#F8FAFC',
-                color: '#0F172A',
-                border: '1px solid #CBD5E1',
+                background: 'var(--cru-surface-muted)',
+                color: 'var(--theme-text-primary)',
+                border: '1px solid var(--cru-border-strong)',
                 borderRadius: '8px',
                 padding: '0.45rem 0.85rem',
                 fontSize: '0.82rem',
@@ -260,8 +260,8 @@ export const EducacionPage: FC = () => {
 
         {/* Listado de Centros Educativos */}
         <section aria-label="Directorio de Instituciones Educativas">
-          <div style={{ marginBottom: '1rem', fontSize: '0.85rem', color: '#475569', fontWeight: 600 }}>
-            Se muestran <strong style={{ color: '#062A77' }}>{centrosFiltrados.length}</strong> centros educativos cantonales
+          <div style={{ marginBottom: '1rem', fontSize: '0.85rem', color: 'var(--cru-text-muted)', fontWeight: 600 }}>
+            Se muestran <strong style={{ color: 'var(--cru-text)' }}>{centrosFiltrados.length}</strong> centros educativos cantonales
           </div>
 
           <div

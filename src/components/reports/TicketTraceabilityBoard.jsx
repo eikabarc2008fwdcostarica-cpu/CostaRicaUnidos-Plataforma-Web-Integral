@@ -132,16 +132,16 @@ export function normalizarTicketSeguro(t) {
 function getCategoryIcon(categoria, size = 18) {
   const cat = String(categoria || '').toLowerCase();
   if (cat.includes('hueco') || cat.includes('vial') || cat.includes('calzada') || cat.includes('asfalto')) {
-    return <Construction size={size} color="#FF6B6B" />;
+    return <Construction size={size} color="var(--cru-accent-red)" />;
   }
   if (cat.includes('luminaria') || cat.includes('luz') || cat.includes('alumbrado')) {
-    return <Lightbulb size={size} color="#FBBF24" />;
+    return <Lightbulb size={size} color="var(--cru-accent-amber)" />;
   }
   if (cat.includes('agua') || cat.includes('fuga') || cat.includes('alcantarilla')) {
     return <Droplets size={size} color="#38BDF8" />;
   }
   if (cat.includes('basura') || cat.includes('residuo') || cat.includes('vertedero')) {
-    return <Trash2 size={size} color="#34D399" />;
+    return <Trash2 size={size} color="var(--cru-accent-green)" />;
   }
   return <AlertTriangle size={size} color="#F59E0B" />;
 }
@@ -265,9 +265,9 @@ export default function TicketTraceabilityBoard({
         <span
           className="telemetry-badge"
           style={{
-            backgroundColor: '#EFF6FF',
-            color: '#0053AF',
-            border: '1px solid #BFDBFE',
+            backgroundColor: 'var(--cru-accent-blue-bg)',
+            color: 'var(--cru-accent-blue)',
+            border: '1px solid var(--cru-accent-blue-border)',
             fontWeight: 700
           }}
         >
@@ -276,13 +276,13 @@ export default function TicketTraceabilityBoard({
         <h3 style={{
           fontSize: '1.65rem',
           fontWeight: 800,
-          color: '#062A77',
+          color: 'var(--cru-text)',
           marginTop: '0.6rem',
           marginBottom: '0.35rem'
         }}>
           Tablero Público de Trazabilidad de Incidencias
         </h3>
-        <p style={{ color: '#334155', fontSize: '0.92rem', maxWidth: '680px', margin: '0 auto', fontWeight: 500 }}>
+        <p style={{ color: 'var(--cru-text-soft)', fontSize: '0.92rem', maxWidth: '680px', margin: '0 auto', fontWeight: 500 }}>
           Consulte el avance físico y administrativo de los tickets emitidos. La ciudadanía puede auditar el cumplimiento de los tiempos de respuesta municipal.
         </p>
       </div>
@@ -293,8 +293,8 @@ export default function TicketTraceabilityBoard({
           padding: '1.5rem',
           borderRadius: '20px',
           marginBottom: '2.5rem',
-          backgroundColor: '#FFFFFF',
-          border: '1.5px solid rgba(6, 42, 119, 0.15)',
+          backgroundColor: 'var(--cru-surface-card)',
+          border: '1.5px solid var(--cru-accent-blue-border)',
           boxShadow: '0 4px 16px rgba(6, 42, 119, 0.04)'
         }}
       >
@@ -308,7 +308,7 @@ export default function TicketTraceabilityBoard({
           }}
         >
           <div style={{ flex: 1, minWidth: '280px', position: 'relative' }}>
-            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#0053AF', display: 'flex', alignItems: 'center' }}>
+            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--cru-accent-blue)', display: 'flex', alignItems: 'center' }}>
               <Search size={18} />
             </span>
             <input
@@ -320,10 +320,10 @@ export default function TicketTraceabilityBoard({
               style={{
                 width: '100%',
                 padding: '0.9rem 1rem 0.9rem 2.8rem',
-                backgroundColor: '#F8FAFC',
+                backgroundColor: 'var(--cru-surface-muted)',
                 border: '1.5px solid #CBD5E1',
                 borderRadius: '12px',
-                color: '#0F172A',
+                color: 'var(--theme-text-primary)',
                 fontFamily: 'var(--font-telemetry)',
                 fontSize: '0.95rem',
                 fontWeight: 600,
@@ -338,7 +338,7 @@ export default function TicketTraceabilityBoard({
               padding: '0.9rem 1.6rem',
               fontSize: '0.92rem',
               fontWeight: 700,
-              backgroundColor: '#0053AF',
+              backgroundColor: 'var(--cru-accent-blue)',
               color: '#FFFFFF',
               borderRadius: '12px',
               border: 'none',
@@ -378,7 +378,7 @@ export default function TicketTraceabilityBoard({
             padding: 'clamp(1.5rem, 3vw, 2.5rem)',
             borderRadius: '24px',
             marginBottom: '3rem',
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'var(--cru-surface-card)',
             border: '2px solid rgba(6, 42, 119, 0.15)',
             boxShadow: '0 10px 30px rgba(6, 42, 119, 0.08)'
           }}
@@ -391,7 +391,7 @@ export default function TicketTraceabilityBoard({
             flexWrap: 'wrap',
             gap: '1rem',
             paddingBottom: '1.25rem',
-            borderBottom: '1px solid #E2E8F0',
+            borderBottom: '1px solid var(--cru-border)',
             marginBottom: '2rem'
           }}>
             <div>
@@ -400,8 +400,8 @@ export default function TicketTraceabilityBoard({
                   width: '42px',
                   height: '42px',
                   borderRadius: '10px',
-                  backgroundColor: '#EFF6FF',
-                  border: '1px solid #BFDBFE',
+                  backgroundColor: 'var(--cru-accent-blue-bg)',
+                  border: '1px solid var(--cru-accent-blue-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center'
@@ -412,7 +412,7 @@ export default function TicketTraceabilityBoard({
                   fontFamily: 'var(--font-telemetry)',
                   fontSize: '1.4rem',
                   fontWeight: 800,
-                  color: '#062A77',
+                  color: 'var(--cru-text)',
                   letterSpacing: '0.02em'
                 }}>
                   {activeTicket.reportId || activeTicket.id}
@@ -428,20 +428,20 @@ export default function TicketTraceabilityBoard({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '4px',
-                    backgroundColor: '#F1F5F9',
-                    border: '1px solid #CBD5E1',
-                    color: '#062A77',
+                    backgroundColor: 'var(--cru-surface-muted)',
+                    border: '1px solid var(--cru-border-strong)',
+                    color: 'var(--cru-text)',
                     fontWeight: 600,
                     cursor: 'pointer'
                   }}
                 >
-                  {copiedId ? <Check size={12} color="#059669" /> : <Copy size={12} />}
+                  {copiedId ? <Check size={12} color="var(--cru-accent-green)" /> : <Copy size={12} />}
                   <span>{copiedId ? 'Copiado' : 'Copiar'}</span>
                 </button>
               </div>
 
-              <div style={{ color: '#334155', fontSize: '0.92rem', marginTop: '0.45rem', fontWeight: 600 }}>
-                <strong style={{ color: '#062A77' }}>{activeTicket.categoriaTitulo}</strong> &bull; {activeTicket.provincia} › {activeTicket.canton} › {activeTicket.distrito}
+              <div style={{ color: 'var(--cru-text-soft)', fontSize: '0.92rem', marginTop: '0.45rem', fontWeight: 600 }}>
+                <strong style={{ color: 'var(--cru-text)' }}>{activeTicket.categoriaTitulo}</strong> &bull; {activeTicket.provincia} › {activeTicket.canton} › {activeTicket.distrito}
               </div>
             </div>
 
@@ -449,16 +449,16 @@ export default function TicketTraceabilityBoard({
               <span
                 className="telemetry-badge"
                 style={{
-                  backgroundColor: '#EFF6FF',
+                  backgroundColor: 'var(--cru-accent-blue-bg)',
                   borderColor: '#0053AF',
-                  color: '#0053AF',
+                  color: 'var(--cru-accent-blue)',
                   fontSize: '0.85rem',
                   fontWeight: 800
                 }}
               >
                 ESTADO: {(estadoActivoCfg.label || activeTicket.estado || 'RECIBIDO').toUpperCase()}
               </span>
-              <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '0.4rem', fontFamily: 'var(--font-telemetry)', fontWeight: 600 }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--cru-text-muted)', marginTop: '0.4rem', fontFamily: 'var(--font-telemetry)', fontWeight: 600 }}>
                 Registrado: {fechaDisplay}
               </div>
             </div>
@@ -484,7 +484,7 @@ export default function TicketTraceabilityBoard({
                   left: '40px',
                   right: '40px',
                   height: '4px',
-                  backgroundColor: '#E2E8F0',
+                  backgroundColor: 'var(--cru-track)',
                   zIndex: 1
                 }}
               />
@@ -536,7 +536,7 @@ export default function TicketTraceabilityBoard({
                         justifyContent: 'center',
                         fontWeight: 900,
                         fontSize: '1rem',
-                        transition: 'all 0.3s ease'
+                        transition: 'var(--transition-smooth)'
                       }}
                     >
                       {isPassed && !isCurrent ? <Check size={16} strokeWidth={3} /> : st.step}
@@ -580,16 +580,16 @@ export default function TicketTraceabilityBoard({
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '1.5rem',
             paddingTop: '1.5rem',
-            borderTop: '1px solid #E2E8F0'
+            borderTop: '1px solid var(--cru-border)'
           }}>
             {/* Información Territorial y Evidencia */}
             <div>
-              <h5 style={{ fontSize: '1rem', fontWeight: 800, color: '#062A77', marginBottom: '0.75rem' }}>
+              <h5 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--cru-text)', marginBottom: '0.75rem' }}>
                 Datos de Ubicación y Evidencia
               </h5>
 
-              <p style={{ color: '#334155', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1rem' }}>
-                <strong style={{ color: '#062A77' }}>Dirección exacta:</strong> {activeTicket.direccionExacta}
+              <p style={{ color: 'var(--cru-text-soft)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1rem' }}>
+                <strong style={{ color: 'var(--cru-text)' }}>Dirección exacta:</strong> {activeTicket.direccionExacta}
               </p>
 
               <div style={{
@@ -598,17 +598,17 @@ export default function TicketTraceabilityBoard({
                 gap: '0.6rem',
                 fontFamily: 'var(--font-telemetry)',
                 fontSize: '0.82rem',
-                color: '#0053AF',
+                color: 'var(--cru-accent-blue)',
                 fontWeight: 600,
                 marginBottom: '1rem'
               }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><MapPin size={14} color="#0053AF" /> COORDENADAS:</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><MapPin size={14} color="var(--cru-accent-blue)" /> COORDENADAS:</span>
                 <span>{latCoord}, {lngCoord}</span>
               </div>
 
               {activeTicket.imagen?.url && (
                 <div>
-                  <div style={{ fontSize: '0.76rem', color: '#64748B', marginBottom: '0.35rem', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.76rem', color: 'var(--cru-text-muted)', marginBottom: '0.35rem', fontWeight: 600 }}>
                     Fotografía Comprimida WebP ({activeTicket.imagen.pesoComprimido || '< 1 MB'}):
                   </div>
                   <img
@@ -628,7 +628,7 @@ export default function TicketTraceabilityBoard({
 
             {/* Línea de Tiempo del Historial de Inspección */}
             <div>
-              <h5 style={{ fontSize: '1rem', fontWeight: 800, color: '#062A77', marginBottom: '0.75rem' }}>
+              <h5 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--cru-text)', marginBottom: '0.75rem' }}>
                 Historial de Gestión y Fiscalización
               </h5>
 
@@ -651,18 +651,18 @@ export default function TicketTraceabilityBoard({
                       style={{
                         padding: '0.85rem',
                         borderRadius: '10px',
-                        backgroundColor: '#F8FAFC',
-                        border: '1px solid #E2E8F0',
+                        backgroundColor: 'var(--cru-surface-muted)',
+                        border: '1px solid var(--cru-border)',
                         borderLeft: `4px solid ${hEstadoCfg.color || '#0053AF'}`
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: '#64748B', fontFamily: 'var(--font-telemetry)', marginBottom: '0.2rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: 'var(--cru-text-muted)', fontFamily: 'var(--font-telemetry)', marginBottom: '0.2rem' }}>
                         <span style={{ color: hEstadoCfg.color || '#0053AF', fontWeight: 800 }}>
                           {(hEstadoCfg.label || h?.estado || 'PROCESO').toUpperCase()}
                         </span>
                         <span style={{ fontWeight: 600 }}>{hFechaFormateada}</span>
                       </div>
-                      <p style={{ fontSize: '0.86rem', color: '#1E293B', lineHeight: 1.45, fontWeight: 500, margin: 0 }}>
+                      <p style={{ fontSize: '0.86rem', color: 'var(--theme-text-primary)', lineHeight: 1.45, fontWeight: 500, margin: 0 }}>
                         {h?.nota || h?.descripcion || 'Actualización registrada en el expediente municipal.'}
                       </p>
                     </div>
@@ -675,16 +675,16 @@ export default function TicketTraceabilityBoard({
                   marginTop: '1rem',
                   padding: '0.7rem 0.9rem',
                   borderRadius: '8px',
-                  backgroundColor: '#EFF6FF',
-                  border: '1px solid #BFDBFE',
+                  backgroundColor: 'var(--cru-accent-blue-bg)',
+                  border: '1px solid var(--cru-accent-blue-border)',
                   fontSize: '0.82rem',
-                  color: '#062A77',
+                  color: 'var(--cru-text)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                   fontWeight: 600
                 }}>
-                  <Building2 size={16} color="#0053AF" /> <span><strong>Unidad Técnica Asignada:</strong> {activeTicket.entidadResponsable}</span>
+                  <Building2 size={16} color="var(--cru-accent-blue)" /> <span><strong>Unidad Técnica Asignada:</strong> {activeTicket.entidadResponsable}</span>
                 </div>
               )}
             </div>
@@ -702,7 +702,7 @@ export default function TicketTraceabilityBoard({
           gap: '1rem',
           marginBottom: '1.25rem'
         }}>
-          <h4 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#062A77' }}>
+          <h4 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--cru-text)' }}>
             Incidencias Comunitarias Registradas ({ticketsFiltrados.length})
           </h4>
 
@@ -759,7 +759,7 @@ export default function TicketTraceabilityBoard({
                   border: isSelected ? '2px solid #0053AF' : '1.5px solid #CBD5E1',
                   backgroundColor: isSelected ? '#EFF6FF' : '#FFFFFF',
                   boxShadow: isSelected ? '0 8px 24px rgba(0, 83, 175, 0.12)' : '0 2px 8px rgba(0, 0, 0, 0.04)',
-                  transition: 'all 0.2s ease'
+                  transition: 'var(--transition-smooth)'
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.6rem' }}>
@@ -767,9 +767,9 @@ export default function TicketTraceabilityBoard({
                     className="telemetry-badge"
                     style={{
                       fontSize: '0.75rem',
-                      backgroundColor: '#EFF6FF',
-                      color: '#0053AF',
-                      border: '1px solid #BFDBFE',
+                      backgroundColor: 'var(--cru-accent-blue-bg)',
+                      color: 'var(--cru-accent-blue)',
+                      border: '1px solid var(--cru-accent-blue-border)',
                       fontWeight: 700
                     }}
                   >
@@ -792,12 +792,12 @@ export default function TicketTraceabilityBoard({
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
                   <span style={{ display: 'flex', alignItems: 'center' }}>{getCategoryIcon(ticket.categoria, 18)}</span>
-                  <h5 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#062A77' }}>
+                  <h5 style={{ fontSize: '0.98rem', fontWeight: 800, color: 'var(--cru-text)' }}>
                     {ticket.categoriaTitulo}
                   </h5>
                 </div>
 
-                <p style={{ fontSize: '0.84rem', color: '#334155', marginBottom: '0.75rem', lineHeight: 1.45, fontWeight: 500 }}>
+                <p style={{ fontSize: '0.84rem', color: 'var(--cru-text-soft)', marginBottom: '0.75rem', lineHeight: 1.45, fontWeight: 500 }}>
                   {dirCorta}
                 </p>
 
@@ -806,13 +806,13 @@ export default function TicketTraceabilityBoard({
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   fontSize: '0.78rem',
-                  color: '#64748B',
+                  color: 'var(--cru-text-muted)',
                   paddingTop: '0.5rem',
-                  borderTop: '1px solid #E2E8F0',
+                  borderTop: '1px solid var(--cru-border)',
                   fontWeight: 600
                 }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><MapPin size={13} color="#0053AF" /> {ticket.canton}, {ticket.provincia}</span>
-                  <span style={{ color: '#0053AF', display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 700 }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><MapPin size={13} color="var(--cru-accent-blue)" /> {ticket.canton}, {ticket.provincia}</span>
+                  <span style={{ color: 'var(--cru-accent-blue)', display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 700 }}>
                     Ver Trazabilidad <ArrowRight size={13} />
                   </span>
                 </div>

@@ -311,7 +311,7 @@ export default function CrearPostModal({
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            transition: 'all 0.2s ease'
+            transition: 'var(--transition-smooth)'
           }}
           className="hover:bg-slate-200"
         >
@@ -351,7 +351,7 @@ export default function CrearPostModal({
           >
             Nueva Publicación en el Foro Tico
           </h2>
-          <p style={{ fontSize: '0.85rem', color: '#94A3B8', margin: '0.25rem 0 0 0' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--cru-text-muted)', margin: '0.25rem 0 0 0' }}>
             Propón soluciones comunitarias, inicia debates cívicos y consulta a los vecinos de tu provincia o país.
           </p>
         </div>
@@ -411,7 +411,7 @@ export default function CrearPostModal({
                   gap: '0.4rem',
                   fontSize: '0.8rem',
                   fontWeight: 600,
-                  color: '#CBD5E1',
+                  color: 'var(--cru-border-strong)',
                   marginBottom: '0.4rem'
                 }}
               >
@@ -473,7 +473,7 @@ export default function CrearPostModal({
                   gap: '0.4rem',
                   fontSize: '0.8rem',
                   fontWeight: 600,
-                  color: '#CBD5E1',
+                  color: 'var(--cru-border-strong)',
                   marginBottom: '0.4rem'
                 }}
               >
@@ -516,7 +516,7 @@ export default function CrearPostModal({
               alignItems: 'center',
               gap: '0.5rem',
               fontSize: '0.75rem',
-              color: '#94A3B8'
+              color: 'var(--cru-text-muted)'
             }}
           >
             <Info className="w-4 h-4 text-sky-400 flex-shrink-0" />
@@ -537,13 +537,13 @@ export default function CrearPostModal({
                   gap: '0.4rem',
                   fontSize: '0.8rem',
                   fontWeight: 600,
-                  color: '#CBD5E1'
+                  color: 'var(--cru-border-strong)'
                 }}
               >
                 <FileText className="w-3.5 h-3.5 text-sky-400" />
                 <span>Título de la Iniciativa o Debate</span>
               </label>
-              <span style={{ fontSize: '0.725rem', color: '#64748B' }}>
+              <span style={{ fontSize: '0.725rem', color: 'var(--cru-text-muted)' }}>
                 {titulo.length}/120
               </span>
             </div>
@@ -575,12 +575,12 @@ export default function CrearPostModal({
                 style={{
                   fontSize: '0.8rem',
                   fontWeight: 600,
-                  color: '#CBD5E1'
+                  color: 'var(--cru-border-strong)'
                 }}
               >
                 Detalle y Argumentación Cívica
               </label>
-              <span style={{ fontSize: '0.725rem', color: '#64748B' }}>
+              <span style={{ fontSize: '0.725rem', color: 'var(--cru-text-muted)' }}>
                 {contenido.length}/1000
               </span>
             </div>
@@ -611,7 +611,7 @@ export default function CrearPostModal({
           {/* Fila: Datos del Autor (Autocompletados con Cédula Oficial) */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
             <div>
-              <label style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block', marginBottom: '0.25rem' }}>
+              <label style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', marginBottom: '0.25rem' }}>
                 Autor / Proponente
               </label>
               <input
@@ -624,7 +624,7 @@ export default function CrearPostModal({
                   borderRadius: '8px',
                   backgroundColor: 'rgba(15, 23, 42, 0.6)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#CBD5E1',
+                  color: 'var(--cru-border-strong)',
                   fontSize: '0.8rem',
                   outline: 'none',
                   boxSizing: 'border-box'
@@ -633,7 +633,7 @@ export default function CrearPostModal({
             </div>
 
             <div>
-              <label style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block', marginBottom: '0.25rem' }}>
+              <label style={{ fontSize: '0.75rem', color: 'var(--cru-text-muted)', display: 'block', marginBottom: '0.25rem' }}>
                 Identidad Cívica (Ley N° 8968)
               </label>
               <div
@@ -675,7 +675,7 @@ export default function CrearPostModal({
                   gap: '0.65rem',
                   cursor: 'pointer',
                   fontSize: '0.825rem',
-                  color: '#E2E8F0',
+                  color: 'var(--cru-border)',
                   lineHeight: 1.45
                 }}
               >
@@ -726,14 +726,14 @@ export default function CrearPostModal({
                   justifyContent: 'space-between',
                   gap: '0.5rem',
                   fontSize: '0.78rem',
-                  color: '#94A3B8'
+                  color: 'var(--cru-text-muted)'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>
                     Has aceptado las{' '}
-                    <strong style={{ color: '#E2E8F0' }}>Reglas de Convivencia Cívica</strong>.
+                    <strong style={{ color: 'var(--cru-border)' }}>Reglas de Convivencia Cívica</strong>.
                   </span>
                 </div>
                 <button
@@ -776,11 +776,11 @@ export default function CrearPostModal({
                 borderRadius: '10px',
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#CBD5E1',
+                color: 'var(--cru-border-strong)',
                 fontSize: '0.85rem',
                 fontWeight: 600,
                 cursor: 'pointer',
-                transition: 'all 0.2s ease'
+                transition: 'var(--transition-smooth)'
               }}
               className="hover:bg-white/10"
             >
@@ -803,7 +803,7 @@ export default function CrearPostModal({
                 fontWeight: 700,
                 cursor: enviando || exito ? 'not-allowed' : 'pointer',
                 boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)',
-                transition: 'all 0.2s ease'
+                transition: 'var(--transition-smooth)'
               }}
               className="hover:bg-sky-500 active:scale-95"
             >

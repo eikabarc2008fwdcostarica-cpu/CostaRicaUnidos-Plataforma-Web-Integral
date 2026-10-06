@@ -68,17 +68,17 @@ export const FormularioItinerarioIA: React.FC<FormularioItinerarioIAProps> = ({
     <div
       className="p-6 sm:p-8 space-y-6"
       style={{
-        background: '#FFFFFF',
+        background: 'var(--cru-surface-card)',
         borderRadius: '24px',
-        border: '1px solid #E2E8F0',
+        border: '1px solid var(--cru-border)',
         borderTop: '4px solid #0053AF',
         boxShadow: '0 4px 20px rgba(6, 42, 119, 0.08)'
       }}
     >
       <div className="flex items-center justify-between border-b border-slate-200 pb-4">
         <div>
-          <h3 className="text-xl font-bold flex items-center gap-2" style={{ color: '#062A77' }}>
-            <Sparkles size={22} style={{ color: '#0053AF' }} />
+          <h3 className="text-xl font-bold flex items-center gap-2" style={{ color: 'var(--cru-text)' }}>
+            <Sparkles size={22} style={{ color: 'var(--cru-accent-blue)' }} />
             Parámetros del Motor Generativo de IA
           </h3>
           <p className="text-xs text-slate-600 mt-0.5">
@@ -98,7 +98,7 @@ export const FormularioItinerarioIA: React.FC<FormularioItinerarioIAProps> = ({
               htmlFor="presupuesto-slider"
               className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5"
             >
-              <DollarSign size={16} style={{ color: '#0053AF' }} />
+              <DollarSign size={16} style={{ color: 'var(--cru-accent-blue)' }} />
               <span>Presupuesto por Persona (₡ Colones):</span>
             </label>
             <div className="flex items-baseline gap-2">
@@ -152,7 +152,7 @@ export const FormularioItinerarioIA: React.FC<FormularioItinerarioIAProps> = ({
         {/* Variable 2: Selector Segmentado de Vehículo */}
         <div className="space-y-2">
           <label className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-            <Car size={15} style={{ color: '#0053AF' }} />
+            <Car size={15} style={{ color: 'var(--cru-accent-blue)' }} />
             <span>Tipo de Vehículo / Movilidad:</span>
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -246,7 +246,7 @@ export const FormularioItinerarioIA: React.FC<FormularioItinerarioIAProps> = ({
               htmlFor="canton-destino"
               className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5"
             >
-              <MapPin size={15} style={{ color: '#0053AF' }} />
+              <MapPin size={15} style={{ color: 'var(--cru-accent-blue)' }} />
               <span>Cantón Destino:</span>
             </label>
             <select
