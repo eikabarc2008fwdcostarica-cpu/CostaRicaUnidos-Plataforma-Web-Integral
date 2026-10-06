@@ -181,49 +181,49 @@ export default function ParticipacionPage() {
 
         {/* Estadísticas Clave en Tiempo Real */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <CivicCard level={1} className="p-5 border-white/5 space-y-1">
-            <span className="text-xs text-slate-400 font-medium">Fondo Presupuestario</span>
-            <div className="text-2xl font-bold font-mono text-cyan-400">
+          <div className="p-5 bg-white border border-slate-200/90 rounded-2xl shadow-sm space-y-1">
+            <span className="text-xs text-slate-600 font-semibold uppercase tracking-wider">Fondo Presupuestario</span>
+            <div className="text-2xl font-bold font-mono text-[#062A77]">
               ₡ {(totalPresupuesto / 1000000).toFixed(0)} Millones
             </div>
-            <p className="text-[11px] text-slate-400">Fondos públicos participativos 2026</p>
-          </CivicCard>
+            <p className="text-[12px] text-slate-600">Fondos públicos participativos 2026</p>
+          </div>
 
-          <CivicCard level={1} className="p-5 border-white/5 space-y-1">
-            <span className="text-xs text-slate-400 font-medium">Votos Ciudadanos Emitidos</span>
-            <div className="text-2xl font-bold font-mono text-white flex items-center gap-2">
+          <div className="p-5 bg-white border border-slate-200/90 rounded-2xl shadow-sm space-y-1">
+            <span className="text-xs text-slate-600 font-semibold uppercase tracking-wider">Votos Ciudadanos Emitidos</span>
+            <div className="text-2xl font-bold font-mono text-[#062A77] flex items-center gap-2">
               <span>{totalVotos.toLocaleString()}</span>
-              <TrendingUp size={18} className="text-emerald-400" />
+              <TrendingUp size={18} className="text-[#059669]" />
             </div>
-            <p className="text-[11px] text-emerald-400 font-semibold">100% Verificados por Cédula</p>
-          </CivicCard>
+            <p className="text-[12px] text-[#059669] font-bold">100% Verificados por Cédula</p>
+          </div>
 
-          <CivicCard level={1} className="p-5 border-white/5 space-y-1">
-            <span className="text-xs text-slate-400 font-medium">Proyectos en Competencia</span>
-            <div className="text-2xl font-bold font-mono text-purple-400">
+          <div className="p-5 bg-white border border-slate-200/90 rounded-2xl shadow-sm space-y-1">
+            <span className="text-xs text-slate-600 font-semibold uppercase tracking-wider">Proyectos en Competencia</span>
+            <div className="text-2xl font-bold font-mono text-[#0053AF]">
               {proyectos.length} Distritales
             </div>
-            <p className="text-[11px] text-slate-400">Propuestos por ADIs y colectivos</p>
-          </CivicCard>
+            <p className="text-[12px] text-slate-600">Propuestos por ADIs y colectivos</p>
+          </div>
 
-          <CivicCard level={1} className="p-5 border-white/5 space-y-1">
-            <span className="text-xs text-slate-400 font-medium">Cierre del Sufragio</span>
-            <div className="text-2xl font-bold text-amber-400">
+          <div className="p-5 bg-white border border-slate-200/90 rounded-2xl shadow-sm space-y-1">
+            <span className="text-xs text-slate-600 font-semibold uppercase tracking-wider">Cierre del Sufragio</span>
+            <div className="text-2xl font-bold text-[#C22727]">
               15 Nov 2026
             </div>
-            <p className="text-[11px] text-slate-400">Ratificación en sesión municipal</p>
-          </CivicCard>
+            <p className="text-[12px] text-slate-600">Ratificación en sesión municipal</p>
+          </div>
         </div>
 
         {/* Gráficos Reactivos Interactivos */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Coins className="text-cyan-400" size={24} />
+              <h2 className="text-2xl font-bold text-[#062A77] flex items-center gap-2">
+                <Coins className="text-[#0053AF]" size={24} />
                 Métricas Electorales y Distribución Presupuestaria
               </h2>
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-slate-700 font-medium mt-1">
                 Visualización reactiva en tiempo real del escrutinio vecinal y asignación cantonal.
               </p>
             </div>
@@ -233,14 +233,14 @@ export default function ParticipacionPage() {
         </div>
 
         {/* Banco de Proyectos Vecinales (Tarjetas Interactivas de Votación) */}
-        <div className="space-y-6 pt-4 border-t border-white/10">
+        <div className="space-y-6 pt-4 border-t border-slate-200">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Vote className="text-cyan-400" size={24} />
+              <h2 className="text-2xl font-bold text-[#062A77] flex items-center gap-2">
+                <Vote className="text-[#0053AF]" size={24} />
                 Banco de Proyectos Vecinales en Votación
               </h2>
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-slate-700 font-medium mt-1">
                 Selecciona una iniciativa de tu interés y ejerce tu voto seguro con rol "Ciudadano Verificado Nivel 2".
               </p>
             </div>
@@ -252,61 +252,59 @@ export default function ParticipacionPage() {
               const porcentaje = porcentajeNumerico.toFixed(1);
 
               return (
-                <CivicCard
+                <div
                   key={proyecto.id}
-                  level={2}
-                  className="p-6 border-white/10 flex flex-col justify-between space-y-5 hover:border-cyan-400/40 transition-all duration-300"
-                  style={{ borderRadius: '20px' }}
+                  className="p-6 bg-white border-2 border-slate-200/90 rounded-2xl flex flex-col justify-between space-y-5 hover:border-[#0053AF]/40 hover:shadow-lg shadow-sm transition-all duration-300"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-cyan-300">
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 border border-blue-200 text-[#0053AF]">
                         {proyecto.categoria}
                       </span>
-                      <span className="text-xs font-mono text-slate-400">
-                        Distrito: <strong className="text-white">{proyecto.distrito}</strong>
+                      <span className="text-xs font-mono text-slate-700 font-semibold">
+                        Distrito: <strong className="text-[#062A77]">{proyecto.distrito}</strong>
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-bold text-white leading-snug">
+                    <h3 className="text-xl font-bold text-[#062A77] leading-snug">
                       {proyecto.titulo}
                     </h3>
 
-                    <p className="text-sm text-slate-300 leading-relaxed">
+                    <p className="text-sm text-slate-700 leading-relaxed font-normal">
                       {proyecto.descripcion}
                     </p>
 
-                    <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 text-xs text-slate-300 space-y-1">
+                    <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs text-slate-700 space-y-1.5">
                       <div>
-                        <strong>Proponente:</strong> {proyecto.proponenteComunal}
+                        <strong className="text-[#062A77]">Proponente:</strong> {proyecto.proponenteComunal}
                       </div>
                       <div>
-                        <strong>Beneficiarios:</strong> {proyecto.beneficiariosEstimados}
+                        <strong className="text-[#062A77]">Beneficiarios:</strong> {proyecto.beneficiariosEstimados}
                       </div>
                     </div>
                   </div>
 
                   {/* Estado de Votación, Barra de Progreso Reactiva y Botón */}
-                  <div className="space-y-4 pt-3 border-t border-white/5">
+                  <div className="space-y-4 pt-3 border-t border-slate-200">
                     {/* Barra de Progreso Porcentual Reactiva */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-mono text-cyan-400 font-bold text-base">
+                        <span className="font-mono text-[#062A77] font-extrabold text-lg">
                           {proyecto.presupuestoFormateado}
                         </span>
                         <div className="text-right">
-                          <span className="font-bold text-white text-sm">
+                          <span className="font-bold text-slate-800 text-sm">
                             {proyecto.votosAcumulados} votos
                           </span>{' '}
-                          <span className="text-cyan-300 font-mono text-xs font-semibold">
+                          <span className="text-[#0053AF] font-mono text-xs font-bold">
                             ({porcentaje}%)
                           </span>
                         </div>
                       </div>
 
-                      <div className="w-full bg-slate-900/90 rounded-full h-3 overflow-hidden border border-white/10 p-0.5">
+                      <div className="w-full bg-slate-200 rounded-full h-3.5 overflow-hidden border border-slate-300/60 p-0.5">
                         <div
-                          className="bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 h-full rounded-full transition-all duration-700 ease-out shadow-[0_0_12px_rgba(6,182,212,0.6)]"
+                          className="bg-gradient-to-r from-[#0053AF] via-[#062A77] to-[#C22727] h-full rounded-full transition-all duration-700 ease-out shadow-[0_0_8px_rgba(0,83,175,0.3)]"
                           style={{
                             width: `${Math.min(100, Math.max(3, porcentajeNumerico))}%`
                           }}
@@ -314,17 +312,16 @@ export default function ParticipacionPage() {
                       </div>
                     </div>
 
-                    <CivicButton
-                      variant="primary"
-                      fullWidth
-                      size="md"
+                    <button
+                      type="button"
                       onClick={() => abrirVotacionParaProyecto(proyecto)}
-                      leftIcon={<Vote size={16} />}
+                      className="w-full py-3 px-5 rounded-xl font-bold text-white bg-[#0053AF] hover:bg-[#062A77] active:scale-[0.99] shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      Votar por este Proyecto
-                    </CivicButton>
+                      <Vote size={18} />
+                      <span>Votar por este Proyecto</span>
+                    </button>
                   </div>
-                </CivicCard>
+                </div>
               );
             })}
           </div>

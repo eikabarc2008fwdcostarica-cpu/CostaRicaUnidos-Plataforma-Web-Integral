@@ -126,8 +126,8 @@ export default function SeguridadEmergencias() {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: 'var(--theme-bg, #00040D)',
-        color: 'var(--theme-text-primary, #FFFFFF)',
+        backgroundColor: 'var(--theme-bg, #F8FAFC)',
+        color: 'var(--theme-text-primary, #131313)',
         display: 'flex',
         flexDirection: 'column',
         fontFamily: 'var(--font-body, system-ui, sans-serif)'
@@ -176,14 +176,12 @@ export default function SeguridadEmergencias() {
             ========================================================================== */}
         <section
           style={{
-            backgroundColor: 'rgba(0, 15, 45, 0.72)',
-            backdropFilter: 'blur(28px)',
-            WebkitBackdropFilter: 'blur(28px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
+            background: 'linear-gradient(135deg, #062A77 0%, #01004E 100%)',
+            border: '2px solid rgba(6, 42, 119, 0.2)',
             borderRadius: '24px',
             padding: 'clamp(1.25rem, 4vw, 2.5rem)',
             marginBottom: '3rem',
-            boxShadow: '0 20px 60px rgba(0, 4, 13, 0.8), 0 0 35px rgba(0, 20, 137, 0.35)',
+            boxShadow: '0 15px 35px rgba(6, 42, 119, 0.16)',
             position: 'relative',
             overflow: 'hidden'
           }}
@@ -306,7 +304,7 @@ export default function SeguridadEmergencias() {
               style={{
                 fontSize: '1.75rem',
                 fontWeight: 900,
-                color: '#FFFFFF',
+                color: 'var(--cru-text, #062A77)',
                 margin: 0,
                 fontFamily: 'var(--font-headline, sans-serif)',
                 display: 'flex',
@@ -314,10 +312,10 @@ export default function SeguridadEmergencias() {
                 gap: '0.65rem'
               }}
             >
-              <PhoneCall size={24} color="#FF6B6B" />
+              <PhoneCall size={24} color="#C22727" />
               <span>Botonera Táctil de Auxilio y Despacho Inmediato</span>
             </h2>
-            <p style={{ fontSize: '0.92rem', color: '#94A3B8', marginTop: '0.4rem', margin: '0.4rem 0 0 0' }}>
+            <p style={{ fontSize: '0.92rem', color: 'var(--cru-text-secondary, #334155)', marginTop: '0.4rem', margin: '0.4rem 0 0 0', fontWeight: 500 }}>
               Toque cualquier botón de la lista para establecer enlace telefónico instantáneo con los cuerpos de rescate del Estado.
             </p>
           </div>
@@ -336,26 +334,27 @@ export default function SeguridadEmergencias() {
                 <div
                   key={ent.id}
                   style={{
-                    backgroundColor: 'rgba(0, 15, 45, 0.65)',
-                    backdropFilter: 'blur(24px)',
-                    WebkitBackdropFilter: 'blur(24px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #E2E8F0',
+                    borderTop: '4px solid #C22727',
                     borderRadius: '18px',
                     padding: 'clamp(1rem, 3vw, 1.5rem)',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    boxShadow: '0 10px 30px rgba(0, 4, 13, 0.75)',
+                    boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))',
                     transition: 'all 0.25s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.45)';
-                    e.currentTarget.style.backgroundColor = 'rgba(0, 20, 60, 0.85)';
+                    e.currentTarget.style.borderColor = 'rgba(6, 42, 119, 0.3)';
+                    e.currentTarget.style.borderTopColor = '#C22727';
+                    e.currentTarget.style.boxShadow = '0 10px 25px -3px rgba(6, 42, 119, 0.12)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-                    e.currentTarget.style.backgroundColor = 'rgba(0, 15, 45, 0.65)';
+                    e.currentTarget.style.borderColor = '#E2E8F0';
+                    e.currentTarget.style.borderTopColor = '#C22727';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))';
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
@@ -367,28 +366,28 @@ export default function SeguridadEmergencias() {
                             width: '42px',
                             height: '42px',
                             borderRadius: '12px',
-                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                            border: '1px solid rgba(255, 255, 255, 0.16)',
+                            backgroundColor: 'rgba(6, 42, 119, 0.08)',
+                            border: '1.5px solid rgba(6, 42, 119, 0.15)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0
                           }}
                         >
-                          <Icono size={20} color="#FFFFFF" />
+                          <Icono size={20} color="#062A77" />
                         </div>
                         <div>
-                          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#79a6ff', textTransform: 'uppercase', display: 'block' }}>
+                          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#C22727', textTransform: 'uppercase', display: 'block' }}>
                             {ent.prioridad}
                           </span>
-                          <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                          <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#062A77', margin: 0 }}>
                             {ent.titulo}
                           </h3>
                         </div>
                       </div>
                     </div>
 
-                    <p style={{ fontSize: '0.86rem', color: '#94A3B8', lineHeight: 1.55, margin: '0 0 1.25rem 0' }}>
+                    <p style={{ fontSize: '0.86rem', color: '#334155', lineHeight: 1.55, margin: '0 0 1.25rem 0', fontWeight: 500 }}>
                       {ent.descripcion}
                     </p>
                   </div>
@@ -400,8 +399,8 @@ export default function SeguridadEmergencias() {
                     className="boton-tactil-auxilio"
                     style={{
                       textDecoration: 'none',
-                      backgroundColor: 'rgba(0, 20, 137, 0.35)',
-                      border: '1px solid rgba(121, 166, 255, 0.4)',
+                      backgroundColor: '#0053AF',
+                      border: 'none',
                       color: '#FFFFFF',
                       minHeight: '58px',
                       padding: '0.75rem 1rem',
@@ -411,21 +410,18 @@ export default function SeguridadEmergencias() {
                       justifyContent: 'space-between',
                       gap: '0.75rem',
                       transition: 'all 0.2s ease',
-                      boxSizing: 'border-box'
+                      boxSizing: 'border-box',
+                      boxShadow: '0 4px 14px rgba(0, 83, 175, 0.25)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#002B7F';
-                      e.currentTarget.style.borderColor = '#79a6ff';
-                      e.currentTarget.style.boxShadow = '0 0 16px rgba(0, 20, 137, 0.6)';
+                      e.currentTarget.style.backgroundColor = '#062A77';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.35)';
-                      e.currentTarget.style.borderColor = 'rgba(121, 166, 255, 0.4)';
-                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.backgroundColor = '#0053AF';
                     }}
                   >
                     <div>
-                      <span style={{ fontSize: '0.72rem', color: '#79a6ff', fontWeight: 700, textTransform: 'uppercase', display: 'block' }}>
+                      <span style={{ fontSize: '0.72rem', color: '#BFDBFE', fontWeight: 700, textTransform: 'uppercase', display: 'block' }}>
                         Línea Directa Oficial:
                       </span>
                       <strong style={{ fontSize: '1.25rem', color: '#FFFFFF', fontFamily: 'monospace', letterSpacing: '0.04em' }}>
@@ -435,7 +431,7 @@ export default function SeguridadEmergencias() {
 
                     <div
                       style={{
-                        backgroundColor: '#DA291C',
+                        backgroundColor: '#C22727',
                         color: '#FFFFFF',
                         padding: '0.5rem 0.95rem',
                         borderRadius: '9999px',
@@ -479,10 +475,10 @@ export default function SeguridadEmergencias() {
                 gap: '0.65rem'
               }}
             >
-              <Home size={24} color="#34D399" />
+              <Home size={24} color="#0053AF" />
               <span>Red de Albergues Temporales Municipales</span>
             </h2>
-            <p style={{ fontSize: '0.92rem', color: '#94A3B8', marginTop: '0.4rem', margin: '0.4rem 0 0 0' }}>
+            <p style={{ fontSize: '0.92rem', color: 'var(--cru-text-secondary, #334155)', marginTop: '0.4rem', margin: '0.4rem 0 0 0', fontWeight: 500 }}>
               Catálogo oficial de refugios comunales habilitados por la CNE y los gobiernos locales con trazabilidad de capacidad y servicios sanitarios.
             </p>
           </div>
@@ -490,10 +486,8 @@ export default function SeguridadEmergencias() {
           {/* Filtros Rápidos de Albergues */}
           <div
             style={{
-              backgroundColor: 'rgba(0, 15, 45, 0.65)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              backgroundColor: '#FFFFFF',
+              border: '1px solid #E2E8F0',
               borderRadius: '16px',
               padding: '1.15rem 1.5rem',
               marginBottom: '1.5rem',
@@ -501,7 +495,8 @@ export default function SeguridadEmergencias() {
               alignItems: 'center',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
-              gap: '1rem'
+              gap: '1rem',
+              boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))'
             }}
           >
             <input
@@ -513,12 +508,13 @@ export default function SeguridadEmergencias() {
               style={{
                 flex: '1 1 280px',
                 padding: '0.65rem 1rem',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.16)',
+                backgroundColor: '#F8FAFC',
+                border: '1px solid #CBD5E1',
                 borderRadius: '10px',
-                color: '#FFFFFF',
+                color: '#0F172A',
                 fontSize: '0.88rem',
-                outline: 'none'
+                outline: 'none',
+                fontWeight: 500
               }}
             />
 
@@ -528,24 +524,24 @@ export default function SeguridadEmergencias() {
                 onChange={(e) => setFiltroProvincia(e.target.value)}
                 aria-label="Filtrar albergues por provincia"
                 style={{
-                  backgroundColor: '#000814',
-                  color: '#FFFFFF',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  backgroundColor: '#F8FAFC',
+                  color: '#0F172A',
+                  border: '1px solid #CBD5E1',
                   borderRadius: '10px',
-                  padding: '0.45rem 0.8rem',
+                  padding: '0.55rem 0.85rem',
                   outline: 'none',
-                  fontSize: '0.85rem'
+                  fontSize: '0.85rem',
+                  fontWeight: 600
                 }}
-                className="focus:border-red-500 font-bold"
               >
-                <option value="todas" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Todas las Provincias</option>
-                <option value="San José" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>San José</option>
-                <option value="Alajuela" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Alajuela</option>
-                <option value="Cartago" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Cartago</option>
-                <option value="Heredia" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Heredia</option>
-                <option value="Guanacaste" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Guanacaste</option>
-                <option value="Puntarenas" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Puntarenas</option>
-                <option value="Limón" style={{ backgroundColor: '#000814', color: '#FFFFFF' }}>Limón</option>
+                <option value="todas">Todas las Provincias</option>
+                <option value="San José">San José</option>
+                <option value="Alajuela">Alajuela</option>
+                <option value="Cartago">Cartago</option>
+                <option value="Heredia">Heredia</option>
+                <option value="Guanacaste">Guanacaste</option>
+                <option value="Puntarenas">Puntarenas</option>
+                <option value="Limón">Limón</option>
               </select>
 
               <select
@@ -553,26 +549,26 @@ export default function SeguridadEmergencias() {
                 onChange={(e) => setFiltroEstado(e.target.value)}
                 aria-label="Filtrar albergues por estado"
                 style={{
-                  backgroundColor: '#000814',
-                  color: '#FFFFFF',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  backgroundColor: '#F8FAFC',
+                  color: '#0F172A',
+                  border: '1px solid #CBD5E1',
                   borderRadius: '10px',
-                  padding: '0.45rem 0.8rem',
+                  padding: '0.55rem 0.85rem',
                   outline: 'none',
-                  fontSize: '0.85rem'
+                  fontSize: '0.85rem',
+                  fontWeight: 600
                 }}
-                className="focus:border-red-500 font-bold"
               >
-                <option value="todos" style={{ backgroundColor: '#000814', color: '#FFFFFF', fontWeight: 'bold' }}>
+                <option value="todos">
                   ● Todos los Estados
                 </option>
-                <option value="activo" style={{ backgroundColor: '#000814', color: '#10B981', fontWeight: 'bold' }}>
+                <option value="activo">
                   ● Habilitado (Operativo y Activo)
                 </option>
-                <option value="preparado" style={{ backgroundColor: '#000814', color: '#F59E0B', fontWeight: 'bold' }}>
+                <option value="preparado">
                   ● Ocupación Alta / Preparación
                 </option>
-                <option value="en_reserva" style={{ backgroundColor: '#000814', color: '#3B82F6', fontWeight: 'bold' }}>
+                <option value="en_reserva">
                   ● En Reserva
                 </option>
               </select>
@@ -585,11 +581,9 @@ export default function SeguridadEmergencias() {
             style={{
               overflowX: 'auto',
               borderRadius: '18px',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              backgroundColor: 'rgba(0, 15, 45, 0.65)',
-              backdropFilter: 'blur(24px)',
-              WebkitBackdropFilter: 'blur(24px)',
-              boxShadow: '0 12px 40px rgba(0, 4, 13, 0.7)',
+              border: '1px solid #E2E8F0',
+              backgroundColor: '#FFFFFF',
+              boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))',
               width: '100%',
               WebkitOverflowScrolling: 'touch'
             }}
@@ -601,32 +595,32 @@ export default function SeguridadEmergencias() {
                 borderCollapse: 'collapse',
                 textAlign: 'left',
                 fontSize: '0.88rem',
-                color: '#FFFFFF'
+                color: '#0F172A'
               }}
             >
               <thead>
                 <tr
                   style={{
-                    backgroundColor: 'rgba(0, 20, 137, 0.35)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.15)'
+                    backgroundColor: '#F8FAFC',
+                    borderBottom: '1.5px solid #E2E8F0'
                   }}
                 >
-                  <th style={{ padding: '1rem 1.25rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '1rem 1.25rem', color: '#062A77', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
                     Albergue & Tipología
                   </th>
-                  <th style={{ padding: '1rem 1.25rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '1rem 1.25rem', color: '#062A77', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
                     Cantón / Distrito
                   </th>
-                  <th style={{ padding: '1rem 1rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '1rem 1rem', color: '#062A77', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
                     Aforo & Ocupación
                   </th>
-                  <th style={{ padding: '1rem 1.25rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '1rem 1.25rem', color: '#062A77', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
                     Dotación Sanitaria y Servicios
                   </th>
-                  <th style={{ padding: '1rem 1rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '1rem 1rem', color: '#062A77', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase' }}>
                     Disponibilidad
                   </th>
-                  <th style={{ padding: '1rem 1.25rem', color: '#CBD5E1', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                  <th style={{ padding: '1rem 1.25rem', color: '#062A77', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', textAlign: 'right' }}>
                     Navegación GPS
                   </th>
                 </tr>
@@ -641,34 +635,34 @@ export default function SeguridadEmergencias() {
                     <tr
                       key={alb.id}
                       style={{
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                        backgroundColor: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.015)' : 'transparent',
+                        borderBottom: '1px solid #E2E8F0',
+                        backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAFCFF',
                         transition: 'all 0.2s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.25)';
+                        e.currentTarget.style.backgroundColor = '#EFF6FF';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = idx % 2 === 0 ? 'rgba(255, 255, 255, 0.015)' : 'transparent';
+                        e.currentTarget.style.backgroundColor = idx % 2 === 0 ? '#FFFFFF' : '#FAFCFF';
                       }}
                     >
                       {/* Nombre y Tipo */}
                       <td style={{ padding: '1.15rem 1.25rem', verticalAlign: 'top' }}>
                         <div>
-                          <strong style={{ color: '#FFFFFF', fontSize: '0.92rem', display: 'block' }}>
+                          <strong style={{ color: '#062A77', fontSize: '0.92rem', display: 'block', fontWeight: 800 }}>
                             {alb.nombre}
                           </strong>
-                          <span style={{ fontSize: '0.76rem', color: '#94A3B8' }}>{alb.tipo}</span>
+                          <span style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: 600 }}>{alb.tipo}</span>
                         </div>
                       </td>
 
                       {/* Cantón y Distrito */}
                       <td style={{ padding: '1.15rem 1.25rem', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                          <span style={{ color: '#FFFFFF', fontWeight: 700 }}>
+                          <span style={{ color: '#0F172A', fontWeight: 700 }}>
                             {alb.canton}, {alb.provincia}
                           </span>
-                          <span style={{ fontSize: '0.76rem', color: '#79a6ff' }}>
+                          <span style={{ fontSize: '0.76rem', color: '#0053AF', fontWeight: 600 }}>
                             Distrito {alb.distrito}
                           </span>
                         </div>
@@ -677,20 +671,20 @@ export default function SeguridadEmergencias() {
                       {/* Aforo y Ocupación */}
                       <td style={{ padding: '1.15rem 1rem', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                         <div>
-                          <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF' }}>
+                          <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0F172A' }}>
                             {alb.ocupacionActual} / {alb.aforoMaximo} personas
                           </span>
-                          <div style={{ width: '110px', height: '6px', backgroundColor: 'rgba(255, 255, 255, 0.1)', borderRadius: '9999px', marginTop: '0.4rem', overflow: 'hidden' }}>
+                          <div style={{ width: '110px', height: '7px', backgroundColor: '#E2E8F0', borderRadius: '9999px', marginTop: '0.4rem', overflow: 'hidden' }}>
                             <div
                               style={{
                                 width: `${porcentaje}%`,
                                 height: '100%',
-                                backgroundColor: porcentaje > 80 ? '#DA291C' : porcentaje > 50 ? '#FBBF24' : '#34D399',
+                                backgroundColor: porcentaje > 80 ? '#C22727' : porcentaje > 50 ? '#F59E0B' : '#0053AF',
                                 borderRadius: '9999px'
                               }}
                             />
                           </div>
-                          <span style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.25rem', display: 'block' }}>
+                          <span style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', display: 'block', fontWeight: 600 }}>
                             {porcentaje}% ocupado
                           </span>
                         </div>
@@ -703,12 +697,13 @@ export default function SeguridadEmergencias() {
                             <span
                               key={sIdx}
                               style={{
-                                fontSize: '0.7rem',
+                                fontSize: '0.72rem',
                                 padding: '0.2rem 0.55rem',
                                 borderRadius: '6px',
-                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                                color: '#CBD5E1',
-                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                                backgroundColor: '#F1F5F9',
+                                color: '#334155',
+                                border: '1px solid #CBD5E1',
+                                fontWeight: 500
                               }}
                             >
                               {s}
@@ -728,22 +723,22 @@ export default function SeguridadEmergencias() {
                             textTransform: 'uppercase',
                             backgroundColor:
                               alb.estado === 'activo'
-                                ? 'rgba(52, 211, 153, 0.15)'
+                                ? '#ECFDF5'
                                 : alb.estado === 'preparado'
-                                ? 'rgba(251, 191, 36, 0.15)'
-                                : 'rgba(148, 163, 184, 0.15)',
+                                ? '#FFFBEB'
+                                : '#F1F5F9',
                             color:
                               alb.estado === 'activo'
-                                ? '#34D399'
+                                ? '#047857'
                                 : alb.estado === 'preparado'
-                                ? '#FBBF24'
-                                : '#CBD5E1',
+                                ? '#B45309'
+                                : '#475569',
                             border: `1px solid ${
                               alb.estado === 'activo'
-                                ? 'rgba(52, 211, 153, 0.35)'
+                                ? '#A7F3D0'
                                 : alb.estado === 'preparado'
-                                ? 'rgba(251, 191, 36, 0.35)'
-                                : 'rgba(148, 163, 184, 0.35)'
+                                ? '#FDE68A'
+                                : '#CBD5E1'
                             }`
                           }}
                         >
@@ -760,10 +755,10 @@ export default function SeguridadEmergencias() {
                             rel="noopener noreferrer"
                             style={{
                               textDecoration: 'none',
-                              backgroundColor: 'rgba(0, 20, 137, 0.35)',
-                              border: '1px solid rgba(121, 166, 255, 0.35)',
-                              color: '#FFFFFF',
-                              padding: '0.42rem 0.8rem',
+                              backgroundColor: '#EFF6FF',
+                              border: '1px solid #BFDBFE',
+                              color: '#0053AF',
+                              padding: '0.45rem 0.85rem',
                               borderRadius: '8px',
                               fontSize: '0.78rem',
                               fontWeight: 700,
@@ -773,13 +768,13 @@ export default function SeguridadEmergencias() {
                               transition: 'all 0.15s ease'
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = '#002B7F';
+                              e.currentTarget.style.backgroundColor = '#DBEAFE';
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = 'rgba(0, 20, 137, 0.35)';
+                              e.currentTarget.style.backgroundColor = '#EFF6FF';
                             }}
                           >
-                            <Navigation size={13} color="#79a6ff" />
+                            <Navigation size={13} color="#0053AF" />
                             <span>Waze</span>
                           </a>
 
@@ -789,10 +784,10 @@ export default function SeguridadEmergencias() {
                             rel="noopener noreferrer"
                             style={{
                               textDecoration: 'none',
-                              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                              border: '1px solid rgba(255, 255, 255, 0.14)',
-                              color: '#CBD5E1',
-                              padding: '0.42rem 0.8rem',
+                              backgroundColor: '#FEF2F2',
+                              border: '1px solid #FECACA',
+                              color: '#C22727',
+                              padding: '0.45rem 0.85rem',
                               borderRadius: '8px',
                               fontSize: '0.78rem',
                               fontWeight: 700,
@@ -802,15 +797,13 @@ export default function SeguridadEmergencias() {
                               transition: 'all 0.15s ease'
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
-                              e.currentTarget.style.color = '#FFFFFF';
+                              e.currentTarget.style.backgroundColor = '#FEE2E2';
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                              e.currentTarget.style.color = '#CBD5E1';
+                              e.currentTarget.style.backgroundColor = '#FEF2F2';
                             }}
                           >
-                            <MapPin size={13} color="#34D399" />
+                            <MapPin size={13} color="#C22727" />
                             <span>Maps</span>
                           </a>
                         </div>

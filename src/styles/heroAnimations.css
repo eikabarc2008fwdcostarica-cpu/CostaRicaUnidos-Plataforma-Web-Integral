@@ -1,0 +1,343 @@
+/**
+ * ============================================================================
+ * COSTA RICA UNIDOS — HERO SCENIC ANIMATIONS (60 FPS)
+ * Animaciones CSS puras de alto rendimiento con transform y opacity
+ * 
+ * ELEMENTOS CON ANIMACIÓN BIOMECÁNICA Y NATURAL:
+ *   1. Pareja de dos lapas rojas (Ara macao) volando en tándem
+ *      - El movimiento se origina íntegramente en el cuerpo de las aves:
+ *        elevación rítmica del torso, aleteo anclado al hombro y ondulación de cola.
+ *   2. Vaivén de brisa en ramas y plantas perimetrales (Heliconias y rama superior)
+ *   3. Desplazamiento horizontal de nubes cúmulos
+ *
+ * ELEMENTOS TOTALMENTE ESTÁTICOS:
+ *   - Volcán Arenal 100% estático (SIN humo / SIN fumarola para máxima pureza visual)
+ *   - Sol radiante con halos dorados
+ *   - Tucán pico iris posado en su percha
+ *   - Lago Arenal y cordillera de fondo
+ * ============================================================================
+ */
+
+/* ============================================================================
+   1. PAREJA DE DOS LAPAS ROJAS (ARA MACAO) — VUELO BIOMECÁNICO REALISTA
+   El movimiento nace de la musculatura y cuerpo de las aves, nunca en el aire.
+   ============================================================================ */
+
+/* 1A. Desplazamiento panorámico en tándem a través del cielo del Hero */
+@keyframes macawPairFlightAcross {
+  0% {
+    transform: translate(-220px, 42px);
+  }
+  20% {
+    transform: translate(240px, 20px);
+  }
+  45% {
+    transform: translate(680px, 46px);
+  }
+  70% {
+    transform: translate(1100px, 22px);
+  }
+  90% {
+    transform: translate(1420px, 38px);
+  }
+  100% {
+    transform: translate(1720px, 32px);
+  }
+}
+
+.animate-macaw-pair-flight {
+  animation: macawPairFlightAcross 24s cubic-bezier(0.35, 0.05, 0.65, 0.95) infinite;
+  will-change: transform;
+}
+
+/* 1B. Elevación e impulso del torso (Body Heave / Bobbing):
+       El golpe de ala hacia abajo levanta el pecho y lo inclina hacia arriba;
+       la recuperación permite un ligero descenso y planeo natural. */
+@keyframes macawBodyHeave {
+  0%, 100% {
+    transform: translateY(1.2px) rotate(1deg);
+  }
+  35% {
+    /* Golpe descendente: máxima sustentación hacia arriba */
+    transform: translateY(-5px) rotate(-3.5deg);
+  }
+  70% {
+    /* Recuperación aerodinámica: descenso suave */
+    transform: translateY(2.8px) rotate(1.8deg);
+  }
+}
+
+.macaw-body-lead {
+  animation: macawBodyHeave 0.42s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.macaw-body-companion {
+  animation: macawBodyHeave 0.42s ease-in-out infinite -0.11s;
+  transform-box: fill-box;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* 1C. Aleteo del ala cercana (fijada anatómicamente a la articulación del hombro) */
+@keyframes macawNearWingStroke {
+  0%, 100% {
+    /* Alas en posición elevada (upstroke) */
+    transform: rotate(-38deg);
+  }
+  35% {
+    /* Golpe de fuerza descendente (downstroke) */
+    transform: rotate(26deg);
+  }
+  70% {
+    /* Fase de recuperación */
+    transform: rotate(-7deg);
+  }
+}
+
+.macaw-wing-near-lead {
+  animation: macawNearWingStroke 0.42s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 12% 88%;
+  will-change: transform;
+}
+
+.macaw-wing-near-companion {
+  animation: macawNearWingStroke 0.42s ease-in-out infinite -0.11s;
+  transform-box: fill-box;
+  transform-origin: 12% 88%;
+  will-change: transform;
+}
+
+/* 1D. Aleteo del ala lejana (vista detrás del cuerpo) */
+@keyframes macawFarWingStroke {
+  0%, 100% {
+    transform: rotate(-30deg);
+  }
+  35% {
+    transform: rotate(20deg);
+  }
+  70% {
+    transform: rotate(-5deg);
+  }
+}
+
+.macaw-wing-far-lead {
+  animation: macawFarWingStroke 0.42s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 15% 85%;
+  will-change: transform;
+}
+
+.macaw-wing-far-companion {
+  animation: macawFarWingStroke 0.42s ease-in-out infinite -0.11s;
+  transform-box: fill-box;
+  transform-origin: 15% 85%;
+  will-change: transform;
+}
+
+/* 1E. Ondulación aerodinámica de la cola en respuesta al impulso del cuerpo */
+@keyframes macawTailFlutter {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  38% {
+    transform: rotate(4.5deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+}
+
+.macaw-tail-lead {
+  animation: macawTailFlutter 0.42s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 90% 30%;
+  will-change: transform;
+}
+
+.macaw-tail-companion {
+  animation: macawTailFlutter 0.42s ease-in-out infinite -0.11s;
+  transform-box: fill-box;
+  transform-origin: 90% 30%;
+  will-change: transform;
+}
+
+/* ============================================================================
+   2. VAIVÉN DE RAMAS Y PLANTAS PERIMETRALES (BRISA SUAVE)
+   ============================================================================ */
+/* Rama superior izquierda colgante */
+@keyframes branchTopSway {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(1deg);
+  }
+  100% {
+    transform: rotate(-1deg);
+  }
+}
+
+.sway-top-branch {
+  animation: branchTopSway 6.5s ease-in-out infinite alternate;
+  transform-origin: 0% 0%;
+  will-change: transform;
+}
+
+/* Heliconias y follaje inferior izquierdo */
+@keyframes floraSwayLeft {
+  0% {
+    transform: rotate(-1.5deg);
+  }
+  50% {
+    transform: rotate(1.2deg);
+  }
+  100% {
+    transform: rotate(-1.5deg);
+  }
+}
+
+.sway-flora-left {
+  animation: floraSwayLeft 5s ease-in-out infinite alternate;
+  transform-origin: bottom left;
+  will-change: transform;
+}
+
+.sway-heliconia-1 {
+  animation: floraSwayLeft 4.6s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+.sway-heliconia-2 {
+  animation: floraSwayLeft 5.2s ease-in-out infinite alternate 0.9s;
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+.sway-heliconia-3 {
+  animation: floraSwayLeft 4.9s ease-in-out infinite alternate 1.7s;
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+/* Follaje inferior derecho */
+@keyframes floraSwayRight {
+  0% {
+    transform: rotate(1.4deg);
+  }
+  50% {
+    transform: rotate(-1.1deg);
+  }
+  100% {
+    transform: rotate(1.4deg);
+  }
+}
+
+.sway-flora-right {
+  animation: floraSwayRight 5.6s ease-in-out infinite alternate 1.4s;
+  transform-origin: bottom right;
+  will-change: transform;
+}
+
+.sway-heliconia-right {
+  animation: floraSwayRight 5.4s ease-in-out infinite alternate 1.1s;
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+/* ============================================================================
+   3. DESPLAZAMIENTO SUAVE DE NUBES (CÚMULOS FLOTANTES HORIZONTALES)
+   ============================================================================ */
+@keyframes cloudDriftSlow {
+  0% {
+    transform: translateX(-240px);
+  }
+  100% {
+    transform: translateX(1520px);
+  }
+}
+
+@keyframes cloudDriftMedium {
+  0% {
+    transform: translateX(-220px);
+  }
+  100% {
+    transform: translateX(1520px);
+  }
+}
+
+.cloud-drift-1 {
+  animation: cloudDriftSlow 50s linear infinite;
+  will-change: transform;
+}
+
+.cloud-drift-2 {
+  animation: cloudDriftMedium 38s linear infinite -16s;
+  will-change: transform;
+}
+
+.cloud-drift-3 {
+  animation: cloudDriftSlow 62s linear infinite -32s;
+  will-change: transform;
+}
+
+/* ============================================================================
+   4. MODO NOCHE (ESTRELLAS TITILANTES)
+   ============================================================================ */
+@keyframes starTwinkleGlow {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.star-twinkle-fast {
+  animation: starTwinkleGlow 2.4s ease-in-out infinite;
+}
+
+.star-twinkle-mid {
+  animation: starTwinkleGlow 3.2s ease-in-out infinite 0.8s;
+}
+
+.star-twinkle-slow {
+  animation: starTwinkleGlow 4.2s ease-in-out infinite 1.6s;
+}
+
+/* ============================================================================
+   5. ACCESIBILIDAD: PREFERS-REDUCED-MOTION (CONGELA TODAS LAS ANIMACIONES)
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .sway-top-branch,
+  .sway-flora-left,
+  .sway-flora-right,
+  .sway-heliconia-1,
+  .sway-heliconia-2,
+  .sway-heliconia-3,
+  .sway-heliconia-right,
+  .cloud-drift-1,
+  .cloud-drift-2,
+  .cloud-drift-3,
+  .animate-macaw-pair-flight,
+  .macaw-body-lead,
+  .macaw-body-companion,
+  .macaw-wing-near-lead,
+  .macaw-wing-near-companion,
+  .macaw-wing-far-lead,
+  .macaw-wing-far-companion,
+  .macaw-tail-lead,
+  .macaw-tail-companion,
+  .star-twinkle-fast,
+  .star-twinkle-mid,
+  .star-twinkle-slow {
+    animation: none !important;
+    transform: none !important;
+  }
+}

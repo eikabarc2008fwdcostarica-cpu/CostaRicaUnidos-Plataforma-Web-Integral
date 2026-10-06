@@ -44,19 +44,28 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
   return (
     <div style={{ animation: 'fadeIn 0.3s ease' }}>
       <div style={{ marginBottom: '1.75rem', textAlign: 'center' }}>
-        <span className="telemetry-badge" style={{ backgroundColor: 'rgba(0, 43, 127, 0.4)' }}>
+        <span
+          className="telemetry-badge"
+          style={{
+            backgroundColor: 'rgba(6, 42, 119, 0.08)',
+            border: '1px solid rgba(6, 42, 119, 0.22)',
+            color: '#062A77',
+            fontWeight: 800
+          }}
+        >
           PASO 1 DE 4 &bull; TIPOLOGÍA DEL DAÑO
         </span>
         <h3 style={{
           fontSize: '1.5rem',
           fontWeight: 800,
-          color: '#FFFFFF',
+          color: '#062A77',
           marginTop: '0.6rem',
-          marginBottom: '0.35rem'
+          marginBottom: '0.35rem',
+          fontFamily: 'var(--font-headline, "Plus Jakarta Sans", serif)'
         }}>
           Seleccione la Naturaleza de la Avería o Incidencia
         </h3>
-        <p style={{ color: '#CBD5E1', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto' }}>
+        <p style={{ color: '#334155', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', lineHeight: 1.55 }}>
           La categorización precisa permite al sistema dirigir el ticket de forma inmediata a la cuadrilla técnica municipal o entidad estatal correspondiente.
         </p>
       </div>
@@ -83,20 +92,19 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                   onSelectType(tipo.id);
                 }
               }}
-              className="civic-glass-card"
               style={{
                 padding: '1.5rem',
                 cursor: 'pointer',
                 borderRadius: '16px',
                 border: isSelected
-                  ? '2px solid #DA291C'
-                  : '1px solid rgba(255, 255, 255, 0.16)',
+                  ? '2px solid #C22727'
+                  : '1.5px solid rgba(6, 42, 119, 0.14)',
                 backgroundColor: isSelected
-                  ? 'rgba(218, 41, 28, 0.12)'
-                  : 'rgba(0, 15, 45, 0.55)',
+                  ? 'rgba(194, 39, 39, 0.04)'
+                  : '#FFFFFF',
                 boxShadow: isSelected
-                  ? '0 0 25px rgba(218, 41, 28, 0.45)'
-                  : '0 8px 25px rgba(0, 4, 13, 0.5)',
+                  ? '0 8px 24px rgba(194, 39, 39, 0.18)'
+                  : '0 4px 18px rgba(6, 42, 119, 0.05)',
                 transform: isSelected ? 'translateY(-2px)' : 'none',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 display: 'flex',
@@ -105,7 +113,7 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                 position: 'relative'
               }}
             >
-              {/* Badge de Selección */}
+              {/* Badge de Selección en Rojo Costarricense */}
               {isSelected && (
                 <div style={{
                   position: 'absolute',
@@ -114,14 +122,14 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                   width: '24px',
                   height: '24px',
                   borderRadius: '50%',
-                  backgroundColor: '#DA291C',
+                  backgroundColor: '#C22727',
                   color: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '0.85rem',
                   fontWeight: 900,
-                  boxShadow: '0 0 10px rgba(218, 41, 28, 0.8)'
+                  boxShadow: '0 0 10px rgba(194, 39, 39, 0.6)'
                 }}>
                   <Check size={14} strokeWidth={2.5} />
                 </div>
@@ -132,20 +140,21 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                   width: '52px',
                   height: '52px',
                   borderRadius: '14px',
-                  backgroundColor: isSelected ? 'rgba(218, 41, 28, 0.25)' : 'rgba(0, 20, 137, 0.35)',
-                  border: `1px solid ${isSelected ? 'rgba(218, 41, 28, 0.5)' : 'rgba(255, 255, 255, 0.18)'}`,
+                  backgroundColor: isSelected ? '#C22727' : 'rgba(0, 83, 175, 0.08)',
+                  border: `1px solid ${isSelected ? '#990001' : 'rgba(0, 83, 175, 0.2)'}`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginBottom: '1rem'
+                  marginBottom: '1rem',
+                  transition: 'all 0.2s ease'
                 }}>
-                  {React.createElement(tipo.icono, { size: 28, color: isSelected ? '#FFFFFF' : '#79a6ff' })}
+                  {React.createElement(tipo.icono, { size: 28, color: isSelected ? '#FFFFFF' : '#0053AF' })}
                 </div>
 
                 <h4 style={{
                   fontSize: '1.15rem',
                   fontWeight: 700,
-                  color: isSelected ? '#FFFFFF' : '#F8FAFC',
+                  color: isSelected ? '#C22727' : '#062A77',
                   marginBottom: '0.5rem',
                   lineHeight: 1.25
                 }}>
@@ -153,7 +162,7 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                 </h4>
 
                 <p style={{
-                  color: '#CBD5E1',
+                  color: '#334155',
                   fontSize: '0.86rem',
                   lineHeight: 1.5,
                   marginBottom: '1rem'
@@ -165,7 +174,7 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
               {/* Pie con Entidad y Plazo */}
               <div style={{
                 paddingTop: '0.85rem',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                borderTop: '1px solid rgba(6, 42, 119, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -174,8 +183,18 @@ export default function Step1DamageType({ selectedType, onSelectType }) {
                 fontSize: '0.75rem',
                 fontFamily: 'var(--font-telemetry)'
               }}>
-                <span style={{ color: '#79a6ff' }}>{tipo.entidad}</span>
-                <span style={{ color: '#00D166', backgroundColor: 'rgba(0, 209, 102, 0.12)', padding: '0.15rem 0.45rem', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ color: '#0053AF', fontWeight: 700 }}>{tipo.entidad}</span>
+                <span style={{
+                  color: '#047857',
+                  backgroundColor: 'rgba(4, 120, 87, 0.1)',
+                  border: '1px solid rgba(4, 120, 87, 0.25)',
+                  padding: '0.2rem 0.5rem',
+                  borderRadius: '6px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontWeight: 700
+                }}>
                   <Clock size={12} />
                   <span>{tipo.plazoEstimado}</span>
                 </span>

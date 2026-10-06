@@ -16,7 +16,7 @@ import {
   X,
   LayoutDashboard
 } from 'lucide-react';
-import Logo from './common/Logo';
+import Logo, { Isotipo } from './common/Logo';
 import MegaMenu, { CATEGORIAS_CIVICAS } from './navigation/MegaMenu';
 import { useAuth, PROVINCIAS_COSTA_RICA, normalizarRolOficial } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -380,9 +380,9 @@ export default function Navbar() {
         onClick={() => setIsLogoutModalOpen(false)}
       >
         <div
-          className="w-full max-w-md rounded-2xl border border-white/10 bg-[#070D1B] p-6 shadow-2xl relative text-slate-100 overflow-hidden"
+          className="w-full max-w-md rounded-2xl border border-[var(--cru-border,#E2E8F0)] bg-[var(--cru-surface,#FFFFFF)] p-6 shadow-2xl relative text-[var(--cru-text,#062A77)] overflow-hidden"
           style={{
-            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(220, 38, 38, 0.12)'
+            boxShadow: 'var(--cru-card-shadow-hover, 0 20px 45px rgba(6, 42, 119, 0.12))'
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -397,17 +397,17 @@ export default function Navbar() {
 
           {/* Cabecera con Icono Vectorial */}
           <div className="flex items-start gap-3.5 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center shrink-0 text-red-400 mt-0.5">
+            <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center shrink-0 text-red-500 mt-0.5">
               <LogOut className="w-5 h-5" strokeWidth={1.75} />
             </div>
             <div className="flex-1 min-w-0">
               <h3
                 id="modal-logout-titulo"
-                className="text-base font-bold text-white tracking-tight"
+                className="text-base font-bold text-[var(--cru-text,#062A77)] tracking-tight"
               >
                 ¿Confirmar Cierre de Sesión?
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-[var(--cru-text-soft,#64748B)] mt-0.5">
                 Seguridad Cívica • Costa Rica Unidos
               </p>
             </div>
@@ -415,12 +415,12 @@ export default function Navbar() {
 
           {/* Pastilla Informativa de la Cuenta Activa */}
           {user && (
-            <div className="mb-4 p-3 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-between text-xs gap-2">
+            <div className="mb-4 p-3 rounded-xl bg-[var(--cru-surface-muted,#F1F5F9)] border border-[var(--cru-border,#E2E8F0)] flex items-center justify-between text-xs gap-2">
               <div className="flex items-center gap-2 min-w-0">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" strokeWidth={1.75} />
+                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" strokeWidth={1.75} />
                 <div className="truncate">
-                  <span className="font-semibold text-slate-200 block truncate">{user.nombre}</span>
-                  <span className="text-[11px] text-slate-400 font-mono block truncate">
+                  <span className="font-semibold text-[var(--cru-text,#062A77)] block truncate">{user.nombre}</span>
+                  <span className="text-[11px] text-[var(--cru-text-soft,#64748B)] font-mono block truncate">
                     {user.correoPersonal || user.correo || user.email || 'Usuario Activo'}
                   </span>
                 </div>
@@ -439,7 +439,7 @@ export default function Navbar() {
           )}
 
           {/* Advertencia de Cierre de Sesión */}
-          <p className="text-xs text-slate-300 leading-relaxed mb-6">
+          <p className="text-xs text-[var(--cru-text-soft,#64748B)] leading-relaxed mb-6">
             Está a punto de finalizar su sesión institucional. Sus credenciales y permisos temporales en este dispositivo serán revocados de forma segura. Para acceder nuevamente a los servicios y consolas, deberá iniciar sesión con sus credenciales oficiales.
           </p>
 
@@ -448,7 +448,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsLogoutModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--cru-text-soft,#64748B)] hover:text-[var(--cru-text,#062A77)] bg-[var(--cru-surface-muted,#F1F5F9)] hover:bg-[var(--cru-border,#E2E8F0)] border border-[var(--cru-border,#CBD5E1)] transition-colors cursor-pointer"
             >
               Cancelar
             </button>
@@ -485,17 +485,21 @@ export default function Navbar() {
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-[64px] flex items-center justify-between gap-3">
             {/* 1. EXTREMO IZQUIERDO: Isotipo y Texto Oficial */}
             <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="flex items-center gap-2.5">
-                <Logo showText={false} size="32px" />
+              <Link
+                to="/"
+                className="flex items-center gap-2.5 cursor-pointer select-none group no-underline"
+                aria-label="Ir a la página principal de Costa Rica Unidos"
+              >
+                <Isotipo size="32px" />
                 <div className="flex flex-col">
-                  <span className={`font-bold text-[13px] sm:text-sm tracking-wider uppercase leading-none ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                  <span className={`font-bold text-[13px] sm:text-sm tracking-wider uppercase leading-none ${theme === 'dark' ? 'text-white' : 'text-[#062A77]'}`}>
                     COSTA RICA UNIDOS
                   </span>
-                  <span className="text-[10px] text-slate-400 font-mono tracking-widest uppercase mt-0.5">
+                  <span className={`text-[10px] font-mono tracking-widest uppercase mt-0.5 ${theme === 'dark' ? 'text-[#38BDF8]' : 'text-[#C22727]'}`}>
                     PLATAFORMA CÍVICA
                   </span>
                 </div>
-              </div>
+              </Link>
             </div>
 
             {/* 2. CENTRO: Pastilla Institucional Dinámica según Rol y Nivel */}
@@ -634,108 +638,165 @@ export default function Navbar() {
         className="sticky top-0 left-0 right-0 z-50 transition-colors"
         onMouseLeave={handleMouseLeaveNav}
         style={{
-          backgroundColor: theme === 'dark' ? '#070D1B' : '#FFFFFF',
-          borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)',
-          boxShadow: theme === 'dark' ? '0 10px 30px rgba(0, 4, 13, 0.95)' : '0 4px 20px rgba(0, 0, 0, 0.05)'
+          backgroundColor: '#FFFFFF',
+          borderBottom: '1px solid rgba(6, 42, 119, 0.08)',
+          boxShadow: '0 4px 20px rgba(6, 42, 119, 0.05)'
         }}
       >
         {/* ======================================================================
-            1. CINTILLO SUPERIOR DE ESTADO (TOP BAR - 28px)
+            1. BARRA SUPERIOR (TOP BAR): IDIOMAS, ALTO CONTRASTE Y REDES SOCIALES
             ====================================================================== */}
         <div
-          className="cintillo-superior-container h-7 relative flex items-center justify-between px-3 sm:px-4 md:px-8 text-[11px] font-semibold tracking-wider uppercase overflow-hidden whitespace-nowrap"
+          className="cintillo-superior-container h-8 relative flex items-center justify-between px-3 sm:px-6 md:px-10 text-[11px] font-semibold tracking-wider overflow-hidden whitespace-nowrap"
           style={{
-            backgroundColor: theme === 'dark' ? '#000818' : '#001489',
-            color: theme === 'dark' ? '#94A3B8' : '#FFFFFF',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.10)'
+            backgroundColor: '#01004E',
+            color: '#FFFFFF',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
           }}
         >
-          {/* Sub-cinta tricolor oficial */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[2px]"
-            style={{
-              background:
-                'linear-gradient(90deg, #001489 0%, #001489 16.6%, #FFFFFF 16.6%, #FFFFFF 33.3%, #DA291C 33.3%, #DA291C 66.6%, #FFFFFF 66.6%, #FFFFFF 83.3%, #001489 83.3%, #001489 100%)'
-            }}
-          />
-
-          {/* Leyenda institucional */}
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8] shrink-0" />
-            <span className="font-bold text-white whitespace-nowrap">{t('republicaCostaRica', 'REPÚBLICA DE COSTA RICA')}</span>
-            <span className="cintillo-superior-item-secundario opacity-50 hidden lg:inline">·</span>
-            <span className="cintillo-superior-item-secundario opacity-80 hidden lg:inline whitespace-nowrap">
-              {t('sistemaGobiernosLocales', 'SISTEMA NACIONAL DE GOBIERNOS LOCALES')}
-            </span>
+          {/* LADO IZQUIERDO: IDIOMAS OFICIALES (Español, Bribri, Cabécar, English) */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {[
+              { code: 'es', label: 'Español' },
+              { code: 'bribri', label: 'Bribri' },
+              { code: 'cabecar', label: 'Cabécar' },
+              { code: 'en', label: 'English' }
+            ].map((lang, idx, arr) => (
+              <React.Fragment key={lang.code}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    cambiarIdioma(lang.code);
+                    setActiveLangCode(lang.code);
+                  }}
+                  className={`hover:text-yellow-300 transition-colors cursor-pointer text-[11px] ${
+                    currentLang === lang.code ? 'text-yellow-400 font-bold underline' : 'text-slate-200'
+                  }`}
+                  style={{ background: 'none', border: 'none', padding: 0 }}
+                >
+                  {lang.label}
+                </button>
+                {idx < arr.length - 1 && <span className="opacity-40 text-slate-400">·</span>}
+              </React.Fragment>
+            ))}
           </div>
 
-          {/* Indicador de Transparencia & Cantón Activo */}
-          <div className="flex items-center gap-2 sm:gap-3 text-[10px] shrink-0">
-            <div
-              className="flex items-center gap-1 px-1 whitespace-nowrap"
-              title={`Cantón activo: ${territorio.canton}, ${territorio.provincia}`}
+          {/* LADO DERECHO: ALTO CONTRASTE Y REDES SOCIALES */}
+          <div className="flex items-center gap-2 sm:gap-3 text-[11px]">
+            <button
+              type="button"
+              onClick={() => {
+                setDaltonismoMode(daltonismoMode === 'alto-contraste' ? 'normal' : 'alto-contraste');
+              }}
+              className={`hover:text-yellow-300 transition-colors cursor-pointer text-[11px] ${
+                daltonismoMode === 'alto-contraste' ? 'text-yellow-400 font-bold underline' : 'text-slate-200'
+              }`}
+              style={{ background: 'none', border: 'none', padding: 0 }}
             >
-              <MapPin className="w-3 h-3 text-sky-400 shrink-0" strokeWidth={1.75} />
-              <span>{t('cantonLabel', 'Cantón:')} <strong className="text-white">{territorio.canton}</strong></span>
-            </div>
-            <span className="cintillo-superior-item-secundario opacity-40 hidden lg:inline">•</span>
-            <span className="cintillo-superior-item-secundario text-sky-300 font-bold hidden lg:inline whitespace-nowrap">
-              {t('cantonesAutonomos', '84 CANTONES AUTÓNOMOS')}
-            </span>
+              Alto contraste
+            </button>
+            <span className="opacity-40 text-slate-400">·</span>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-slate-200 hover:text-yellow-300 transition-colors no-underline hidden sm:inline">
+              Facebook
+            </a>
+            <span className="opacity-40 text-slate-400 hidden sm:inline">·</span>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-slate-200 hover:text-yellow-300 transition-colors no-underline hidden sm:inline">
+              Instagram
+            </a>
+            <span className="opacity-40 text-slate-400 hidden sm:inline">·</span>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-slate-200 hover:text-yellow-300 transition-colors no-underline hidden sm:inline">
+              YouTube
+            </a>
           </div>
         </div>
 
         {/* ======================================================================
-            2. BARRA PRINCIPAL DEL NAVBAR (68px)
+            2. HEADER INSTITUCIONAL CON LOGO 100% ESTÁTICO, MENÚ Y BOTÓN INICIAR SESIÓN
             ====================================================================== */}
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-3 xl:px-6 h-[68px] flex items-center justify-between gap-1.5 xl:gap-3">
-          {/* LADO IZQUIERDO: LOGOTIPO OFICIAL */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[74px] flex items-center justify-between gap-3">
+          {/* LADO IZQUIERDO: LOGOTIPO OFICIAL (100% Estático - Redirige a /) */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-            <Logo showText={true} size="36px" />
+            <Logo showText={true} size="40px" variant="light" spin={false} />
           </div>
 
-          {/* CENTRO: 4 CATEGORÍAS CÍVICAS HORIZONTALES (DESKTOP >= 1024px) */}
+          {/* CENTRO: MENÚ HORIZONTAL INSTITUCIONAL */}
           <nav
             aria-label="Navegación Cívica Principal"
             data-tour="nav-institucional"
-            className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 p-1 rounded-2xl"
+            className="hidden lg:flex items-center gap-1 xl:gap-3"
           >
-            {CATEGORIAS_CIVICAS.map((cat) => {
-              const IconoCat = cat.icon;
-              const isActivo = categoriaActiva === cat.id;
+            {/* 1. La Muni (Activo con subrayado rojo) */}
+            <Link
+              to="/"
+              className="px-3 py-2 text-sm font-bold text-slate-900 transition-all rounded-none relative"
+              style={{
+                textDecoration: 'none',
+                borderBottom: '3px solid var(--red, #C22727)',
+                color: 'var(--navy, #062A77)'
+              }}
+            >
+              La Muni
+            </Link>
 
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onMouseEnter={() => handleMouseEnterCategoria(cat.id)}
-                  onClick={() => handleToggleCategoria(cat.id)}
-                  aria-expanded={isActivo}
-                  aria-haspopup="true"
-                  className={`px-2 xl:px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-bold transition-all duration-200 flex items-center gap-1 xl:gap-1.5 focus:outline-none focus:ring-2 focus:ring-sky-500 ${
-                    isActivo
-                      ? 'bg-red-500/15 text-white border border-red-500/40 shadow-lg shadow-red-500/10'
-                      : theme === 'dark'
-                      ? 'text-slate-300 hover:text-white hover:bg-white/[0.05] border border-transparent'
-                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-transparent'
-                  }`}
-                >
-                  <IconoCat
-                    className={`w-3.5 h-3.5 xl:w-4 xl:h-4 transition-colors ${
-                      isActivo ? 'text-red-500' : theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
-                    }`}
-                    strokeWidth={1.75}
-                  />
-                  <span>{t(cat.label)}</span>
-                  <ChevronDown
-                    className={`w-3 h-3 xl:w-3.5 xl:h-3.5 transition-transform duration-200 ${
-                      isActivo ? 'rotate-180 text-red-500' : 'text-slate-400'
-                    }`}
-                    strokeWidth={1.75}
-                  />
-                </button>
-              );
-            })}
+            {/* 2. Trámites y servicios (Abre MegaMenú tramites) */}
+            <button
+              type="button"
+              onMouseEnter={() => handleMouseEnterCategoria('tramites')}
+              onClick={() => handleToggleCategoria('tramites')}
+              aria-expanded={categoriaActiva === 'tramites'}
+              className="px-3 py-2 text-sm font-semibold transition-colors hover:text-[#062A77] rounded-lg flex items-center gap-1 cursor-pointer"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: categoriaActiva === 'tramites' ? 'var(--navy, #062A77)' : '#334155'
+              }}
+            >
+              <span>Trámites y servicios</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${categoriaActiva === 'tramites' ? 'rotate-180 text-red-600' : 'text-slate-400'}`} />
+            </button>
+
+            {/* 3. Concejo y Actas (Abre MegaMenú gobierno) */}
+            <button
+              type="button"
+              onMouseEnter={() => handleMouseEnterCategoria('gobierno')}
+              onClick={() => handleToggleCategoria('gobierno')}
+              aria-expanded={categoriaActiva === 'gobierno'}
+              className="px-3 py-2 text-sm font-semibold transition-colors hover:text-[#062A77] rounded-lg flex items-center gap-1 cursor-pointer"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: categoriaActiva === 'gobierno' ? 'var(--navy, #062A77)' : '#334155'
+              }}
+            >
+              <span>Concejo y Actas</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${categoriaActiva === 'gobierno' ? 'rotate-180 text-red-600' : 'text-slate-400'}`} />
+            </button>
+
+            {/* 4. Obras y Reportes (Abre MegaMenú territorio) */}
+            <button
+              type="button"
+              onMouseEnter={() => handleMouseEnterCategoria('territorio')}
+              onClick={() => handleToggleCategoria('territorio')}
+              aria-expanded={categoriaActiva === 'territorio'}
+              className="px-3 py-2 text-sm font-semibold transition-colors hover:text-[#062A77] rounded-lg flex items-center gap-1 cursor-pointer"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: categoriaActiva === 'territorio' ? 'var(--navy, #062A77)' : '#334155'
+              }}
+            >
+              <span>Obras y Reportes</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${categoriaActiva === 'territorio' ? 'rotate-180 text-red-600' : 'text-slate-400'}`} />
+            </button>
+
+            {/* 5. Transparencia */}
+            <Link
+              to="/gobernanza"
+              className="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-[#062A77] transition-colors rounded-lg"
+              style={{ textDecoration: 'none' }}
+            >
+              Transparencia
+            </Link>
           </nav>
 
           {/* LADO DERECHO: UTILIDADES ESENCIALES (TEMA + ACCESIBILIDAD) + ACCESO CÍVICO */}
@@ -1101,43 +1162,75 @@ export default function Navbar() {
                   to="/login"
                   aria-label="Iniciar sesión en la plataforma cívica institucional"
                   title="Iniciar Sesión"
-                  className={`inline-flex items-center gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full border text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 shadow-sm ${
-                    theme === 'dark'
-                      ? 'bg-sky-500/15 hover:bg-sky-500/25 border-sky-500/40 hover:border-sky-400 text-sky-300 hover:text-white focus:ring-sky-500'
-                      : 'bg-[#002B7F] hover:bg-[#001f5c] border-[#002B7F] hover:border-[#001f5c] text-white hover:text-white focus:ring-[#002B7F]'
-                  }`}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-[#062A77] text-[#062A77] hover:bg-[#062A77] hover:text-white text-xs font-bold tracking-wide transition-all duration-200 shadow-sm"
                 >
-                  <LogIn className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-sky-400' : 'text-white'}`} strokeWidth={1.75} />
-                  <span className="hidden sm:inline lg:hidden xl:inline">{t('Iniciar Sesión')}</span>
+                  <LogIn className="w-3.5 h-3.5" strokeWidth={2} />
+                  <span>{t('Iniciar sesión')}</span>
                 </Link>
               )}
             </div>
 
-            {/* EN MÓVILES (< 1024px): BOTÓN HAMBURGUESA QUE DESPLIEGA MENÚ COMPACTO */}
+            {/* EN MÓVILES (< 1024px): BOTÓN HAMBURGUESA QUE DESPLIEGA MENÚ LATERAL */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
               aria-expanded={isMobileMenuOpen}
-              className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-[#062A77]"
             >
               {isMobileMenuOpen ? (
-                <X className="w-5 h-5 text-slate-200" strokeWidth={1.75} />
+                <X className="w-5 h-5 text-slate-800" strokeWidth={2} />
               ) : (
-                <Menu className="w-5 h-5 text-slate-200" strokeWidth={1.75} />
+                <Menu className="w-5 h-5 text-slate-800" strokeWidth={2} />
               )}
             </button>
           </div>
         </div>
 
-        {/* NAVEGACIÓN MÓVIL DESPLEGABLE COMPACTA (SIN CAJONES LATERALES NI OVERLAYS OSCUROS) */}
+        {/* NAVEGACIÓN MÓVIL DESPLEGABLE COMPACTA EN BLANCO INSTITUCIONAL */}
         {isMobileMenuOpen && (
           <nav
-            aria-label="Navegación Móvil Compacta"
-            className={`lg:hidden border-t px-4 py-3 space-y-3 transition-all ${
-              theme === 'dark' ? 'bg-[#070D1B]/98 border-white/10' : 'bg-white/98 border-slate-200'
-            }`}
+            aria-label="Navegación Móvil Municipal"
+            className="lg:hidden border-t px-4 py-4 space-y-4 bg-white border-slate-200 shadow-xl"
           >
+            {/* Enlaces principales */}
+            <div className="flex flex-col gap-1 pb-3 border-b border-slate-100">
+              <Link
+                to="/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 text-sm font-bold text-[#062A77] rounded-lg bg-blue-50"
+              >
+                La Muni
+              </Link>
+              <Link
+                to="/portal-ciudadano"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded-lg"
+              >
+                Trámites y servicios
+              </Link>
+              <Link
+                to="/gobernanza"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded-lg"
+              >
+                Concejo y Actas
+              </Link>
+              <Link
+                to="/reportar-incidencia"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded-lg"
+              >
+                Obras y Reportes
+              </Link>
+              <Link
+                to="/gobernanza"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded-lg"
+              >
+                Transparencia
+              </Link>
+            </div>
             {isAuthenticated && user && (
               <div className="pb-3 border-b border-white/10 flex flex-col gap-2">
                 <Link

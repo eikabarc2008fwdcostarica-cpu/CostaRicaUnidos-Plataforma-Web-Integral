@@ -96,7 +96,7 @@ export default function NotFound() {
             <Logo showText={true} />
           </div>
 
-          {/* Insignia de Telemetría Oficial DTA */}
+          {/* Insignia de Telemetría Oficial */}
           <div style={{ display: 'inline-flex', marginBottom: '1.25rem' }}>
             <span
               className="telemetry-badge"
@@ -110,7 +110,7 @@ export default function NotFound() {
                 textTransform: 'uppercase'
               }}
             >
-              CÓDIGO DE RESPUESTA HTTP 404 &bull; DTA NACIONAL
+              CÓDIGO DE RESPUESTA HTTP 404 &bull; TERRITORIO NACIONAL
             </span>
           </div>
 

@@ -190,8 +190,8 @@ export const DeportesPage: FC = () => {
     <div
       style={{
         minHeight: '100vh',
-        background: 'var(--color-obsidian-sovereign, #00040D)',
-        color: '#FFFFFF',
+        background: 'var(--theme-bg, #F8FAFC)',
+        color: 'var(--theme-text-primary, #131313)',
         position: 'relative'
       }}
     >
@@ -204,17 +204,17 @@ export const DeportesPage: FC = () => {
             <CivicBadge variant="provincial" size="md">
               COMITÉ CANTONAL DE DEPORTES Y RECREACIÓN &bull; {cantonActivo.toUpperCase()}
             </CivicBadge>
-            <span style={{ fontSize: '0.825rem', color: '#94A3B8' }}>
+            <span style={{ fontSize: '0.825rem', color: '#475569', fontWeight: 600 }}>
               Personería Jurídica Instrumental y Autonomía Administrativa (Artículos 164 al 172 del Código Municipal - Ley N° 7794)
             </span>
           </div>
 
           <h1
             style={{
-              fontFamily: "var(--font-headline, 'Mistical Spring', serif)",
+              fontFamily: "var(--font-headline, 'Poppins', sans-serif)",
               fontSize: 'clamp(1.9rem, 4vw, 2.9rem)',
               fontWeight: 800,
-              color: '#FFFFFF',
+              color: 'var(--cru-text, #062A77)',
               letterSpacing: '-0.02em',
               margin: '0 0 0.85rem 0'
             }}
@@ -222,14 +222,23 @@ export const DeportesPage: FC = () => {
             Comité Cantonal de Deportes y Recreación de {cantonActivo} (CCDR)
           </h1>
 
-          <p style={{ fontSize: '1.05rem', color: '#CBD5E1', maxWidth: '900px', lineHeight: 1.6, margin: 0 }}>
-            Órgano municipal autónomo responsable de democratizar el acceso a la infraestructura deportiva pública, fomentar las escuelas formativas formativas gratuitas para la niñez y juventud, y preparar a las delegaciones cantonales para los Juegos Deportivos Nacionales (JDN) del ICODER.
+          <p style={{ fontSize: '1.05rem', color: 'var(--cru-text-secondary, #334155)', maxWidth: '900px', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
+            Órgano municipal autónomo responsable de democratizar el acceso a la infraestructura deportiva pública, fomentar las escuelas formativas gratuitas para la niñez y juventud, y preparar a las delegaciones cantonales para los Juegos Deportivos Nacionales (JDN) del ICODER.
           </p>
         </div>
 
         {/* Panel de Indicadores de Gestión y Membrete Legal */}
         <div style={{ marginBottom: '2.5rem' }}>
-          <CivicCard level={2} provincialGlow>
+          <div
+            style={{
+              backgroundColor: '#FFFFFF',
+              border: '1px solid #E2E8F0',
+              borderTop: '4px solid #0053AF',
+              borderRadius: '18px',
+              padding: '1.5rem',
+              boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))'
+            }}
+          >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
@@ -238,20 +247,20 @@ export const DeportesPage: FC = () => {
                       width: '42px',
                       height: '42px',
                       borderRadius: '10px',
-                      background: 'rgba(0, 43, 127, 0.4)',
-                      border: '1px solid rgba(125, 211, 252, 0.35)',
+                      background: 'rgba(0, 83, 175, 0.08)',
+                      border: '1px solid rgba(0, 83, 175, 0.2)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <Shield size={22} color="#7DD3FC" />
+                    <Shield size={22} color="#0053AF" />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#062A77', margin: 0 }}>
                       Gobernanza y Autonomía Deportiva Municipal (Ley N° 7794)
                     </h3>
-                    <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+                    <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 500 }}>
                       Junta Directiva conformada por 5 miembros ad honorem con representación cantonal plural
                     </span>
                   </div>
@@ -268,46 +277,46 @@ export const DeportesPage: FC = () => {
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
                   gap: '1rem',
-                  background: 'rgba(0, 0, 0, 0.35)',
+                  background: '#F8FAFC',
                   padding: '1.25rem',
                   borderRadius: '12px',
-                  border: '1px solid rgba(255, 255, 255, 0.08)'
+                  border: '1px solid #E2E8F0'
                 }}
               >
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block' }}>Instalaciones Administradas:</span>
-                  <strong style={{ fontSize: '1.4rem', color: '#7DD3FC', fontFamily: "var(--font-telemetry, monospace)" }}>
+                  <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Instalaciones Administradas:</span>
+                  <strong style={{ fontSize: '1.4rem', color: '#062A77', fontFamily: "monospace" }}>
                     {DEPORTES_MOCK_DATA.instalaciones.length} recintos
                   </strong>
-                  <span style={{ fontSize: '0.72rem', color: '#34D399', display: 'block' }}>100% con Ley 7600</span>
+                  <span style={{ fontSize: '0.72rem', color: '#059669', display: 'block', fontWeight: 700 }}>100% con Ley 7600</span>
                 </div>
 
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block' }}>Atletas en Selecciones JDN:</span>
-                  <strong style={{ fontSize: '1.4rem', color: '#FFFFFF', fontFamily: "var(--font-telemetry, monospace)" }}>
+                  <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Atletas en Selecciones JDN:</span>
+                  <strong style={{ fontSize: '1.4rem', color: '#0F172A', fontFamily: "monospace" }}>
                     284 atletas
                   </strong>
-                  <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Fase Eliminatoria 2026</span>
+                  <span style={{ fontSize: '0.72rem', color: '#475569', display: 'block', fontWeight: 600 }}>Fase Eliminatoria 2026</span>
                 </div>
 
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block' }}>Escuelas Formativas Comunitarias:</span>
-                  <strong style={{ fontSize: '1.4rem', color: '#A7F3D0', fontFamily: "var(--font-telemetry, monospace)" }}>
+                  <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Escuelas Formativas Comunitarias:</span>
+                  <strong style={{ fontSize: '1.4rem', color: '#0053AF', fontFamily: "monospace" }}>
                     {DEPORTES_MOCK_DATA.escuelas.length} gratuitas
                   </strong>
-                  <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block' }}>Cobertura en los distritos</span>
+                  <span style={{ fontSize: '0.72rem', color: '#475569', display: 'block', fontWeight: 600 }}>Cobertura en los distritos</span>
                 </div>
 
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block' }}>Medallero Histórico JDN:</span>
-                  <strong style={{ fontSize: '1.4rem', color: '#FCD34D', fontFamily: "var(--font-telemetry, monospace)" }}>
+                  <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block', fontWeight: 600 }}>Medallero Histórico JDN:</span>
+                  <strong style={{ fontSize: '1.4rem', color: '#B45309', fontFamily: "monospace" }}>
                     9 Medallas Oro
                   </strong>
-                  <span style={{ fontSize: '0.72rem', color: '#FDE68A', display: 'block' }}>Última edición nacional</span>
+                  <span style={{ fontSize: '0.72rem', color: '#92400E', display: 'block', fontWeight: 700 }}>Última edición nacional</span>
                 </div>
               </div>
             </div>
-          </CivicCard>
+          </div>
         </div>
 
         {/* Barra de Pestañas Deportivas */}
@@ -315,7 +324,7 @@ export const DeportesPage: FC = () => {
           style={{
             display: 'flex',
             gap: '0.5rem',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+            borderBottom: '2px solid #E2E8F0',
             marginBottom: '2.5rem',
             overflowX: 'auto',
             scrollbarWidth: 'none'
@@ -331,8 +340,8 @@ export const DeportesPage: FC = () => {
             style={{
               background: 'transparent',
               border: 'none',
-              borderBottom: seccionActiva === 'instalaciones' ? '2.5px solid var(--color-provincial-primary, #002B7F)' : '2.5px solid transparent',
-              color: seccionActiva === 'instalaciones' ? '#FFFFFF' : '#94A3B8',
+              borderBottom: seccionActiva === 'instalaciones' ? '3px solid #0053AF' : '3px solid transparent',
+              color: seccionActiva === 'instalaciones' ? '#062A77' : '#64748B',
               fontWeight: 700,
               fontSize: '1rem',
               padding: '0.75rem 1.25rem',
@@ -344,7 +353,7 @@ export const DeportesPage: FC = () => {
               transition: 'all 0.2s ease'
             }}
           >
-            <Dumbbell size={18} />
+            <Dumbbell size={18} color={seccionActiva === 'instalaciones' ? '#0053AF' : '#64748B'} />
             <span>Instalaciones Públicas y Semáforo</span>
             <CivicBadge variant="default" size="sm">
               {DEPORTES_MOCK_DATA.instalaciones.length}
@@ -359,8 +368,8 @@ export const DeportesPage: FC = () => {
             style={{
               background: 'transparent',
               border: 'none',
-              borderBottom: seccionActiva === 'jdn' ? '2.5px solid var(--color-provincial-primary, #002B7F)' : '2.5px solid transparent',
-              color: seccionActiva === 'jdn' ? '#FFFFFF' : '#94A3B8',
+              borderBottom: seccionActiva === 'jdn' ? '3px solid #0053AF' : '3px solid transparent',
+              color: seccionActiva === 'jdn' ? '#062A77' : '#64748B',
               fontWeight: 700,
               fontSize: '1rem',
               padding: '0.75rem 1.25rem',
@@ -372,7 +381,7 @@ export const DeportesPage: FC = () => {
               transition: 'all 0.2s ease'
             }}
           >
-            <Medal size={18} />
+            <Medal size={18} color={seccionActiva === 'jdn' ? '#0053AF' : '#64748B'} />
             <span>Juegos Deportivos Nacionales (JDN)</span>
             <CivicBadge variant="provincial" size="sm">
               {DEPORTES_MOCK_DATA.convocatorias.length} Convocatorias
@@ -387,8 +396,8 @@ export const DeportesPage: FC = () => {
             style={{
               background: 'transparent',
               border: 'none',
-              borderBottom: seccionActiva === 'escuelas' ? '2.5px solid var(--color-provincial-primary, #002B7F)' : '2.5px solid transparent',
-              color: seccionActiva === 'escuelas' ? '#FFFFFF' : '#94A3B8',
+              borderBottom: seccionActiva === 'escuelas' ? '3px solid #0053AF' : '3px solid transparent',
+              color: seccionActiva === 'escuelas' ? '#062A77' : '#64748B',
               fontWeight: 700,
               fontSize: '1rem',
               padding: '0.75rem 1.25rem',
@@ -400,7 +409,7 @@ export const DeportesPage: FC = () => {
               transition: 'all 0.2s ease'
             }}
           >
-            <Users size={18} />
+            <Users size={18} color={seccionActiva === 'escuelas' ? '#0053AF' : '#64748B'} />
             <span>Escuelas Deportivas CCDR</span>
           </button>
 
@@ -412,8 +421,8 @@ export const DeportesPage: FC = () => {
             style={{
               background: 'transparent',
               border: 'none',
-              borderBottom: seccionActiva === 'orgullo' ? '2.5px solid var(--color-provincial-primary, #002B7F)' : '2.5px solid transparent',
-              color: seccionActiva === 'orgullo' ? '#FFFFFF' : '#94A3B8',
+              borderBottom: seccionActiva === 'orgullo' ? '3px solid #0053AF' : '3px solid transparent',
+              color: seccionActiva === 'orgullo' ? '#062A77' : '#64748B',
               fontWeight: 700,
               fontSize: '1rem',
               padding: '0.75rem 1.25rem',
@@ -425,7 +434,7 @@ export const DeportesPage: FC = () => {
               transition: 'all 0.2s ease'
             }}
           >
-            <Trophy size={18} />
+            <Trophy size={18} color={seccionActiva === 'orgullo' ? '#0053AF' : '#64748B'} />
             <span>Salón de Honor y Medallas</span>
           </button>
 
@@ -437,8 +446,8 @@ export const DeportesPage: FC = () => {
             style={{
               background: 'transparent',
               border: 'none',
-              borderBottom: seccionActiva === 'feed' ? '2.5px solid var(--color-provincial-primary, #002B7F)' : '2.5px solid transparent',
-              color: seccionActiva === 'feed' ? '#FFFFFF' : '#94A3B8',
+              borderBottom: seccionActiva === 'feed' ? '3px solid #0053AF' : '3px solid transparent',
+              color: seccionActiva === 'feed' ? '#062A77' : '#64748B',
               fontWeight: 700,
               fontSize: '1rem',
               padding: '0.75rem 1.25rem',
@@ -450,7 +459,7 @@ export const DeportesPage: FC = () => {
               transition: 'all 0.2s ease'
             }}
           >
-            <Calendar size={18} />
+            <Calendar size={18} color={seccionActiva === 'feed' ? '#0053AF' : '#64748B'} />
             <span>Feed Comunitario</span>
           </button>
         </div>
@@ -466,15 +475,16 @@ export const DeportesPage: FC = () => {
                 gap: '1rem',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                background: 'rgba(255, 255, 255, 0.03)',
+                background: '#FFFFFF',
                 padding: '1.25rem',
-                borderRadius: '14px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                border: '1px solid #E2E8F0',
+                boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))',
                 marginBottom: '2rem'
               }}
             >
               <div style={{ position: 'relative', flex: '1 1 280px' }}>
-                <Search size={18} color="#94A3B8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+                <Search size={18} color="#0053AF" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="text"
                   value={busquedaInstalacion}
@@ -483,29 +493,31 @@ export const DeportesPage: FC = () => {
                   style={{
                     width: '100%',
                     padding: '0.65rem 1rem 0.65rem 2.4rem',
-                    background: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '8px',
-                    color: '#FFFFFF',
+                    background: '#F8FAFC',
+                    border: '1px solid #CBD5E1',
+                    borderRadius: '10px',
+                    color: '#0F172A',
                     fontSize: '0.875rem',
-                    outline: 'none'
+                    outline: 'none',
+                    fontWeight: 500
                   }}
                 />
               </div>
 
               {/* Botonera de Semáforo Formal */}
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>Semáforo:</span>
+                <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>Semáforo:</span>
                 <button
                   type="button"
                   onClick={() => setFiltroSemaforo('todos')}
                   style={{
-                    background: filtroSemaforo === 'todos' ? 'rgba(0, 43, 127, 0.8)' : 'rgba(255, 255, 255, 0.05)',
-                    color: filtroSemaforo === 'todos' ? '#FFFFFF' : '#CBD5E1',
-                    border: filtroSemaforo === 'todos' ? '1px solid #7DD3FC' : '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '6px',
-                    padding: '0.35rem 0.65rem',
-                    fontSize: '0.78rem',
+                    background: filtroSemaforo === 'todos' ? '#0053AF' : '#F1F5F9',
+                    color: filtroSemaforo === 'todos' ? '#FFFFFF' : '#334155',
+                    border: filtroSemaforo === 'todos' ? '1px solid #0053AF' : '1px solid #CBD5E1',
+                    borderRadius: '8px',
+                    padding: '0.45rem 0.85rem',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
                     cursor: 'pointer'
                   }}
                 >
@@ -515,57 +527,60 @@ export const DeportesPage: FC = () => {
                   type="button"
                   onClick={() => setFiltroSemaforo('abierto')}
                   style={{
-                    background: filtroSemaforo === 'abierto' ? 'rgba(16, 185, 129, 0.35)' : 'rgba(255, 255, 255, 0.05)',
-                    color: filtroSemaforo === 'abierto' ? '#A7F3D0' : '#CBD5E1',
-                    border: filtroSemaforo === 'abierto' ? '1px solid #34D399' : '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '6px',
-                    padding: '0.35rem 0.65rem',
-                    fontSize: '0.78rem',
+                    background: filtroSemaforo === 'abierto' ? '#ECFDF5' : '#F1F5F9',
+                    color: filtroSemaforo === 'abierto' ? '#047857' : '#334155',
+                    border: filtroSemaforo === 'abierto' ? '1.5px solid #059669' : '1px solid #CBD5E1',
+                    borderRadius: '8px',
+                    padding: '0.45rem 0.85rem',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.4rem'
                   }}
                 >
-                  <Circle className="w-2.5 h-2.5 fill-emerald-400 text-emerald-400" />
+                  <Circle className="w-2.5 h-2.5 fill-emerald-600 text-emerald-600" />
                   <span>Abierto al Público</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setFiltroSemaforo('mantenimiento')}
                   style={{
-                    background: filtroSemaforo === 'mantenimiento' ? 'rgba(245, 158, 11, 0.35)' : 'rgba(255, 255, 255, 0.05)',
-                    color: filtroSemaforo === 'mantenimiento' ? '#FDE68A' : '#CBD5E1',
-                    border: filtroSemaforo === 'mantenimiento' ? '1px solid #FBBF24' : '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '6px',
-                    padding: '0.35rem 0.65rem',
-                    fontSize: '0.78rem',
+                    background: filtroSemaforo === 'mantenimiento' ? '#FFFBEB' : '#F1F5F9',
+                    color: filtroSemaforo === 'mantenimiento' ? '#B45309' : '#334155',
+                    border: filtroSemaforo === 'mantenimiento' ? '1.5px solid #D97706' : '1px solid #CBD5E1',
+                    borderRadius: '8px',
+                    padding: '0.45rem 0.85rem',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.4rem'
                   }}
                 >
-                  <Circle className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+                  <Circle className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />
                   <span>Mantenimiento</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setFiltroSemaforo('reservado_escuelas')}
                   style={{
-                    background: filtroSemaforo === 'reservado_escuelas' ? 'rgba(0, 43, 127, 0.5)' : 'rgba(255, 255, 255, 0.05)',
-                    color: filtroSemaforo === 'reservado_escuelas' ? '#BAE6FD' : '#CBD5E1',
-                    border: filtroSemaforo === 'reservado_escuelas' ? '1px solid #7DD3FC' : '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '6px',
-                    padding: '0.35rem 0.65rem',
-                    fontSize: '0.78rem',
+                    background: filtroSemaforo === 'reservado_escuelas' ? '#EFF6FF' : '#F1F5F9',
+                    color: filtroSemaforo === 'reservado_escuelas' ? '#1E40AF' : '#334155',
+                    border: filtroSemaforo === 'reservado_escuelas' ? '1.5px solid #2563EB' : '1px solid #CBD5E1',
+                    borderRadius: '8px',
+                    padding: '0.45rem 0.85rem',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.4rem'
                   }}
                 >
-                  <Circle className="w-2.5 h-2.5 fill-blue-400 text-blue-400" />
+                  <Circle className="w-2.5 h-2.5 fill-blue-600 text-blue-600" />
                   <span>Reservado para Escuelas</span>
                 </button>
               </div>

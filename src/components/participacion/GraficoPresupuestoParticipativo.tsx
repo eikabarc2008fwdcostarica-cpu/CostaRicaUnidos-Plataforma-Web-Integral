@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { BarChart3, PieChart, Coins, Vote, TrendingUp, Info } from 'lucide-react';
 import { ProyectoVecinal } from '../../data/participacionData';
-import { CivicCard } from '../common/CivicCard';
 
 interface GraficoPresupuestoParticipativoProps {
   proyectos: ProyectoVecinal[];
@@ -10,7 +9,7 @@ interface GraficoPresupuestoParticipativoProps {
 /**
  * GraficoPresupuestoParticipativo — Módulo 11: Participación Ciudadana
  * Visualizador interactivo reactivo de métricas electorales y distribución
- * presupuestaria cantonal con SVG responsivo de alta tasa de refresco (60fps).
+ * presupuestaria cantonal con paleta oficial Azul Marino, Azul Real y Rojo Costarricense.
  */
 export const GraficoPresupuestoParticipativo: React.FC<GraficoPresupuestoParticipativoProps> = ({
   proyectos
@@ -35,32 +34,30 @@ export const GraficoPresupuestoParticipativo: React.FC<GraficoPresupuestoPartici
   }));
 
   const colorPorCategoria: Record<string, string> = {
-    'Infraestructura & Aceras': '#38BDF8', // Cyan
-    'Espacios Verdes y Parques': '#34D399', // Emerald
-    'Seguridad y Movilidad': '#F59E0B',    // Amber
-    'Cultura e Juventud': '#A855F7',       // Purple
-    'Cultura y Juventud': '#A855F7'
+    'Infraestructura & Aceras': '#0053AF',    // Azul Real
+    'Espacios Verdes y Parques': '#059669',   // Verde Esmeralda
+    'Seguridad y Movilidad': '#D97706',       // Ámbar
+    'Cultura e Juventud': '#C22727',          // Rojo Costarricense
+    'Cultura y Juventud': '#C22727'
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       {/* Gráfico 1: Conteo de Votos Ciudadanos en Tiempo Real (Barras Reactivas) */}
-      <CivicCard
-        level={2}
-        className="lg:col-span-7 p-6 border-white/10 space-y-6"
-        style={{ borderRadius: '20px' }}
+      <div
+        className="lg:col-span-7 p-6 bg-white border border-slate-200/90 rounded-2xl shadow-sm space-y-6"
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-cyan-400 font-bold text-base">
-            <Vote size={20} />
+          <div className="flex items-center gap-2 text-[#062A77] font-bold text-lg">
+            <Vote size={22} className="text-[#0053AF]" />
             <span>Conteo de Votos en Tiempo Real</span>
           </div>
-          <span className="text-xs px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-300 font-mono border border-cyan-500/30">
+          <span className="text-xs px-3 py-1 rounded-full bg-blue-50 text-[#0053AF] font-mono font-bold border border-blue-200">
             Total Votos: {totalVotos.toLocaleString()}
           </span>
         </div>
 
-        <p className="text-xs text-slate-300">
+        <p className="text-xs text-slate-600 font-medium">
           Resultados auditables vinculados a cédulas únicas verificadas ante el Ministerio de Hacienda.
         </p>
 
@@ -78,88 +75,86 @@ export const GraficoPresupuestoParticipativo: React.FC<GraficoPresupuestoPartici
                 onMouseEnter={() => setHoveredProyectoId(proyecto.id)}
                 onMouseLeave={() => setHoveredProyectoId(null)}
                 className={`p-3 rounded-xl transition-all duration-200 ${
-                  isHovered ? 'bg-white/[0.05] border border-cyan-500/30' : 'bg-white/[0.02] border border-transparent'
+                  isHovered ? 'bg-blue-50/50 border border-blue-200' : 'bg-slate-50/70 border border-slate-200/70'
                 }`}
               >
-                <div className="flex items-center justify-between text-xs mb-1.5 gap-2">
+                <div className="flex items-center justify-between text-xs mb-2 gap-2">
                   <div className="flex items-center gap-1.5 truncate">
                     {esLider && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
                         1° Lugar
                       </span>
                     )}
-                    <span className="font-semibold text-white truncate">
+                    <span className="font-bold text-slate-800 truncate text-sm">
                       {proyecto.titulo}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 shrink-0 font-mono">
-                    <span className="text-cyan-300 font-bold">
+                    <span className="text-[#0053AF] font-bold text-sm">
                       {proyecto.votosAcumulados} votos
                     </span>
-                    <span className="text-slate-400 text-[11px]">({porcentaje}%)</span>
+                    <span className="text-slate-600 text-xs font-semibold">({porcentaje}%)</span>
                   </div>
                 </div>
 
-                {/* Barra de Progreso SVG / CSS */}
-                <div className="w-full h-3 rounded-full bg-slate-800/80 overflow-hidden relative">
+                {/* Barra de Progreso Limpia sin riel negro */}
+                <div className="w-full h-3.5 rounded-full bg-slate-200 overflow-hidden relative border border-slate-300/60 p-0.5">
                   <div
                     className="h-full rounded-full transition-all duration-700 ease-out"
                     style={{
                       width: anchoBarra,
                       background: esLider
-                        ? 'linear-gradient(90deg, #0ea5e9, #38bdf8)'
-                        : 'linear-gradient(90deg, #0284c7, #38bdf8)',
-                      boxShadow: isHovered ? '0 0 12px rgba(56, 189, 248, 0.5)' : 'none'
+                        ? 'linear-gradient(90deg, #062A77 0%, #0053AF 65%, #C22727 100%)'
+                        : 'linear-gradient(90deg, #0053AF 0%, #0284c7 100%)',
+                      boxShadow: isHovered ? '0 0 10px rgba(0, 83, 175, 0.4)' : 'none'
                     }}
                   />
                 </div>
-                <div className="flex justify-between items-center mt-1 text-[11px] text-slate-400">
+                <div className="flex justify-between items-center mt-1.5 text-xs text-slate-700 font-medium">
                   <span>{proyecto.distrito}</span>
-                  <span>{proyecto.presupuestoFormateado}</span>
+                  <span className="font-mono font-bold text-[#062A77]">{proyecto.presupuestoFormateado}</span>
                 </div>
               </div>
             );
           })}
         </div>
-      </CivicCard>
+      </div>
 
       {/* Gráfico 2: Asignación Presupuestaria Comunal por Categoría */}
-      <CivicCard
-        level={2}
-        className="lg:col-span-5 p-6 border-white/10 space-y-6 flex flex-col justify-between"
-        style={{ borderRadius: '20px' }}
+      <div
+        className="lg:col-span-5 p-6 bg-white border border-slate-200/90 rounded-2xl shadow-sm space-y-6 flex flex-col justify-between"
       >
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-emerald-400 font-bold text-base">
-              <Coins size={20} />
+            <div className="flex items-center gap-2 text-[#062A77] font-bold text-lg">
+              <Coins size={22} className="text-[#0053AF]" />
               <span>Presupuesto Participativo Cantonal</span>
             </div>
           </div>
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-slate-600 font-medium">
             Distribución del fondo de ₡ {presupuestoTotal.toLocaleString()} asignado a votación vecinal.
           </p>
         </div>
 
         {/* Desglose de Categorías */}
-        <div className="space-y-3.5 my-auto">
+        <div className="space-y-4 my-auto">
           {categoriasData.map((cat) => {
-            const barColor = colorPorCategoria[cat.nombre] || '#38BDF8';
+            const barColor = colorPorCategoria[cat.nombre] || '#0053AF';
             return (
               <div key={cat.nombre} className="space-y-1.5">
                 <div className="flex justify-between text-xs">
                   <div className="flex items-center gap-2">
                     <span
-                      className="w-2.5 h-2.5 rounded-full"
+                      className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: barColor }}
                     />
-                    <span className="text-slate-200 font-medium">{cat.nombre}</span>
+                    <span className="text-slate-800 font-bold text-xs">{cat.nombre}</span>
                   </div>
-                  <span className="font-mono text-slate-300 font-bold">
+                  <span className="font-mono text-[#062A77] font-bold">
                     ₡ {cat.monto.toLocaleString()} ({cat.porcentaje}%)
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                <div className="w-full h-2.5 rounded-full bg-slate-200 overflow-hidden border border-slate-300/50">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{
@@ -173,17 +168,17 @@ export const GraficoPresupuestoParticipativo: React.FC<GraficoPresupuestoPartici
           })}
         </div>
 
-        {/* Leyenda y Nota de Blindaje */}
-        <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 text-xs text-slate-300 space-y-1">
-          <div className="flex items-center gap-1.5 text-cyan-400 font-semibold">
-            <Info size={14} />
+        {/* Leyenda y Nota de Fiscalización Ciudadana */}
+        <div className="p-3.5 rounded-xl bg-blue-50/80 border border-blue-200/90 text-xs text-slate-700 space-y-1">
+          <div className="flex items-center gap-1.5 text-[#062A77] font-bold">
+            <Info size={15} className="text-[#0053AF]" />
             <span>Fiscalización Ciudadana</span>
           </div>
-          <p className="text-[11px] leading-relaxed text-slate-400">
+          <p className="text-[12px] leading-relaxed text-slate-700">
             Los proyectos más votados por distrito serán ratificados e incorporados al Plan Operativo Anual (POA) del Concejo Municipal.
           </p>
         </div>
-      </CivicCard>
+      </div>
     </div>
   );
 };

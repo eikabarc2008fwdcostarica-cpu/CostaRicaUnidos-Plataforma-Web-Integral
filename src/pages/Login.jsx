@@ -241,8 +241,8 @@ class SafeNavbarBoundary extends React.Component {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            background: 'rgba(0,4,13,0.95)',
+            borderBottom: '1px solid var(--cru-border, #E2E8F0)',
+            background: 'var(--theme-header-bg, #FFFFFF)',
             boxSizing: 'border-box'
           }}
         >
@@ -250,7 +250,7 @@ class SafeNavbarBoundary extends React.Component {
           <Link
             to="/"
             style={{
-              color: '#60A5FA',
+              color: 'var(--blue, #0053AF)',
               textDecoration: 'none',
               fontSize: '0.85rem',
               fontWeight: 600
@@ -649,10 +649,10 @@ export default function Login() {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: 'var(--theme-bg, #00040D)',
-        backgroundImage: 'var(--theme-bg-gradient, radial-gradient(ellipse at 50% 15%, rgba(0, 43, 127, 0.22) 0%, rgba(0, 4, 13, 0.98) 75%))',
-        color: 'var(--theme-text-primary, #F8FAFC)',
-        fontFamily: "var(--font-sans, 'Plus Jakarta Sans', system-ui, sans-serif)",
+        backgroundColor: 'var(--theme-bg, #FFFFFF)',
+        backgroundImage: 'var(--theme-bg-gradient, linear-gradient(180deg, #FDFDFF 0%, #F5F7FB 100%))',
+        color: 'var(--theme-text-primary, #0F172A)',
+        fontFamily: "var(--font-main, 'Poppins', sans-serif)",
         position: 'relative',
         overflowX: 'hidden'
       }}
@@ -678,12 +678,12 @@ export default function Login() {
           style={{
             width: '100%',
             maxWidth: '580px',
-            backgroundColor: 'var(--cru-surface, rgba(5, 12, 28, 0.88))',
-            border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.08))',
+            backgroundColor: 'var(--cru-surface, #FFFFFF)',
+            border: '1px solid var(--cru-border, #E2E8F0)',
             borderRadius: '24px',
             backdropFilter: 'blur(28px)',
             WebkitBackdropFilter: 'blur(28px)',
-            boxShadow: 'var(--cru-card-shadow-hover, 0 25px 60px rgba(0, 0, 0, 0.85))',
+            boxShadow: 'var(--cru-card-shadow-hover, 0 20px 45px rgba(6, 42, 119, 0.08))',
             padding: 'clamp(2rem, 5vw, 3.25rem) clamp(1.5rem, 4vw, 2.75rem)',
             position: 'relative',
             overflow: 'hidden',
@@ -712,7 +712,7 @@ export default function Login() {
               style={{
                 fontSize: 'clamp(1.4rem, 3.8vw, 1.85rem)',
                 fontWeight: 800,
-                color: 'var(--cru-text, #FFFFFF)',
+                color: 'var(--cru-text, #062A77)',
                 margin: '0 0 0.35rem 0',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.25
@@ -721,7 +721,7 @@ export default function Login() {
               Acceso Soberano
             </h1>
 
-            <p style={{ color: 'var(--cru-text-soft, #94A3B8)', fontSize: '0.86rem', margin: '0 0 1rem 0' }}>
+            <p style={{ color: 'var(--cru-text-soft, #64748B)', fontSize: '0.86rem', margin: '0 0 1rem 0' }}>
               Control de Acceso Basado en Roles (RBAC) para los Servicios Cívicos de la República
             </p>
 
@@ -730,9 +730,9 @@ export default function Login() {
                 fontFamily: "var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace)",
                 fontSize: '0.7rem',
                 fontWeight: 600,
-                color: '#60A5FA',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                border: '1px solid rgba(59, 130, 246, 0.25)',
+                color: 'var(--cru-accent-blue, #002B7F)',
+                backgroundColor: 'var(--cru-accent-blue-bg, rgba(0, 43, 127, 0.08))',
+                border: '1px solid var(--cru-accent-blue-border, rgba(0, 43, 127, 0.25))',
                 padding: '0.35rem 0.85rem',
                 borderRadius: '9999px',
                 display: 'inline-flex',
@@ -742,7 +742,7 @@ export default function Login() {
                 textTransform: 'uppercase'
               }}
             >
-              <IconShieldCheck size={14} color="#60A5FA" />
+              <IconShieldCheck size={14} color="var(--cru-accent-blue, #002B7F)" />
               <span>ACCESO SEGURO • LEY N° 8968 & LEY N° 8292</span>
             </div>
           </div>
@@ -753,10 +753,10 @@ export default function Login() {
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
               gap: '6px',
-              backgroundColor: 'var(--cru-badge-neutral-bg, rgba(0, 4, 13, 0.9))',
-              padding: '5px',
-              borderRadius: '12px',
-              border: '1px solid var(--cru-border, rgba(255, 255, 255, 0.12))',
+              backgroundColor: 'var(--cru-badge-neutral-bg, #F1F5F9)',
+              padding: '6px',
+              borderRadius: '14px',
+              border: '1px solid var(--cru-border, #E2E8F0)',
               marginBottom: '1.75rem'
             }}
           >
@@ -771,13 +771,13 @@ export default function Login() {
               }}
               style={{
                 padding: '10px 14px',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 border: 'none',
                 background:
                   authMode === 'login'
-                    ? 'linear-gradient(135deg, #002B7F 0%, #0A3282 100%)'
+                    ? 'linear-gradient(135deg, #062A77 0%, #0053AF 100%)'
                     : 'transparent',
-                color: authMode === 'login' ? '#FFFFFF' : 'var(--cru-text-soft, rgba(255, 255, 255, 0.65))',
+                color: authMode === 'login' ? '#FFFFFF' : 'var(--cru-text-soft, #64748B)',
                 fontWeight: 700,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
@@ -787,7 +787,7 @@ export default function Login() {
                 justifyContent: 'center',
                 gap: '8px',
                 boxShadow:
-                  authMode === 'login' ? '0 4px 14px rgba(0, 43, 127, 0.5)' : 'none'
+                  authMode === 'login' ? '0 4px 14px rgba(6, 42, 119, 0.25)' : 'none'
               }}
             >
               <IconLogIn size={16} color="currentColor" />
@@ -805,13 +805,13 @@ export default function Login() {
               }}
               style={{
                 padding: '10px 14px',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 border: 'none',
                 background:
                   authMode === 'register'
-                    ? 'linear-gradient(135deg, #002B7F 0%, #0A3282 100%)'
+                    ? 'linear-gradient(135deg, #062A77 0%, #0053AF 100%)'
                     : 'transparent',
-                color: authMode === 'register' ? '#FFFFFF' : 'var(--cru-text-soft, rgba(255, 255, 255, 0.65))',
+                color: authMode === 'register' ? '#FFFFFF' : 'var(--cru-text-soft, #64748B)',
                 fontWeight: 700,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
@@ -821,7 +821,7 @@ export default function Login() {
                 justifyContent: 'center',
                 gap: '8px',
                 boxShadow:
-                  authMode === 'register' ? '0 4px 14px rgba(0, 43, 127, 0.5)' : 'none'
+                  authMode === 'register' ? '0 4px 14px rgba(6, 42, 119, 0.25)' : 'none'
               }}
             >
               <IconUserPlus size={16} color="currentColor" />
@@ -889,11 +889,11 @@ export default function Login() {
                     gap: '0.45rem',
                     fontSize: '0.82rem',
                     fontWeight: 600,
-                    color: '#E2E8F0',
+                    color: 'var(--cru-text, #062A77)',
                     marginBottom: '0.45rem'
                   }}
                 >
-                  <IconCreditCard size={15} color="#94A3B8" />
+                  <IconCreditCard size={15} color="var(--cru-accent-blue, #002B7F)" />
                   <span>Cédula Costarricense o Correo Institucional</span>
                 </label>
                 <input
@@ -910,20 +910,20 @@ export default function Login() {
                     width: '100%',
                     padding: '0.85rem 1.1rem',
                     borderRadius: '12px',
-                    backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#FFFFFF',
+                    backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                    border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                    color: 'var(--theme-input-text, #0F172A)',
                     fontSize: '0.94rem',
                     outline: 'none',
                     boxSizing: 'border-box',
                     transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
                   }}
                   onFocus={(e) => {
-                    e.target.style.borderColor = 'rgba(56, 189, 248, 0.6)';
-                    e.target.style.boxShadow = '0 0 12px rgba(56, 189, 248, 0.2)';
+                    e.target.style.borderColor = 'var(--blue, #0053AF)';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 83, 175, 0.15)';
                   }}
                   onBlur={(e) => {
-                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                    e.target.style.borderColor = 'var(--theme-input-border, #CBD5E1)';
                     e.target.style.boxShadow = 'none';
                   }}
                 />
@@ -939,11 +939,11 @@ export default function Login() {
                     gap: '0.45rem',
                     fontSize: '0.82rem',
                     fontWeight: 600,
-                    color: '#E2E8F0',
+                    color: 'var(--cru-text, #062A77)',
                     marginBottom: '0.45rem'
                   }}
                 >
-                  <IconLock size={15} color="#94A3B8" />
+                  <IconLock size={15} color="var(--cru-accent-blue, #002B7F)" />
                   <span>Contraseña de Acceso</span>
                 </label>
                 <div style={{ position: 'relative' }}>
@@ -961,20 +961,20 @@ export default function Login() {
                       width: '100%',
                       padding: '0.85rem 2.75rem 0.85rem 1.1rem',
                       borderRadius: '12px',
-                      backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#FFFFFF',
+                      backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                      border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                      color: 'var(--theme-input-text, #0F172A)',
                       fontSize: '0.94rem',
                       outline: 'none',
                       boxSizing: 'border-box',
                       transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
                     }}
                     onFocus={(e) => {
-                      e.target.style.borderColor = 'rgba(56, 189, 248, 0.6)';
-                      e.target.style.boxShadow = '0 0 12px rgba(56, 189, 248, 0.2)';
+                      e.target.style.borderColor = 'var(--blue, #0053AF)';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 83, 175, 0.15)';
                     }}
                     onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                      e.target.style.borderColor = 'var(--theme-input-border, #CBD5E1)';
                       e.target.style.boxShadow = 'none';
                     }}
                   />
@@ -998,7 +998,7 @@ export default function Login() {
                     }}
                     aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
                   >
-                    {showPassword ? <IconEyeOff size={18} color="#94A3B8" /> : <IconEye size={18} color="#94A3B8" />}
+                    {showPassword ? <IconEyeOff size={18} color="#64748B" /> : <IconEye size={18} color="#64748B" />}
                   </button>
                 </div>
               </div>
@@ -1012,9 +1012,9 @@ export default function Login() {
                   width: '100%',
                   padding: '0.95rem 1.5rem',
                   borderRadius: '14px',
-                  backgroundColor: '#002B7F',
-                  backgroundImage: 'linear-gradient(135deg, #002B7F 0%, #001489 50%, #0A3282 100%)',
-                  border: '1px solid rgba(121, 166, 255, 0.45)',
+                  backgroundColor: 'var(--navy, #062A77)',
+                  backgroundImage: 'linear-gradient(135deg, #062A77 0%, #0053AF 100%)',
+                  border: 'none',
                   color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '0.96rem',
@@ -1024,7 +1024,7 @@ export default function Login() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.6rem',
-                  boxShadow: '0 4px 20px rgba(0, 43, 127, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 6px 20px rgba(6, 42, 119, 0.25)',
                   marginTop: '0.5rem'
                 }}
               >
@@ -1060,10 +1060,10 @@ export default function Login() {
                       gap: '0.45rem',
                       fontSize: '0.82rem',
                       fontWeight: 600,
-                      color: '#E2E8F0'
+                      color: 'var(--cru-text, #062A77)'
                     }}
                   >
-                    <IconCreditCard size={15} color="#94A3B8" />
+                    <IconCreditCard size={15} color="var(--cru-accent-blue, #002B7F)" />
                     <span>Cédula Costarricense o DIMEX Oficial</span>
                   </label>
                   <span style={{ fontSize: '0.72rem', color: '#64748B', fontFamily: "var(--font-mono, monospace)" }}>
@@ -1089,11 +1089,11 @@ export default function Login() {
                       flex: 1,
                       padding: '0.85rem 1.1rem',
                       borderRadius: '12px',
-                      backgroundColor: 'rgba(0, 4, 13, 0.85)',
+                      backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
                       border: isHaciendaVerified
-                        ? '1px solid rgba(52, 211, 153, 0.6)'
-                        : '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#FFFFFF',
+                        ? '1.5px solid #10B981'
+                        : '1.5px solid var(--theme-input-border, #CBD5E1)',
+                      color: 'var(--theme-input-text, #0F172A)',
                       fontSize: '0.94rem',
                       outline: 'none',
                       boxSizing: 'border-box',
@@ -1101,16 +1101,16 @@ export default function Login() {
                     }}
                     onFocus={(e) => {
                       e.target.style.borderColor = isHaciendaVerified
-                        ? 'rgba(52, 211, 153, 0.8)'
-                        : 'rgba(56, 189, 248, 0.6)';
+                        ? '#10B981'
+                        : 'var(--blue, #0053AF)';
                       e.target.style.boxShadow = isHaciendaVerified
-                        ? '0 0 12px rgba(52, 211, 153, 0.25)'
-                        : '0 0 12px rgba(56, 189, 248, 0.2)';
+                        ? '0 0 0 3px rgba(16, 185, 129, 0.15)'
+                        : '0 0 0 3px rgba(0, 83, 175, 0.15)';
                     }}
                     onBlur={(e) => {
                       e.target.style.borderColor = isHaciendaVerified
-                        ? 'rgba(52, 211, 153, 0.6)'
-                        : 'rgba(255, 255, 255, 0.15)';
+                        ? '#10B981'
+                        : 'var(--theme-input-border, #CBD5E1)';
                       e.target.style.boxShadow = 'none';
                     }}
                   />
@@ -1123,9 +1123,9 @@ export default function Login() {
                     style={{
                       padding: '0 1.25rem',
                       borderRadius: '12px',
-                      backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                      border: '1px solid rgba(59, 130, 246, 0.35)',
-                      color: '#60A5FA',
+                      backgroundColor: 'var(--cru-accent-blue-bg, rgba(0, 43, 127, 0.08))',
+                      border: '1px solid var(--cru-accent-blue-border, rgba(0, 43, 127, 0.25))',
+                      color: 'var(--cru-accent-blue, #002B7F)',
                       fontWeight: 700,
                       fontSize: '0.85rem',
                       cursor: isValidating ? 'not-allowed' : 'pointer',
@@ -1134,17 +1134,17 @@ export default function Login() {
                       gap: '6px',
                       whiteSpace: 'nowrap',
                       transition: 'all 0.2s ease',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                      boxShadow: 'none'
                     }}
                   >
                     {isValidating ? (
                       <>
-                        <IconLoader2 size={15} color="#60A5FA" />
+                        <IconLoader2 size={15} color="var(--cru-accent-blue, #002B7F)" />
                         <span>Validando...</span>
                       </>
                     ) : (
                       <>
-                        <IconSearch size={15} color="#60A5FA" />
+                        <IconSearch size={15} color="var(--cru-accent-blue, #002B7F)" />
                         <span>Validar</span>
                       </>
                     )}
@@ -1159,13 +1159,13 @@ export default function Login() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.45rem',
-                      color: '#34D399',
+                      color: '#059669',
                       fontSize: '0.78rem',
                       fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
-                      fontWeight: 500
+                      fontWeight: 600
                     }}
                   >
-                    <IconCheckCircle2 size={14} color="#34D399" />
+                    <IconCheckCircle2 size={14} color="#059669" />
                     <span>{haciendaSuccess || '✔ Identidad oficial verificada y certificada ante el Ministerio de Hacienda.'}</span>
                   </div>
                 )}
@@ -1175,14 +1175,14 @@ export default function Login() {
                   <div
                     style={{
                       marginTop: '0.5rem',
-                      color: '#FBBF24',
+                      color: '#D97706',
                       fontSize: '0.76rem',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.35rem'
                     }}
                   >
-                    <IconAlertCircle size={14} color="#FBBF24" />
+                    <IconAlertCircle size={14} color="#D97706" />
                     <span>{haciendaError}</span>
                   </div>
                 )}
@@ -1199,16 +1199,16 @@ export default function Login() {
                       gap: '0.45rem',
                       fontSize: '0.82rem',
                       fontWeight: 600,
-                      color: '#E2E8F0'
+                      color: 'var(--cru-text, #062A77)'
                     }}
                   >
-                    <IconUser size={15} color="#94A3B8" />
+                    <IconUser size={15} color="var(--cru-accent-blue, #002B7F)" />
                     <span>Nombre(s)</span>
                   </label>
                   {isHaciendaVerified && (
                     <span
                       style={{
-                        color: '#34D399',
+                        color: '#059669',
                         fontSize: '0.72rem',
                         fontWeight: 600,
                         display: 'inline-flex',
@@ -1235,13 +1235,21 @@ export default function Login() {
                     width: '100%',
                     padding: '0.85rem 1.1rem',
                     borderRadius: '12px',
-                    backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#FFFFFF',
+                    backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                    border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                    color: 'var(--theme-input-text, #0F172A)',
                     fontSize: '0.94rem',
                     outline: 'none',
                     boxSizing: 'border-box',
                     transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = 'var(--blue, #0053AF)';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 83, 175, 0.15)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = 'var(--theme-input-border, #CBD5E1)';
+                    e.target.style.boxShadow = 'none';
                   }}
                 />
               </div>
@@ -1255,7 +1263,7 @@ export default function Login() {
                       display: 'block',
                       fontSize: '0.82rem',
                       fontWeight: 600,
-                      color: '#E2E8F0',
+                      color: 'var(--cru-text, #062A77)',
                       marginBottom: '0.45rem'
                     }}
                   >
@@ -1276,12 +1284,20 @@ export default function Login() {
                       width: '100%',
                       padding: '0.85rem 1rem',
                       borderRadius: '12px',
-                      backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#FFFFFF',
+                      backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                      border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                      color: 'var(--theme-input-text, #0F172A)',
                       fontSize: '0.94rem',
                       outline: 'none',
                       boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = 'var(--blue, #0053AF)';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 83, 175, 0.15)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'var(--theme-input-border, #CBD5E1)';
+                      e.target.style.boxShadow = 'none';
                     }}
                   />
                 </div>
@@ -1293,7 +1309,7 @@ export default function Login() {
                       display: 'block',
                       fontSize: '0.82rem',
                       fontWeight: 600,
-                      color: '#E2E8F0',
+                      color: 'var(--cru-text, #062A77)',
                       marginBottom: '0.45rem'
                     }}
                   >
@@ -1313,12 +1329,20 @@ export default function Login() {
                       width: '100%',
                       padding: '0.85rem 1rem',
                       borderRadius: '12px',
-                      backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#FFFFFF',
+                      backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                      border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                      color: 'var(--theme-input-text, #0F172A)',
                       fontSize: '0.94rem',
                       outline: 'none',
                       boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = 'var(--blue, #0053AF)';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 83, 175, 0.15)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'var(--theme-input-border, #CBD5E1)';
+                      e.target.style.boxShadow = 'none';
                     }}
                   />
                 </div>
@@ -1334,11 +1358,11 @@ export default function Login() {
                     gap: '0.45rem',
                     fontSize: '0.82rem',
                     fontWeight: 600,
-                    color: '#E2E8F0',
+                    color: 'var(--cru-text, #062A77)',
                     marginBottom: '0.45rem'
                   }}
                 >
-                  <IconMail size={15} color="#94A3B8" />
+                  <IconMail size={15} color="var(--cru-accent-blue, #002B7F)" />
                   <span>Correo Electrónico Ciudadano</span>
                 </label>
                 <input
@@ -1355,12 +1379,20 @@ export default function Login() {
                     width: '100%',
                     padding: '0.85rem 1.1rem',
                     borderRadius: '12px',
-                    backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#FFFFFF',
+                    backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                    border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                    color: 'var(--theme-input-text, #0F172A)',
                     fontSize: '0.94rem',
                     outline: 'none',
                     boxSizing: 'border-box'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = 'var(--blue, #0053AF)';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 83, 175, 0.15)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = 'var(--theme-input-border, #CBD5E1)';
+                    e.target.style.boxShadow = 'none';
                   }}
                 />
               </div>
@@ -1375,11 +1407,11 @@ export default function Login() {
                     gap: '0.45rem',
                     fontSize: '0.82rem',
                     fontWeight: 600,
-                    color: '#E2E8F0',
+                    color: 'var(--cru-text, #062A77)',
                     marginBottom: '0.45rem'
                   }}
                 >
-                  <IconLock size={15} color="#94A3B8" />
+                  <IconLock size={15} color="var(--cru-accent-blue, #002B7F)" />
                   <span>Crear Contraseña de Acceso</span>
                 </label>
                 <div style={{ position: 'relative' }}>
@@ -1397,12 +1429,20 @@ export default function Login() {
                       width: '100%',
                       padding: '0.85rem 2.75rem 0.85rem 1.1rem',
                       borderRadius: '12px',
-                      backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#FFFFFF',
+                      backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                      border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                      color: 'var(--theme-input-text, #0F172A)',
                       fontSize: '0.94rem',
                       outline: 'none',
                       boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = 'var(--blue, #0053AF)';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 83, 175, 0.15)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'var(--theme-input-border, #CBD5E1)';
+                      e.target.style.boxShadow = 'none';
                     }}
                   />
                   <button
@@ -1425,7 +1465,7 @@ export default function Login() {
                     }}
                     aria-label={showRegPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
                   >
-                    {showRegPassword ? <IconEyeOff size={18} color="#94A3B8" /> : <IconEye size={18} color="#94A3B8" />}
+                    {showRegPassword ? <IconEyeOff size={18} color="#64748B" /> : <IconEye size={18} color="#64748B" />}
                   </button>
                 </div>
               </div>
@@ -1440,11 +1480,11 @@ export default function Login() {
                     gap: '0.45rem',
                     fontSize: '0.82rem',
                     fontWeight: 600,
-                    color: '#E2E8F0',
+                    color: 'var(--cru-text, #062A77)',
                     marginBottom: '0.45rem'
                   }}
                 >
-                  <IconLock size={15} color="#94A3B8" />
+                  <IconLock size={15} color="var(--cru-accent-blue, #002B7F)" />
                   <span>Confirmar Contraseña</span>
                 </label>
                 <div style={{ position: 'relative' }}>
@@ -1462,12 +1502,20 @@ export default function Login() {
                       width: '100%',
                       padding: '0.85rem 2.75rem 0.85rem 1.1rem',
                       borderRadius: '12px',
-                      backgroundColor: 'rgba(0, 4, 13, 0.85)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#FFFFFF',
+                      backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                      border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                      color: 'var(--theme-input-text, #0F172A)',
                       fontSize: '0.94rem',
                       outline: 'none',
                       boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = 'var(--blue, #0053AF)';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 83, 175, 0.15)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'var(--theme-input-border, #CBD5E1)';
+                      e.target.style.boxShadow = 'none';
                     }}
                   />
                   <button
@@ -1490,7 +1538,7 @@ export default function Login() {
                     }}
                     aria-label={showRegConfirmPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
                   >
-                    {showRegConfirmPassword ? <IconEyeOff size={18} color="#94A3B8" /> : <IconEye size={18} color="#94A3B8" />}
+                    {showRegConfirmPassword ? <IconEyeOff size={18} color="#64748B" /> : <IconEye size={18} color="#64748B" />}
                   </button>
                 </div>
               </div>
@@ -1504,9 +1552,9 @@ export default function Login() {
                   width: '100%',
                   padding: '0.95rem 1.5rem',
                   borderRadius: '14px',
-                  backgroundColor: '#002B7F',
-                  backgroundImage: 'linear-gradient(135deg, #002B7F 0%, #001489 50%, #0A3282 100%)',
-                  border: '1px solid rgba(121, 166, 255, 0.45)',
+                  backgroundColor: 'var(--navy, #062A77)',
+                  backgroundImage: 'linear-gradient(135deg, #062A77 0%, #0053AF 100%)',
+                  border: 'none',
                   color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '0.96rem',
@@ -1516,7 +1564,7 @@ export default function Login() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.6rem',
-                  boxShadow: '0 4px 20px rgba(0, 43, 127, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 6px 20px rgba(6, 42, 119, 0.25)',
                   marginTop: '0.5rem'
                 }}
               >
@@ -1540,10 +1588,10 @@ export default function Login() {
             style={{
               marginTop: '2.25rem',
               paddingTop: '1.25rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              borderTop: '1px solid var(--cru-border, #E2E8F0)',
               textAlign: 'center',
               fontSize: '0.72rem',
-              color: '#64748B',
+              color: 'var(--cru-text-soft, #64748B)',
               lineHeight: 1.55,
               display: 'flex',
               flexDirection: 'column',
@@ -1557,7 +1605,7 @@ export default function Login() {
               style={{
                 fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
                 fontSize: '0.66rem',
-                color: '#475569',
+                color: 'var(--cru-text-soft, #64748B)',
                 marginTop: '0.2rem'
               }}
             >

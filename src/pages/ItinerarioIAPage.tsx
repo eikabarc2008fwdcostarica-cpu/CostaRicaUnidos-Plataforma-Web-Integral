@@ -68,44 +68,47 @@ export default function ItinerarioIAPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--theme-bg,#00040D)] text-[var(--theme-text-primary,#F1F5F9)] selection:bg-cyan-500 selection:text-slate-950">
+    <div className="min-h-screen bg-[var(--theme-bg,#F8FAFC)] text-[var(--theme-text-primary,#0F172A)]">
       <Navbar />
       <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Banner Hero Principal */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-[#00172e] to-slate-950 p-8 sm:p-12 shadow-2xl">
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-cyan-500/15 blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-
+        <div
+          className="relative overflow-hidden rounded-3xl border border-blue-900 p-8 sm:p-12 shadow-2xl"
+          style={{
+            background: 'linear-gradient(135deg, #062A77 0%, #01004E 100%)',
+            borderLeft: '6px solid #C22727'
+          }}
+        >
           <div className="relative z-10 max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
-              <Sparkles size={14} className="animate-spin-slow" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-semibold uppercase tracking-wider">
+              <Sparkles size={14} className="text-[#93C5FD]" />
               Motor Generativo de IA y Topografía 3D
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
               Planificador{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">
+              <span className="text-[#93C5FD]">
                 'Itinerario Pura Vida'
               </span>
             </h1>
 
-            <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
+            <p className="text-slate-100 text-base sm:text-lg leading-relaxed">
               Diseña tu recorrido cantonal ideal mediante algoritmos de optimización multivariable.
               Calculamos perfiles de pendiente en 3D para certificar accesibilidad universal (Ley 7600)
               o advertir exigencia de vehículos 4x4, vinculando tu ruta con Waze y Google Maps.
             </p>
 
-            <div className="flex flex-wrap gap-4 pt-2 text-xs text-slate-300 font-mono">
+            <div className="flex flex-wrap gap-4 pt-2 text-xs text-slate-200 font-mono">
               <span className="flex items-center gap-1.5">
-                <BrainCircuit size={15} className="text-cyan-400" />
+                <BrainCircuit size={15} className="text-[#93C5FD]" />
                 Optimización Multivariable
               </span>
               <span className="flex items-center gap-1.5">
-                <Mountain size={15} className="text-amber-400" />
+                <Mountain size={15} className="text-amber-300" />
                 Relieve 3D de Eiker
               </span>
               <span className="flex items-center gap-1.5">
-                <ShieldCheck size={15} className="text-emerald-400" />
+                <ShieldCheck size={15} className="text-emerald-300" />
                 Certificación Ley 7600
               </span>
             </div>
@@ -114,49 +117,53 @@ export default function ItinerarioIAPage() {
 
         {/* Animación de Carga Cívica */}
         {cargando && (
-          <CivicCard
-            level={3}
-            className="p-8 sm:p-12 border-cyan-500/40 bg-slate-900/90 backdrop-blur-xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-300"
-            style={{ borderRadius: '24px' }}
+          <div
+            className="p-8 sm:p-12 text-center space-y-6 shadow-xl"
+            style={{
+              background: '#FFFFFF',
+              borderRadius: '24px',
+              border: '1px solid #E2E8F0',
+              borderTop: '4px solid #0053AF'
+            }}
           >
             <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-              <div className="absolute inset-0 rounded-full border-4 border-cyan-500/20 border-t-cyan-400 animate-spin" />
-              <div className="absolute inset-3 rounded-full border-4 border-emerald-500/20 border-b-emerald-400 animate-spin-reverse" />
-              <Sparkles size={32} className="text-cyan-300 animate-pulse" />
+              <div className="absolute inset-0 rounded-full border-4 border-blue-200 border-t-[#0053AF] animate-spin" />
+              <div className="absolute inset-3 rounded-full border-4 border-emerald-200 border-b-emerald-600 animate-spin-reverse" />
+              <Sparkles size={32} className="text-[#0053AF] animate-pulse" />
             </div>
 
             <div className="space-y-2 max-w-lg mx-auto">
-              <h3 className="text-xl font-bold text-white">
+              <h3 className="text-xl font-bold text-[#062A77]">
                 Ensamblando Itinerario Soberano 'Pura Vida'
               </h3>
-              <p className="text-sm font-mono text-cyan-300 h-6 transition-all duration-300">
+              <p className="text-sm font-mono text-[#0053AF] font-bold h-6 transition-all duration-300">
                 {fasesTexto[faseCarga]}
               </p>
             </div>
 
             {/* Barra de Progreso Cívica */}
-            <div className="w-full max-w-md mx-auto bg-slate-950/80 rounded-full h-2.5 overflow-hidden border border-white/10">
+            <div className="w-full max-w-md mx-auto bg-slate-200 rounded-full h-3 overflow-hidden border border-slate-300 p-0.5">
               <div
-                className="bg-gradient-to-r from-cyan-500 via-teal-400 to-emerald-400 h-full rounded-full transition-all duration-300 ease-out"
+                className="bg-gradient-to-r from-[#0053AF] to-[#C22727] h-full rounded-full transition-all duration-300 ease-out"
                 style={{ width: `${((faseCarga + 1) / fasesTexto.length) * 100}%` }}
               />
             </div>
 
-            <div className="flex flex-wrap justify-center gap-4 text-[11px] text-slate-400 font-mono pt-2">
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-slate-600 font-mono pt-2 font-medium">
               <span className="flex items-center gap-1">
-                <CheckCircle2 size={13} className="text-emerald-400" />
+                <CheckCircle2 size={13} className="text-emerald-600" />
                 Modelo Digital de Terreno 3D
               </span>
               <span className="flex items-center gap-1">
-                <CheckCircle2 size={13} className="text-emerald-400" />
+                <CheckCircle2 size={13} className="text-emerald-600" />
                 Validación Padrón y PyMEs
               </span>
               <span className="flex items-center gap-1">
-                <CheckCircle2 size={13} className="text-emerald-400" />
+                <CheckCircle2 size={13} className="text-emerald-600" />
                 Georutas Waze / Maps
               </span>
             </div>
-          </CivicCard>
+          </div>
         )}
 
         {/* Formulario Generativo o Resultado del Itinerario */}
@@ -169,35 +176,59 @@ export default function ItinerarioIAPage() {
 
             {/* Presets Informativos */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-              <CivicCard level={1} className="p-4 border-white/5 space-y-2">
-                <span className="font-bold text-cyan-300 flex items-center gap-1.5">
-                  <Accessibility className="w-4 h-4 text-cyan-400" />
+              <div
+                className="p-5 space-y-2 shadow-sm"
+                style={{
+                  background: '#FFFFFF',
+                  borderRadius: '16px',
+                  border: '1px solid #E2E8F0',
+                  borderTop: '4px solid #0053AF'
+                }}
+              >
+                <span className="font-bold text-[#062A77] flex items-center gap-1.5 text-sm">
+                  <Accessibility className="w-4 h-4 text-[#0053AF]" />
                   <span>Ruta Accesible Ciudadana</span>
                 </span>
-                <p className="text-slate-400">
+                <p className="text-slate-600 leading-relaxed">
                   Limita pendientes a un máximo de 8%. Prioriza aceras continuas, sodas típicas con rampa y parques nacionales.
                 </p>
-              </CivicCard>
+              </div>
 
-              <CivicCard level={1} className="p-4 border-white/5 space-y-2">
-                <span className="font-bold text-amber-300 flex items-center gap-1.5">
-                  <Car className="w-4 h-4 text-amber-400" />
+              <div
+                className="p-5 space-y-2 shadow-sm"
+                style={{
+                  background: '#FFFFFF',
+                  borderRadius: '16px',
+                  border: '1px solid #E2E8F0',
+                  borderTop: '4px solid #C22727'
+                }}
+              >
+                <span className="font-bold text-[#C22727] flex items-center gap-1.5 text-sm">
+                  <Car className="w-4 h-4 text-[#C22727]" />
                   <span>Travesía Cumbres 4x4</span>
                 </span>
-                <p className="text-slate-400">
+                <p className="text-slate-600 leading-relaxed">
                   Desbloquea senderos de lastre, miradores montañosos y pasos de quebradas con pendientes superiores al 16%.
                 </p>
-              </CivicCard>
+              </div>
 
-              <CivicCard level={1} className="p-4 border-white/5 space-y-2">
-                <span className="font-bold text-emerald-300 flex items-center gap-1.5">
-                  <Sprout className="w-4 h-4 text-emerald-400" />
+              <div
+                className="p-5 space-y-2 shadow-sm"
+                style={{
+                  background: '#FFFFFF',
+                  borderRadius: '16px',
+                  border: '1px solid #E2E8F0',
+                  borderTop: '4px solid #059669'
+                }}
+              >
+                <span className="font-bold text-emerald-800 flex items-center gap-1.5 text-sm">
+                  <Sprout className="w-4 h-4 text-emerald-600" />
                   <span>Circuito Feria & PyMEs</span>
                 </span>
-                <p className="text-slate-400">
+                <p className="text-slate-600 leading-relaxed">
                   Incentiva el consumo en puestos de agricultores locales y sodas registradas ante el Ministerio de Hacienda.
                 </p>
-              </CivicCard>
+              </div>
             </div>
           </div>
         )}

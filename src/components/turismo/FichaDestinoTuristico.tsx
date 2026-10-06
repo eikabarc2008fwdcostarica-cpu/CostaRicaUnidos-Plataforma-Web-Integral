@@ -54,11 +54,8 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
 
   return (
     <>
-      <CivicCard
-        level={2}
-        interactive
-        className="flex flex-col h-full overflow-hidden transition-all duration-300 hover:border-cyan-400/40"
-        style={{ borderRadius: '16px' }}
+      <div
+        className="flex flex-col h-full overflow-hidden transition-all duration-300 bg-white border border-slate-200 hover:border-[#0053AF] shadow-sm hover:shadow-lg rounded-2xl"
       >
         {/* Galería de Alto Rendimiento Visual */}
         <div className="relative w-full h-56 bg-slate-900 overflow-hidden group select-none">
@@ -74,7 +71,7 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
 
           {/* Categoría Pill */}
           <div className="absolute top-3 left-3 z-10">
-            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-slate-900/80 text-cyan-300 border border-cyan-500/30 backdrop-blur-md">
+            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-[#062A77]/90 text-white border border-blue-400/40 backdrop-blur-md shadow-sm">
               {destino.categoria}
             </span>
           </div>
@@ -128,35 +125,35 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
         {/* Contenido Principal */}
         <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
           <div>
-            <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
-              <MapPin size={13} className="text-cyan-400" />
+            <div className="flex items-center gap-1.5 text-xs text-[#0053AF] font-bold mb-1">
+              <MapPin size={13} className="text-[#0053AF]" />
               <span>{destino?.distrito || 'Distrito'}, {destino?.canton || 'Cantón'}, {destino?.provincia || 'Costa Rica'}</span>
             </div>
 
-            <h3 className="text-lg font-bold text-white leading-snug group-hover:text-cyan-200 transition-colors">
+            <h3 className="text-lg font-bold text-[#062A77] leading-snug transition-colors">
               {destino?.nombre || 'Destino Turístico'}
             </h3>
 
-            <p className="mt-2 text-sm text-slate-300 line-clamp-3 leading-relaxed">
+            <p className="mt-2 text-sm text-slate-700 line-clamp-3 leading-relaxed font-normal">
               {destino?.descripcion || 'Destino turístico oficial verificado de Costa Rica.'}
             </p>
           </div>
 
           {/* Badges de Accesibilidad y Logística */}
-          <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
+          <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
             {badges.map((badgeType) => (
               <AccessibilityBadge key={badgeType} type={badgeType} size="sm" />
             ))}
           </div>
 
           {/* Metadatos Logísticos */}
-          <div className="grid grid-cols-2 gap-2 text-xs bg-white/[0.02] p-3 rounded-lg border border-white/5 text-slate-300">
+          <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-3 rounded-lg border border-slate-200 text-slate-800 font-medium">
             <div className="flex items-center gap-1.5">
-              <Clock size={13} className="text-slate-400" />
+              <Clock size={13} className="text-[#0053AF]" />
               <span>{destino.tiempoVisitaRecomendado}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <DollarSign size={13} className="text-slate-400" />
+              <DollarSign size={13} className="text-[#059669]" />
               <span className="truncate">{destino.tarifaEntrada}</span>
             </div>
           </div>
@@ -169,6 +166,7 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
                 size="sm"
                 fullWidth
                 onClick={abrirGoogleMaps}
+                style={{ borderColor: '#CBD5E1', color: '#0F172A', backgroundColor: '#F8FAFC' }}
                 leftIcon={<ExternalLink size={13} />}
               >
                 Maps
@@ -178,6 +176,7 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
                 size="sm"
                 fullWidth
                 onClick={abrirWaze}
+                style={{ borderColor: '#BFDBFE', color: '#0053AF', backgroundColor: '#EFF6FF' }}
                 leftIcon={<ExternalLink size={13} />}
               >
                 Waze
@@ -188,13 +187,14 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
                 variant="primary"
                 size="sm"
                 onClick={() => onAgregarAItinerario(destino)}
+                style={{ backgroundColor: '#C22727', borderColor: '#C22727', color: '#FFFFFF', fontWeight: 600 }}
               >
                 + Planear
               </CivicButton>
             )}
           </div>
         </div>
-      </CivicCard>
+      </div>
 
       {/* Lightbox Modal de Foto Completa */}
       {modalLightboxAbierto && (
@@ -215,13 +215,13 @@ export const FichaDestinoTuristico: React.FC<FichaDestinoTuristicoProps> = ({
             />
             <div className="mt-4 text-center">
               <h4 className="text-lg font-bold text-white">{destino.nombre}</h4>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-slate-300 font-medium">
                 {destino.distrito}, {destino.canton} — {destino.elevacionMsnm} msnm
               </p>
             </div>
             <button
               onClick={() => setModalLightboxAbierto(false)}
-              className="absolute -top-3 -right-3 px-3 py-1.5 bg-slate-800 text-white text-xs font-bold rounded-full border border-white/20 hover:bg-slate-700"
+              className="absolute -top-3 -right-3 px-3 py-1.5 bg-[#062A77] hover:bg-[#C22727] text-white text-xs font-bold rounded-full border border-white/40 shadow-lg transition-colors"
             >
               Cerrar (Esc)
             </button>

@@ -193,8 +193,8 @@ export const ModalVotacionAntifraude: React.FC<ModalVotacionAntifraudeProps> = (
       isOpen={isOpen}
       onClose={handleCerrar}
       title={
-        <div className="flex items-center gap-2.5 text-cyan-400 font-bold">
-          <ShieldCheck size={22} className="text-cyan-400" />
+        <div className="flex items-center gap-2.5 text-[#062A77] font-bold">
+          <ShieldCheck size={22} className="text-[#0053AF]" />
           <span>Votación Soberana de Presupuesto Participativo</span>
         </div>
       }

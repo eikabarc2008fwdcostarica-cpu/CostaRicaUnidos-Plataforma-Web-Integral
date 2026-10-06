@@ -406,13 +406,13 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
       {showHeader && (
         <div
           style={{
-            backgroundColor: '#070D1B',
+            backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
             borderRadius: '24px',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            border: '1px solid var(--cru-border, #E2E8F0)',
             padding: '2.5rem 2rem',
             position: 'relative',
             overflow: 'hidden',
-            boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.7)'
+            boxShadow: 'var(--cru-card-shadow, 0 10px 30px rgba(6, 42, 119, 0.06))'
           }}
         >
           {/* Resplandor decorativo cívico */}
@@ -478,7 +478,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                 style={{
                   fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
                   fontWeight: 900,
-                  color: '#FFFFFF',
+                  color: 'var(--cru-text, #062A77)',
                   lineHeight: 1.2,
                   margin: '0 0 0.5rem 0',
                   letterSpacing: '-0.02em'
@@ -491,7 +491,7 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
                 style={{
                   fontSize: '1rem',
                   lineHeight: 1.5,
-                  color: '#94A3B8',
+                  color: 'var(--cru-text-secondary, #475569)',
                   maxWidth: '720px',
                   margin: 0
                 }}
@@ -846,8 +846,8 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
           gap: '1rem',
           padding: '1rem 1.25rem',
           borderRadius: '16px',
-          backgroundColor: '#070D1B',
-          border: '1px solid rgba(255, 255, 255, 0.08)'
+          backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
+          border: '1px solid var(--cru-border, #E2E8F0)'
         }}
       >
         {/* Buscador de texto */}
@@ -1002,13 +1002,13 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
             style={{
               padding: '3rem',
               textAlign: 'center',
-              backgroundColor: '#070D1B',
+              backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
               borderRadius: '16px',
-              border: '1px solid rgba(255, 255, 255, 0.08)'
+              border: '1px solid var(--cru-border, #E2E8F0)'
             }}
           >
             <RefreshCw className="w-8 h-8 text-sky-400 animate-spin mx-auto mb-3" />
-            <p style={{ color: '#94A3B8', fontSize: '0.9rem' }}>
+            <p style={{ color: 'var(--cru-text-secondary, #475569)', fontSize: '0.9rem' }}>
               Cargando debates cívicos desde db.json...
             </p>
           </div>
@@ -1017,13 +1017,13 @@ export default function ForoTico({ initialScope = 'nacional', showHeader = true 
             style={{
               padding: '3rem 2rem',
               textAlign: 'center',
-              backgroundColor: '#070D1B',
+              backgroundColor: 'var(--cru-surface-card, #FFFFFF)',
               borderRadius: '16px',
-              border: '1px dashed rgba(255, 255, 255, 0.15)'
+              border: '1px dashed var(--cru-border, #CBD5E1)'
             }}
           >
             <MessageSquare className="w-12 h-12 text-slate-500 mx-auto mb-3 opacity-60" />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.5rem' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--cru-text, #062A77)', marginBottom: '0.5rem' }}>
               No se encontraron publicaciones en {ambitoActualObj.nombre}
             </h3>
             <p style={{ color: '#94A3B8', fontSize: '0.85rem', maxWidth: '480px', margin: '0 auto 1.5rem auto' }}>

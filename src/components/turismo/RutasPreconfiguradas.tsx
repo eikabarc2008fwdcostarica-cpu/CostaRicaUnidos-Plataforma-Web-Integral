@@ -35,11 +35,11 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-xl font-bold text-white flex items-center gap-2">
-            <Route className="text-cyan-400" size={22} />
+          <h3 className="text-xl font-bold text-[#062A77] flex items-center gap-2">
+            <Route className="text-[#0053AF]" size={22} />
             Rutas e Itinerarios Oficiales Sugeridos
           </h3>
-          <p className="text-sm text-slate-300 mt-1">
+          <p className="text-sm text-slate-700 mt-1 font-medium">
             Circuitos probados con certificación de viabilidad vial, horarios y accesibilidad.
           </p>
         </div>
@@ -51,32 +51,30 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
           const esAltaDificultad = ruta.duracion === '2 Días';
 
           return (
-            <CivicCard
+            <div
               key={ruta.id}
-              level={2}
-              className={`transition-all duration-300 border ${
-                estaExpandida ? 'border-cyan-500/50 shadow-lg shadow-cyan-950/30' : 'border-white/10'
-              }`}
-              style={{ borderRadius: '20px' }}
+              className={`transition-all duration-300 bg-white border ${
+                estaExpandida ? 'border-[#0053AF] shadow-lg' : 'border-slate-200 shadow-sm'
+              } rounded-2xl overflow-hidden`}
             >
               {/* Encabezado con Imagen */}
-              <div className="relative h-48 w-full overflow-hidden rounded-t-[19px]">
+              <div className="relative h-48 w-full overflow-hidden">
                 <img
                   src={ruta.imagenPortada}
                   alt={ruta.titulo}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
                 <div className="absolute top-3 left-3 flex gap-2">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/90 text-slate-950 backdrop-blur-md">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#062A77] text-white backdrop-blur-md shadow-sm">
                     {ruta.duracion}
                   </span>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium backdrop-blur-md ${
+                    className={`px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md ${
                       esAltaDificultad
-                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                        ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                        : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
                     }`}
                   >
                     {ruta.dificultad}
@@ -92,15 +90,15 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
 
               {/* Cuerpo de la Ruta */}
               <div className="p-5 space-y-4">
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <p className="text-sm text-slate-700 leading-relaxed font-normal">
                   {ruta.descripcion}
                 </p>
 
                 {/* Perfil Topográfico Resumen */}
-                <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/[0.03] border border-white/5 text-xs text-slate-300">
-                  <Mountain size={15} className="text-amber-400 shrink-0" />
+                <div className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800">
+                  <Mountain size={15} className="text-amber-600 shrink-0" />
                   <span>
-                    <strong>Topografía:</strong> {ruta.elevacionMaxima}
+                    <strong className="text-slate-900">Topografía:</strong> {ruta.elevacionMaxima}
                   </span>
                 </div>
 
@@ -108,7 +106,7 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
                 <div className="pt-2">
                   <button
                     onClick={() => toggleExpandir(ruta.id)}
-                    className="w-full flex items-center justify-between py-2 text-xs font-bold uppercase tracking-wider text-cyan-400 hover:text-cyan-300 transition-colors"
+                    className="w-full flex items-center justify-between py-2 text-xs font-bold uppercase tracking-wider text-[#0053AF] hover:text-[#062A77] transition-colors"
                   >
                     <span>
                       Ver Cronograma de Paradas ({(ruta?.paradas || []).length} paradas)
@@ -117,26 +115,26 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
                   </button>
 
                   {estaExpandida && (
-                    <div className="mt-3 space-y-3 pl-2 border-l-2 border-cyan-500/30">
+                    <div className="mt-3 space-y-3 pl-2 border-l-2 border-[#0053AF]/40">
                       {(ruta?.paradas || []).map((parada, idx) => (
                         <div key={idx} className="relative pl-4 space-y-1">
-                          <div className="absolute -left-[13px] top-1.5 w-2.5 h-2.5 rounded-full bg-cyan-400 ring-4 ring-slate-950" />
+                          <div className="absolute -left-[13px] top-1.5 w-2.5 h-2.5 rounded-full bg-[#0053AF] ring-4 ring-white" />
                           <div className="flex items-center justify-between gap-2">
-                            <span className="text-xs font-mono font-bold text-cyan-300">
+                            <span className="text-xs font-mono font-bold text-[#0053AF]">
                               {parada.horaSugerida}
                             </span>
-                            <span className="text-[11px] px-2 py-0.5 rounded bg-white/5 text-slate-400 capitalize">
+                            <span className="text-[11px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 capitalize font-medium">
                               {parada.tipo}
                             </span>
                           </div>
-                          <p className="text-sm font-semibold text-white">
+                          <p className="text-sm font-semibold text-[#062A77]">
                             {parada.titulo}
                           </p>
-                          <p className="text-xs text-slate-400 flex items-center gap-1">
+                          <p className="text-xs text-slate-600 flex items-center gap-1">
                             <MapPin size={12} className="text-slate-500" />
                             {parada.lugar}
                           </p>
-                          <p className="text-xs text-slate-300 leading-snug">
+                          <p className="text-xs text-slate-700 leading-snug">
                             {parada.descripcion}
                           </p>
                           <div className="flex flex-wrap gap-1 pt-1">
@@ -151,12 +149,13 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
                 </div>
 
                 {/* Acciones */}
-                <div className="pt-3 border-t border-white/5 flex gap-2">
+                <div className="pt-3 border-t border-slate-100 flex gap-2">
                   <CivicButton
                     variant="primary"
                     size="sm"
                     fullWidth
                     onClick={() => abrirEnGoogleMapsRuta(ruta)}
+                    style={{ backgroundColor: '#0053AF', borderColor: '#0053AF', color: '#FFFFFF', fontWeight: 600 }}
                     leftIcon={<Navigation size={14} />}
                   >
                     Navegar Ruta Completa
@@ -166,13 +165,14 @@ export const RutasPreconfiguradas: React.FC<RutasPreconfiguradasProps> = ({
                       variant="outline"
                       size="sm"
                       onClick={() => onSeleccionarRutaParaIA(ruta)}
+                      style={{ borderColor: '#062A77', color: '#062A77' }}
                     >
                       Adaptar con IA
                     </CivicButton>
                   )}
                 </div>
               </div>
-            </CivicCard>
+            </div>
           );
         })}
       </div>

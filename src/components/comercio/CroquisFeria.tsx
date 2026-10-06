@@ -26,10 +26,10 @@ export interface CroquisFeriaProps {
   calendario?: TemporadaCosecha[];
 }
 
-export const CroquisFeria: FC<CroquisFeriaProps> = ({
+export function CroquisFeria({
   puestos = PUESTOS_FERIA_MOCK,
   calendario = CALENDARIO_COSECHAS
-}) => {
+}: CroquisFeriaProps) {
   const [sectorActivo, setSectorActivo] = useState<string>('todos');
   const [puestoSeleccionado, setPuestoSeleccionado] = useState<PuestoFeriaSector | null>(puestos[0] || null);
 
@@ -50,22 +50,23 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       {/* Selector de Sectores */}
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-        <span style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 600 }}>Sectores de la Feria:</span>
+        <span style={{ fontSize: '0.85rem', color: '#475569', fontWeight: 700 }}>Sectores de la Feria:</span>
         {sectores.map((sec) => (
           <button
             key={sec.nombre}
             type="button"
             onClick={() => setSectorActivo(sec.nombre)}
             style={{
-              background: sectorActivo === sec.nombre ? 'var(--color-provincial-primary, #002B7F)' : 'rgba(255, 255, 255, 0.05)',
-              color: sectorActivo === sec.nombre ? '#FFFFFF' : '#CBD5E1',
-              border: sectorActivo === sec.nombre ? '1px solid var(--color-provincial-border, rgba(255, 255, 255, 0.3))' : '1px solid rgba(255, 255, 255, 0.1)',
+              background: sectorActivo === sec.nombre ? '#0053AF' : '#FFFFFF',
+              color: sectorActivo === sec.nombre ? '#FFFFFF' : '#334155',
+              border: sectorActivo === sec.nombre ? '1px solid #0053AF' : '1px solid #CBD5E1',
               borderRadius: '9999px',
               padding: '0.4rem 0.85rem',
               fontSize: '0.8rem',
               fontWeight: 600,
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              boxShadow: sectorActivo === sec.nombre ? '0 2px 6px rgba(0, 83, 175, 0.2)' : 'none'
             }}
           >
             {sec.etiqueta}
@@ -74,15 +75,24 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
       </div>
 
       {/* Croquis Interactivo en 2D Vectorial */}
-      <CivicCard level={2} provincialGlow>
+      <div
+        style={{
+          background: '#FFFFFF',
+          borderRadius: '16px',
+          border: '1px solid #E2E8F0',
+          borderTop: '4px solid #0053AF',
+          boxShadow: '0 4px 16px rgba(6, 42, 119, 0.06)',
+          padding: '1.5rem'
+        }}
+      >
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.75rem', alignItems: 'start' }}>
           {/* Mapa Visual del Predio Ferial */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+              <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#062A77', margin: 0 }}>
                 Plano de Distribución de Puestos
               </h4>
-              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Haga clic en un puesto para ver al productor</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 500 }}>Haga clic en un puesto para ver al productor</span>
             </div>
 
             <div
@@ -90,18 +100,18 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
                 position: 'relative',
                 width: '100%',
                 height: '320px',
-                background: 'radial-gradient(circle at center, rgba(0, 43, 127, 0.25) 0%, rgba(0, 4, 13, 0.95) 100%)',
-                border: '1.5px solid rgba(255, 255, 255, 0.15)',
+                background: 'linear-gradient(135deg, #062A77 0%, #01004E 100%)',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '16px',
                 overflow: 'hidden'
               }}
             >
               {/* Pasillos y Guías Visuales */}
-              <div style={{ position: 'absolute', inset: '10%', border: '1px dashed rgba(255, 255, 255, 0.15)', borderRadius: '12px' }} />
-              <div style={{ position: 'absolute', top: '50%', left: '10%', right: '10%', height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
-              <div style={{ position: 'absolute', left: '50%', top: '10%', bottom: '10%', width: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
+              <div style={{ position: 'absolute', inset: '10%', border: '1px dashed rgba(255, 255, 255, 0.25)', borderRadius: '12px' }} />
+              <div style={{ position: 'absolute', top: '50%', left: '10%', right: '10%', height: '1px', background: 'rgba(255, 255, 255, 0.15)' }} />
+              <div style={{ position: 'absolute', left: '50%', top: '10%', bottom: '10%', width: '1px', background: 'rgba(255, 255, 255, 0.15)' }} />
 
-              <span style={{ position: 'absolute', top: '12px', left: '16px', fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8' }}>
+              <span style={{ position: 'absolute', top: '12px', left: '16px', fontSize: '0.75rem', fontWeight: 700, color: '#7DD3FC' }}>
                 ACCESO NORTE (PARQUEO)
               </span>
 
@@ -148,10 +158,11 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
           {puestoSeleccionado && (
             <div
               style={{
-                background: 'rgba(255, 255, 255, 0.03)',
+                background: '#F8FAFC',
                 padding: '1.25rem',
                 borderRadius: '14px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid #E2E8F0',
+                borderLeft: '4px solid #C22727',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.75rem'
@@ -163,7 +174,7 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
                     fontFamily: "var(--font-telemetry, monospace)",
                     fontSize: '1.2rem',
                     fontWeight: 800,
-                    color: '#7DD3FC'
+                    color: '#062A77'
                   }}
                 >
                   Puesto {puestoSeleccionado.numeroPuesto}
@@ -175,18 +186,18 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
               </div>
 
               <div>
-                <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+                <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
                   {puestoSeleccionado.productorNombre}
                 </h4>
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.25rem', fontSize: '0.8rem', color: '#94A3B8' }}>
-                  <span>Cédula: <strong style={{ color: '#E2E8F0', fontFamily: "var(--font-telemetry, monospace)" }}>{puestoSeleccionado.cedulaProductor}</strong></span>
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.25rem', fontSize: '0.8rem', color: '#64748B' }}>
+                  <span>Cédula: <strong style={{ color: '#0F172A', fontFamily: "var(--font-telemetry, monospace)" }}>{puestoSeleccionado.cedulaProductor}</strong></span>
                   {puestoSeleccionado.carneCacNumero && (
-                    <span>Carné CAC: <strong style={{ color: '#7DD3FC', fontFamily: "var(--font-telemetry, monospace)" }}>{puestoSeleccionado.carneCacNumero}</strong></span>
+                    <span>Carné CAC: <strong style={{ color: '#0053AF', fontFamily: "var(--font-telemetry, monospace)" }}>{puestoSeleccionado.carneCacNumero}</strong></span>
                   )}
                 </div>
               </div>
 
-              <div style={{ fontSize: '0.85rem', color: '#CBD5E1', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              <div style={{ fontSize: '0.85rem', color: '#334155', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 <div><strong>Finca de Origen: </strong>{puestoSeleccionado.fincaOrigen}</div>
                 <div><strong>Procedencia: </strong>{puestoSeleccionado.cantonOrigen}</div>
               </div>
@@ -194,18 +205,18 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
               {puestoSeleccionado.esOrganicoCertificado && puestoSeleccionado.enteCertificador && (
                 <div
                   style={{
-                    background: 'rgba(0, 122, 61, 0.2)',
-                    border: '1px solid rgba(52, 211, 153, 0.4)',
+                    background: '#ECFDF5',
+                    border: '1px solid #A7F3D0',
                     borderRadius: '8px',
                     padding: '0.45rem 0.75rem',
-                    color: '#6EE7B7',
+                    color: '#065F46',
                     fontSize: '0.8rem',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.4rem'
                   }}
                 >
-                  <Sparkles size={15} color="#34D399" />
+                  <Sparkles size={15} color="#059669" />
                   <span><strong>Producción Orgánica: </strong>{puestoSeleccionado.enteCertificador}</span>
                 </div>
               )}
@@ -213,24 +224,24 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
               {puestoSeleccionado.verificadoHacienda && (
                 <div
                   style={{
-                    background: 'rgba(16, 185, 129, 0.15)',
-                    border: '1px solid rgba(52, 211, 153, 0.35)',
+                    background: '#EFF6FF',
+                    border: '1px solid #BFDBFE',
                     borderRadius: '8px',
                     padding: '0.45rem 0.75rem',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.4rem',
-                    color: '#A7F3D0',
+                    color: '#1E40AF',
                     fontSize: '0.8rem'
                   }}
                 >
-                  <ShieldCheck size={16} color="#10B981" />
+                  <ShieldCheck size={16} color="#0053AF" />
                   <span>Productor al Día &bull; {puestoSeleccionado.regimenTributario || 'Régimen Simplificado Agropecuario'}</span>
                 </div>
               )}
 
               <div>
-                <strong style={{ fontSize: '0.825rem', color: '#F8FAFC', display: 'block', marginBottom: '0.35rem' }}>
+                <strong style={{ fontSize: '0.825rem', color: '#0F172A', display: 'block', marginBottom: '0.35rem' }}>
                   Productos que ofrece hoy en feria:
                 </strong>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
@@ -238,12 +249,13 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
                     <span
                       key={i}
                       style={{
-                        background: 'rgba(255, 255, 255, 0.06)',
-                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        background: '#FFFFFF',
+                        border: '1px solid #CBD5E1',
                         borderRadius: '6px',
                         padding: '0.2rem 0.55rem',
                         fontSize: '0.78rem',
-                        color: '#E2E8F0'
+                        color: '#0F172A',
+                        fontWeight: 500
                       }}
                     >
                       {prod}
@@ -254,13 +266,13 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
             </div>
           )}
         </div>
-      </CivicCard>
+      </div>
 
       {/* Calendario Estacional de Cosechas */}
       <section aria-labelledby="titulo-cosechas">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem' }}>
-          <Calendar size={22} color="#FBBF24" />
-          <h3 id="titulo-cosechas" style={{ fontSize: '1.25rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+          <Calendar size={22} color="#D97706" />
+          <h3 id="titulo-cosechas" style={{ fontSize: '1.25rem', fontWeight: 700, color: '#062A77', margin: 0 }}>
             Calendario Cantonal de Temporadas de Cosecha
           </h3>
         </div>
@@ -273,21 +285,31 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
           }}
         >
           {calendario.map((temp, idx) => (
-            <CivicCard key={idx} level={1}>
+            <div
+              key={idx}
+              style={{
+                background: '#FFFFFF',
+                borderRadius: '14px',
+                border: '1px solid #E2E8F0',
+                borderTop: '3px solid #0053AF',
+                padding: '1.25rem',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+              }}
+            >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                 <span
                   style={{
                     fontFamily: "var(--font-headline, serif)",
-                    fontSize: '1rem',
+                    fontSize: '1.05rem',
                     fontWeight: 700,
-                    color: '#7DD3FC'
+                    color: '#062A77'
                   }}
                 >
                   {temp.mes}
                 </span>
 
                 <div>
-                  <strong style={{ fontSize: '0.8rem', color: '#34D399', display: 'block', marginBottom: '0.25rem' }}>
+                  <strong style={{ fontSize: '0.8rem', color: '#059669', display: 'block', marginBottom: '0.25rem' }}>
                     Abundancia y Mejor Precio:
                   </strong>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
@@ -296,11 +318,12 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
                         key={i}
                         style={{
                           fontSize: '0.75rem',
-                          background: 'rgba(16, 185, 129, 0.15)',
-                          border: '1px solid rgba(52, 211, 153, 0.3)',
+                          background: '#ECFDF5',
+                          border: '1px solid #A7F3D0',
                           padding: '0.15rem 0.5rem',
                           borderRadius: '4px',
-                          color: '#A7F3D0'
+                          color: '#065F46',
+                          fontWeight: 600
                         }}
                       >
                         {p}
@@ -309,11 +332,11 @@ export const CroquisFeria: FC<CroquisFeriaProps> = ({
                   </div>
                 </div>
 
-                <p style={{ fontSize: '0.825rem', color: '#CBD5E1', lineHeight: 1.5, margin: '0.35rem 0 0 0' }}>
+                <p style={{ fontSize: '0.825rem', color: '#334155', lineHeight: 1.5, margin: '0.35rem 0 0 0' }}>
                   {temp.consejoConsumidor}
                 </p>
               </div>
-            </CivicCard>
+            </div>
           ))}
         </div>
       </section>

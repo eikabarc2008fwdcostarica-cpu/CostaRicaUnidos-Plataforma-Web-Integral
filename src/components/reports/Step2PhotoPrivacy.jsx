@@ -18,10 +18,20 @@ import { compressImage } from './imageCompressor';
 export default function Step2PhotoPrivacy({
   photoData,
   onPhotoProcessed,
+  onPhotoCaptured,
   onClearPhoto,
   consentLaw8968,
-  onToggleConsent
+  onToggleConsent,
+  onConsentChange
 }) {
+  const notifyPhoto = (result) => {
+    if (typeof onPhotoProcessed === 'function') onPhotoProcessed(result);
+    if (typeof onPhotoCaptured === 'function') onPhotoCaptured(result);
+  };
+  const toggleConsent = () => {
+    if (typeof onToggleConsent === 'function') onToggleConsent();
+    if (typeof onConsentChange === 'function') onConsentChange(!consentLaw8968);
+  };
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
@@ -132,7 +142,7 @@ export default function Step2PhotoPrivacy({
 
           try {
             const result = await compressImage(blob);
-            onPhotoProcessed(result);
+            notifyPhoto(result);
           } catch (err) {
             console.error('[Compresor]', err);
             setErrorMsg(err.message || 'Error al comprimir la fotografía.');
@@ -160,7 +170,7 @@ export default function Step2PhotoPrivacy({
 
     try {
       const result = await compressImage(file);
-      onPhotoProcessed(result);
+      notifyPhoto(result);
     } catch (err) {
       console.error('[Compresor]', err);
       setErrorMsg(err.message || 'Error al comprimir la imagen en el cliente.');
@@ -173,31 +183,39 @@ export default function Step2PhotoPrivacy({
   return (
     <div style={{ animation: 'fadeIn 0.3s ease' }}>
       <div style={{ marginBottom: '1.75rem', textAlign: 'center' }}>
-        <span className="telemetry-badge" style={{ backgroundColor: 'rgba(0, 43, 127, 0.4)' }}>
+        <span
+          className="telemetry-badge"
+          style={{
+            backgroundColor: 'rgba(6, 42, 119, 0.08)',
+            border: '1px solid rgba(6, 42, 119, 0.22)',
+            color: '#062A77',
+            fontWeight: 800
+          }}
+        >
           PASO 2 DE 4 &bull; EVIDENCIA FOTOGRÁFICA Y PRIVACIDAD
         </span>
         <h3 style={{
           fontSize: '1.5rem',
           fontWeight: 800,
-          color: '#FFFFFF',
+          color: '#062A77',
           marginTop: '0.6rem',
-          marginBottom: '0.35rem'
+          marginBottom: '0.35rem',
+          fontFamily: 'var(--font-headline, "Plus Jakarta Sans", serif)'
         }}>
           Evidencia Digital y Cumplimiento Normativo Ley N° 8968
         </h3>
-        <p style={{ color: '#CBD5E1', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto' }}>
+        <p style={{ color: '#334155', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', lineHeight: 1.55 }}>
           Capture en vivo con su cámara o cargue una fotografía de su galería. La compresión es 100% segura en el navegador a formato WebP optimizado (&lt; 1 MB).
         </p>
       </div>
 
       {/* Zona de Carga / Previsualización / Cámara en Vivo */}
       <div
-        className="civic-glass-card"
         style={{
           padding: '2rem',
           marginBottom: '1.75rem',
-          border: photoData ? '1px solid rgba(0, 209, 102, 0.4)' : isCameraActive ? '1px solid #79a6ff' : '2px dashed rgba(255, 255, 255, 0.22)',
-          backgroundColor: photoData ? 'rgba(0, 15, 45, 0.65)' : 'rgba(0, 8, 25, 0.5)',
+          border: photoData ? '2px solid #059669' : isCameraActive ? '2px solid #0053AF' : '2px dashed rgba(6, 42, 119, 0.25)',
+          backgroundColor: photoData ? '#F8FAFC' : '#F8FAFC',
           textAlign: 'center',
           borderRadius: '24px',
           position: 'relative'
@@ -398,10 +416,10 @@ export default function Step2PhotoPrivacy({
               <Camera size={34} color="#79a6ff" />
             </div>
 
-            <h4 style={{ fontSize: '1.25rem', color: '#FFFFFF', fontWeight: 800, marginBottom: '0.5rem' }}>
+            <h4 style={{ fontSize: '1.25rem', color: '#062A77', fontWeight: 800, marginBottom: '0.5rem' }}>
               Adjuntar Fotografía de la Avería
             </h4>
-            <p style={{ color: '#CBD5E1', fontSize: '0.88rem', maxWidth: '520px', margin: '0 auto 1.75rem', lineHeight: 1.5 }}>
+            <p style={{ color: '#334155', fontSize: '0.9rem', maxWidth: '520px', margin: '0 auto 1.75rem', lineHeight: 1.55 }}>
               Active la cámara para capturar la incidencia en el sitio o seleccione una imagen de sus archivos. La compresión automática preserva la nitidez del daño.
             </p>
 
@@ -409,19 +427,20 @@ export default function Step2PhotoPrivacy({
               <button
                 type="button"
                 onClick={() => startCamera('environment')}
-                className="btn-sovereign-blue"
                 style={{
                   padding: '0.85rem 1.6rem',
                   fontSize: '0.92rem',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  backgroundColor: '#002B7F',
+                  backgroundColor: '#0053AF',
+                  backgroundImage: 'linear-gradient(135deg, #0053AF 0%, #062A77 100%)',
                   color: '#FFFFFF',
                   borderRadius: '12px',
-                  border: '1px solid rgba(121, 166, 255, 0.4)',
-                  fontWeight: 700,
-                  cursor: 'pointer'
+                  border: 'none',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(0, 83, 175, 0.35)'
                 }}
               >
                 <Camera size={18} />
@@ -431,18 +450,17 @@ export default function Step2PhotoPrivacy({
               <button
                 type="button"
                 onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                className="btn-glass-secondary"
                 style={{
                   padding: '0.85rem 1.6rem',
                   fontSize: '0.92rem',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  color: '#FFFFFF',
+                  backgroundColor: '#F1F5F9',
+                  color: '#062A77',
                   borderRadius: '12px',
-                  border: '1px solid rgba(255, 255, 255, 0.16)',
-                  fontWeight: 600,
+                  border: '1px solid rgba(6, 42, 119, 0.2)',
+                  fontWeight: 700,
                   cursor: 'pointer'
                 }}
               >
@@ -738,21 +756,23 @@ export default function Step2PhotoPrivacy({
 
       {/* Advertencia de Privacidad y Consentimiento Informado (Ley N° 8968) */}
       <div
-        className="civic-glass-card"
         style={{
           padding: '1.5rem',
-          borderLeft: '4px solid #F59E0B',
-          backgroundColor: 'rgba(245, 158, 11, 0.08)',
-          borderRadius: '16px'
+          borderLeft: '4px solid #D97706',
+          backgroundColor: '#FFFBEB',
+          border: '1.5px solid #FDE68A',
+          borderLeftWidth: '4px',
+          borderRadius: '16px',
+          boxShadow: '0 4px 12px rgba(217, 119, 6, 0.06)'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem', marginBottom: '1rem' }}>
-          <ShieldCheck size={26} color="#F59E0B" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <ShieldCheck size={26} color="#B45309" style={{ flexShrink: 0, marginTop: '2px' }} />
           <div>
-            <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#F8FAFC', marginBottom: '0.3rem' }}>
+            <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#92400E', marginBottom: '0.3rem' }}>
               Aviso Normativo y Protección de Datos Personales (Ley N° 8968)
             </h4>
-            <p style={{ color: '#CBD5E1', fontSize: '0.86rem', lineHeight: 1.6 }}>
+            <p style={{ color: '#78350F', fontSize: '0.88rem', lineHeight: 1.6, fontWeight: 500 }}>
               De conformidad con la <strong>Ley de Protección de la Persona frente al Tratamiento de sus Datos Personales (Ley N° 8968)</strong> de la República de Costa Rica,
               le solicitamos verificar que la evidencia fotográfica <strong>NO exponga rostros reconocibles de personas (especialmente menores de edad) ni placas de vehículos legibles</strong>.
             </p>
@@ -767,10 +787,11 @@ export default function Step2PhotoPrivacy({
             alignItems: 'flex-start',
             gap: '0.75rem',
             cursor: 'pointer',
-            padding: '0.85rem 1rem',
+            padding: '0.9rem 1.1rem',
             borderRadius: '12px',
-            backgroundColor: consentLaw8968 ? 'rgba(0, 209, 102, 0.12)' : 'rgba(0, 0, 0, 0.35)',
-            border: consentLaw8968 ? '1px solid rgba(0, 209, 102, 0.5)' : '1px solid rgba(255, 255, 255, 0.15)',
+            backgroundColor: consentLaw8968 ? '#ECFDF5' : '#FFFFFF',
+            border: consentLaw8968 ? '2px solid #059669' : '1.5px solid #CBD5E1',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
             transition: 'all 0.2s ease'
           }}
         >
@@ -778,17 +799,17 @@ export default function Step2PhotoPrivacy({
             type="checkbox"
             id="consentimiento-ley8968"
             checked={consentLaw8968}
-            onChange={onToggleConsent}
+            onChange={toggleConsent}
             style={{
               width: '18px',
               height: '18px',
-              accentColor: '#00D166',
+              accentColor: '#059669',
               marginTop: '0.2rem',
               cursor: 'pointer'
             }}
           />
-          <span style={{ fontSize: '0.84rem', color: consentLaw8968 ? '#FFFFFF' : '#E2E8F0', lineHeight: 1.5 }}>
-            <strong>Declaro bajo fe de juramento</strong> que la evidencia fotográfica adjunta no expone rostros de menores de edad, datos sensibles de terceros ni placas vehiculares legibles, autorizando su procesamiento exclusivamente para la fiscalización ciudadana y atención técnica de esta avería.
+          <span style={{ fontSize: '0.86rem', color: consentLaw8968 ? '#065F46' : '#1E293B', lineHeight: 1.5, fontWeight: consentLaw8968 ? 600 : 500 }}>
+            <strong style={{ color: consentLaw8968 ? '#064E3B' : '#0F172A' }}>Declaro bajo fe de juramento</strong> que la evidencia fotográfica adjunta no expone rostros de menores de edad, datos sensibles de terceros ni placas vehiculares legibles, autorizando su procesamiento exclusivamente para la fiscalización ciudadana y atención técnica de esta avería.
           </span>
         </label>
       </div>

@@ -167,23 +167,21 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
       onMouseLeave={alCerrar}
       role="region"
       aria-label={`Mega menú: ${categoria.label}`}
-      className={`absolute top-full left-0 w-full z-50 border-b shadow-2xl py-8 px-6 md:px-16 transition-all duration-300 animate-fadeIn ${
-        theme === 'dark' ? 'bg-[#0A0F1D] border-slate-800' : 'bg-white border-slate-200'
-      }`}
+      className="absolute top-full left-0 w-full z-50 border-b shadow-2xl py-8 px-6 md:px-16 transition-all duration-300 animate-fadeIn"
       style={{
-        backgroundColor: theme === 'dark' ? '#0A0F1D' : '#FFFFFF',
-        opacity: 1,
-        boxShadow: theme === 'dark'
-          ? '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 0, 0, 0.85)'
-          : '0 20px 40px -10px rgba(0, 20, 137, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05)'
+        backgroundColor: '#FFFFFF',
+        borderBottom: '2px solid rgba(6, 42, 119, 0.08)',
+        boxShadow: '0 20px 45px -10px rgba(6, 42, 119, 0.10), 0 4px 16px rgba(0, 0, 0, 0.04)',
+        opacity: 1
       }}
     >
       <div className="max-w-7xl mx-auto">
         {/* Encabezado del eje municipal */}
-        <div className={`flex items-center gap-2 mb-6 font-semibold text-xs tracking-widest uppercase ${
-          theme === 'dark' ? 'text-red-500' : 'text-red-600'
-        }`}>
-          <IconoCategoria className="w-4 h-4" strokeWidth={1.75} />
+        <div
+          className="flex items-center gap-2 mb-6 font-bold text-xs tracking-widest uppercase"
+          style={{ color: 'var(--red, #C22727)' }}
+        >
+          <IconoCategoria className="w-4 h-4" strokeWidth={2} />
           <span>Eje Municipal: {categoria.label}</span>
         </div>
 
@@ -196,42 +194,60 @@ export default function MegaMenu({ categoriaActiva, alCerrar }) {
                 key={m.titulo}
                 to={m.path}
                 onClick={alCerrar}
-                className={`group p-5 rounded-2xl border shadow-lg transition-all duration-200 flex flex-col justify-between ${
-                  theme === 'dark'
-                    ? 'bg-[#0F172A] border-slate-800 hover:border-red-500/50 hover:bg-[#1E293B]'
-                    : 'bg-slate-50 border-slate-200 hover:border-red-500/50 hover:bg-white hover:shadow-md'
-                }`}
+                className="group p-5 rounded-2xl border shadow-sm transition-all duration-200 flex flex-col justify-between"
                 style={{
                   minHeight: '170px',
-                  backgroundColor: theme === 'dark' ? '#0F172A' : '#F8FAFC'
+                  backgroundColor: '#F8FAFC',
+                  borderColor: 'rgba(6, 42, 119, 0.08)',
+                  borderRadius: '20px',
+                  boxShadow: '0 4px 14px rgba(6, 42, 119, 0.04)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.borderColor = 'rgba(0, 83, 175, 0.35)';
+                  e.currentTarget.style.boxShadow = '0 12px 28px rgba(6, 42, 119, 0.12)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F8FAFC';
+                  e.currentTarget.style.borderColor = 'rgba(6, 42, 119, 0.08)';
+                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(6, 42, 119, 0.04)';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
                 <div>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ${
-                    theme === 'dark'
-                      ? 'bg-red-500/10 text-red-500'
-                      : 'bg-red-50 text-red-600 border border-red-100'
-                  }`}>
-                    <IconoModulo className="w-5 h-5" strokeWidth={1.75} />
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+                    style={{
+                      backgroundColor: 'rgba(194, 39, 39, 0.08)',
+                      color: 'var(--red, #C22727)',
+                      border: '1px solid rgba(194, 39, 39, 0.15)'
+                    }}
+                  >
+                    <IconoModulo className="w-5 h-5" strokeWidth={1.8} />
                   </div>
-                  <h4 className={`font-bold text-base mb-1.5 transition-colors ${
-                    theme === 'dark'
-                      ? 'text-white group-hover:text-red-400'
-                      : 'text-slate-900 group-hover:text-red-600'
-                  }`}>
+                  <h4
+                    className="font-bold text-base mb-1.5 transition-colors"
+                    style={{
+                      color: 'var(--navy, #062A77)',
+                      fontFamily: 'var(--font-main, "Poppins", sans-serif)'
+                    }}
+                  >
                     {m.titulo}
                   </h4>
-                  <p className={`text-xs leading-relaxed ${
-                    theme === 'dark' ? 'text-slate-400' : 'text-slate-600'
-                  }`}>
+                  <p
+                    className="text-xs leading-relaxed"
+                    style={{ color: '#475569', fontWeight: 500 }}
+                  >
                     {m.desc}
                   </p>
                 </div>
-                <div className={`mt-4 flex items-center gap-1 text-xs font-medium group-hover:translate-x-1 transition-transform ${
-                  theme === 'dark' ? 'text-sky-400' : 'text-blue-700'
-                }`}>
+                <div
+                  className="mt-4 flex items-center gap-1 text-xs font-semibold group-hover:translate-x-1 transition-transform"
+                  style={{ color: 'var(--blue, #0053AF)' }}
+                >
                   <span>Acceder al módulo</span>
-                  <ChevronRight className="w-3.5 h-3.5" strokeWidth={1.75} />
+                  <ChevronRight className="w-3.5 h-3.5" strokeWidth={2} />
                 </div>
               </Link>
             );

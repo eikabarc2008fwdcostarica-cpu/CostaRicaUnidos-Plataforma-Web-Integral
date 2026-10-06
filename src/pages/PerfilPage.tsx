@@ -154,8 +154,8 @@ export default function PerfilPage() {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: 'var(--theme-bg, #00040D)',
-        color: 'var(--theme-text-primary, #FFFFFF)',
+        backgroundColor: 'var(--theme-bg, #F8FAFC)',
+        color: 'var(--theme-text-primary, #131313)',
         display: 'flex',
         flexDirection: 'column'
       }}
@@ -177,8 +177,8 @@ export default function PerfilPage() {
             marginBottom: '2rem',
             padding: '1rem 1.25rem',
             borderRadius: '16px',
-            backgroundColor: 'rgba(0, 43, 127, 0.25)',
-            border: '1px solid rgba(121, 166, 255, 0.35)',
+            backgroundColor: '#EFF6FF',
+            border: '1px solid #BFDBFE',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -192,21 +192,21 @@ export default function PerfilPage() {
                 width: '40px',
                 height: '40px',
                 borderRadius: '10px',
-                backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
+                backgroundColor: '#DBEAFE',
+                border: '1px solid #93C5FD',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#38BDF8'
+                color: '#0053AF'
               }}
             >
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#FFFFFF' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#062A77' }}>
                 Protección de Datos Garantizada · Ley N° 8968
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#CBD5E1' }}>
+              <div style={{ fontSize: '0.75rem', color: '#334155' }}>
                 {esMiPerfil
                   ? 'Usted se encuentra en su expediente privado protegido. Solo usted puede ver sus datos fiscales y cédula.'
                   : 'Vista de perfil público sanitizada. Cédula y datos sensibles protegidos.'}
@@ -214,8 +214,8 @@ export default function PerfilPage() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#94A3B8' }}>
-            <Lock className="w-3.5 h-3.5 text-emerald-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#475569', fontWeight: 500 }}>
+            <Lock className="w-3.5 h-3.5 text-emerald-600" />
             <span>Encriptación TLS 1.3 · Ministerio de Hacienda</span>
           </div>
         </div>
@@ -228,11 +228,12 @@ export default function PerfilPage() {
             {/* 1. Tarjeta Principal de Identidad Cívica */}
             <div
               style={{
-                backgroundColor: '#070D1B',
+                backgroundColor: '#FFFFFF',
                 borderRadius: '24px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid #E2E8F0',
+                borderTop: '4px solid #0053AF',
                 padding: '2rem',
-                boxShadow: '0 20px 45px rgba(0, 0, 0, 0.6)'
+                boxShadow: '0 4px 16px rgba(6, 42, 119, 0.06)'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.75rem' }}>
@@ -242,15 +243,15 @@ export default function PerfilPage() {
                       width: '72px',
                       height: '72px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                      border: '2px solid rgba(56, 189, 248, 0.4)',
+                      backgroundColor: '#EFF6FF',
+                      border: '2px solid #BFDBFE',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '1.75rem',
                       fontWeight: 800,
-                      color: '#38BDF8',
-                      boxShadow: '0 0 25px rgba(56, 189, 248, 0.25)'
+                      color: '#0053AF',
+                      boxShadow: '0 2px 10px rgba(0, 83, 175, 0.15)'
                     }}
                   >
                     {nombreTitular.charAt(0)}
@@ -258,16 +259,16 @@ export default function PerfilPage() {
 
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      <h1 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 800, color: '#FFFFFF' }}>
+                      <h1 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 800, color: '#062A77' }}>
                         {nombreTitular}
                       </h1>
                       <span
                         style={{
                           fontSize: '0.72rem',
                           fontWeight: 700,
-                          backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                          border: '1px solid rgba(52, 211, 153, 0.35)',
-                          color: '#6EE7B7',
+                          backgroundColor: '#ECFDF5',
+                          border: '1px solid #A7F3D0',
+                          color: '#065F46',
                           padding: '3px 10px',
                           borderRadius: '12px',
                           display: 'inline-flex',
@@ -275,15 +276,15 @@ export default function PerfilPage() {
                           gap: '4px'
                         }}
                       >
-                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                         {verificadoHacienda ? 'Verificado ante Hacienda' : 'Validación Pendiente'}
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.4rem', fontSize: '0.82rem', color: '#94A3B8' }}>
-                      <span>Rol: <strong style={{ color: '#E2E8F0' }}>{rolActual}</strong></span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.4rem', fontSize: '0.82rem', color: '#64748B' }}>
+                      <span>Rol: <strong style={{ color: '#0F172A' }}>{rolActual}</strong></span>
                       <span>•</span>
-                      <span>Nombre Público: <strong style={{ color: '#38BDF8' }}>{nombrePublico}</strong></span>
+                      <span>Nombre Público: <strong style={{ color: '#0053AF' }}>{nombrePublico}</strong></span>
                     </div>
                   </div>
                 </div>
@@ -296,12 +297,12 @@ export default function PerfilPage() {
                     gap: '0.5rem',
                     padding: '0.6rem 1.2rem',
                     borderRadius: '10px',
-                    backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                    border: '1px solid rgba(56, 189, 248, 0.35)',
-                    color: '#38BDF8',
+                    backgroundColor: '#EFF6FF',
+                    border: '1px solid #BFDBFE',
+                    color: '#0053AF',
                     textDecoration: 'none',
                     fontSize: '0.82rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     transition: 'all 0.2s'
                   }}
                 >
@@ -316,48 +317,48 @@ export default function PerfilPage() {
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
                   gap: '1rem',
-                  backgroundColor: 'rgba(15, 23, 42, 0.5)',
+                  backgroundColor: '#F8FAFC',
                   padding: '1.25rem',
                   borderRadius: '16px',
-                  border: '1px solid rgba(255, 255, 255, 0.06)'
+                  border: '1px solid #E2E8F0'
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem' }}>
-                    <Lock className="w-3 h-3 text-amber-400" />
+                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
+                    <Lock className="w-3 h-3 text-amber-600" />
                     <span>Cédula de Identidad Oficial</span>
                   </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#F1F5F9', fontFamily: 'monospace' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0F172A', fontFamily: 'monospace' }}>
                     {formatearCedulaOficial(cedulaOficial)}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem' }}>
-                    <Mail className="w-3 h-3 text-sky-400" />
+                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
+                    <Mail className="w-3 h-3 text-sky-600" />
                     <span>Correo Electrónico Personal</span>
                   </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#F1F5F9' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0F172A' }}>
                     {correoPersonal}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem' }}>
-                    <MapPin className="w-3 h-3 text-emerald-400" />
+                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
+                    <MapPin className="w-3 h-3 text-emerald-600" />
                     <span>Cantón y Provincia</span>
                   </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#F1F5F9' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0F172A' }}>
                     {cantonTitular}, {provinciaTitular}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem' }}>
-                    <Calendar className="w-3 h-3 text-indigo-400" />
+                  <div style={{ fontSize: '0.75rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem', fontWeight: 600 }}>
+                    <Calendar className="w-3 h-3 text-indigo-600" />
                     <span>Fecha de Registro</span>
                   </div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#F1F5F9' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0F172A' }}>
                     {new Date(fechaRegistro).toLocaleDateString('es-CR', { year: 'numeric', month: 'short', day: 'numeric' })}
                   </div>
                 </div>
@@ -367,11 +368,12 @@ export default function PerfilPage() {
             {/* 2. SECCIÓN: SOLICITAR CUENTA DE EMPRENDEDOR / COMERCIO LOCAL */}
             <div
               style={{
-                backgroundColor: '#070D1B',
+                backgroundColor: '#FFFFFF',
                 borderRadius: '24px',
-                border: '1px solid rgba(251, 191, 36, 0.25)',
+                border: '1px solid #E2E8F0',
+                borderTop: '4px solid #C22727',
                 padding: '2rem',
-                boxShadow: '0 20px 45px rgba(0, 0, 0, 0.6)'
+                boxShadow: '0 4px 16px rgba(6, 42, 119, 0.06)'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
@@ -380,21 +382,21 @@ export default function PerfilPage() {
                     width: '42px',
                     height: '42px',
                     borderRadius: '12px',
-                    backgroundColor: 'rgba(251, 191, 36, 0.15)',
-                    border: '1px solid rgba(251, 191, 36, 0.3)',
+                    backgroundColor: '#FEF2F2',
+                    border: '1px solid #FECACA',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#FBBF24'
+                    color: '#C22727'
                   }}
                 >
                   <Store className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF' }}>
+                  <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: '#062A77' }}>
                     Solicitar Cuenta de Emprendedor / Comercio Local
                   </h2>
-                  <p style={{ margin: '0.2rem 0 0', fontSize: '0.8rem', color: '#94A3B8' }}>
+                  <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: '#475569' }}>
                     Trámite formal regulado para elevar su rol cívico y publicar comercios y ofertas en el directorio cantonal.
                   </p>
                 </div>
@@ -409,37 +411,37 @@ export default function PerfilPage() {
                     borderRadius: '16px',
                     backgroundColor:
                       solicitudExistente.estado?.toLowerCase() === 'aprobado'
-                        ? 'rgba(16, 185, 129, 0.12)'
+                        ? '#ECFDF5'
                         : solicitudExistente.estado?.toLowerCase() === 'rechazado'
-                        ? 'rgba(239, 68, 68, 0.12)'
-                        : 'rgba(251, 191, 36, 0.12)',
+                        ? '#FEF2F2'
+                        : '#FFFBEB',
                     border: `1px solid ${
                       solicitudExistente.estado?.toLowerCase() === 'aprobado'
-                        ? 'rgba(52, 211, 153, 0.35)'
+                        ? '#A7F3D0'
                         : solicitudExistente.estado?.toLowerCase() === 'rechazado'
-                        ? 'rgba(248, 113, 113, 0.35)'
-                        : 'rgba(251, 191, 36, 0.35)'
+                        ? '#FECACA'
+                        : '#FDE68A'
                     }`
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       {solicitudExistente.estado?.toLowerCase() === 'aprobado' ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                       ) : (
-                        <Clock className="w-5 h-5 text-amber-400" />
+                        <Clock className="w-5 h-5 text-amber-600" />
                       )}
-                      <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFFFFF' }}>
+                      <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0F172A' }}>
                         Estado de Solicitud:{' '}
                         <strong
                           style={{
                             textTransform: 'uppercase',
                             color:
                               solicitudExistente.estado?.toLowerCase() === 'aprobado'
-                                ? '#34D399'
+                                ? '#059669'
                                 : solicitudExistente.estado?.toLowerCase() === 'rechazado'
-                                ? '#F87171'
-                                : '#FBBF24'
+                                ? '#DC2626'
+                                : '#D97706'
                           }}
                         >
                           {solicitudExistente.estado}
@@ -447,27 +449,27 @@ export default function PerfilPage() {
                       </span>
                     </div>
 
-                    <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
                       Radicado: {new Date(solicitudExistente.fechaSolicitud).toLocaleDateString('es-CR')}
                     </span>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.85rem', fontSize: '0.82rem' }}>
                     <div>
-                      <span style={{ color: '#94A3B8' }}>Emprendimiento:</span>{' '}
-                      <strong style={{ color: '#F1F5F9' }}>{solicitudExistente.nombreEmprendimiento}</strong>
+                      <span style={{ color: '#64748B' }}>Emprendimiento:</span>{' '}
+                      <strong style={{ color: '#0F172A' }}>{solicitudExistente.nombreEmprendimiento}</strong>
                     </div>
                     <div>
-                      <span style={{ color: '#94A3B8' }}>Correo Comercial:</span>{' '}
-                      <strong style={{ color: '#38BDF8' }}>{solicitudExistente.correoComercial}</strong>
+                      <span style={{ color: '#64748B' }}>Correo Comercial:</span>{' '}
+                      <strong style={{ color: '#0053AF' }}>{solicitudExistente.correoComercial}</strong>
                     </div>
                     <div>
-                      <span style={{ color: '#94A3B8' }}>Categoría:</span>{' '}
-                      <strong style={{ color: '#F1F5F9' }}>{solicitudExistente.categoriaComercial}</strong>
+                      <span style={{ color: '#64748B' }}>Categoría:</span>{' '}
+                      <strong style={{ color: '#0F172A' }}>{solicitudExistente.categoriaComercial}</strong>
                     </div>
                     <div>
-                      <span style={{ color: '#94A3B8' }}>Cantón:</span>{' '}
-                      <strong style={{ color: '#F1F5F9' }}>{solicitudExistente.canton}</strong>
+                      <span style={{ color: '#64748B' }}>Cantón:</span>{' '}
+                      <strong style={{ color: '#0F172A' }}>{solicitudExistente.canton}</strong>
                     </div>
                   </div>
 
@@ -477,16 +479,16 @@ export default function PerfilPage() {
                         marginTop: '1rem',
                         padding: '0.85rem 1rem',
                         borderRadius: '10px',
-                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                        border: '1px solid rgba(52, 211, 153, 0.35)',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid #A7F3D0',
                         fontSize: '0.82rem',
-                        color: '#6EE7B7',
+                        color: '#065F46',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.6rem'
                       }}
                     >
-                      <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                       <span>
                         ¡Acreditación Oficial Concedida! Su emprendimiento <strong>{solicitudExistente.nombreEmprendimiento}</strong> ha sido <strong>APROBADO</strong> por la administración territorial y certificado para operar y participar en el directorio comercial y feria cantonal.
                       </span>
@@ -499,15 +501,16 @@ export default function PerfilPage() {
                         marginTop: '1rem',
                         padding: '0.75rem 1rem',
                         borderRadius: '10px',
-                        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid #FDE68A',
                         fontSize: '0.78rem',
-                        color: '#CBD5E1',
+                        color: '#92400E',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.5rem'
                       }}
                     >
-                      <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                      <Clock className="w-4 h-4 text-amber-600 shrink-0" />
                       <span>
                         Su solicitud está registrada en <strong>db.json</strong> y pendiente de revisión por el Administrador. Su rol cívico actual se mantiene como <strong>Ciudadano/Turista</strong> hasta que el funcionario apruebe formalmente la elevación de privilegios.
                       </span>
@@ -522,16 +525,16 @@ export default function PerfilPage() {
                     style={{
                       padding: '1rem',
                       borderRadius: '12px',
-                      backgroundColor: 'rgba(0, 20, 137, 0.2)',
-                      border: '1px solid rgba(0, 43, 127, 0.45)',
+                      backgroundColor: '#EFF6FF',
+                      border: '1px solid #BFDBFE',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.75rem'
                     }}
                   >
-                    <Lock className="w-5 h-5 text-amber-400 shrink-0" />
-                    <div style={{ fontSize: '0.78rem', color: '#CBD5E1' }}>
-                      <strong style={{ color: '#FFFFFF', display: 'block', marginBottom: '0.2rem' }}>
+                    <Lock className="w-5 h-5 text-amber-600 shrink-0" />
+                    <div style={{ fontSize: '0.78rem', color: '#334155' }}>
+                      <strong style={{ color: '#062A77', display: 'block', marginBottom: '0.2rem' }}>
                         Regla Inmutable de Cédula de Identidad (Identidad Civil & Fiscal)
                       </strong>
                       El número de cédula está bloqueado en solo lectura. Bajo ninguna circunstancia se permite transferir o cambiar la cédula asignada, ya que vincula legalmente la personería física ante el Ministerio de Hacienda y el TSE.
@@ -541,7 +544,7 @@ export default function PerfilPage() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
                     {/* Campo 1: Cédula (Solo Lectura) */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#E2E8F0', marginBottom: '0.35rem' }}>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
                         Cédula de Identidad (Bloqueada)
                       </label>
                       <div style={{ position: 'relative' }}>
@@ -554,23 +557,23 @@ export default function PerfilPage() {
                             width: '100%',
                             padding: '0.75rem 1rem 0.75rem 2.2rem',
                             borderRadius: '10px',
-                            backgroundColor: 'rgba(15, 23, 42, 0.75)',
-                            border: '1px solid rgba(255, 255, 255, 0.15)',
-                            color: '#94A3B8',
+                            backgroundColor: '#F1F5F9',
+                            border: '1px solid #CBD5E1',
+                            color: '#475569',
                             fontSize: '0.9rem',
                             fontFamily: 'monospace',
                             cursor: 'not-allowed',
                             boxSizing: 'border-box'
                           }}
                         />
-                        <Lock className="w-4 h-4 text-amber-400" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+                        <Lock className="w-4 h-4 text-amber-600" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
                       </div>
                     </div>
 
                     {/* Campo 2: Nuevo Correo Comercial */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#E2E8F0', marginBottom: '0.35rem' }}>
-                        Nuevo Correo Electrónico Comercial <span style={{ color: '#38BDF8' }}>*</span>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
+                        Nuevo Correo Electrónico Comercial <span style={{ color: '#C22727' }}>*</span>
                       </label>
                       <input
                         type="email"
@@ -582,9 +585,9 @@ export default function PerfilPage() {
                           width: '100%',
                           padding: '0.75rem 1rem',
                           borderRadius: '10px',
-                          backgroundColor: 'rgba(0, 4, 13, 0.75)',
-                          border: '1px solid rgba(56, 189, 248, 0.35)',
-                          color: '#FFFFFF',
+                          backgroundColor: '#FFFFFF',
+                          border: '1px solid #CBD5E1',
+                          color: '#0F172A',
                           fontSize: '0.9rem',
                           outline: 'none',
                           boxSizing: 'border-box'
@@ -594,8 +597,8 @@ export default function PerfilPage() {
 
                     {/* Campo 3: Nombre del Emprendimiento */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#E2E8F0', marginBottom: '0.35rem' }}>
-                        Nombre del Emprendimiento / Comercio <span style={{ color: '#38BDF8' }}>*</span>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
+                        Nombre del Emprendimiento / Comercio <span style={{ color: '#C22727' }}>*</span>
                       </label>
                       <input
                         type="text"
@@ -607,9 +610,9 @@ export default function PerfilPage() {
                           width: '100%',
                           padding: '0.75rem 1rem',
                           borderRadius: '10px',
-                          backgroundColor: 'rgba(0, 4, 13, 0.75)',
-                          border: '1px solid rgba(255, 255, 255, 0.18)',
-                          color: '#FFFFFF',
+                          backgroundColor: '#FFFFFF',
+                          border: '1px solid #CBD5E1',
+                          color: '#0F172A',
                           fontSize: '0.9rem',
                           outline: 'none',
                           boxSizing: 'border-box'
@@ -619,8 +622,8 @@ export default function PerfilPage() {
 
                     {/* Campo 4: Categoría Comercial */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#E2E8F0', marginBottom: '0.35rem' }}>
-                        Categoría Comercial <span style={{ color: '#38BDF8' }}>*</span>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
+                        Categoría Comercial <span style={{ color: '#C22727' }}>*</span>
                       </label>
                       <select
                         value={categoriaComercial}
@@ -629,9 +632,9 @@ export default function PerfilPage() {
                           width: '100%',
                           padding: '0.75rem 1rem',
                           borderRadius: '10px',
-                          backgroundColor: 'rgba(0, 4, 13, 0.95)',
-                          border: '1px solid rgba(255, 255, 255, 0.18)',
-                          color: '#FFFFFF',
+                          backgroundColor: '#FFFFFF',
+                          border: '1px solid #CBD5E1',
+                          color: '#0F172A',
                           fontSize: '0.9rem',
                           outline: 'none',
                           boxSizing: 'border-box'
@@ -648,8 +651,8 @@ export default function PerfilPage() {
 
                     {/* Campo 5: Cantón */}
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#E2E8F0', marginBottom: '0.35rem' }}>
-                        Cantón donde opera <span style={{ color: '#38BDF8' }}>*</span>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
+                        Cantón donde opera <span style={{ color: '#C22727' }}>*</span>
                       </label>
                       <select
                         value={cantonComercial}
@@ -658,9 +661,9 @@ export default function PerfilPage() {
                           width: '100%',
                           padding: '0.75rem 1rem',
                           borderRadius: '10px',
-                          backgroundColor: 'rgba(0, 4, 13, 0.95)',
-                          border: '1px solid rgba(255, 255, 255, 0.18)',
-                          color: '#FFFFFF',
+                          backgroundColor: '#FFFFFF',
+                          border: '1px solid #CBD5E1',
+                          color: '#0F172A',
                           fontSize: '0.9rem',
                           outline: 'none',
                           boxSizing: 'border-box'
@@ -677,8 +680,8 @@ export default function PerfilPage() {
 
                   {/* Campo 6: Justificación / Descripción */}
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#E2E8F0', marginBottom: '0.35rem' }}>
-                      Justificación y Descripción de la Actividad Económica <span style={{ color: '#38BDF8' }}>*</span>
+                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.35rem' }}>
+                      Justificación y Descripción de la Actividad Económica <span style={{ color: '#C22727' }}>*</span>
                     </label>
                     <textarea
                       required
@@ -690,9 +693,9 @@ export default function PerfilPage() {
                         width: '100%',
                         padding: '0.75rem 1rem',
                         borderRadius: '10px',
-                        backgroundColor: 'rgba(0, 4, 13, 0.75)',
-                        border: '1px solid rgba(255, 255, 255, 0.18)',
-                        color: '#FFFFFF',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid #CBD5E1',
+                        color: '#0F172A',
                         fontSize: '0.9rem',
                         outline: 'none',
                         resize: 'vertical',
@@ -702,14 +705,14 @@ export default function PerfilPage() {
                   </div>
 
                   {mensajeError && (
-                    <div style={{ color: '#F87171', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div style={{ color: '#DC2626', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
                       <AlertCircle className="w-4 h-4" />
                       <span>{mensajeError}</span>
                     </div>
                   )}
 
                   {mensajeExito && (
-                    <div style={{ color: '#34D399', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div style={{ color: '#059669', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
                       <CheckCircle2 className="w-4 h-4" />
                       <span>{mensajeExito}</span>
                     </div>
@@ -725,13 +728,13 @@ export default function PerfilPage() {
                       gap: '0.6rem',
                       padding: '0.75rem 1.6rem',
                       borderRadius: '10px',
-                      backgroundColor: '#D97706',
-                      border: '1px solid #F59E0B',
+                      backgroundColor: '#C22727',
+                      border: 'none',
                       color: '#FFFFFF',
                       fontSize: '0.88rem',
                       fontWeight: 700,
                       cursor: enviando ? 'not-allowed' : 'pointer',
-                      boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
+                      boxShadow: '0 4px 14px rgba(194, 39, 39, 0.25)',
                       opacity: enviando ? 0.7 : 1,
                       transition: 'all 0.2s ease'
                     }}
@@ -749,11 +752,12 @@ export default function PerfilPage() {
              ==================================================================== */
           <div
             style={{
-              backgroundColor: '#070D1B',
+              backgroundColor: '#FFFFFF',
               borderRadius: '24px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              border: '1px solid #E2E8F0',
+              borderTop: '4px solid #0053AF',
               padding: '2.5rem',
-              boxShadow: '0 20px 45px rgba(0, 0, 0, 0.6)',
+              boxShadow: '0 4px 16px rgba(6, 42, 119, 0.06)',
               display: 'flex',
               flexDirection: 'column',
               gap: '1.75rem'
@@ -765,21 +769,21 @@ export default function PerfilPage() {
                   width: '72px',
                   height: '72px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                  border: '2px solid rgba(56, 189, 248, 0.4)',
+                  backgroundColor: '#EFF6FF',
+                  border: '2px solid #BFDBFE',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '1.8rem',
                   fontWeight: 800,
-                  color: '#38BDF8'
+                  color: '#0053AF'
                 }}
               >
                 {nombrePublico.charAt(0)}
               </div>
 
               <div>
-                <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#FFFFFF' }}>
+                <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#062A77' }}>
                   {nombrePublico}
                 </h1>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.35rem' }}>
@@ -787,9 +791,9 @@ export default function PerfilPage() {
                     style={{
                       fontSize: '0.72rem',
                       fontWeight: 700,
-                      backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                      border: '1px solid rgba(52, 211, 153, 0.35)',
-                      color: '#6EE7B7',
+                      backgroundColor: '#ECFDF5',
+                      border: '1px solid #A7F3D0',
+                      color: '#065F46',
                       padding: '2px 8px',
                       borderRadius: '12px',
                       display: 'inline-flex',
@@ -797,10 +801,10 @@ export default function PerfilPage() {
                       gap: '4px'
                     }}
                   >
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                     Ciudadano Verificado
                   </span>
-                  <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>{cantonTitular}, {provinciaTitular}</span>
+                  <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 500 }}>{cantonTitular}, {provinciaTitular}</span>
                 </div>
               </div>
             </div>
@@ -810,22 +814,22 @@ export default function PerfilPage() {
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: '1rem',
-                backgroundColor: 'rgba(15, 23, 42, 0.6)',
+                backgroundColor: '#F8FAFC',
                 padding: '1.25rem',
                 borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.08)'
+                border: '1px solid #E2E8F0'
               }}
             >
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '0.25rem' }}>Fecha de Registro</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#F1F5F9' }}>
+                <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '0.25rem', fontWeight: 600 }}>Fecha de Registro</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0F172A' }}>
                   {new Date(fechaRegistro).toLocaleDateString('es-CR', { month: 'long', year: 'numeric' })}
                 </div>
               </div>
 
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '0.25rem' }}>Participación Cívica</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#38BDF8' }}>
+                <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '0.25rem', fontWeight: 600 }}>Participación Cívica</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0053AF' }}>
                   Aportes Comunitarios Activos
                 </div>
               </div>
@@ -835,16 +839,16 @@ export default function PerfilPage() {
               style={{
                 padding: '1rem 1.25rem',
                 borderRadius: '14px',
-                backgroundColor: 'rgba(0, 43, 127, 0.25)',
-                border: '1px solid rgba(121, 166, 255, 0.35)',
+                backgroundColor: '#EFF6FF',
+                border: '1px solid #BFDBFE',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.75rem'
               }}
             >
-              <Lock className="w-4 h-4 text-sky-400 shrink-0" />
-              <span style={{ fontSize: '0.78rem', color: '#CBD5E1', lineHeight: 1.45 }}>
-                <strong>Privacidad de Datos Personales (Ley N° 8968):</strong> La cédula de identidad, el correo electrónico y la información tributaria de este ciudadano se encuentran estrictamente ocultos para terceros y protegidos por la ley.
+              <Lock className="w-4 h-4 text-sky-600 shrink-0" />
+              <span style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.45 }}>
+                <strong style={{ color: '#062A77' }}>Privacidad de Datos Personales (Ley N° 8968):</strong> La cédula de identidad, el correo electrónico y la información tributaria de este ciudadano se encuentran estrictamente ocultos para terceros y protegidos por la ley.
               </span>
             </div>
           </div>

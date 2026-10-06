@@ -13,7 +13,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   Clock,
   Compass,
@@ -22,7 +22,7 @@ import {
   LogOut,
   LayoutDashboard
 } from 'lucide-react';
-import Logo from '../common/Logo';
+import Logo, { Isotipo } from '../common/Logo';
 import { useAuth, PROVINCIAS_COSTA_RICA } from '../../context/AuthContext';
 import CNEGlobalMarqueeAlert from '../common/CNEGlobalMarqueeAlert';
 
@@ -109,8 +109,12 @@ export default function AdminNavbar({
           )}
 
           {/* Logotipo Oficial */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <Logo showText={false} size="32px" />
+          <Link
+            to="/"
+            style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}
+            aria-label="Ir a la página principal de Costa Rica Unidos"
+          >
+            <Isotipo size="32px" />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span
                 style={{
@@ -136,7 +140,7 @@ export default function AdminNavbar({
                 Gobernanza Territorial
               </span>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* CENTRO: Identificador Nivel 4 en JetBrains Mono */}

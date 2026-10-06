@@ -25,19 +25,27 @@ export default function Step4Confirmation({
   return (
     <div style={{ animation: 'fadeIn 0.3s ease' }}>
       <div style={{ marginBottom: '1.75rem', textAlign: 'center' }}>
-        <span className="telemetry-badge" style={{ backgroundColor: 'rgba(0, 43, 127, 0.4)' }}>
+        <span
+          className="telemetry-badge"
+          style={{
+            backgroundColor: '#EFF6FF',
+            color: '#0053AF',
+            border: '1px solid #BFDBFE',
+            fontWeight: 700
+          }}
+        >
           PASO 4 DE 4 &bull; DESCRIPCIÓN Y CONFIRMACIÓN
         </span>
         <h3 style={{
           fontSize: '1.5rem',
           fontWeight: 800,
-          color: '#FFFFFF',
+          color: '#062A77',
           marginTop: '0.6rem',
           marginBottom: '0.35rem'
         }}>
           Revisión General y Emisión del Ticket Cívico
         </h3>
-        <p style={{ color: '#CBD5E1', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto' }}>
+        <p style={{ color: '#334155', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', fontWeight: 500 }}>
           Verifique el resumen de los datos recopilados antes de emitir el reporte oficial. Se asignará un código único estandarizado con trazabilidad pública.
         </p>
       </div>
@@ -50,8 +58,14 @@ export default function Step4Confirmation({
         marginBottom: '1.75rem'
       }}>
         {/* 1. Tipología y Entidad */}
-        <div className="civic-glass-card" style={{ padding: '1.25rem', borderRadius: '16px' }}>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+        <div style={{
+          padding: '1.25rem',
+          borderRadius: '16px',
+          backgroundColor: '#F8FAFC',
+          border: '1.5px solid rgba(6, 42, 119, 0.14)',
+          boxShadow: '0 4px 12px rgba(6, 42, 119, 0.04)'
+        }}>
+          <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
             Tipología & Entidad Competente
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
@@ -59,21 +73,21 @@ export default function Step4Confirmation({
               width: '42px',
               height: '42px',
               borderRadius: '10px',
-              backgroundColor: 'rgba(0, 20, 137, 0.35)',
+              backgroundColor: '#EFF6FF',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0
             }}>
               {typeof tipologiaObj.icono === 'function'
-                ? React.createElement(tipologiaObj.icono, { size: 24, color: '#79a6ff' })
-                : <Building2 size={24} color="#79a6ff" />}
+                ? React.createElement(tipologiaObj.icono, { size: 24, color: '#0053AF' })
+                : <Building2 size={24} color="#0053AF" />}
             </div>
             <div>
-              <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.2 }}>
+              <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#062A77', lineHeight: 1.2 }}>
                 {tipologiaObj.titulo}
               </h4>
-              <span style={{ fontSize: '0.78rem', color: '#00D166' }}>
+              <span style={{ fontSize: '0.78rem', color: '#047857', fontWeight: 600 }}>
                 Plazo: {tipologiaObj.plazoEstimado}
               </span>
             </div>
@@ -82,9 +96,10 @@ export default function Step4Confirmation({
             fontSize: '0.78rem',
             padding: '0.4rem 0.6rem',
             borderRadius: '6px',
-            backgroundColor: 'rgba(0, 43, 127, 0.3)',
-            border: '1px solid rgba(121, 166, 255, 0.25)',
-            color: '#79a6ff',
+            backgroundColor: '#EFF6FF',
+            border: '1px solid #BFDBFE',
+            color: '#0053AF',
+            fontWeight: 600,
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px'
@@ -94,24 +109,32 @@ export default function Step4Confirmation({
           </div>
         </div>
 
-        {/* 2. Ubicación Territorial DTA */}
-        <div className="civic-glass-card" style={{ padding: '1.25rem', borderRadius: '16px' }}>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-            Ubicación Territorial DTA
+        {/* 2. Ubicación Territorial Oficial */}
+        <div style={{
+          padding: '1.25rem',
+          borderRadius: '16px',
+          backgroundColor: '#F8FAFC',
+          border: '1.5px solid rgba(6, 42, 119, 0.14)',
+          boxShadow: '0 4px 12px rgba(6, 42, 119, 0.04)'
+        }}>
+          <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+            Ubicación Territorial Oficial
           </div>
           <div style={{ marginBottom: '0.5rem' }}>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#FFFFFF' }}>
+            <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#062A77' }}>
               {provinciaNombre || 'San José'} › {cantonNombre || 'Cantón Central'}
             </div>
-            <div style={{ fontSize: '0.85rem', color: '#79a6ff' }}>
+            <div style={{ fontSize: '0.85rem', color: '#0053AF', fontWeight: 600 }}>
               Distrito: {distritoNombre || 'Cabecera'}
             </div>
           </div>
           <div style={{
             fontSize: '0.78rem',
             fontFamily: 'var(--font-telemetry)',
-            color: '#CBD5E1',
-            backgroundColor: 'rgba(255, 255, 255, 0.04)',
+            color: '#334155',
+            backgroundColor: '#F1F5F9',
+            border: '1px solid #E2E8F0',
+            fontWeight: 600,
             padding: '0.4rem 0.6rem',
             borderRadius: '6px'
           }}>
@@ -120,8 +143,14 @@ export default function Step4Confirmation({
         </div>
 
         {/* 3. Evidencia Fotográfica y Normativa */}
-        <div className="civic-glass-card" style={{ padding: '1.25rem', borderRadius: '16px' }}>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+        <div style={{
+          padding: '1.25rem',
+          borderRadius: '16px',
+          backgroundColor: '#F8FAFC',
+          border: '1.5px solid rgba(6, 42, 119, 0.14)',
+          boxShadow: '0 4px 12px rgba(6, 42, 119, 0.04)'
+        }}>
+          <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
             Evidencia Multimedia Comprimida
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -134,7 +163,7 @@ export default function Step4Confirmation({
                   height: '64px',
                   borderRadius: '10px',
                   objectFit: 'cover',
-                  border: '1px solid rgba(255, 255, 255, 0.2)'
+                  border: '1.5px solid #CBD5E1'
                 }}
               />
             ) : (
@@ -142,23 +171,23 @@ export default function Step4Confirmation({
                 width: '64px',
                 height: '64px',
                 borderRadius: '10px',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                backgroundColor: '#F1F5F9',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Camera size={26} color="#94A3B8" />
+                <Camera size={26} color="#64748B" />
               </div>
             )}
             <div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#FFFFFF' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#062A77' }}>
                 {photoData ? `Peso: ${photoData.compressedSizeFormatted}` : 'Foto procesada'}
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#00D166', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Check size={13} strokeWidth={2.5} />
+              <div style={{ fontSize: '0.78rem', color: '#047857', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
+                <Check size={14} strokeWidth={2.5} />
                 <span>Ley N° 8968 Verificada</span>
               </div>
-              <div style={{ fontSize: '0.72rem', color: '#94A3B8', fontFamily: 'var(--font-telemetry)' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748B', fontFamily: 'var(--font-telemetry)', fontWeight: 600 }}>
                 {photoData ? photoData.dimensiones : '1920x1080'} &bull; WebP
               </div>
             </div>
@@ -168,11 +197,13 @@ export default function Step4Confirmation({
 
       {/* Campo de Observaciones Breves y Dirección Exacta */}
       <div
-        className="civic-glass-card"
         style={{
           padding: '1.5rem',
           borderRadius: '20px',
-          marginBottom: '2rem'
+          marginBottom: '2rem',
+          backgroundColor: '#F8FAFC',
+          border: '1.5px solid rgba(6, 42, 119, 0.14)',
+          boxShadow: '0 4px 16px rgba(6, 42, 119, 0.04)'
         }}
       >
         <label
@@ -180,14 +211,14 @@ export default function Step4Confirmation({
           style={{
             display: 'block',
             fontSize: '0.95rem',
-            fontWeight: 700,
-            color: '#FFFFFF',
+            fontWeight: 800,
+            color: '#062A77',
             marginBottom: '0.4rem'
           }}
         >
           Dirección Exacta y Puntos de Referencia de la Incidencia *
         </label>
-        <p style={{ color: '#94A3B8', fontSize: '0.82rem', marginBottom: '0.75rem' }}>
+        <p style={{ color: '#475569', fontSize: '0.85rem', marginBottom: '0.75rem', fontWeight: 500 }}>
           Describa señas particulares para la cuadrilla técnica (ej: frente al abastecedor, poste número, color de casa, etc.).
         </p>
 
@@ -200,10 +231,10 @@ export default function Step4Confirmation({
           maxLength={400}
           style={{
             width: '100%',
-            backgroundColor: 'rgba(0, 10, 30, 0.75)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            backgroundColor: '#FFFFFF',
+            border: '1.5px solid #CBD5E1',
             borderRadius: '12px',
-            color: '#FFFFFF',
+            color: '#0F172A',
             padding: '1rem',
             fontFamily: 'var(--font-main)',
             fontSize: '0.92rem',
@@ -218,7 +249,8 @@ export default function Step4Confirmation({
           alignItems: 'center',
           marginTop: '0.4rem',
           fontSize: '0.75rem',
-          color: '#94A3B8'
+          color: '#64748B',
+          fontWeight: 600
         }}>
           <span>Mínimo 15 caracteres para orientar a la cuadrilla</span>
           <span>{observaciones.length} / 400 caracteres</span>
@@ -236,8 +268,10 @@ export default function Step4Confirmation({
             padding: '1rem 2.5rem',
             fontSize: '1.05rem',
             fontWeight: 800,
-            backgroundColor: '#DA291C',
-            boxShadow: '0 8px 30px rgba(218, 41, 28, 0.55)',
+            backgroundColor: '#C22727',
+            color: '#FFFFFF',
+            borderRadius: '12px',
+            boxShadow: '0 8px 24px rgba(194, 39, 39, 0.45)',
             cursor: isSubmitting || observaciones.trim().length < 10 ? 'not-allowed' : 'pointer',
             opacity: isSubmitting || observaciones.trim().length < 10 ? 0.5 : 1,
             display: 'inline-flex',
@@ -259,8 +293,8 @@ export default function Step4Confirmation({
         </button>
 
         {observaciones.trim().length < 10 && (
-          <p style={{ color: '#F59E0B', fontSize: '0.8rem', marginTop: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-            <AlertTriangle size={14} />
+          <p style={{ color: '#B45309', fontSize: '0.85rem', marginTop: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 600 }}>
+            <AlertTriangle size={15} color="#D97706" />
             <span>Ingrese una dirección exacta o descripción mínima antes de continuar.</span>
           </p>
         )}

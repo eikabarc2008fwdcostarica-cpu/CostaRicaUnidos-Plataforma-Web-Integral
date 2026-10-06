@@ -134,7 +134,18 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
   };
 
   return (
-    <CivicCard level={1} interactive>
+    <div
+      style={{
+        background: '#FFFFFF',
+        borderRadius: '14px',
+        border: '1px solid #E2E8F0',
+        borderTop: '3px solid #0053AF',
+        padding: '1.25rem',
+        boxShadow: '0 2px 10px rgba(6, 42, 119, 0.05)',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
         {/* Imagen del Comercio / Local */}
         <div
@@ -188,7 +199,7 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
         {/* Nombre y Razón Social */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#062A77', margin: 0 }}>
               {comercio.nombreComercial}
             </h3>
             {comercio.patenteMunicipal && (
@@ -197,9 +208,9 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
                   fontSize: '0.7rem',
                   fontFamily: "var(--font-telemetry, monospace)",
                   fontWeight: 700,
-                  color: '#7DD3FC',
-                  background: 'rgba(0, 43, 127, 0.4)',
-                  border: '1px solid rgba(125, 211, 252, 0.35)',
+                  color: '#0053AF',
+                  background: '#EFF6FF',
+                  border: '1px solid #BFDBFE',
                   padding: '0.15rem 0.45rem',
                   borderRadius: '4px'
                 }}
@@ -208,8 +219,8 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
               </span>
             )}
           </div>
-          <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
-            {comercio.razonSocial} &bull; Cédula: <strong style={{ color: '#E2E8F0', fontFamily: "var(--font-telemetry, monospace)" }}>{comercio.cedulaJuridicaOFisica}</strong>
+          <span style={{ fontSize: '0.78rem', color: '#64748B' }}>
+            {comercio.razonSocial} &bull; Cédula: <strong style={{ color: '#0F172A', fontFamily: "var(--font-telemetry, monospace)" }}>{comercio.cedulaJuridicaOFisica}</strong>
           </span>
           {comercio.actividadCiiu && (
             <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', fontFamily: "var(--font-telemetry, monospace)" }}>
@@ -219,19 +230,19 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
         </div>
 
         {/* Descripción */}
-        <p style={{ fontSize: '0.85rem', color: '#CBD5E1', lineHeight: 1.5, margin: 0 }}>
+        <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5, margin: 0 }}>
           {comercio.descripcion}
         </p>
 
         {/* Dirección y Horario */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.825rem', color: '#CBD5E1' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.825rem', color: '#334155' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <MapPin size={15} color="#94A3B8" />
+            <MapPin size={15} color="#0053AF" />
             <span>{comercio.direccionExacta}, <strong>{comercio.distrito}</strong></span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <Clock size={15} color="#94A3B8" />
+            <Clock size={15} color="#059669" />
             <span>{comercio.horario}</span>
           </div>
         </div>
@@ -242,9 +253,9 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
             style={{
               fontSize: '0.72rem',
               fontWeight: 600,
-              color: '#A7F3D0',
-              background: 'rgba(16, 185, 129, 0.12)',
-              border: '1px solid rgba(52, 211, 153, 0.3)',
+              color: '#065F46',
+              background: '#ECFDF5',
+              border: '1px solid #A7F3D0',
               padding: '0.2rem 0.55rem',
               borderRadius: '6px',
               display: 'inline-flex',
@@ -252,7 +263,7 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
               gap: '0.3rem'
             }}
           >
-            <Building size={12} color="#10B981" /> Patente Cantonal al Día
+            <Building size={12} color="#059669" /> Patente Cantonal al Día
           </span>
 
           {comercio.aceptaSinpeMovil && (
@@ -260,9 +271,9 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
               style={{
                 fontSize: '0.72rem',
                 fontWeight: 600,
-                color: '#38BDF8',
-                background: 'rgba(56, 189, 248, 0.12)',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
+                color: '#0369A1',
+                background: '#F0F9FF',
+                border: '1px solid #BAE6FD',
                 padding: '0.2rem 0.55rem',
                 borderRadius: '6px',
                 display: 'inline-flex',
@@ -270,7 +281,7 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
                 gap: '0.3rem'
               }}
             >
-              <CreditCard size={12} /> Acepta SINPE Móvil
+              <CreditCard size={12} color="#0284C7" /> Acepta SINPE Móvil
             </span>
           )}
         </div>
@@ -278,7 +289,7 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
         {/* BARRA DE REACCIONES CÍVICAS PARA EL CIUDADANO (SVG) */}
         <div
           style={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            borderTop: '1px solid #E2E8F0',
             paddingTop: '0.65rem',
             display: 'flex',
             alignItems: 'center',
@@ -299,9 +310,9 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
                 gap: '0.3rem',
                 padding: '0.25rem 0.55rem',
                 borderRadius: '6px',
-                border: `1px solid ${miReaccion === 'apoyo' ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)'}`,
-                background: miReaccion === 'apoyo' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                color: miReaccion === 'apoyo' ? '#38BDF8' : '#94A3B8',
+                border: `1px solid ${miReaccion === 'apoyo' ? '#0053AF' : '#CBD5E1'}`,
+                background: miReaccion === 'apoyo' ? '#EFF6FF' : '#F8FAFC',
+                color: miReaccion === 'apoyo' ? '#0053AF' : '#475569',
                 fontSize: '0.75rem',
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -323,9 +334,9 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
                 gap: '0.3rem',
                 padding: '0.25rem 0.55rem',
                 borderRadius: '6px',
-                border: `1px solid ${miReaccion === 'recomiendo' ? '#34D399' : 'rgba(255, 255, 255, 0.1)'}`,
-                background: miReaccion === 'recomiendo' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                color: miReaccion === 'recomiendo' ? '#34D399' : '#94A3B8',
+                border: `1px solid ${miReaccion === 'recomiendo' ? '#059669' : '#CBD5E1'}`,
+                background: miReaccion === 'recomiendo' ? '#ECFDF5' : '#F8FAFC',
+                color: miReaccion === 'recomiendo' ? '#059669' : '#475569',
                 fontSize: '0.75rem',
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -347,9 +358,9 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
                 gap: '0.3rem',
                 padding: '0.25rem 0.55rem',
                 borderRadius: '6px',
-                border: `1px solid ${miReaccion === 'alerta' ? '#FBBF24' : 'rgba(255, 255, 255, 0.1)'}`,
-                background: miReaccion === 'alerta' ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                color: miReaccion === 'alerta' ? '#FBBF24' : '#94A3B8',
+                border: `1px solid ${miReaccion === 'alerta' ? '#D97706' : '#CBD5E1'}`,
+                background: miReaccion === 'alerta' ? '#FFFBEB' : '#F8FAFC',
+                color: miReaccion === 'alerta' ? '#D97706' : '#475569',
                 fontSize: '0.75rem',
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -371,9 +382,9 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
               gap: '0.3rem',
               padding: '0.25rem 0.6rem',
               borderRadius: '6px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              background: mostrarComentarios ? 'rgba(56, 189, 248, 0.15)' : 'transparent',
-              color: mostrarComentarios ? '#38BDF8' : '#CBD5E1',
+              border: '1px solid #BFDBFE',
+              background: mostrarComentarios ? '#EFF6FF' : '#FFFFFF',
+              color: '#0053AF',
               fontSize: '0.75rem',
               fontWeight: 600,
               cursor: 'pointer'
@@ -389,16 +400,17 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
             style={{
               padding: '0.35rem 0.65rem',
               borderRadius: '6px',
-              backgroundColor: 'rgba(52, 211, 153, 0.15)',
-              border: '1px solid rgba(52, 211, 153, 0.3)',
-              color: '#34D399',
+              backgroundColor: '#ECFDF5',
+              border: '1px solid #A7F3D0',
+              color: '#065F46',
               fontSize: '0.75rem',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem'
+              gap: '0.4rem',
+              fontWeight: 600
             }}
           >
-            <CheckCircle2 size={13} />
+            <CheckCircle2 size={13} color="#059669" />
             <span>{feedback}</span>
           </div>
         )}
@@ -409,9 +421,9 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
             style={{
               marginTop: '0.4rem',
               padding: '0.75rem',
-              backgroundColor: 'rgba(15, 23, 42, 0.6)',
+              backgroundColor: '#F8FAFC',
               borderRadius: '8px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              border: '1px solid #E2E8F0',
               display: 'flex',
               flexDirection: 'column',
               gap: '0.65rem'
@@ -427,10 +439,10 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
                 style={{
                   flex: 1,
                   padding: '0.4rem 0.65rem',
-                  backgroundColor: 'rgba(0, 8, 24, 0.8)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #CBD5E1',
                   borderRadius: '6px',
-                  color: '#FFFFFF',
+                  color: '#0F172A',
                   fontSize: '0.78rem'
                 }}
               />
@@ -439,8 +451,8 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
                 disabled={!nuevoComentario.trim()}
                 style={{
                   padding: '0.4rem 0.75rem',
-                  backgroundColor: nuevoComentario.trim() ? '#0284C7' : 'rgba(255, 255, 255, 0.08)',
-                  color: '#FFFFFF',
+                  backgroundColor: nuevoComentario.trim() ? '#0053AF' : '#E2E8F0',
+                  color: nuevoComentario.trim() ? '#FFFFFF' : '#94A3B8',
                   border: 'none',
                   borderRadius: '6px',
                   fontSize: '0.78rem',
@@ -462,23 +474,24 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
                   key={c.id}
                   style={{
                     padding: '0.45rem 0.6rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                    backgroundColor: '#FFFFFF',
                     borderRadius: '6px',
-                    borderLeft: '2px solid #38BDF8',
+                    borderLeft: '3px solid #0053AF',
+                    border: '1px solid #E2E8F0',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.2rem'
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#E2E8F0' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#062A77' }}>
                       {obtenerNombrePublico(c.autorNombre)}
                     </span>
                     <span style={{ fontSize: '0.68rem', color: '#64748B' }}>
                       {new Date(c.fecha).toLocaleDateString('es-CR')}
                     </span>
                   </div>
-                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#94A3B8', lineHeight: 1.4 }}>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#334155', lineHeight: 1.4 }}>
                     {c.contenido}
                   </p>
                 </div>
@@ -490,7 +503,7 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
         {/* CTAs Directos Obligatorios a WhatsApp y Waze */}
         <div
           style={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            borderTop: '1px solid #E2E8F0',
             paddingTop: '0.85rem',
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
@@ -508,11 +521,11 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
               size="sm"
               fullWidth
               style={{
-                background: 'rgba(37, 211, 102, 0.18)',
-                borderColor: 'rgba(37, 211, 102, 0.4)',
-                color: '#A7F3D0'
+                background: '#ECFDF5',
+                borderColor: '#10B981',
+                color: '#065F46'
               }}
-              leftIcon={<MessageCircle size={16} color="#25D366" />}
+              leftIcon={<MessageCircle size={16} color="#059669" />}
             >
               WhatsApp
             </CivicButton>
@@ -529,18 +542,18 @@ export const FichaComercio: FC<FichaComercioProps> = ({ comercio }) => {
               size="sm"
               fullWidth
               style={{
-                background: 'rgba(51, 204, 255, 0.18)',
-                borderColor: 'rgba(51, 204, 255, 0.4)',
-                color: '#BAE6FD'
+                background: '#EFF6FF',
+                borderColor: '#0053AF',
+                color: '#0053AF'
               }}
-              leftIcon={<Navigation size={16} color="#33CCFF" />}
+              leftIcon={<Navigation size={16} color="#0053AF" />}
             >
               Ruta Waze
             </CivicButton>
           </a>
         </div>
       </div>
-    </CivicCard>
+    </div>
   );
 };
 

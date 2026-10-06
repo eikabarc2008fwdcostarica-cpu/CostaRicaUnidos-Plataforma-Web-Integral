@@ -77,8 +77,8 @@ export const EducacionPage: FC = () => {
     <div
       style={{
         minHeight: '100vh',
-        background: 'var(--color-obsidian-sovereign, #00040D)',
-        color: '#FFFFFF',
+        background: 'var(--theme-bg, #F8FAFC)',
+        color: 'var(--theme-text-primary, #131313)',
         position: 'relative'
       }}
     >
@@ -87,21 +87,21 @@ export const EducacionPage: FC = () => {
       <main className="civic-container" style={{ paddingTop: '2.5rem', paddingBottom: '4rem' }}>
         {/* Cabecera Educativa */}
         <div style={{ marginBottom: '2.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
             <CivicBadge variant="provincial" size="md">
               INFRAESTRUCTURA EDUCATIVA &bull; COLEGIOS TÉCNICOS (CTP)
             </CivicBadge>
-            <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+            <span style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600 }}>
               Ministerio de Educación Pública (MEP) &bull; Formación Técnica Vocacional
             </span>
           </div>
 
           <h1
             style={{
-              fontFamily: "var(--font-headline, 'Mistical Spring', serif)",
+              fontFamily: "var(--font-headline, 'Poppins', sans-serif)",
               fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
               fontWeight: 800,
-              color: '#FFFFFF',
+              color: 'var(--cru-text, #062A77)',
               letterSpacing: '-0.02em',
               margin: '0 0 0.75rem 0'
             }}
@@ -109,7 +109,7 @@ export const EducacionPage: FC = () => {
             Directorio Cantonal de Centros Educativos y CTPs
           </h1>
 
-          <p style={{ fontSize: '1.05rem', color: '#CBD5E1', maxWidth: '850px', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: '1.05rem', color: 'var(--cru-text-secondary, #334155)', maxWidth: '850px', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
             Explore los centros educativos del cantón desde preescolar hasta universidades, descubra las especialidades técnicas de alta demanda laboral de los Colegios Técnicos Profesionales (CTP) y descargue las coordenadas POI para las capas GIS.
           </p>
         </div>
@@ -117,8 +117,9 @@ export const EducacionPage: FC = () => {
         {/* Tarjeta de Coordinación GIS con Eiker */}
         <div
           style={{
-            background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.2) 0%, rgba(124, 58, 237, 0.15) 100%)',
-            border: '1px solid rgba(167, 139, 250, 0.3)',
+            background: '#FFFFFF',
+            border: '2px solid rgba(6, 42, 119, 0.15)',
+            borderLeft: '5px solid #0053AF',
             borderRadius: '16px',
             padding: '1.25rem 1.75rem',
             display: 'flex',
@@ -126,29 +127,43 @@ export const EducacionPage: FC = () => {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '1rem',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))'
           }}
         >
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-              <Layers size={18} color="#C7D2FE" />
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+              <Layers size={18} color="#0053AF" />
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#062A77', margin: 0 }}>
                 Interoperabilidad GIS: Dataset POI de Escuelas para Eiker
               </h3>
             </div>
-            <p style={{ fontSize: '0.875rem', color: '#CBD5E1', margin: 0 }}>
+            <p style={{ fontSize: '0.875rem', color: '#334155', margin: 0 }}>
               Exportación en formato estándar GeoJSON (WGS84) para el renderizado geoespacial de centros y paradas escolares en Leaflet.
             </p>
           </div>
 
-          <CivicButton
-            variant="primary"
-            size="sm"
+          <button
+            type="button"
             onClick={handleDescargarGeoJson}
-            leftIcon={<Download size={15} />}
+            style={{
+              backgroundColor: '#0053AF',
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: '10px',
+              padding: '0.6rem 1.2rem',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              boxShadow: '0 4px 12px rgba(0, 83, 175, 0.25)'
+            }}
           >
-            {descargadoGeoJson ? '¡GeoJSON Descargado!' : 'Exportar Dataset GeoJSON POI'}
-          </CivicButton>
+            <Download size={15} />
+            <span>{descargadoGeoJson ? '¡GeoJSON Descargado!' : 'Exportar Dataset GeoJSON POI'}</span>
+          </button>
         </div>
 
         {/* Barra de Filtros y Búsqueda */}
@@ -157,17 +172,18 @@ export const EducacionPage: FC = () => {
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
-            background: 'rgba(255, 255, 255, 0.03)',
+            background: '#FFFFFF',
             padding: '1.25rem',
-            borderRadius: '14px',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '16px',
+            border: '1px solid #E2E8F0',
+            boxShadow: 'var(--shadow-card, 0 4px 20px -2px rgba(6, 42, 119, 0.06))',
             marginBottom: '2rem'
           }}
         >
           {/* Fila 1: Búsqueda y Selector de Nivel */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ position: 'relative', flex: '1 1 300px' }}>
-              <Search size={18} color="#94A3B8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+              <Search size={18} color="#0053AF" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
               <input
                 type="text"
                 value={busqueda}
@@ -177,12 +193,13 @@ export const EducacionPage: FC = () => {
                 style={{
                   width: '100%',
                   padding: '0.65rem 1rem 0.65rem 2.4rem',
-                  background: 'rgba(255, 255, 255, 0.06)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  borderRadius: '8px',
-                  color: '#FFFFFF',
+                  background: '#F8FAFC',
+                  border: '1px solid #CBD5E1',
+                  borderRadius: '10px',
+                  color: '#0F172A',
                   fontSize: '0.875rem',
-                  outline: 'none'
+                  outline: 'none',
+                  fontWeight: 500
                 }}
               />
             </div>
@@ -195,13 +212,13 @@ export const EducacionPage: FC = () => {
                   type="button"
                   onClick={() => setNivelSeleccionado(niv)}
                   style={{
-                    background: nivelSeleccionado === niv ? 'var(--color-provincial-primary, #002B7F)' : 'rgba(255, 255, 255, 0.05)',
-                    color: nivelSeleccionado === niv ? '#FFFFFF' : '#CBD5E1',
-                    border: nivelSeleccionado === niv ? '1px solid var(--color-provincial-border, rgba(255, 255, 255, 0.3))' : '1px solid rgba(255, 255, 255, 0.1)',
+                    background: nivelSeleccionado === niv ? '#0053AF' : '#F1F5F9',
+                    color: nivelSeleccionado === niv ? '#FFFFFF' : '#334155',
+                    border: nivelSeleccionado === niv ? '1px solid #0053AF' : '1px solid #CBD5E1',
                     borderRadius: '8px',
                     padding: '0.45rem 0.85rem',
                     fontSize: '0.8rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
@@ -214,20 +231,23 @@ export const EducacionPage: FC = () => {
 
           {/* Fila 2: Filtro específico por Especialidad CTP */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Filter size={14} /> Especialidad CTP:
+            <span style={{ fontSize: '0.82rem', color: '#062A77', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <Filter size={14} color="#0053AF" /> Especialidad CTP:
             </span>
             <select
               value={filtroEspecialidad}
               onChange={(e) => setFiltroEspecialidad(e.target.value)}
               aria-label="Filtrar por especialidad técnica CTP"
               style={{
-                background: 'rgba(0, 4, 13, 0.85)',
-                color: '#FFFFFF',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '6px',
-                padding: '0.4rem 0.75rem',
-                fontSize: '0.8rem'
+                background: '#F8FAFC',
+                color: '#0F172A',
+                border: '1px solid #CBD5E1',
+                borderRadius: '8px',
+                padding: '0.45rem 0.85rem',
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                outline: 'none',
+                cursor: 'pointer'
               }}
             >
               <option value="todas">Todas las Especialidades Técnicas</option>
@@ -240,8 +260,8 @@ export const EducacionPage: FC = () => {
 
         {/* Listado de Centros Educativos */}
         <section aria-label="Directorio de Instituciones Educativas">
-          <div style={{ marginBottom: '1rem', fontSize: '0.85rem', color: '#94A3B8' }}>
-            Se muestran <strong style={{ color: '#FFFFFF' }}>{centrosFiltrados.length}</strong> centros educativos cantonales
+          <div style={{ marginBottom: '1rem', fontSize: '0.85rem', color: '#475569', fontWeight: 600 }}>
+            Se muestran <strong style={{ color: '#062A77' }}>{centrosFiltrados.length}</strong> centros educativos cantonales
           </div>
 
           <div
