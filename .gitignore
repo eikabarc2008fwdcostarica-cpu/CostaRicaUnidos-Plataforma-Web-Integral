@@ -33,3 +33,6 @@ lerna-debug.log*
 # Sistema operativo
 .DS_Store
 Thumbs.db
+
+# Scripts de verificación y temporales
+scratch/

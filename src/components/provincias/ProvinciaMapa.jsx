@@ -14,13 +14,16 @@ import {
   ChevronRight,
   ShieldAlert
 } from 'lucide-react';
-import { CANTONES_OFICIALES } from '../../data/costaRicaTerritorialData';
+import { CANTONES_OFICIALES, getProvincialTextColor } from '../../data/costaRicaTerritorialData';
+import { useTheme } from '../../context/ThemeContext';
 
 /**
  * Componente Base (Scaffolding): Mapa y Visor GIS Cantonal
  * Módulo 05 — Infraestructura Cartográfica y Georreferenciación Territorial
  */
 export default function ProvinciaMapa({ provincia }) {
+  const { isLight } = useTheme?.() || { isLight: false };
+  const provAccentColor = getProvincialTextColor(provincia, isLight);
   const [capaActiva, setCapaActiva] = useState('VIAS');
   const [cantonSeleccionado, setCantonSeleccionado] = useState(null);
 
@@ -36,6 +39,8 @@ export default function ProvinciaMapa({ provincia }) {
     { id: 'PATRIMONIO', label: 'Áreas Silvestres / Parques', icon: Compass, count: 'Activo' }
   ];
 
+  const greenAccent = isLight ? '#047857' : '#34D399';
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* Encabezado del Módulo de Mapa */}
@@ -46,7 +51,7 @@ export default function ProvinciaMapa({ provincia }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid var(--cru-border)',
           paddingBottom: '1.25rem'
         }}
       >
@@ -56,12 +61,12 @@ export default function ProvinciaMapa({ provincia }) {
               width: '42px',
               height: '42px',
               borderRadius: '10px',
-              backgroundColor: 'rgba(16, 185, 129, 0.15)',
+              backgroundColor: isLight ? 'rgba(16, 185, 129, 0.12)' : 'rgba(16, 185, 129, 0.15)',
               border: '1px solid rgba(16, 185, 129, 0.35)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#34D399'
+              color: greenAccent
             }}
           >
             <MapPin size={22} />
@@ -74,7 +79,7 @@ export default function ProvinciaMapa({ provincia }) {
                   fontWeight: 800,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  color: '#34D399',
+                  color: greenAccent,
                   fontFamily: 'monospace'
                 }}
               >
@@ -85,15 +90,15 @@ export default function ProvinciaMapa({ provincia }) {
                   fontSize: '0.68rem',
                   padding: '2px 8px',
                   borderRadius: '999px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#CBD5E1',
-                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                  backgroundColor: 'var(--cru-chip-bg)',
+                  color: 'var(--cru-chip-text)',
+                  border: '1px solid var(--cru-chip-border)'
                 }}
               >
                 {provincia.superficie}
               </span>
             </div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: '2px 0 0 0' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--cru-text)', margin: '2px 0 0 0' }}>
               Cartografía y Capas Territoriales — {provincia.nombre}
             </h3>
           </div>
@@ -106,16 +111,17 @@ export default function ProvinciaMapa({ provincia }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+            backgroundColor: isLight ? 'rgba(16, 185, 129, 0.12)' : 'rgba(16, 185, 129, 0.15)',
             border: '1px solid rgba(16, 185, 129, 0.35)',
             borderRadius: '8px',
             padding: '0.55rem 1.15rem',
-            color: '#34D399',
+            color: greenAccent,
             fontSize: '0.82rem',
             fontWeight: 700,
             textDecoration: 'none',
             transition: 'all 0.15s ease'
           }}
+          className="hover:opacity-90"
         >
           <Maximize2 size={15} />
           <span>Abrir Visor GIS 3D</span>
@@ -143,12 +149,12 @@ export default function ProvinciaMapa({ provincia }) {
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
                 border: activa
-                  ? '1px solid #34D399'
-                  : '1px solid rgba(255, 255, 255, 0.1)',
+                  ? (isLight ? '1px solid #059669' : '1px solid #34D399')
+                  : '1px solid var(--cru-border)',
                 backgroundColor: activa
-                  ? 'rgba(16, 185, 129, 0.15)'
-                  : 'rgba(255, 255, 255, 0.03)',
-                color: activa ? '#34D399' : '#94A3B8'
+                  ? (isLight ? 'rgba(16, 185, 129, 0.14)' : 'rgba(16, 185, 129, 0.18)')
+                  : 'var(--cru-surface-muted)',
+                color: activa ? greenAccent : 'var(--cru-text-soft)'
               }}
             >
               <Icono size={14} />
@@ -158,8 +164,8 @@ export default function ProvinciaMapa({ provincia }) {
                   fontSize: '0.66rem',
                   padding: '1px 6px',
                   borderRadius: '4px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                  color: '#CBD5E1'
+                  backgroundColor: isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)',
+                  color: isLight ? 'var(--cru-text)' : '#CBD5E1'
                 }}
               >
                 {capa.count}
@@ -169,8 +175,9 @@ export default function ProvinciaMapa({ provincia }) {
         })}
       </div>
 
-      {/* Maqueta / Lienzo del Visor Cartográfico */}
+      {/* Maqueta / Lienzo del Visor Cartográfico (Isla Oscura Intencional) */}
       <div
+        className="surface-dark"
         style={{
           position: 'relative',
           height: '280px',
@@ -178,7 +185,8 @@ export default function ProvinciaMapa({ provincia }) {
           borderRadius: '14px',
           overflow: 'hidden',
           backgroundColor: '#000814',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid var(--cru-border)',
+          boxShadow: isLight ? '0 4px 20px rgba(0, 0, 0, 0.12)' : '0 4px 20px rgba(0, 0, 0, 0.4)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -192,7 +200,7 @@ export default function ProvinciaMapa({ provincia }) {
           <div
             style={{
               backgroundColor: 'rgba(0, 10, 28, 0.85)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
               borderRadius: '8px',
               padding: '6px 12px',
               fontSize: '0.74rem',
@@ -207,7 +215,7 @@ export default function ProvinciaMapa({ provincia }) {
           <div
             style={{
               backgroundColor: 'rgba(0, 10, 28, 0.85)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
               borderRadius: '8px',
               padding: '6px 12px',
               fontSize: '0.74rem',
@@ -254,7 +262,7 @@ export default function ProvinciaMapa({ provincia }) {
             justifyContent: 'space-between',
             alignItems: 'center',
             fontSize: '0.72rem',
-            color: '#64748B',
+            color: '#94A3B8',
             fontFamily: 'monospace'
           }}
         >
@@ -265,7 +273,7 @@ export default function ProvinciaMapa({ provincia }) {
 
       {/* Selector Rápido de Cantones de la Provincia */}
       <div>
-        <div style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: 700, marginBottom: '0.65rem' }}>
+        <div style={{ fontSize: '0.78rem', color: 'var(--cru-text-soft)', fontWeight: 700, marginBottom: '0.65rem' }}>
           Cantones Autónomos de {provincia.nombre} ({cantonesProvincia.length}):
         </div>
         <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
@@ -284,12 +292,12 @@ export default function ProvinciaMapa({ provincia }) {
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
                   border: esSeleccionado
-                    ? '1px solid #38BDF8'
-                    : '1px solid rgba(255, 255, 255, 0.08)',
+                    ? (isLight ? '1px solid #0284C7' : '1px solid #38BDF8')
+                    : '1px solid var(--cru-border)',
                   backgroundColor: esSeleccionado
-                    ? 'rgba(56, 189, 248, 0.15)'
-                    : 'rgba(255, 255, 255, 0.03)',
-                  color: esSeleccionado ? '#38BDF8' : '#CBD5E1'
+                    ? (isLight ? 'rgba(14, 165, 233, 0.14)' : 'rgba(56, 189, 248, 0.15)')
+                    : 'var(--cru-chip-bg)',
+                  color: esSeleccionado ? (isLight ? '#0369A1' : '#38BDF8') : 'var(--cru-chip-text)'
                 }}
               >
                 {canton.nombre}
@@ -302,8 +310,8 @@ export default function ProvinciaMapa({ provincia }) {
       {/* Scaffolding de Enlace Directo */}
       <div
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.02)',
-          border: '1px dashed rgba(255, 255, 255, 0.12)',
+          backgroundColor: 'var(--cru-surface-muted)',
+          border: '1px dashed var(--cru-border)',
           borderRadius: '12px',
           padding: '1.25rem',
           display: 'flex',
@@ -313,7 +321,7 @@ export default function ProvinciaMapa({ provincia }) {
           gap: '1rem'
         }}
       >
-        <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+        <span style={{ fontSize: '0.8rem', color: 'var(--cru-text-soft)' }}>
           Base técnica M05: Conexión con los servicios WMS/WFS del catastro nacional y reportes georreferenciados de incidencias viales.
         </span>
         <Link
@@ -325,12 +333,14 @@ export default function ProvinciaMapa({ provincia }) {
             fontSize: '0.8rem',
             fontWeight: 700,
             color: '#FFFFFF',
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
+            backgroundColor: isLight ? '#0284C7' : 'rgba(255, 255, 255, 0.08)',
+            border: isLight ? '1px solid #0284C7' : '1px solid rgba(255, 255, 255, 0.15)',
             padding: '6px 14px',
             borderRadius: '8px',
-            textDecoration: 'none'
+            textDecoration: 'none',
+            transition: 'all 0.15s ease'
           }}
+          className="hover:opacity-90"
         >
           <span>Reportar Avería en {provincia.nombre}</span>
           <ExternalLink size={13} />

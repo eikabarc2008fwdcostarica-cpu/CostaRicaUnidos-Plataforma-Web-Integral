@@ -131,8 +131,8 @@ export default function Navbar() {
         label: 'Volver a mi Interfaz',
         roleShort: 'Super Admin',
         roleFull: 'Super Administrador Nacional (Nivel 5)',
-        themeClass: 'bg-red-500/15 hover:bg-red-500/25 border-red-500/40 hover:border-red-400 text-red-300 hover:text-white',
-        badgeColor: '#EF4444',
+        themeClass: 'bg-cru-accent-red-bg border border-cru-accent-red-border text-cru-accent-red hover:bg-cru-accent-red hover:text-white',
+        badgeColor: 'var(--cru-accent-red)',
         title: 'Super Administrador Nacional — Retornar al Centro de Mando Nacional'
       };
     }
@@ -144,8 +144,8 @@ export default function Navbar() {
         label: 'Volver a mi Interfaz',
         roleShort: 'Gestor Territorial',
         roleFull: 'Gestor Territorial y Municipal (Nivel 4)',
-        themeClass: 'bg-amber-500/15 hover:bg-amber-500/25 border-amber-500/40 hover:border-amber-400 text-amber-300 hover:text-white',
-        badgeColor: '#F59E0B',
+        themeClass: 'bg-cru-accent-amber-bg border border-cru-accent-amber-border text-cru-accent-amber hover:bg-cru-accent-amber hover:text-white',
+        badgeColor: 'var(--cru-accent-amber)',
         title: 'Gestor Territorial y Municipal — Retornar a la Consola de Mando Territorial'
       };
     }
@@ -157,8 +157,8 @@ export default function Navbar() {
         label: 'Volver a mi Interfaz',
         roleShort: 'Comerciante',
         roleFull: 'Comerciante y Emprendedor Local (Nivel 3)',
-        themeClass: 'bg-emerald-500/15 hover:bg-emerald-500/25 border-emerald-500/40 hover:border-emerald-400 text-emerald-300 hover:text-white',
-        badgeColor: '#10B981',
+        themeClass: 'bg-cru-accent-green-bg border border-cru-accent-green-border text-cru-accent-green hover:bg-cru-accent-green hover:text-white',
+        badgeColor: 'var(--cru-accent-green)',
         title: 'Comerciante y Emprendedor — Retornar a la Sede Cívica y Comercial'
       };
     }
@@ -169,8 +169,8 @@ export default function Navbar() {
       label: 'Volver a mi Interfaz',
       roleShort: 'Ciudadano',
       roleFull: 'Ciudadano Residente (Nivel 2)',
-      themeClass: 'bg-sky-500/15 hover:bg-sky-500/25 border-sky-500/40 hover:border-sky-400 text-sky-300 hover:text-white',
-      badgeColor: '#38BDF8',
+      themeClass: 'bg-cru-accent-sky-bg border border-cru-accent-sky-border text-cru-accent-sky hover:bg-cru-accent-sky hover:text-white',
+      badgeColor: 'var(--cru-accent-sky)',
       title: 'Ciudadano Residente — Retornar a mi Portal Cívico'
     };
   };
@@ -380,7 +380,7 @@ export default function Navbar() {
         onClick={() => setIsLogoutModalOpen(false)}
       >
         <div
-          className="w-full max-w-md rounded-2xl border border-[var(--cru-border,#E2E8F0)] bg-[var(--cru-surface,#FFFFFF)] p-6 shadow-2xl relative text-[var(--cru-text,#062A77)] overflow-hidden"
+          className="w-full max-w-md rounded-2xl border border-cru-border bg-cru-card-bg p-6 shadow-2xl relative text-cru-text overflow-hidden"
           style={{
             boxShadow: 'var(--cru-card-shadow-hover, 0 20px 45px rgba(6, 42, 119, 0.12))'
           }}
@@ -397,17 +397,17 @@ export default function Navbar() {
 
           {/* Cabecera con Icono Vectorial */}
           <div className="flex items-start gap-3.5 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center shrink-0 text-red-500 mt-0.5">
+            <div className="w-10 h-10 rounded-xl bg-cru-accent-red-bg border border-cru-accent-red-border flex items-center justify-center shrink-0 text-cru-accent-red mt-0.5">
               <LogOut className="w-5 h-5" strokeWidth={1.75} />
             </div>
             <div className="flex-1 min-w-0">
               <h3
                 id="modal-logout-titulo"
-                className="text-base font-bold text-[var(--cru-text,#062A77)] tracking-tight"
+                className="text-base font-bold text-cru-text tracking-tight"
               >
                 ¿Confirmar Cierre de Sesión?
               </h3>
-              <p className="text-xs text-[var(--cru-text-soft,#64748B)] mt-0.5">
+              <p className="text-xs text-cru-text-soft mt-0.5">
                 Seguridad Cívica • Costa Rica Unidos
               </p>
             </div>
@@ -415,23 +415,18 @@ export default function Navbar() {
 
           {/* Pastilla Informativa de la Cuenta Activa */}
           {user && (
-            <div className="mb-4 p-3 rounded-xl bg-[var(--cru-surface-muted,#F1F5F9)] border border-[var(--cru-border,#E2E8F0)] flex items-center justify-between text-xs gap-2">
+            <div className="mb-4 p-3 rounded-xl bg-cru-surface-muted border border-cru-border flex items-center justify-between text-xs gap-2">
               <div className="flex items-center gap-2 min-w-0">
-                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" strokeWidth={1.75} />
+                <ShieldCheck className="w-4 h-4 text-cru-accent-green shrink-0" strokeWidth={1.75} />
                 <div className="truncate">
-                  <span className="font-semibold text-[var(--cru-text,#062A77)] block truncate">{user.nombre}</span>
-                  <span className="text-[11px] text-[var(--cru-text-soft,#64748B)] font-mono block truncate">
+                  <span className="font-semibold text-cru-text block truncate">{user.nombre}</span>
+                  <span className="text-[11px] text-cru-text-soft font-mono block truncate">
                     {user.correoPersonal || user.correo || user.email || 'Usuario Activo'}
                   </span>
                 </div>
               </div>
               <span
-                className="px-2 py-0.5 rounded text-[10px] font-bold font-mono uppercase tracking-wider shrink-0"
-                style={{
-                  backgroundColor: `${interfaceInfo.badgeColor}20`,
-                  color: interfaceInfo.badgeColor,
-                  border: `1px solid ${interfaceInfo.badgeColor}40`
-                }}
+                className="px-2 py-0.5 rounded text-[10px] font-bold font-mono uppercase tracking-wider shrink-0 bg-cru-surface-muted border border-cru-border text-cru-text"
               >
                 {interfaceInfo.roleShort}
               </span>
@@ -439,7 +434,7 @@ export default function Navbar() {
           )}
 
           {/* Advertencia de Cierre de Sesión */}
-          <p className="text-xs text-[var(--cru-text-soft,#64748B)] leading-relaxed mb-6">
+          <p className="text-xs text-cru-text-soft leading-relaxed mb-6">
             Está a punto de finalizar su sesión institucional. Sus credenciales y permisos temporales en este dispositivo serán revocados de forma segura. Para acceder nuevamente a los servicios y consolas, deberá iniciar sesión con sus credenciales oficiales.
           </p>
 
@@ -448,14 +443,14 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsLogoutModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--cru-text-soft,#64748B)] hover:text-[var(--cru-text,#062A77)] bg-[var(--cru-surface-muted,#F1F5F9)] hover:bg-[var(--cru-border,#E2E8F0)] border border-[var(--cru-border,#CBD5E1)] transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-cru-text-soft hover:text-cru-text bg-cru-surface-muted hover:bg-cru-border border border-cru-border transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="button"
               onClick={handleConfirmarLogout}
-              className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-500 border border-red-500 transition-all shadow-lg shadow-red-600/30 flex items-center gap-2 cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-cru-accent-red hover:bg-red-700 border border-cru-accent-red transition-all shadow-lg shadow-red-600/30 flex items-center gap-2 cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" strokeWidth={1.75} />
               <span>Confirmar Salida</span>
@@ -473,13 +468,13 @@ export default function Navbar() {
     return (
       <>
         <header
-          className="sticky top-0 left-0 right-0 z-50 transition-all"
+          className="sticky top-0 left-0 right-0 z-50 transition-all bg-theme-header-bg border-b border-theme-header-border"
           style={{
-            backgroundColor: theme === 'dark' ? 'rgba(5, 12, 28, 0.85)' : 'rgba(255, 255, 255, 0.95)',
+            backgroundColor: 'var(--theme-header-bg)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.45)'
+            borderBottom: '1px solid var(--theme-header-border)',
+            boxShadow: 'var(--cru-card-shadow, 0 4px 20px rgba(0, 0, 0, 0.45))'
           }}
         >
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-[64px] flex items-center justify-between gap-3">
@@ -492,10 +487,10 @@ export default function Navbar() {
               >
                 <Isotipo size="32px" />
                 <div className="flex flex-col">
-                  <span className={`font-bold text-[13px] sm:text-sm tracking-wider uppercase leading-none ${theme === 'dark' ? 'text-white' : 'text-[#062A77]'}`}>
+                  <span className="font-bold text-[13px] sm:text-sm tracking-wider uppercase leading-none text-cru-text">
                     COSTA RICA UNIDOS
                   </span>
-                  <span className={`text-[10px] font-mono tracking-widest uppercase mt-0.5 ${theme === 'dark' ? 'text-[#38BDF8]' : 'text-[#C22727]'}`}>
+                  <span className="text-[10px] font-mono tracking-widest uppercase mt-0.5 text-cru-accent-sky">
                     PLATAFORMA CÍVICA
                   </span>
                 </div>
@@ -571,8 +566,8 @@ export default function Navbar() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : '#F1F5F9',
-                  border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #CBD5E1',
+                  backgroundColor: 'var(--cru-surface-muted)',
+                  border: '1px solid var(--cru-border)',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
@@ -588,7 +583,7 @@ export default function Navbar() {
                   </svg>
                 ) : (
                   /* SVG Luna */
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#002B7F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cru-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg>
                 )}
@@ -599,13 +594,9 @@ export default function Navbar() {
                 to="/"
                 aria-label="Ir al portal público"
                 title="Ir al Portal Público Ciudadano"
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
-                  theme === 'dark'
-                    ? 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-300 hover:text-white'
-                    : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-700 hover:text-slate-900'
-                }`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-cru-border bg-cru-surface-muted hover:bg-cru-card-bg text-cru-text text-xs font-semibold transition-all"
               >
-                <Building2 className={`w-3.5 h-3.5 ${theme === 'dark' ? 'text-sky-400' : 'text-blue-700'}`} strokeWidth={1.75} />
+                <Building2 className="w-3.5 h-3.5 text-cru-accent-sky" strokeWidth={1.75} />
                 <span className="hidden sm:inline">Portal Público</span>
               </Link>
 
@@ -814,8 +805,8 @@ export default function Navbar() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : '#F1F5F9',
-                border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #CBD5E1',
+                backgroundColor: 'var(--cru-surface-muted)',
+                border: '1px solid var(--cru-border)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
               }}
@@ -831,7 +822,7 @@ export default function Navbar() {
                 </svg>
               ) : (
                 /* SVG Luna */
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#002B7F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cru-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg>
               )}
@@ -855,18 +846,18 @@ export default function Navbar() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: isA11yOpen
-                    ? (theme === 'dark' ? 'rgba(56, 189, 248, 0.20)' : 'rgba(0, 43, 127, 0.12)')
-                    : (theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : '#F1F5F9'),
+                    ? 'var(--cru-accent-sky-bg)'
+                    : 'var(--cru-surface-muted)',
                   border: isA11yOpen
-                    ? (theme === 'dark' ? '1px solid rgba(56, 189, 248, 0.50)' : '1px solid #002B7F')
-                    : (theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #CBD5E1'),
-                  color: theme === 'dark' ? '#38BDF8' : '#002B7F',
+                    ? '1px solid var(--cru-accent-sky)'
+                    : '1px solid var(--cru-border)',
+                  color: isA11yOpen ? 'var(--cru-accent-sky)' : 'var(--cru-text)',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
               >
                 {/* Icono universal de accesibilidad (persona/figura humana dentro de un círculo) */}
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={theme === 'dark' ? "#38BDF8" : "#002B7F"} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10" />
                   <circle cx="12" cy="7" r="1.5" />
                   <path d="M7 11.5h10" />
@@ -887,13 +878,13 @@ export default function Navbar() {
                     right: 0,
                     zIndex: 100,
                     width: '320px',
-                    backgroundColor: theme === 'dark' ? 'rgba(5, 12, 28, 0.96)' : 'rgba(255, 255, 255, 0.98)',
+                    backgroundColor: 'var(--cru-card-bg)',
                     backdropFilter: 'blur(24px)',
                     WebkitBackdropFilter: 'blur(24px)',
-                    border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(0, 0, 0, 0.12)',
+                    border: '1px solid var(--cru-border)',
                     borderRadius: '16px',
                     padding: '16px',
-                    boxShadow: '0 16px 40px rgba(0, 4, 13, 0.65)',
+                    boxShadow: 'var(--cru-card-shadow-hover, 0 16px 40px rgba(0, 4, 13, 0.45))',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '14px',
@@ -901,16 +892,16 @@ export default function Navbar() {
                   }}
                 >
                   {/* Cabecera del Popover */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)', paddingBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--cru-border)', paddingBottom: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cru-accent-sky)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10" />
                         <circle cx="12" cy="7" r="1.5" />
                         <path d="M7 11.5h10" />
                         <path d="M12 9v6" />
                         <path d="m9.5 19 2.5-4 2.5 4" />
                       </svg>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: theme === 'dark' ? '#F8FAFC' : '#0F172A' }}>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--cru-text)' }}>
                         Accesibilidad (Ley N° 7600)
                       </span>
                     </div>
@@ -920,7 +911,7 @@ export default function Navbar() {
                       style={{
                         background: 'transparent',
                         border: 'none',
-                        color: '#94A3B8',
+                        color: 'var(--cru-text-muted)',
                         cursor: 'pointer',
                         padding: '2px',
                         display: 'flex',
@@ -938,10 +929,10 @@ export default function Navbar() {
                   {/* A. Escala de Tipografía: [ A- ] [ 100% ] [ A+ ] */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: theme === 'dark' ? '#94A3B8' : '#64748B' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--cru-text-soft)' }}>
                         Escala de Tipografía
                       </span>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#38BDF8' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cru-accent-sky)' }}>
                         {currentScalePercent}
                       </span>
                     </div>
@@ -961,20 +952,14 @@ export default function Navbar() {
                               padding: '7px 4px',
                               borderRadius: '8px',
                               border: isSelected
-                                ? '1px solid #38BDF8'
-                                : theme === 'dark'
-                                ? '1px solid rgba(255, 255, 255, 0.10)'
-                                : '1px solid rgba(0, 0, 0, 0.12)',
+                                ? '1px solid var(--cru-accent-sky)'
+                                : '1px solid var(--cru-border)',
                               backgroundColor: isSelected
-                                ? 'rgba(56, 189, 248, 0.18)'
-                                : theme === 'dark'
-                                ? 'rgba(255, 255, 255, 0.04)'
-                                : 'rgba(0, 0, 0, 0.04)',
+                                ? 'var(--cru-accent-sky-bg)'
+                                : 'var(--cru-surface-muted)',
                               color: isSelected
-                                ? '#38BDF8'
-                                : theme === 'dark'
-                                ? '#F8FAFC'
-                                : '#0F172A',
+                                ? 'var(--cru-accent-sky)'
+                                : 'var(--cru-text)',
                               fontWeight: 700,
                               fontSize: '0.78rem',
                               cursor: 'pointer',
@@ -997,10 +982,10 @@ export default function Navbar() {
                   {/* B. Adaptación de Daltonismo */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: theme === 'dark' ? '#94A3B8' : '#64748B' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--cru-text-soft)' }}>
                         Adaptación de Daltonismo
                       </span>
-                      <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#34D399' }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--cru-accent-green)' }}>
                         {currentDaltonismoLabel}
                       </span>
                     </div>
@@ -1024,16 +1009,12 @@ export default function Navbar() {
                               fontSize: '0.72rem',
                               fontWeight: 600,
                               border: isSelected
-                                ? '1px solid #10B981'
-                                : theme === 'dark'
-                                ? '1px solid rgba(255, 255, 255, 0.10)'
-                                : '1px solid rgba(0, 0, 0, 0.12)',
+                                ? '1px solid var(--cru-accent-green)'
+                                : '1px solid var(--cru-border)',
                               backgroundColor: isSelected
-                                ? 'rgba(16, 185, 129, 0.20)'
-                                : theme === 'dark'
-                                ? 'rgba(255, 255, 255, 0.04)'
-                                : 'rgba(0, 0, 0, 0.04)',
-                              color: isSelected ? '#34D399' : theme === 'dark' ? '#E2E8F0' : '#334155',
+                                ? 'var(--cru-accent-green-bg)'
+                                : 'var(--cru-surface-muted)',
+                              color: isSelected ? 'var(--cru-accent-green)' : 'var(--cru-text)',
                               cursor: 'pointer',
                               transition: 'all 0.15s ease'
                             }}
@@ -1047,7 +1028,7 @@ export default function Navbar() {
 
                   {/* C. Idiomas Oficiales (Estándar BCP-47 / ISO-639-1) */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: theme === 'dark' ? '#94A3B8' : '#64748B' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--cru-text-soft)' }}>
                       {t('Idiomas Oficiales', 'Idiomas Oficiales')}
                     </span>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
@@ -1074,20 +1055,14 @@ export default function Navbar() {
                               padding: '6px 4px',
                               borderRadius: '8px',
                               border: isSelected
-                                ? '1px solid #38BDF8'
-                                : theme === 'dark'
-                                ? '1px solid rgba(255, 255, 255, 0.10)'
-                                : '1px solid rgba(0, 0, 0, 0.12)',
+                                ? '1px solid var(--cru-accent-sky)'
+                                : '1px solid var(--cru-border)',
                               backgroundColor: isSelected
-                                ? 'rgba(56, 189, 248, 0.18)'
-                                : theme === 'dark'
-                                ? 'rgba(255, 255, 255, 0.04)'
-                                : 'rgba(0, 0, 0, 0.04)',
+                                ? 'var(--cru-accent-sky-bg)'
+                                : 'var(--cru-surface-muted)',
                               color: isSelected
-                                ? '#38BDF8'
-                                : theme === 'dark'
-                                ? '#F8FAFC'
-                                : '#0F172A',
+                                ? 'var(--cru-accent-sky)'
+                                : 'var(--cru-text)',
                               fontWeight: 700,
                               fontSize: '0.72rem',
                               cursor: 'pointer',
@@ -1232,7 +1207,7 @@ export default function Navbar() {
               </Link>
             </div>
             {isAuthenticated && user && (
-              <div className="pb-3 border-b border-white/10 flex flex-col gap-2">
+              <div className="pb-3 border-b border-cru-border flex flex-col gap-2">
                 <Link
                   to={interfaceInfo.path}
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -1249,9 +1224,9 @@ export default function Navbar() {
                   <Link
                     to="/perfil"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-2 text-xs font-medium text-slate-300 hover:text-white"
+                    className="flex items-center gap-2 text-xs font-medium text-cru-text-soft hover:text-cru-text"
                   >
-                    <ShieldCheck className="w-4 h-4 text-sky-400" strokeWidth={1.75} />
+                    <ShieldCheck className="w-4 h-4 text-cru-accent-sky" strokeWidth={1.75} />
                     <span className="truncate max-w-[180px]">{user.nombre}</span>
                   </Link>
 
@@ -1261,9 +1236,9 @@ export default function Navbar() {
                       setIsMobileMenuOpen(false);
                       setIsLogoutModalOpen(true);
                     }}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-500/15 border border-red-500/30 text-red-300 hover:text-white text-xs font-bold transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cru-accent-red-bg border border-cru-accent-red-border text-cru-accent-red hover:bg-cru-accent-red hover:text-white text-xs font-bold transition-colors cursor-pointer"
                   >
-                    <LogOut className="w-3.5 h-3.5 text-red-400" strokeWidth={1.75} />
+                    <LogOut className="w-3.5 h-3.5 text-cru-accent-red" strokeWidth={1.75} />
                     <span>{t('Cerrar Sesión')}</span>
                   </button>
                 </div>
@@ -1273,7 +1248,7 @@ export default function Navbar() {
               const IconoCat = cat.icon;
               return (
                 <div key={cat.id} className="space-y-1">
-                  <div className="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider">
+                  <div className="flex items-center gap-2 text-xs font-bold text-cru-accent-sky uppercase tracking-wider">
                     <IconoCat className="w-3.5 h-3.5" strokeWidth={1.75} />
                     <span>{t(cat.label)}</span>
                   </div>
@@ -1283,11 +1258,7 @@ export default function Navbar() {
                         key={mod.path}
                         to={mod.path}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className={`py-1 text-xs transition-colors block ${
-                          theme === 'dark'
-                            ? 'text-slate-300 hover:text-white'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
+                        className="py-1 text-xs text-cru-text-soft hover:text-cru-text transition-colors block"
                       >
                         {t(mod.titulo)}
                       </Link>

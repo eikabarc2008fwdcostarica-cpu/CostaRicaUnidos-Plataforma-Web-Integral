@@ -5,11 +5,15 @@ import { Link } from 'react-router-dom';
  * Logotipo Oficial de Costa Rica Unidos
  * 100% Estático (sin rotación) y con navegación directa a la pantalla principal (/)
  */
-export default function Logo({ size = '40px', showText = true, variant = 'light', spin = false }) {
+export default function Logo({ size = '40px', showText = true, variant = 'auto', spin = false }) {
   const pixelHeight = typeof size === 'number' ? `${size}px` : (typeof size === 'string' && (size.endsWith('px') || size.endsWith('rem')) ? size : '40px');
 
-  const primaryTextColor = variant === 'dark' ? '#FFFFFF' : '#062A77';
-  const secondaryTextColor = variant === 'dark' ? '#38BDF8' : '#C22727';
+  const primaryTextColor = variant === 'dark'
+    ? '#FFFFFF'
+    : (variant === 'light' ? '#062A77' : 'var(--cru-text, #062A77)');
+  const secondaryTextColor = variant === 'dark'
+    ? '#38BDF8'
+    : (variant === 'light' ? '#C22727' : 'var(--cru-accent-sky, #38BDF8)');
 
   return (
     <Link

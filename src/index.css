@@ -57,8 +57,13 @@
   --theme-bg-gradient: linear-gradient(180deg, #FDFDFF 0%, #F5F7FB 100%);
   --theme-input-bg: #FFFFFF;
   --theme-input-border: #CBD5E1;
-  --theme-input-text: #0F172A;
   --cru-badge-neutral-bg: #F1F5F9;
+  --cru-chip-bg: rgba(255, 255, 255, 0.05);
+  --cru-chip-border: rgba(255, 255, 255, 0.10);
+  --cru-chip-text: #94A3B8;
+  --cru-tab-active-bg: rgba(255, 255, 255, 0.12);
+  --cru-tab-active-border: rgba(255, 255, 255, 0.20);
+  --cru-tab-inactive-bg: rgba(255, 255, 255, 0.03);
 
   /* Sustrato Base Soberano */
   --color-obsidian: #00040D;
@@ -251,9 +256,14 @@ html.dark, :root.dark, .dark {
   --cru-accent-purple-border: rgba(192, 132, 252, 0.35);
   --cru-track: rgba(255, 255, 255, 0.1);
   --cru-badge-neutral-bg: rgba(255, 255, 255, 0.05);
-  --cru-badge-neutral-text: #CBD5E1;
   --cru-badge-neutral-border: rgba(255, 255, 255, 0.1);
   --cru-card-shadow-hover: 0 20px 50px rgba(0, 20, 137, 0.4);
+  --cru-chip-bg: rgba(255, 255, 255, 0.05);
+  --cru-chip-border: rgba(255, 255, 255, 0.10);
+  --cru-chip-text: #94A3B8;
+  --cru-tab-active-bg: rgba(255, 255, 255, 0.12);
+  --cru-tab-active-border: rgba(255, 255, 255, 0.20);
+  --cru-tab-inactive-bg: rgba(255, 255, 255, 0.03);
 }
 
 /* Modo Claro (Sede Electrónica Oficial - WCAG 2.1 AA) */
@@ -328,9 +338,14 @@ html.light {
   --cru-accent-purple-border: rgba(109, 40, 217, 0.25);
   --cru-track: #E2E8F0;
   --cru-badge-neutral-bg: #F1F5F9;
-  --cru-badge-neutral-text: #475569;
   --cru-badge-neutral-border: #CBD5E1;
   --cru-card-shadow-hover: 0 16px 36px rgba(0, 20, 137, 0.10);
+  --cru-chip-bg: #F1F5F9;
+  --cru-chip-border: #E2E8F0;
+  --cru-chip-text: #475569;
+  --cru-tab-active-bg: #FFFFFF;
+  --cru-tab-active-border: #CBD5E1;
+  --cru-tab-inactive-bg: #F8FAFC;
 }
 
 /* Transición suave global durante cambio de tema interactivo (≈200ms, WCAG 2.1 AA Motion) */
@@ -347,6 +362,12 @@ html.light {
   .hero-crossfade-layer {
     transition: none !important;
   }
+}
+
+/* Optimización de rendimiento: pausar animaciones en capa oculta del Hero */
+.hero-crossfade-layer.is-hidden,
+.hero-crossfade-layer.is-hidden * {
+  animation-play-state: paused !important;
 }
 
 /* ==========================================================================
@@ -407,12 +428,66 @@ html.light {
   --cru-accent-amber-border: rgba(251, 191, 36, 0.35);
   --cru-accent-purple: #C084FC;
   --cru-accent-purple-bg: rgba(192, 132, 252, 0.15);
-  --cru-accent-purple-border: rgba(192, 132, 252, 0.35);
   --cru-track: rgba(255, 255, 255, 0.1);
+  --cru-chip-bg: rgba(255, 255, 255, 0.05);
+  --cru-chip-border: rgba(255, 255, 255, 0.10);
+  --cru-chip-text: #94A3B8;
+  --cru-tab-active-bg: rgba(255, 255, 255, 0.12);
+  --cru-tab-active-border: rgba(255, 255, 255, 0.20);
+  --cru-tab-inactive-bg: rgba(255, 255, 255, 0.03);
 
   background-color: var(--cru-surface);
   color: var(--cru-text);
   color-scheme: dark;
+}
+
+/* ==========================================================================
+   GRID DE LAS 7 PROVINCIAS OFICIALES (WCAG 2.1 AA & Responsive Design)
+   Distribución calibrada: Desktop 7 columnas iguales, Tablet 4+3 centradas, Móvil 2 columnas
+   Garantiza que la 7ª provincia (Limón) nunca quede huérfana y previene desbordes a 375px
+   ========================================================================== */
+.provincias-selector-grid {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+@media (max-width: 639px) {
+  .provincias-selector-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .provincias-selector-grid > button:last-child {
+    grid-column: 1 / -1;
+    max-width: 280px;
+    justify-self: center;
+    width: 100%;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .provincias-selector-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+  .provincias-selector-grid > button:nth-child(1),
+  .provincias-selector-grid > button:nth-child(2),
+  .provincias-selector-grid > button:nth-child(3),
+  .provincias-selector-grid > button:nth-child(4) {
+    grid-column: span 3;
+  }
+  .provincias-selector-grid > button:nth-child(5),
+  .provincias-selector-grid > button:nth-child(6),
+  .provincias-selector-grid > button:nth-child(7) {
+    grid-column: span 4;
+  }
+}
+
+@media (min-width: 1024px) {
+  .provincias-selector-grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
 }
 
 /* Isla sobre color de marca (rojo patrio / azul soberano): texto e hijos siempre blancos */
@@ -459,7 +534,7 @@ html.light .civic-card {
   box-shadow: var(--theme-card-shadow);
 }
 
-html.light header {
+html.light header:not(.surface-dark):not(.surface-brand) {
   background-color: var(--theme-header-bg);
   border-color: var(--theme-header-border);
 }

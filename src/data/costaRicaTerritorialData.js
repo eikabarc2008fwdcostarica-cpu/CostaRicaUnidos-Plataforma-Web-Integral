@@ -381,3 +381,27 @@ export const MAPA_PROVINCIAS_SVG = [
     labelPos: { x: 370, y: 405 }
   }
 ];
+
+/**
+ * Variantes de color de texto provincial para garantizar contraste WCAG AA (>= 4.5:1)
+ * sobre sustratos claros (#FFFFFF, #F1F5F9).
+ * Preserva la identidad cromática pero oscurece tonos claros como Heredia (amarillo),
+ * Puntarenas (naranja) y Limón (verde claro).
+ */
+export const PROVINCIAL_DARK_TEXT = {
+  1: '#601438', // San José (12.69:1 sobre blanco)
+  2: '#D31424', // Alajuela (5.39:1 sobre blanco)
+  3: '#0A3282', // Cartago (11.72:1 sobre blanco)
+  4: '#B45309', // Heredia (5.02:1 sobre blanco - variante ámbar oscuro)
+  5: '#047857', // Guanacaste (5.01:1 sobre slate-100 - variante verde bosque)
+  6: '#C2410C', // Puntarenas (5.18:1 sobre blanco - variante teja/óxido oscuro)
+  7: '#047857'  // Limón (5.48:1 sobre blanco - variante esmeralda oscuro)
+};
+
+export function getProvincialTextColor(prov, isLight = false) {
+  if (!prov) return 'var(--cru-text)';
+  if (isLight) {
+    return PROVINCIAL_DARK_TEXT[prov.id] || prov.color;
+  }
+  return prov.color;
+}

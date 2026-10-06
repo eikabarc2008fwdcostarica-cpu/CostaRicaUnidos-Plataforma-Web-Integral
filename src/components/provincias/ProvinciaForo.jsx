@@ -19,6 +19,8 @@ import {
 import PostCard from '../foro/PostCard';
 import CrearPostModal from '../foro/CrearPostModal';
 import { obtenerPosts, suscribirCambiosForo } from '../../services/foroService';
+import { useTheme } from '../../context/ThemeContext';
+import { getProvincialTextColor } from '../../data/costaRicaTerritorialData';
 
 /**
  * Componente Provincial: Foro y Cabildo Comunal
@@ -26,6 +28,7 @@ import { obtenerPosts, suscribirCambiosForo } from '../../services/foroService';
  * Conectado en tiempo real con db.json vía foroService
  */
 export default function ProvinciaForo({ provincia }) {
+  const { isLight } = useTheme?.() || { isLight: false };
   const [posts, setPosts] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [modalAbierto, setModalAbierto] = useState(false);
@@ -73,6 +76,8 @@ export default function ProvinciaForo({ provincia }) {
     setPosts((prev) => [nuevo, ...prev]);
   };
 
+  const purpleAccent = isLight ? '#7E22CE' : '#C084FC';
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* Encabezado del Módulo de Foro Provincial */}
@@ -83,7 +88,7 @@ export default function ProvinciaForo({ provincia }) {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid var(--cru-border)',
           paddingBottom: '1.25rem'
         }}
       >
@@ -93,12 +98,12 @@ export default function ProvinciaForo({ provincia }) {
               width: '42px',
               height: '42px',
               borderRadius: '10px',
-              backgroundColor: 'rgba(168, 85, 247, 0.15)',
+              backgroundColor: isLight ? 'rgba(168, 85, 247, 0.12)' : 'rgba(168, 85, 247, 0.15)',
               border: '1px solid rgba(168, 85, 247, 0.35)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#C084FC'
+              color: purpleAccent
             }}
           >
             <MessageSquare size={22} />
@@ -111,7 +116,7 @@ export default function ProvinciaForo({ provincia }) {
                   fontWeight: 800,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  color: '#C084FC',
+                  color: purpleAccent,
                   fontFamily: 'monospace'
                 }}
               >
@@ -122,15 +127,15 @@ export default function ProvinciaForo({ provincia }) {
                   fontSize: '0.68rem',
                   padding: '2px 8px',
                   borderRadius: '999px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#CBD5E1',
-                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                  backgroundColor: 'var(--cru-chip-bg)',
+                  color: 'var(--cru-chip-text)',
+                  border: '1px solid var(--cru-chip-border)'
                 }}
               >
                 {provincia.cantonesCount} Cantones Conectados
               </span>
             </div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: '2px 0 0 0' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--cru-text)', margin: '2px 0 0 0' }}>
               Foro Ciudadano y Consultas Comunitarias — {provincia.nombre}
             </h3>
           </div>
@@ -147,7 +152,7 @@ export default function ProvinciaForo({ provincia }) {
               gap: '6px',
               padding: '0.55rem 1rem',
               borderRadius: '10px',
-              backgroundColor: '#A855F7',
+              backgroundColor: isLight ? '#9333EA' : '#A855F7',
               border: '1px solid rgba(168, 85, 247, 0.4)',
               color: '#FFFFFF',
               fontSize: '0.8rem',
@@ -155,7 +160,7 @@ export default function ProvinciaForo({ provincia }) {
               cursor: 'pointer',
               transition: 'all 0.2s ease'
             }}
-            className="hover:bg-purple-600 active:scale-95"
+            className="hover:opacity-90 active:scale-95"
           >
             <Plus size={15} />
             <span>Publicar en {provincia.nombre}</span>
@@ -169,14 +174,15 @@ export default function ProvinciaForo({ provincia }) {
               gap: '6px',
               padding: '0.55rem 1rem',
               borderRadius: '10px',
-              backgroundColor: 'rgba(255, 255, 255, 0.06)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              color: '#38BDF8',
+              backgroundColor: 'var(--cru-surface-muted)',
+              border: '1px solid var(--cru-border)',
+              color: 'var(--cru-accent-sky)',
               fontSize: '0.8rem',
               fontWeight: 700,
-              textDecoration: 'none'
+              textDecoration: 'none',
+              transition: 'all 0.15s ease'
             }}
-            className="hover:bg-white/10"
+            className="hover:opacity-90"
           >
             <span>Ver Foro Nacional</span>
             <ExternalLink size={13} />
@@ -189,7 +195,7 @@ export default function ProvinciaForo({ provincia }) {
         style={{
           padding: '0.85rem 1.15rem',
           borderRadius: '12px',
-          backgroundColor: 'rgba(168, 85, 247, 0.08)',
+          backgroundColor: isLight ? 'rgba(168, 85, 247, 0.08)' : 'rgba(168, 85, 247, 0.12)',
           border: '1px solid rgba(168, 85, 247, 0.25)',
           display: 'flex',
           alignItems: 'center',
@@ -199,12 +205,12 @@ export default function ProvinciaForo({ provincia }) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <ShieldCheck size={18} color="#C084FC" />
-          <span style={{ fontSize: '0.825rem', color: '#E2E8F0' }}>
+          <ShieldCheck size={18} color={purpleAccent} />
+          <span style={{ fontSize: '0.825rem', color: 'var(--cru-text)' }}>
             Las publicaciones en este espacio pertenecen a <strong>{provincia.nombre}</strong> y se sincronizan automáticamente con el feed del <strong>Foro Nacional</strong>.
           </span>
         </div>
-        <span style={{ fontSize: '0.75rem', color: '#A855F7', fontWeight: 700 }}>
+        <span style={{ fontSize: '0.75rem', color: purpleAccent, fontWeight: 700 }}>
           {posts.length} {posts.length === 1 ? 'debate registrado' : 'debates registrados'}
         </span>
       </div>
@@ -212,7 +218,7 @@ export default function ProvinciaForo({ provincia }) {
       {/* Listado de Publicaciones Reales de la Provincia */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         {cargando ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', color: '#94A3B8' }}>
+          <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--cru-text-soft)' }}>
             <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-purple-400" />
             <p style={{ fontSize: '0.85rem' }}>Cargando propuestas de {provincia.nombre}...</p>
           </div>
@@ -221,16 +227,16 @@ export default function ProvinciaForo({ provincia }) {
             style={{
               padding: '2.5rem 1.5rem',
               textAlign: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.02)',
-              border: '1px dashed rgba(255, 255, 255, 0.1)',
+              backgroundColor: 'var(--cru-surface-muted)',
+              border: '1px dashed var(--cru-border)',
               borderRadius: '14px'
             }}
           >
-            <MessageSquare size={36} color="#64748B" style={{ margin: '0 auto 0.75rem auto' }} />
-            <h4 style={{ fontSize: '1rem', color: '#FFFFFF', fontWeight: 700, margin: '0 0 0.35rem 0' }}>
+            <MessageSquare size={36} color={isLight ? '#64748B' : '#94A3B8'} style={{ margin: '0 auto 0.75rem auto' }} />
+            <h4 style={{ fontSize: '1rem', color: 'var(--cru-text)', fontWeight: 700, margin: '0 0 0.35rem 0' }}>
               Sin debates abiertos en {provincia.nombre}
             </h4>
-            <p style={{ fontSize: '0.825rem', color: '#94A3B8', margin: '0 0 1rem 0' }}>
+            <p style={{ fontSize: '0.825rem', color: 'var(--cru-text-soft)', margin: '0 0 1rem 0' }}>
               Sé el primero en plantear una iniciativa vecinal ante el Concejo Municipal y la comunidad.
             </p>
             <button
@@ -242,7 +248,7 @@ export default function ProvinciaForo({ provincia }) {
                 gap: '6px',
                 padding: '0.55rem 1.15rem',
                 borderRadius: '8px',
-                backgroundColor: '#A855F7',
+                backgroundColor: isLight ? '#9333EA' : '#A855F7',
                 border: 'none',
                 color: '#FFFFFF',
                 fontSize: '0.8rem',

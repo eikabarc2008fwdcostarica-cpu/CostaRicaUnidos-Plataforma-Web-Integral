@@ -45,7 +45,7 @@ export default function HeroMunicipal() {
           ==================================================================== */}
       <div
         aria-hidden="true"
-        className="hero-crossfade-layer hero-crossfade-day"
+        className={`hero-crossfade-layer hero-crossfade-day ${isNight ? 'is-hidden' : 'is-active'}`}
         style={{
           position: 'absolute',
           inset: 0,
@@ -77,7 +77,7 @@ export default function HeroMunicipal() {
           ==================================================================== */}
       <div
         aria-hidden="true"
-        className="hero-crossfade-layer hero-crossfade-night"
+        className={`hero-crossfade-layer hero-crossfade-night ${isNight ? 'is-active' : 'is-hidden'}`}
         style={{
           position: 'absolute',
           inset: 0,
