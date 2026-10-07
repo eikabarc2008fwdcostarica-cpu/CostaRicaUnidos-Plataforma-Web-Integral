@@ -99,12 +99,46 @@ export default function HeroScene({ isNight = false }) {
             <stop offset="100%" stopColor="#0A326E" />
           </linearGradient>
 
-          {/* 6. Brácteas de Heliconia (Platanillo): Rojo Carmín a Amarillo Fuego */}
+          {/* 6. Brácteas de Heliconia (Platanillo): Rojo Tomate en la Base a Amarillo Sol en la Punta (#D42518 a #FFCA26) */}
           <linearGradient id="heliconiaBractGrad" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stopColor="#B71C1C" />
-            <stop offset="25%" stopColor="#D42518" />
+            <stop offset="0%" stopColor="#D42518" />
+            <stop offset="25%" stopColor="#E53935" />
             <stop offset="65%" stopColor="#F57C00" />
             <stop offset="100%" stopColor="#FFCA26" />
+          </linearGradient>
+          <linearGradient id="heliconiaBractGradRight" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stopColor="#D42518" />
+            <stop offset="25%" stopColor="#E53935" />
+            <stop offset="65%" stopColor="#F57C00" />
+            <stop offset="100%" stopColor="#FFCA26" />
+          </linearGradient>
+          <linearGradient id="heliconiaBractGradLeft" x1="1" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="#D42518" />
+            <stop offset="25%" stopColor="#E53935" />
+            <stop offset="65%" stopColor="#F57C00" />
+            <stop offset="100%" stopColor="#FFCA26" />
+          </linearGradient>
+
+          {/* Gradientes de Madera y Corteza Orgánica para Árbol y Rama */}
+          <linearGradient id="woodTrunkGradDay" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#4A2B14" />
+            <stop offset="40%" stopColor="#6B3E1F" />
+            <stop offset="100%" stopColor="#3E2723" />
+          </linearGradient>
+          <linearGradient id="woodTrunkGradNight" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#1E120D" />
+            <stop offset="50%" stopColor="#2A1810" />
+            <stop offset="100%" stopColor="#150C08" />
+          </linearGradient>
+          <linearGradient id="woodBranchGradDay" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="#4A2B14" />
+            <stop offset="60%" stopColor="#6B3E1F" />
+            <stop offset="100%" stopColor="#8D5B4C" />
+          </linearGradient>
+          <linearGradient id="woodBranchGradNight" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="#180E09" />
+            <stop offset="60%" stopColor="#251610" />
+            <stop offset="100%" stopColor="#341E15" />
           </linearGradient>
 
           {/* 7. Degradado de Hojas Tropicales */}
@@ -182,19 +216,27 @@ export default function HeroScene({ isNight = false }) {
           </g>
         )}
 
-        {/* Estrellas titilantes suaves en Modo Noche */}
+        {/* Estrellas en Modo Noche (Estacionarias: Cero desplazamiento, únicamente titileo desfasado) */}
         {isNight && (
           <g>
             {[
-              { x: 180, y: 70, r: 2.2, cls: 'star-twinkle-fast' },
-              { x: 340, y: 110, r: 1.8, cls: 'star-twinkle-mid' },
-              { x: 520, y: 55, r: 2.5, cls: 'star-twinkle-slow' },
-              { x: 740, y: 95, r: 2.0, cls: 'star-twinkle-fast' },
-              { x: 910, y: 65, r: 2.2, cls: 'star-twinkle-mid' },
-              { x: 1040, y: 130, r: 1.8, cls: 'star-twinkle-slow' },
-              { x: 260, y: 140, r: 2.0, cls: 'star-twinkle-fast' }
+              { x: 180, y: 70, r: 2.2, cls: 'star-twinkle-1' },
+              { x: 340, y: 110, r: 1.8, cls: 'star-twinkle-2' },
+              { x: 520, y: 55, r: 2.5, cls: 'star-twinkle-3' },
+              { x: 740, y: 95, r: 2.0, cls: 'star-twinkle-1' },
+              { x: 910, y: 65, r: 2.2, cls: 'star-twinkle-2' },
+              { x: 1040, y: 130, r: 1.8, cls: 'star-twinkle-3' },
+              { x: 260, y: 140, r: 2.0, cls: 'star-twinkle-1' }
             ].map((st, i) => (
-              <circle key={i} cx={st.x} cy={st.y} r={st.r} fill="#FFFFFF" className={st.cls} />
+              <circle
+                key={i}
+                cx={st.x}
+                cy={st.y}
+                r={st.r}
+                fill="#FFFFFF"
+                className={st.cls}
+                style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
+              />
             ))}
           </g>
         )}
@@ -559,45 +601,50 @@ export default function HeroScene({ isNight = false }) {
         </g>
 
         {/* INFLORESCENCIAS DE HELICONIAS (PLATANILLO DE FUEGO) - IZQUIERDA */}
-        {/* Heliconia 1 (Alta imponente) */}
+        {/* Heliconia 1 (Alta imponente) — Raquis continuo y brácteas firmemente conectadas */}
         <g className="sway-heliconia-1" style={{ transformOrigin: '75px 620px' }}>
-          {/* Tallo Robusto Verde Bosque */}
-          <path d="M 60 620 Q 70 510 80 400" fill="none" stroke="#19532B" strokeWidth="6" strokeLinecap="round" />
-          {/* Brácteas en Zig-Zag Rojo a Amarillo Fuego (#D42518 a #FFCA26) */}
-          <path d="M 77 470 Q 118 442 124 410 Q 94 432 77 454 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 75 438 Q 34 410 30 378 Q 56 400 73 422 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 79 405 Q 116 378 121 346 Q 92 368 77 389 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 77 372 Q 38 345 34 316 Q 59 335 75 357 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 80 342 Q 113 318 116 288 Q 90 308 78 327 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 79 312 Q 44 290 40 263 Q 62 280 78 298 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 80 285 Q 106 265 109 240 Q 88 258 79 274 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          {/* Tallo Robusto Verde Bosque continuo hasta el ápice */}
+          <path d="M 60 620 Q 68 490 75 380 Q 79 300 81 228" fill="none" stroke="#19532B" strokeWidth="6" strokeLinecap="round" />
+          {/* Brácteas cónicas alternadas insertadas directamente en el raquis (#D42518 a #FFCA26) */}
+          <path d="M 67 476 L 67 450 Q 98 434 130 412 Q 106 458 67 476 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 74 446 L 74 420 Q 44 404 18 382 Q 42 428 74 446 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 72 414 L 72 388 Q 100 372 128 350 Q 104 396 72 414 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 78 382 L 78 356 Q 50 340 24 318 Q 48 364 78 382 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 76 350 L 76 326 Q 100 312 122 290 Q 102 334 76 350 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 81 320 L 81 296 Q 56 282 34 262 Q 54 304 81 320 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 78 290 L 78 268 Q 98 256 114 238 Q 98 276 78 290 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          {/* Ápice terminal floral */}
+          <path d="M 79 248 Q 78 234 81 222 Q 84 234 83 248 Z" fill="#FFCA26" stroke="#19532B" strokeWidth="1" />
         </g>
 
         {/* Heliconia 2 (Media izquierda) */}
         <g className="sway-heliconia-2" style={{ transformOrigin: '160px 620px' }}>
-          <path d="M 150 620 Q 160 520 168 435" fill="none" stroke="#19532B" strokeWidth="5.5" strokeLinecap="round" />
-          <path d="M 165 498 Q 200 474 205 446 Q 181 463 165 482 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 163 470 Q 128 447 124 419 Q 148 436 161 456 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 166 442 Q 198 420 201 393 Q 179 409 165 427 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 164 415 Q 133 393 130 368 Q 152 383 163 401 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 167 390 Q 194 370 197 346 Q 177 361 166 377 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 150 620 Q 158 520 166 430 Q 170 375 172 328" fill="none" stroke="#19532B" strokeWidth="5.5" strokeLinecap="round" />
+          <path d="M 161 506 L 161 480 Q 188 466 214 446 Q 192 490 161 506 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 167 476 L 167 450 Q 138 436 114 416 Q 136 460 167 476 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 165 446 L 165 422 Q 188 408 210 390 Q 188 430 165 446 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 171 418 L 171 394 Q 144 380 122 362 Q 144 402 171 418 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 168 392 L 168 370 Q 188 358 204 342 Q 188 376 168 392 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 170 348 Q 169 336 172 324 Q 175 336 174 348 Z" fill="#FFCA26" stroke="#19532B" strokeWidth="0.8" />
         </g>
 
         {/* Heliconia 3 (Baja frontal izquierda) */}
         <g className="sway-heliconia-3" style={{ transformOrigin: '250px 620px' }}>
-          <path d="M 240 620 Q 250 540 258 475" fill="none" stroke="#19532B" strokeWidth="5" strokeLinecap="round" />
-          <path d="M 256 532 Q 288 510 292 484 Q 271 499 256 517 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 254 508 Q 224 486 220 462 Q 239 477 252 494 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 257 484 Q 286 464 289 440 Q 270 455 257 471 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 255 461 Q 229 440 226 418 Q 244 433 254 449 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 240 620 Q 248 540 255 465 Q 259 430 262 398" fill="none" stroke="#19532B" strokeWidth="5" strokeLinecap="round" />
+          <path d="M 250 538 L 250 514 Q 274 500 298 480 Q 278 522 250 538 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 256 512 L 256 488 Q 232 476 212 456 Q 232 498 256 512 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 254 488 L 254 466 Q 276 454 296 436 Q 278 474 254 488 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 260 464 L 260 442 Q 238 430 218 412 Q 236 450 260 464 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 260 416 Q 259 406 262 396 Q 265 406 264 416 Z" fill="#FFCA26" stroke="#19532B" strokeWidth="0.8" />
         </g>
 
         {/* Heliconia 4 (Centro inferior) */}
         <g className="sway-heliconia-1" style={{ transformOrigin: '380px 620px' }}>
-          <path d="M 370 620 Q 380 555 388 505" fill="none" stroke="#19532B" strokeWidth="4.8" strokeLinecap="round" />
-          <path d="M 386 558 Q 416 538 420 514 Q 401 529 386 545 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 384 536 Q 356 516 352 494 Q 369 509 382 524 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 387 514 Q 414 496 417 474 Q 399 489 387 503 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 370 620 Q 378 555 385 495 Q 388 465 390 435" fill="none" stroke="#19532B" strokeWidth="4.8" strokeLinecap="round" />
+          <path d="M 380 564 L 380 540 Q 404 528 426 510 Q 406 550 380 564 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 386 540 L 386 516 Q 364 504 344 488 Q 364 526 386 540 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 384 516 L 384 494 Q 406 482 422 470 Q 404 504 384 516 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 388 452 Q 387 442 390 432 Q 393 442 392 452 Z" fill="#FFCA26" stroke="#19532B" strokeWidth="0.8" />
         </g>
 
         {/* Hojas verdes arqueadas en el centro inferior */}
@@ -611,9 +658,9 @@ export default function HeroScene({ isNight = false }) {
         />
 
         {/* ====================================================================
-            12. VEGETACIÓN DERECHA, RAMA Y TUCÁN PICO IRIS (ESTÁTICO)
+            12. VEGETACIÓN DERECHA, ÁRBOL PERIMETRAL, RAMA Y TUCÁN (ESTÁTICO)
             ==================================================================== */}
-        {/* Follaje del Margen Derecho */}
+        {/* Follaje de Fondo del Margen Derecho */}
         <g className="sway-flora-right">
           <path
             d="M 1470 620 Q 1380 450 1250 380 Q 1320 490 1410 620 Z"
@@ -629,23 +676,172 @@ export default function HeroScene({ isNight = false }) {
           />
         </g>
 
-        {/* Heliconia en el Margen Derecho (Detrás de la rama del tucán) */}
-        <g className="sway-heliconia-right" style={{ transformOrigin: '1395px 620px' }}>
-          <path d="M 1385 620 Q 1395 525 1402 450" fill="none" stroke="#19532B" strokeWidth="5.5" strokeLinecap="round" />
-          <path d="M 1400 514 Q 1434 492 1438 465 Q 1416 481 1400 499 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 1398 488 Q 1366 466 1362 440 Q 1381 455 1396 473 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 1401 462 Q 1430 442 1433 418 Q 1414 433 1401 449 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
-          <path d="M 1399 438 Q 1370 418 1366 394 Q 1384 409 1398 425 Z" fill="url(#heliconiaBractGrad)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+        {/* TRONCO DE ÁRBOL PERIMETRAL EN EL BORDE DERECHO (ESTILIZADO, NO INVASIVO, ANCLAJE NATURAL) */}
+        <g id="rightPerimeterTree">
+          {/* Silueta del tronco perimetral que entra desde el borde derecho (right-0) */}
+          <path
+            d="M 1440 260 
+               Q 1412 350 1392 430 
+               Q 1372 490 1366 525 
+               Q 1368 565 1382 620 
+               L 1440 620 Z"
+            fill={isNight ? 'url(#woodTrunkGradNight)' : 'url(#woodTrunkGradDay)'}
+          />
+          {/* Sombra de relieve en la corteza izquierda */}
+          <path
+            d="M 1440 260 
+               Q 1412 350 1392 430 
+               Q 1372 490 1366 525 
+               Q 1368 565 1382 620 
+               L 1392 620 
+               Q 1378 565 1376 525 
+               Q 1382 490 1402 430 
+               Q 1422 350 1440 280 Z"
+            fill={isNight ? '#120905' : '#3E2723'}
+            opacity="0.5"
+          />
+          {/* Vetas y estrías longitudinales de corteza de árbol */}
+          <path
+            d="M 1440 310 Q 1420 380 1402 450 Q 1386 520 1396 620"
+            fill="none"
+            stroke={isNight ? '#150A07' : '#3E2723'}
+            strokeWidth="1.8"
+          />
+          <path
+            d="M 1440 370 Q 1426 430 1412 500 Q 1404 560 1416 620"
+            fill="none"
+            stroke={isNight ? '#22140E' : '#4A2B14'}
+            strokeWidth="1.4"
+          />
+          <path
+            d="M 1440 430 Q 1432 480 1424 535 Q 1422 580 1432 620"
+            fill="none"
+            stroke={isNight ? '#2E1A13' : '#6B3E1F'}
+            strokeWidth="1.2"
+            opacity="0.75"
+          />
+          {/* Nudo orgánico en la corteza del tronco */}
+          <ellipse cx="1406" cy="445" rx="4.5" ry="9" fill={isNight ? '#140A07' : '#2E180D'} stroke={isNight ? '#22140E' : '#4A2B14'} strokeWidth="1.0" />
+          <circle cx="1406" cy="445" r="2.2" fill={isNight ? '#0C0604' : '#1B0E07'} />
+          <path d="M 1398 435 Q 1406 430 1414 435" fill="none" stroke={isNight ? '#251610' : '#6B3E1F'} strokeWidth="0.8" />
+          <path d="M 1398 455 Q 1406 460 1414 455" fill="none" stroke={isNight ? '#251610' : '#6B3E1F'} strokeWidth="0.8" />
+
+          {/* Pequeños brotes epífitos de hojas naciendo en la corteza superior e inferior */}
+          <path
+            d="M 1392 425 Q 1374 416 1364 422 Q 1376 434 1390 427 Z"
+            fill={isNight ? '#0C2D18' : '#2E7D32'}
+            stroke={isNight ? '#144627' : '#4CAF50'}
+            strokeWidth="0.7"
+          />
+          <path
+            d="M 1380 575 Q 1362 568 1354 576 Q 1366 586 1380 578 Z"
+            fill={isNight ? '#10391F' : '#388E3C'}
+            stroke={isNight ? '#1B5E20' : '#66BB6A'}
+            strokeWidth="0.7"
+          />
         </g>
 
-        {/* RAMA HORIZONTAL DONDE SE POSA EL TUCÁN (ESTÁTICA) */}
-        <path
-          d="M 1120 535 Q 1240 522 1380 536 L 1380 548 Q 1240 532 1120 546 Z"
-          fill={isNight ? '#261713' : '#5D4037'}
-        />
-        {/* Nudos y textura de corteza en la rama */}
-        <path d="M 1210 527 Q 1235 524 1255 527 L 1250 531 Q 1230 529 1210 531 Z" fill="#4E342E" opacity="0.6" />
-        <path d="M 1315 528 Q 1335 510 1345 518 Q 1338 532 1315 528 Z" fill="#7CB342" />
+        {/* Heliconia en el Margen Derecho (Raquis continuo y brácteas firmemente conectadas) */}
+        <g className="sway-heliconia-right" style={{ transformOrigin: '1395px 620px' }}>
+          <path d="M 1385 620 Q 1393 520 1398 430 Q 1401 380 1402 342" fill="none" stroke="#19532B" strokeWidth="5.5" strokeLinecap="round" />
+          <path d="M 1394 518 L 1394 492 Q 1418 478 1442 460 Q 1422 504 1394 518 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 1400 492 L 1400 468 Q 1374 454 1352 434 Q 1374 476 1400 492 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 1396 466 L 1396 442 Q 1418 428 1438 412 Q 1420 452 1396 466 Z" fill="url(#heliconiaBractGradRight)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 1402 442 L 1402 420 Q 1380 406 1358 388 Q 1380 426 1402 442 Z" fill="url(#heliconiaBractGradLeft)" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))" />
+          <path d="M 1400 360 Q 1399 348 1402 338 Q 1405 348 1404 360 Z" fill="#FFCA26" stroke="#19532B" strokeWidth="0.8" />
+        </g>
+
+        {/* RAMA DEL TUCÁN ANCLADA ORGÁNICAMENTE AL ÁRBOL PERIMETRAL DERECHO */}
+        <g id="toucanPerchBranch">
+          {/* Silueta principal de la rama con curvatura natural y collar de anclaje naciente del tronco */}
+          <path
+            d="M 1376 498 
+               C 1358 514 1302 527 1238 534 
+               C 1175 539 1105 541 1045 544 
+               C 1032 544 1022 546 1028 548 
+               C 1038 550 1105 548 1175 548 
+               C 1238 548 1305 550 1354 558 
+               C 1368 561 1374 564 1378 568 
+               Z"
+            fill={isNight ? 'url(#woodBranchGradNight)' : 'url(#woodBranchGradDay)'}
+            filter="drop-shadow(0 3px 6px rgba(0, 0, 0, 0.28))"
+          />
+
+          {/* Veta profunda inferior de corteza en tono café #4A2B14 */}
+          <path
+            d="M 1042 547 C 1110 547 1190 547 1265 547 C 1325 549 1365 558 1376 564"
+            fill="none"
+            stroke={isNight ? '#150A07' : '#4A2B14'}
+            strokeWidth="2.2"
+            strokeLinecap="round"
+          />
+          {/* Veta central en tono café cálido #6B3E1F */}
+          <path
+            d="M 1058 545 C 1130 544 1215 542 1285 541 C 1335 539 1365 546 1374 550"
+            fill="none"
+            stroke={isNight ? '#22140E' : '#6B3E1F'}
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+          {/* Veta superior de relieve y luz en #8D5B4C */}
+          <path
+            d="M 1072 544 C 1145 540 1230 536 1295 532 C 1340 527 1365 516 1374 508"
+            fill="none"
+            stroke={isNight ? '#2C1A12' : '#8D5B4C'}
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            opacity="0.8"
+          />
+
+          {/* Nudos de madera orgánicos (wood knots) */}
+          {/* Nudo 1: cuello de inserción al tronco (x=1334) */}
+          <ellipse cx="1334" cy="542" rx="5.5" ry="2.6" fill={isNight ? '#140A07' : '#3E2723'} stroke={isNight ? '#22140E' : '#4A2B14'} strokeWidth="1.0" />
+          <ellipse cx="1334" cy="542" rx="2.5" ry="1.2" fill={isNight ? '#0C0604' : '#2A1810'} />
+          <path d="M 1322 540 Q 1334 536 1346 540" fill="none" stroke={isNight ? '#22140E' : '#6B3E1F'} strokeWidth="0.8" />
+
+          {/* Nudo 2: sector medio a la izquierda del tucán (x=1160) */}
+          <ellipse cx="1160" cy="543" rx="4.5" ry="2.2" fill={isNight ? '#140A07' : '#3E2723'} stroke={isNight ? '#22140E' : '#4A2B14'} strokeWidth="0.8" />
+          <ellipse cx="1160" cy="543" rx="2.0" ry="1.0" fill={isNight ? '#0C0604' : '#2A1810'} />
+          <path d="M 1150 542 Q 1160 539 1170 542" fill="none" stroke={isNight ? '#22140E' : '#6B3E1F'} strokeWidth="0.8" />
+
+          {/* Hojas y brotes verdes brotando en los extremos */}
+          {/* Brote terminal bifurcado izquierdo */}
+          <path d="M 1045 544 Q 1032 538 1022 532" fill="none" stroke={isNight ? '#1C110C' : '#5D4037'} strokeWidth="2.0" strokeLinecap="round" />
+          <path d="M 1045 546 Q 1035 550 1025 554" fill="none" stroke={isNight ? '#1C110C' : '#5D4037'} strokeWidth="1.6" strokeLinecap="round" />
+          <path
+            d="M 1022 532 Q 1010 524 1004 525 Q 1012 536 1022 532 Z"
+            fill={isNight ? '#0D2D16' : '#2E7D32'}
+            stroke={isNight ? '#144627' : '#4CAF50'}
+            strokeWidth="0.8"
+          />
+          <line x1="1022" y1="532" x2="1006" y2="526" stroke={isNight ? '#1E5830' : '#81C784'} strokeWidth="0.6" />
+          <path
+            d="M 1032 538 Q 1028 526 1034 520 Q 1040 530 1032 538 Z"
+            fill={isNight ? '#10391F' : '#388E3C'}
+            stroke={isNight ? '#1B5E20' : '#66BB6A'}
+            strokeWidth="0.8"
+          />
+          <line x1="1032" y1="538" x2="1033" y2="522" stroke={isNight ? '#1E5830' : '#A5D6A7'} strokeWidth="0.6" />
+          <circle cx="1020" cy="531" r="1.5" fill={isNight ? '#1B5E20' : '#8BC34A'} />
+
+          {/* Brote tierno a mitad de rama cerca del nudo (x=1152) */}
+          <path d="M 1152 542 Q 1146 532 1138 528" fill="none" stroke={isNight ? '#1C110C' : '#5D4037'} strokeWidth="1.2" strokeLinecap="round" />
+          <path
+            d="M 1138 528 Q 1128 522 1124 526 Q 1132 533 1138 528 Z"
+            fill={isNight ? '#10391F' : '#43A047'}
+            stroke={isNight ? '#1B5E20' : '#81C784'}
+            strokeWidth="0.7"
+          />
+
+          {/* Brote tierno en el collar de inserción (x=1356) */}
+          <path d="M 1356 550 Q 1348 538 1342 534" fill="none" stroke={isNight ? '#1C110C' : '#5D4037'} strokeWidth="1.2" strokeLinecap="round" />
+          <path
+            d="M 1342 534 Q 1332 528 1328 532 Q 1336 539 1342 534 Z"
+            fill={isNight ? '#10391F' : '#43A047'}
+            stroke={isNight ? '#1B5E20' : '#81C784'}
+            strokeWidth="0.7"
+          />
+        </g>
 
         {/* TUCÁN PICO IRIS (RAMPHASTOS SULFURATUS) POSADO EN SU PERCHA (100% ESTÁTICO) */}
         <g transform="translate(1230, 432)">

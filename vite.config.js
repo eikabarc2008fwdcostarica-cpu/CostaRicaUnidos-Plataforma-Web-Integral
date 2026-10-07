@@ -3,9 +3,32 @@ import react from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Normalización de texto (elimina tildes y diacríticos, convierte a minúsculas)
+const normalizeStr = (str) => {
+  return String(str || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+};
+
+// Hash criptográfico de cédula (Ley N° 8968: nunca en texto plano)
+const hashCedula = (cedula) => {
+  const clean = String(cedula || '').replace(/[^0-9]/g, '');
+  return crypto.createHash('sha256').update(clean).digest('hex');
+};
+
+// Enmascaramiento de cédula oficial (e.g. 1-****-0789)
+const maskCedula = (cedula) => {
+  const clean = String(cedula || '').replace(/[^0-9]/g, '');
+  if (clean.length < 4) return '***';
+  return `${clean.slice(0, 1)}-****-${clean.slice(-4)}`;
+};
 
 function jsonDbServerPlugin() {
   return {
@@ -25,6 +48,9 @@ function jsonDbServerPlugin() {
             foro_posts: [],
             noticias: [],
             solicitudes_emprendedor: [],
+            solicitudesComercio: [],
+            publicacionesComercio: [],
+            intentosLoginComercio: {},
             sanciones_foro: [],
             moderacionContenido: []
           };
@@ -36,6 +62,10 @@ function jsonDbServerPlugin() {
             console.error('[jsonDbServer] Error leyendo db.json:', err);
           }
           if (!Array.isArray(data.usuarios)) data.usuarios = [];
+          if (!Array.isArray(data.solicitudesComercio)) data.solicitudesComercio = [];
+          if (!Array.isArray(data.solicitudes_emprendedor)) data.solicitudes_emprendedor = [];
+          if (!Array.isArray(data.publicacionesComercio)) data.publicacionesComercio = [];
+          if (!data.intentosLoginComercio || typeof data.intentosLoginComercio !== 'object') data.intentosLoginComercio = {};
           if (!Array.isArray(data.foro_posts)) data.foro_posts = [];
           if (!Array.isArray(data.sanciones_foro)) data.sanciones_foro = [];
           if (!Array.isArray(data.moderacionContenido)) data.moderacionContenido = [];
@@ -248,6 +278,744 @@ function jsonDbServerPlugin() {
                 res.setHeader('Content-Type', 'application/json');
                 res.setHeader('Access-Control-Allow-Origin', '*');
                 res.end(JSON.stringify({ success: false, message: 'Error actualizando solicitud.' }));
+              }
+            });
+            return;
+          }
+        }
+
+        // =====================================================================
+        // RUTA 0.1: /api/comercio/login (Autenticación Nombre + Cédula con Hash y Rate Limiting)
+        // =====================================================================
+        if (url === '/api/comercio/login') {
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 204;
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
+            res.end();
+            return;
+          }
+
+          if (req.method === 'POST') {
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const { nombreSolicitante, cedula } = JSON.parse(bodyStr || '{}');
+
+                if (!nombreSolicitante || !cedula) {
+                  res.statusCode = 400;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: false, message: 'El nombre del solicitante y la cédula son obligatorios.' }));
+                  return;
+                }
+
+                const normNombre = normalizeStr(nombreSolicitante);
+                const cleanCedula = String(cedula).replace(/[^0-9]/g, '');
+                const clientIp = req.socket?.remoteAddress || '127.0.0.1';
+                const rateKey = `comercio_${cleanCedula || clientIp}`;
+
+                const db = readDb();
+                if (!db.intentosLoginComercio) db.intentosLoginComercio = {};
+
+                const now = Date.now();
+                const intentoActual = db.intentosLoginComercio[rateKey] || { intentos: 0, bloqueadoHasta: 0 };
+
+                // Control estricto de Rate Limiting y Bloqueo Temporal (15 min)
+                if (intentoActual.bloqueadoHasta && intentoActual.bloqueadoHasta > now) {
+                  const segRestantes = Math.ceil((intentoActual.bloqueadoHasta - now) / 1000);
+                  const minRestantes = Math.ceil(segRestantes / 60);
+                  res.statusCode = 429;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(
+                    JSON.stringify({
+                      success: false,
+                      bloqueado: true,
+                      segundosRestantes: segRestantes,
+                      message: `Acceso temporalmente suspendido por múltiples intentos fallidos. Intente de nuevo en ${minRestantes} minuto(s).`
+                    })
+                  );
+                  return;
+                }
+
+                // Si expiró el bloqueo anterior, reiniciar contador
+                if (intentoActual.bloqueadoHasta && intentoActual.bloqueadoHasta <= now) {
+                  intentoActual.intentos = 0;
+                  intentoActual.bloqueadoHasta = 0;
+                }
+
+                // Buscar en solicitudesComercio y usuarios
+                const solMatch = db.solicitudesComercio.find((s) => {
+                  const sCed = String(s.cedula || s.cedulaJuridica || '').replace(/[^0-9]/g, '');
+                  const sNom = normalizeStr(s.nombreSolicitante || s.nombreCompleto || '');
+                  return sCed === cleanCedula && (sNom === normNombre || sNom.includes(normNombre) || normNombre.includes(sNom));
+                });
+
+                const userMatch = db.usuarios.find((u) => {
+                  const uCed = String(u.cedula || '').replace(/[^0-9]/g, '');
+                  const uNom = normalizeStr(u.nombre || '');
+                  return uCed === cleanCedula && (uNom === normNombre || uNom.includes(normNombre) || normNombre.includes(uNom));
+                });
+
+                // Si no coincide credencial ni en solicitudes ni en usuarios -> Error genérico (sin filtrar cuál falló)
+                if (!solMatch && !userMatch) {
+                  intentoActual.intentos = (intentoActual.intentos || 0) + 1;
+                  if (intentoActual.intentos >= 5) {
+                    intentoActual.bloqueadoHasta = now + 15 * 60 * 1000;
+                  }
+                  db.intentosLoginComercio[rateKey] = intentoActual;
+                  writeDb(db);
+
+                  res.statusCode = 401;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(
+                    JSON.stringify({
+                      success: false,
+                      intentosRestantes: Math.max(0, 5 - intentoActual.intentos),
+                      message: 'Credenciales inválidas.'
+                    })
+                  );
+                  return;
+                }
+
+                // Evaluar estado de aprobación
+                const estado = String(
+                  solMatch?.estado ||
+                  (userMatch?.rol?.toLowerCase().includes('comerciante') || userMatch?.isComerciante ? 'aprobado' : 'pendiente')
+                ).toLowerCase();
+
+                if (estado === 'pendiente') {
+                  res.statusCode = 403;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(
+                    JSON.stringify({
+                      success: false,
+                      estado: 'pendiente',
+                      message: 'Tu solicitud de comercio se encuentra en estado PENDIENTE de revisión por la administración municipal.'
+                    })
+                  );
+                  return;
+                }
+
+                if (estado === 'rechazado') {
+                  const motivo = solMatch?.motivoRechazo || 'Incumplimiento de requisitos reglamentarios cantonales.';
+                  res.statusCode = 403;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(
+                    JSON.stringify({
+                      success: false,
+                      estado: 'rechazado',
+                      motivoRechazo: motivo,
+                      message: `Tu solicitud de acreditación comercial fue RECHAZADA. Motivo: ${motivo}`
+                    })
+                  );
+                  return;
+                }
+
+                // Acceso APROBADO: resetear intentos fallidos
+                delete db.intentosLoginComercio[rateKey];
+                writeDb(db);
+
+                // Formatear usuario y comercio SIN exponer cédula en texto plano (Ley N° 8968)
+                const targetUser = userMatch || {
+                  id: solMatch?.usuarioId || `USR-COM-${Date.now()}`,
+                  nombre: solMatch?.nombreSolicitante,
+                  rol: 'Comerciante y Emprendedor',
+                  nivelAcceso: 3,
+                  isComerciante: true,
+                  canton: solMatch?.canton || 'San José',
+                  provincia: solMatch?.provincia || 'San José',
+                  correo: solMatch?.correoComercial || solMatch?.correoPersonal || 'comercio@costaricaunidos.gob.cr'
+                };
+
+                const masked = maskCedula(cleanCedula);
+                const cHash = hashCedula(cleanCedula);
+
+                const sanitizedUser = {
+                  id: targetUser.id,
+                  nombre: targetUser.nombre,
+                  email: targetUser.correo || targetUser.email,
+                  correo: targetUser.correo || targetUser.email,
+                  rol: 'Comerciante y Emprendedor',
+                  rolOficial: 'COMERCIANTE',
+                  nivelAcceso: 3,
+                  isComerciante: true,
+                  canton: targetUser.canton || solMatch?.canton || 'San José',
+                  provincia: targetUser.provincia || solMatch?.provincia || 'San José',
+                  cedulaMascara: masked,
+                  token: `TOKEN_COM_${cHash.slice(0, 16)}_${Date.now()}`
+                };
+
+                const sanitizedComercio = {
+                  id: solMatch?.id || 'SOL-COM-003',
+                  nombreComercio: solMatch?.nombreComercio || solMatch?.nombreNegocio || 'Cafetería y Tostaduría Alma Tica',
+                  nombreSolicitante: solMatch?.nombreSolicitante || targetUser.nombre,
+                  categoria: solMatch?.categoria || solMatch?.categoriaComercial || 'Gastronomía y Café',
+                  patenteCantonal: solMatch?.patenteCantonal || 'PAT-MSJ-2026-8812',
+                  descripcion: solMatch?.descripcion || 'Comercio local con patente cantonal y acreditación oficial.',
+                  contacto: solMatch?.contacto || targetUser.correo || '+506 2221-4589',
+                  canton: solMatch?.canton || targetUser.canton || 'San José',
+                  provincia: solMatch?.provincia || targetUser.provincia || 'San José',
+                  estado: 'aprobado',
+                  verificado: true
+                };
+
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(
+                  JSON.stringify({
+                    success: true,
+                    token: sanitizedUser.token,
+                    user: sanitizedUser,
+                    comercio: sanitizedComercio
+                  })
+                );
+              } catch (loginErr) {
+                console.error('[jsonDbServer] Error en POST /api/comercio/login:', loginErr);
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error interno en autenticación comercial.' }));
+              }
+            });
+            return;
+          }
+        }
+
+        // =====================================================================
+        // RUTA 0.2: /api/solicitudesComercio y /solicitudesComercio (Bandeja Admin)
+        // =====================================================================
+        if (
+          url === '/api/solicitudesComercio' ||
+          url === '/solicitudesComercio' ||
+          url.startsWith('/api/solicitudesComercio/') ||
+          url.startsWith('/solicitudesComercio/')
+        ) {
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 204;
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, x-user-role');
+            res.end();
+            return;
+          }
+
+          const cleanPath = url.replace(/^\/api/, '');
+          const segments = cleanPath.split('/').filter(Boolean);
+          const targetId = segments.length > 1 ? decodeURIComponent(segments[1]) : null;
+
+          if (req.method === 'GET') {
+            const db = readDb();
+            let lista = [...db.solicitudesComercio];
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify(lista));
+            return;
+          }
+
+          if (req.method === 'PATCH' || req.method === 'PUT') {
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const updatePayload = JSON.parse(bodyStr || '{}');
+                const solId = targetId || updatePayload.id;
+
+                const db = readDb();
+                const idx = db.solicitudesComercio.findIndex((s) => s.id === solId);
+                if (idx === -1) {
+                  res.statusCode = 404;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: false, message: 'Solicitud comercial no encontrada.' }));
+                  return;
+                }
+
+                const fechaNow = new Date().toISOString();
+                const nuevoEstado = String(updatePayload.estado || db.solicitudesComercio[idx].estado).toLowerCase();
+
+                db.solicitudesComercio[idx] = {
+                  ...db.solicitudesComercio[idx],
+                  ...updatePayload,
+                  estado: nuevoEstado,
+                  fechaResolucion: fechaNow
+                };
+
+                // Si es APROBADO: otorgar rol de Comerciante y Emprendedor (Nivel 3)
+                if (nuevoEstado === 'aprobado') {
+                  const sol = db.solicitudesComercio[idx];
+                  sol.verificado = true;
+                  sol.verificadoHacienda = true;
+
+                  const cleanCed = String(sol.cedula || sol.cedulaJuridica || '').replace(/[^0-9]/g, '');
+                  const uIdx = db.usuarios.findIndex((u) => {
+                    const uCed = String(u.cedula || '').replace(/[^0-9]/g, '');
+                    return (cleanCed && uCed === cleanCed) || (sol.usuarioId && u.id === sol.usuarioId);
+                  });
+
+                  if (uIdx !== -1) {
+                    db.usuarios[uIdx].rol = 'Comerciante y Emprendedor';
+                    db.usuarios[uIdx].nivelAcceso = 3;
+                    db.usuarios[uIdx].isComerciante = true;
+                  }
+                }
+
+                // Sincronizar en solicitudes_emprendedor si existe
+                const empIdx = db.solicitudes_emprendedor.findIndex((e) => e.id === solId);
+                if (empIdx !== -1) {
+                  db.solicitudes_emprendedor[empIdx] = {
+                    ...db.solicitudes_emprendedor[empIdx],
+                    estado: nuevoEstado,
+                    motivoRechazo: updatePayload.motivoRechazo || null,
+                    fechaResolucion: fechaNow
+                  };
+                }
+
+                writeDb(db);
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: true, data: db.solicitudesComercio[idx] }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error actualizando solicitud de comercio.' }));
+              }
+            });
+            return;
+          }
+        }
+
+        // =====================================================================
+        // RUTA 0.3: /api/comercio/publicaciones (CRUD y Feed de Comercios)
+        // =====================================================================
+        if (
+          url === '/api/comercio/publicaciones' ||
+          url.startsWith('/api/comercio/publicaciones/')
+        ) {
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 204;
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
+            res.end();
+            return;
+          }
+
+          const segments = url.replace(/^\/api\/comercio\/publicaciones/, '').split('/').filter(Boolean);
+          const pubId = segments.length > 0 ? decodeURIComponent(segments[0]) : null;
+
+          if (req.method === 'GET') {
+            const db = readDb();
+            const fullUrl = new URL(req.url, 'http://localhost');
+            const comercioId = fullUrl.searchParams.get('comercioId');
+            const misPublicaciones = fullUrl.searchParams.get('misPublicaciones') === 'true';
+            const excluirComercioId = fullUrl.searchParams.get('excluirComercioId');
+
+            let lista = [...db.publicacionesComercio];
+
+            if (misPublicaciones && comercioId) {
+              lista = lista.filter((p) => p.comercioId === comercioId || p.usuarioId === comercioId);
+            } else if (excluirComercioId) {
+              lista = lista.filter((p) => p.comercioId !== excluirComercioId && p.usuarioId !== excluirComercioId);
+            }
+
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify(lista));
+            return;
+          }
+
+          if (req.method === 'POST') {
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const data = JSON.parse(bodyStr || '{}');
+
+                if (!data.titulo || !data.descripcion) {
+                  res.statusCode = 400;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: false, message: 'El título y la descripción son requeridos.' }));
+                  return;
+                }
+
+                const db = readDb();
+                const nuevaPub = {
+                  id: data.id || `PUB-COM-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+                  comercioId: data.comercioId || 'SOL-COM-003',
+                  usuarioId: data.usuarioId || 'USR-COM-001',
+                  nombreComercio: data.nombreComercio || 'Cafetería y Tostaduría Alma Tica',
+                  nombreSolicitante: data.nombreSolicitante || 'Carlos Hernández Rojas',
+                  titulo: String(data.titulo).trim(),
+                  descripcion: String(data.descripcion).trim(),
+                  categoria: data.categoria || 'Gastronomía y Café',
+                  imagenUrl: data.imagenUrl || 'https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=800&q=80',
+                  precio: data.precio || '',
+                  contacto: data.contacto || '+506 2221-4589',
+                  canton: data.canton || 'San José',
+                  provincia: data.provincia || 'San José',
+                  fechaPublicacion: data.fechaPublicacion || new Date().toISOString(),
+                  metricas: {
+                    vistas: 1,
+                    likes: 0,
+                    comentarios: 0,
+                    contactos: 0
+                  }
+                };
+
+                db.publicacionesComercio.unshift(nuevaPub);
+                writeDb(db);
+
+                res.statusCode = 201;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: true, data: nuevaPub }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error al registrar la publicación.' }));
+              }
+            });
+            return;
+          }
+
+          if (req.method === 'PATCH' || req.method === 'PUT') {
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const updatePayload = JSON.parse(bodyStr || '{}');
+                const targetPubId = pubId || updatePayload.id;
+
+                const db = readDb();
+                const idx = db.publicacionesComercio.findIndex((p) => p.id === targetPubId);
+                if (idx === -1) {
+                  res.statusCode = 404;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: false, message: 'Publicación no encontrada.' }));
+                  return;
+                }
+
+                db.publicacionesComercio[idx] = {
+                  ...db.publicacionesComercio[idx],
+                  ...updatePayload,
+                  fechaModificacion: new Date().toISOString()
+                };
+
+                writeDb(db);
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: true, data: db.publicacionesComercio[idx] }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error actualizando publicación.' }));
+              }
+            });
+            return;
+          }
+
+          if (req.method === 'DELETE') {
+            const db = readDb();
+            const initialLen = db.publicacionesComercio.length;
+            db.publicacionesComercio = db.publicacionesComercio.filter((p) => p.id !== pubId);
+
+            if (db.publicacionesComercio.length < initialLen) {
+              writeDb(db);
+              res.statusCode = 200;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(JSON.stringify({ success: true, message: 'Publicación eliminada correctamente.' }));
+              return;
+            }
+
+            res.statusCode = 404;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify({ success: false, message: 'Publicación no encontrada.' }));
+            return;
+          }
+        }
+
+        // =====================================================================
+        // RUTA 0.4: /api/comercio/metricas (Gráficos de Actividad y Crecimiento)
+        // =====================================================================
+        if (url === '/api/comercio/metricas' || url.startsWith('/api/comercio/metricas')) {
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 204;
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+            res.end();
+            return;
+          }
+
+          if (req.method === 'GET') {
+            const db = readDb();
+            const fullUrl = new URL(req.url, 'http://localhost');
+            const comercioId = fullUrl.searchParams.get('comercioId') || 'SOL-COM-003';
+            const periodo = fullUrl.searchParams.get('periodo') || '30d'; // '30d' | '6m' | '12m'
+
+            const pubsComercio = db.publicacionesComercio.filter(
+              (p) => p.comercioId === comercioId || p.usuarioId === comercioId || p.usuarioId === 'USR-COM-001'
+            );
+
+            // Nombres de meses en español Costa Rica
+            const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'];
+
+            // Construir los últimos 12 meses
+            const hoy = new Date();
+            const ultimos12Meses = [];
+            for (let i = 11; i >= 0; i--) {
+              const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
+              const mesIdx = d.getMonth();
+              const anio = d.getFullYear();
+              ultimos12Meses.push({
+                clave: `${anio}-${String(mesIdx + 1).padStart(2, '0')}`,
+                mesNombre: MESES[mesIdx],
+                anio: anio,
+                cantidad: 0,
+                interacciones: 0
+              });
+            }
+
+            // Agrupar publicaciones por mes
+            pubsComercio.forEach((p) => {
+              const f = new Date(p.fechaPublicacion);
+              if (!isNaN(f.getTime())) {
+                const clave = `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}`;
+                const entry = ultimos12Meses.find((m) => m.clave === clave);
+                if (entry) {
+                  entry.cantidad += 1;
+                  const totalInter =
+                    (p.metricas?.vistas || 0) +
+                    (p.metricas?.likes || 0) +
+                    (p.metricas?.comentarios || 0) +
+                    (p.metricas?.contactos || 0);
+                  entry.interacciones += totalInter;
+                }
+              }
+            });
+
+            // Gráfico 2: Interacciones por publicación (ordenadas por fecha más reciente)
+            const interaccionesPorPublicacion = pubsComercio.slice(0, 8).map((p) => ({
+              id: p.id,
+              titulo: p.titulo,
+              vistas: p.metricas?.vistas || 0,
+              likes: p.metricas?.likes || 0,
+              comentarios: p.metricas?.comentarios || 0,
+              contactos: p.metricas?.contactos || 0,
+              totalInteracciones:
+                (p.metricas?.vistas || 0) +
+                (p.metricas?.likes || 0) +
+                (p.metricas?.comentarios || 0) +
+                (p.metricas?.contactos || 0)
+            }));
+
+            // Calcular crecimiento según selector (30d, 6m, 12m)
+            let diasPeriodo = 30;
+            if (periodo === '6m') diasPeriodo = 180;
+            if (periodo === '12m') diasPeriodo = 365;
+
+            const ahoraTime = hoy.getTime();
+            const limiteActual = ahoraTime - diasPeriodo * 24 * 60 * 60 * 1000;
+            const limiteAnterior = ahoraTime - diasPeriodo * 2 * 24 * 60 * 60 * 1000;
+
+            const pubsActual = pubsComercio.filter((p) => {
+              const t = new Date(p.fechaPublicacion).getTime();
+              return t >= limiteActual && t <= ahoraTime;
+            });
+
+            const pubsAnterior = pubsComercio.filter((p) => {
+              const t = new Date(p.fechaPublicacion).getTime();
+              return t >= limiteAnterior && t < limiteActual;
+            });
+
+            const calcMetric = (fn) => {
+              const act = pubsActual.reduce((acc, p) => acc + fn(p), 0);
+              const ant = pubsAnterior.reduce((acc, p) => acc + fn(p), 0);
+
+              let variacion = 0;
+              let tendencia = 'neutral';
+              let sinDatosPrevios = false;
+
+              if (ant === 0 && act === 0) {
+                variacion = 0;
+                sinDatosPrevios = true;
+                tendencia = 'neutral';
+              } else if (ant === 0 && act > 0) {
+                variacion = 100;
+                tendencia = 'up';
+              } else {
+                const diff = act - ant;
+                variacion = Math.round((diff / ant) * 100);
+                if (variacion > 0) tendencia = 'up';
+                else if (variacion < 0) tendencia = 'down';
+                else tendencia = 'neutral';
+              }
+
+              return {
+                actual: act,
+                anterior: ant,
+                variacion,
+                tendencia,
+                sinDatosPrevios
+              };
+            };
+
+            const crecimientoPublicaciones = calcMetric(() => 1);
+            const crecimientoInteracciones = calcMetric(
+              (p) =>
+                (p.metricas?.vistas || 0) +
+                (p.metricas?.likes || 0) +
+                (p.metricas?.comentarios || 0)
+            );
+            const crecimientoContactos = calcMetric((p) => p.metricas?.contactos || 0);
+
+            // Generar texto resumen automático inteligente
+            let textoResumen = 'Tu comercio mantiene un nivel de actividad estable en el cantón.';
+            if (crecimientoInteracciones.variacion > 0) {
+              const etiquetaPeriodo = periodo === '30d' ? 'este mes' : periodo === '6m' ? 'este semestre' : 'este año';
+              textoResumen = `¡Excelente avance! Tu comercio creció un ${crecimientoInteracciones.variacion} % en interacciones ${etiquetaPeriodo}.`;
+            } else if (crecimientoInteracciones.variacion < 0) {
+              textoResumen = `Las interacciones variaron un ${Math.abs(crecimientoInteracciones.variacion)} % respecto al período anterior. Recomendamos publicar nuevos productos.`;
+            } else if (crecimientoInteracciones.sinDatosPrevios) {
+              textoResumen = 'Comenzando el registro de actividad comercial en la plataforma.';
+            }
+
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(
+              JSON.stringify({
+                success: true,
+                data: {
+                  publicacionesPorMes: ultimos12Meses,
+                  interaccionesPorPublicacion,
+                  crecimiento: {
+                    periodo,
+                    publicaciones: crecimientoPublicaciones,
+                    interacciones: crecimientoInteracciones,
+                    contactos: crecimientoContactos,
+                    textoResumen
+                  }
+                }
+              })
+            );
+            return;
+          }
+        }
+
+        // =====================================================================
+        // RUTA 0.5: /api/comercio/perfil (Detalles públicos del comercio)
+        // =====================================================================
+        if (url === '/api/comercio/perfil' || url.startsWith('/api/comercio/perfil')) {
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 204;
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, PUT, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
+            res.end();
+            return;
+          }
+
+          if (req.method === 'GET') {
+            const db = readDb();
+            const fullUrl = new URL(req.url, 'http://localhost');
+            const comercioId = fullUrl.searchParams.get('comercioId') || 'SOL-COM-003';
+
+            const sol = db.solicitudesComercio.find((s) => s.id === comercioId || s.usuarioId === comercioId) || db.solicitudesComercio[0];
+
+            if (!sol) {
+              res.statusCode = 404;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(JSON.stringify({ success: false, message: 'Perfil comercial no encontrado.' }));
+              return;
+            }
+
+            // Sanitizado: NO incluir cédula en texto plano
+            const perfil = {
+              id: sol.id,
+              usuarioId: sol.usuarioId,
+              nombreComercio: sol.nombreComercio || sol.nombreNegocio,
+              nombreSolicitante: sol.nombreSolicitante,
+              categoria: sol.categoria || sol.categoriaComercial || 'Comercio General',
+              patenteCantonal: sol.patenteCantonal || 'PAT-MSJ-2026-8812',
+              descripcion: sol.descripcion || 'Comercio local verificado.',
+              contacto: sol.contacto || '+506 2221-4589',
+              canton: sol.canton || 'San José',
+              provincia: sol.provincia || 'San José',
+              estado: sol.estado || 'aprobado',
+              verificado: sol.verificado ?? true,
+              fechaAcreditacion: sol.fechaResolucion || sol.fechaSolicitud
+            };
+
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify({ success: true, data: perfil }));
+            return;
+          }
+
+          if (req.method === 'PATCH' || req.method === 'PUT') {
+            let bodyChunks = [];
+            req.on('data', (chunk) => bodyChunks.push(chunk));
+            req.on('end', () => {
+              try {
+                const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
+                const updatePayload = JSON.parse(bodyStr || '{}');
+                const comercioId = updatePayload.id || 'SOL-COM-003';
+
+                const db = readDb();
+                const idx = db.solicitudesComercio.findIndex((s) => s.id === comercioId || s.usuarioId === comercioId);
+
+                if (idx !== -1) {
+                  if (updatePayload.descripcion) db.solicitudesComercio[idx].descripcion = updatePayload.descripcion;
+                  if (updatePayload.contacto) db.solicitudesComercio[idx].contacto = updatePayload.contacto;
+                  if (updatePayload.categoria) db.solicitudesComercio[idx].categoria = updatePayload.categoria;
+                  if (updatePayload.nombreComercio) {
+                    db.solicitudesComercio[idx].nombreComercio = updatePayload.nombreComercio;
+                    db.solicitudesComercio[idx].nombreNegocio = updatePayload.nombreComercio;
+                  }
+
+                  writeDb(db);
+                  res.statusCode = 200;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: true, data: db.solicitudesComercio[idx] }));
+                  return;
+                }
+
+                res.statusCode = 404;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Comercio no encontrado.' }));
+              } catch (err) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, message: 'Error actualizando perfil comercial.' }));
               }
             });
             return;

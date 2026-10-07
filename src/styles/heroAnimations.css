@@ -286,29 +286,56 @@
 }
 
 /* ============================================================================
-   4. MODO NOCHE (ESTRELLAS TITILANTES)
+   4. MODO NOCHE (ESTRELLAS TITILANTES ESTACIONARIAS)
+   Cero desplazamiento espacial o traslación: únicamente variación suave de opacidad
+   y escala concéntrica fijada en sus coordenadas exactas en el cielo.
    ============================================================================ */
-@keyframes starTwinkleGlow {
+@keyframes twinkle {
   0%, 100% {
     opacity: 0.25;
-    transform: scale(0.85);
+    transform: scale(0.9);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.15);
+    opacity: 0.95;
+    transform: scale(1.1);
   }
 }
 
+.star-twinkle-1 {
+  animation: twinkle 3s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.star-twinkle-2 {
+  animation: twinkle 4.5s infinite ease-in-out 1s;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.star-twinkle-3 {
+  animation: twinkle 2.5s infinite ease-in-out 0.5s;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Alias de compatibilidad hacia atrás */
 .star-twinkle-fast {
-  animation: starTwinkleGlow 2.4s ease-in-out infinite;
+  animation: twinkle 2.5s infinite ease-in-out 0.5s;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .star-twinkle-mid {
-  animation: starTwinkleGlow 3.2s ease-in-out infinite 0.8s;
+  animation: twinkle 3s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .star-twinkle-slow {
-  animation: starTwinkleGlow 4.2s ease-in-out infinite 1.6s;
+  animation: twinkle 4.5s infinite ease-in-out 1s;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 /* ============================================================================
@@ -334,6 +361,9 @@
   .macaw-wing-far-companion,
   .macaw-tail-lead,
   .macaw-tail-companion,
+  .star-twinkle-1,
+  .star-twinkle-2,
+  .star-twinkle-3,
   .star-twinkle-fast,
   .star-twinkle-mid,
   .star-twinkle-slow {

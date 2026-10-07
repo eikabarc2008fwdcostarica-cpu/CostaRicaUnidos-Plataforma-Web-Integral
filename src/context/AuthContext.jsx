@@ -14,6 +14,7 @@
  */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { registrarUsuarioApi, obtenerUsuariosApi } from '../services/userService';
+import { loginComercianteApi } from '../services/comercioService';
 import { ROLES_SISTEMA, ROLES_CONFIG, normalizarRolOficial } from '../config/roles';
 
 export { ROLES_SISTEMA, ROLES_CONFIG, normalizarRolOficial };
@@ -125,6 +126,7 @@ function normalizarUsuario(rawUser, token = null) {
   if (!nivelAcceso) {
     if (rolNorm === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL) nivelAcceso = 5;
     else if (rolNorm === ROLES_SISTEMA.GESTOR_TERRITORIAL) nivelAcceso = 4;
+    else if (rolNorm === ROLES_SISTEMA.COMERCIANTE) nivelAcceso = 3;
     else nivelAcceso = 2;
   }
 
@@ -162,6 +164,14 @@ function normalizarUsuario(rawUser, token = null) {
     rol: rawUser.rol || rolNorm,
     rolOficial: rolNorm,
     nivelAcceso: Number(nivelAcceso),
+    isComerciante: Boolean(
+      rawUser.isComerciante ||
+      rolNorm === ROLES_SISTEMA.COMERCIANTE ||
+      Number(nivelAcceso) === 3
+    ),
+    estadoComercio: rawUser.estadoComercio || (rolNorm === ROLES_SISTEMA.COMERCIANTE ? 'aprobado' : undefined),
+    comercioId: rawUser.comercioId || (rolNorm === ROLES_SISTEMA.COMERCIANTE ? 'SOL-COM-003' : undefined),
+    cedulaMascara: rawUser.cedulaMascara,
     provincia: rawUser.provincia || provNombre,
     provinciaId: provId,
     provinciaNombre: provNombre,
@@ -619,6 +629,37 @@ export function AuthProvider({ children }) {
       ) || null;
   }
 
+  const loginComerciante = async (nombreSolicitante, cedula) => {
+    setCargando(true);
+    setError(null);
+    try {
+      const res = await loginComercianteApi(nombreSolicitante, cedula);
+      if (res && res.success && res.user) {
+        const usuarioNorm = normalizarUsuario({
+          ...res.user,
+          isComerciante: true,
+          estadoComercio: 'aprobado'
+        }, res.token);
+        setUser(usuarioNorm);
+        setUsuarioActual(usuarioNorm);
+        setIsAuthenticated(true);
+        try {
+          localStorage.setItem("cru_user_session", JSON.stringify(usuarioNorm));
+          localStorage.setItem("cr_sesion_activa", JSON.stringify(usuarioNorm));
+          localStorage.setItem("cru_token", res.token || 'TOKEN_COMERCIANTE');
+          localStorage.removeItem("cr_sesion_cerrada");
+        } catch (_e) {}
+        setCargando(false);
+        return { success: true, user: usuarioNorm, comercio: res.comercio };
+      }
+      setCargando(false);
+      return res;
+    } catch (err) {
+      setCargando(false);
+      return { success: false, message: 'Error de conexión con el servicio comercial.' };
+    }
+  };
+
   const actualizarUsuario = (cambios) => {
     setUser((prev) => {
       if (!prev) return null;
@@ -633,6 +674,7 @@ export function AuthProvider({ children }) {
     // Requerimientos primordiales
     user,
     login,
+    loginComerciante,
     logout,
     hasPermission,
     actualizarUsuario,
@@ -648,6 +690,7 @@ export function AuthProvider({ children }) {
     role: user?.rol || null,
     officialRoleName: user?.rol || null,
     nivelAcceso: user?.nivelAcceso ?? 2,
+    isComerciante: user?.isComerciante || false,
     identityStatus: user?.verificadoHacienda ? 'VERIFICADO_HACIENDA' : 'PENDIENTE_VERIFICACION',
     citizenMode,
     assignedMunicipality,

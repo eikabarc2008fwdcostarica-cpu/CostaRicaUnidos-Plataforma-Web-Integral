@@ -12,6 +12,7 @@ import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-do
 import Navbar from '../components/Navbar';
 import Logo from '../components/common/Logo';
 import { useAuth } from '../context/AuthContext';
+import { loginComercianteApi } from '../services/comercioService';
 import dbSeed from '../data/seedData';
 
 // ----------------------------------------------------------------------------
@@ -163,6 +164,15 @@ const IconLogIn = ({ size = 20, color = 'currentColor', className = '' }) => (
     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
     <polyline points="10 17 15 12 10 7" />
     <line x1="15" x2="3" y1="12" y2="12" />
+  </svg>
+);
+
+const IconStore = ({ size = 20, color = 'currentColor', className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
+    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+    <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
+    <path d="M2 7h20" />
   </svg>
 );
 
@@ -350,6 +360,30 @@ export default function Login() {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Estados de Autenticación de Comercio Aprobado (Nombre + Cédula)
+  const [comercioNombre, setComercioNombre] = useState('');
+  const [comercioCedula, setComercioCedula] = useState('');
+  const [comercioLoading, setComercioLoading] = useState(false);
+  const [comercioBloqueado, setComercioBloqueado] = useState(false);
+  const [comercioSegundosRestantes, setComercioSegundosRestantes] = useState(0);
+
+  useEffect(() => {
+    let timer = null;
+    if (comercioBloqueado && comercioSegundosRestantes > 0) {
+      timer = setInterval(() => {
+        setComercioSegundosRestantes((prev) => {
+          if (prev <= 1) {
+            setComercioBloqueado(false);
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [comercioBloqueado, comercioSegundosRestantes]);
+
   // Parser inteligente para formato costarricense (Nombres y Apellidos al final)
   const procesarNombreHacienda = (nombreCompleto) => {
     if (!nombreCompleto) return;
@@ -523,7 +557,7 @@ export default function Login() {
           String(usuarioEncontrado.rol || '').toLowerCase().includes('comerciante') ||
           String(usuarioEncontrado.rol || '').toLowerCase().includes('emprendedor')
         ) {
-          navigate('/portal-ciudadano', { replace: true });
+          navigate('/perfil-comercial', { replace: true });
         } else {
           navigate('/', { replace: true });
         }
@@ -538,6 +572,59 @@ export default function Login() {
       setError('Las credenciales ingresadas no corresponden a ningún registro oficial activo en el sistema.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Manejo de Inicio de Sesión Comercial (Nombre del Solicitante + Cédula con Hash y Protección Ley 8968)
+  const handleLoginComercioSubmit = async (e) => {
+    e.preventDefault();
+    const cleanNom = comercioNombre.trim();
+    const cleanCed = comercioCedula.replace(/[^0-9]/g, '');
+
+    if (!cleanNom || !cleanCed) {
+      setError('Por favor complete el nombre del solicitante y el número de cédula oficial.');
+      setSuccessMsg('');
+      return;
+    }
+
+    setComercioLoading(true);
+    setError('');
+    setSuccessMsg('');
+
+    try {
+      let res;
+      if (authContextValue?.loginComerciante) {
+        res = await authContextValue.loginComerciante(cleanNom, cleanCed);
+      } else {
+        res = await loginComercianteApi(cleanNom, cleanCed);
+        if (res?.success && res?.user) {
+          try {
+            localStorage.setItem('cru_user_session', JSON.stringify(res.user));
+            localStorage.setItem('cr_sesion_activa', JSON.stringify(res.user));
+            localStorage.setItem('cru_token', res.token || 'TOKEN_COMERCIANTE');
+          } catch (_e) {}
+        }
+      }
+
+      if (res && res.success) {
+        setSuccessMsg('Acceso comercial autorizado exitosamente. Redirigiendo a su perfil comercial...');
+        setTimeout(() => {
+          navigate('/perfil-comercial', { replace: true });
+        }, 350);
+      } else if (res && res.bloqueado) {
+        setComercioBloqueado(true);
+        setComercioSegundosRestantes(res.segundosRestantes || 900);
+        setError(res.message || 'Acceso temporalmente suspendido por múltiples intentos fallidos.');
+      } else if (res && (res.estado === 'pendiente' || res.estado === 'rechazado')) {
+        setError(res.message || `Su solicitud comercial se encuentra en estado ${res.estado}.`);
+      } else {
+        const intentos = res?.intentosRestantes !== undefined ? ` (Intentos restantes: ${res.intentosRestantes})` : '';
+        setError((res?.message || 'Credenciales inválidas.') + intentos);
+      }
+    } catch {
+      setError('Credenciales inválidas.');
+    } finally {
+      setComercioLoading(false);
     }
   };
 
@@ -751,7 +838,7 @@ export default function Login() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
+              gridTemplateColumns: 'repeat(3, 1fr)',
               gap: '6px',
               backgroundColor: 'var(--cru-badge-neutral-bg, #F1F5F9)',
               padding: '6px',
@@ -760,7 +847,7 @@ export default function Login() {
               marginBottom: '1.75rem'
             }}
           >
-            {/* Pestaña: [→] Iniciar Sesión */}
+            {/* Pestaña 1: [→] Iniciar Sesión Ciudadana/Admin */}
             <button
               type="button"
               id="tab-btn-login"
@@ -770,7 +857,7 @@ export default function Login() {
                 setSuccessMsg('');
               }}
               style={{
-                padding: '10px 14px',
+                padding: '9px 8px',
                 borderRadius: '10px',
                 border: 'none',
                 background:
@@ -779,22 +866,56 @@ export default function Login() {
                     : 'transparent',
                 color: authMode === 'login' ? '#FFFFFF' : 'var(--cru-text-soft, #64748B)',
                 fontWeight: 700,
-                fontSize: '0.88rem',
+                fontSize: '0.8rem',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
+                gap: '6px',
                 boxShadow:
                   authMode === 'login' ? '0 4px 14px rgba(6, 42, 119, 0.25)' : 'none'
               }}
             >
-              <IconLogIn size={16} color="currentColor" />
-              <span>Iniciar Sesión</span>
+              <IconLogIn size={15} color="currentColor" />
+              <span>Ciudadano</span>
             </button>
 
-            {/* Pestaña: [+] Crear Cuenta */}
+            {/* Pestaña 2: [🏪] Comercio PyMES Aprobado */}
+            <button
+              type="button"
+              id="tab-btn-comercio"
+              onClick={() => {
+                setAuthMode('comercio');
+                setError('');
+                setSuccessMsg('');
+              }}
+              style={{
+                padding: '9px 8px',
+                borderRadius: '10px',
+                border: 'none',
+                background:
+                  authMode === 'comercio'
+                    ? 'linear-gradient(135deg, #D97706 0%, #B45309 100%)'
+                    : 'transparent',
+                color: authMode === 'comercio' ? '#FFFFFF' : 'var(--cru-text-soft, #64748B)',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                boxShadow:
+                  authMode === 'comercio' ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none'
+              }}
+            >
+              <IconStore size={15} color="currentColor" />
+              <span>Comercios & PyMES</span>
+            </button>
+
+            {/* Pestaña 3: [+] Crear Cuenta */}
             <button
               type="button"
               id="tab-btn-register"
@@ -804,7 +925,7 @@ export default function Login() {
                 setSuccessMsg('');
               }}
               style={{
-                padding: '10px 14px',
+                padding: '9px 8px',
                 borderRadius: '10px',
                 border: 'none',
                 background:
@@ -813,19 +934,19 @@ export default function Login() {
                     : 'transparent',
                 color: authMode === 'register' ? '#FFFFFF' : 'var(--cru-text-soft, #64748B)',
                 fontWeight: 700,
-                fontSize: '0.88rem',
+                fontSize: '0.8rem',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
+                gap: '6px',
                 boxShadow:
                   authMode === 'register' ? '0 4px 14px rgba(6, 42, 119, 0.25)' : 'none'
               }}
             >
-              <IconUserPlus size={16} color="currentColor" />
-              <span>Crear Cuenta</span>
+              <IconUserPlus size={15} color="currentColor" />
+              <span>Registrarse</span>
             </button>
           </div>
 
@@ -1044,7 +1165,273 @@ export default function Login() {
           )}
 
           {/* ================================================================= */}
-          {/* CONTENIDO DINÁMICO: 2. CREAR CUENTA CIUDADANA                    */}
+          {/* CONTENIDO DINÁMICO: 2. ACCESO COMERCIAL APROBADO (PyMES)          */}
+          {/* ================================================================= */}
+          {authMode === 'comercio' && (
+            <form onSubmit={handleLoginComercioSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              
+              {/* Banner Informativo de Identidad Comercial Soberana */}
+              <div
+                style={{
+                  backgroundColor: 'rgba(217, 119, 6, 0.08)',
+                  border: '1px solid rgba(245, 158, 11, 0.3)',
+                  borderRadius: '12px',
+                  padding: '0.85rem 1rem',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '0.75rem',
+                  fontSize: '0.82rem',
+                  lineHeight: 1.5,
+                  color: 'var(--cru-text, #062A77)'
+                }}
+              >
+                <IconStore size={20} color="#D97706" className="flex-shrink-0" style={{ marginTop: '2px' }} />
+                <div>
+                  <strong style={{ color: '#D97706', display: 'block', marginBottom: '2px' }}>
+                    Acceso Exclusivo para Comercios Acreditados (Nivel 3)
+                  </strong>
+                  Ingrese con el nombre del titular y el número de cédula registrado en su acreditación cantonal.
+                </div>
+              </div>
+
+              {/* Alerta de Bloqueo por Rate Limiting */}
+              {comercioBloqueado && (
+                <div
+                  style={{
+                    backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    color: '#EF4444',
+                    padding: '0.85rem 1rem',
+                    borderRadius: '12px',
+                    fontSize: '0.82rem',
+                    lineHeight: 1.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.65rem'
+                  }}
+                >
+                  <IconAlertCircle size={18} color="#EF4444" />
+                  <span>
+                    Acceso temporalmente suspendido por múltiples intentos fallidos. Tiempo restante: <strong>{Math.floor(comercioSegundosRestantes / 60)}m {comercioSegundosRestantes % 60}s</strong>.
+                  </span>
+                </div>
+              )}
+
+              {/* Campo 1: Nombre del Solicitante */}
+              <div>
+                <label
+                  htmlFor="login-comercio-nombre"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    fontSize: '0.84rem',
+                    fontWeight: 700,
+                    color: 'var(--cru-text, #062A77)',
+                    marginBottom: '0.45rem'
+                  }}
+                >
+                  <IconUser size={15} color="var(--cru-accent-blue, #0053AF)" />
+                  <span>Nombre del Solicitante / Titular</span>
+                </label>
+                <input
+                  id="login-comercio-nombre"
+                  type="text"
+                  required
+                  disabled={comercioLoading || comercioBloqueado}
+                  value={comercioNombre}
+                  onChange={(e) => setComercioNombre(e.target.value)}
+                  placeholder="ej. CARLOS HERNANDEZ ROJAS"
+                  style={{
+                    width: '100%',
+                    padding: '0.85rem 1rem',
+                    borderRadius: '12px',
+                    backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                    border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                    color: 'var(--cru-text, #062A77)',
+                    fontSize: '0.92rem',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <span style={{ fontSize: '0.72rem', color: 'var(--cru-text-soft, #64748B)', marginTop: '4px', display: 'block' }}>
+                  Insensible a mayúsculas y tildes (comparación normalizada oficial).
+                </span>
+              </div>
+
+              {/* Campo 2: Cédula Oficial */}
+              <div>
+                <label
+                  htmlFor="login-comercio-cedula"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    fontSize: '0.84rem',
+                    fontWeight: 700,
+                    color: 'var(--cru-text, #062A77)',
+                    marginBottom: '0.45rem'
+                  }}
+                >
+                  <IconCreditCard size={15} color="var(--cru-accent-blue, #0053AF)" />
+                  <span>Número de Cédula Oficial</span>
+                </label>
+                <input
+                  id="login-comercio-cedula"
+                  type="text"
+                  required
+                  disabled={comercioLoading || comercioBloqueado}
+                  value={comercioCedula}
+                  onChange={(e) => setComercioCedula(e.target.value)}
+                  placeholder="ej. 1-1456-0789"
+                  style={{
+                    width: '100%',
+                    padding: '0.85rem 1rem',
+                    borderRadius: '12px',
+                    backgroundColor: 'var(--theme-input-bg, #FFFFFF)',
+                    border: '1.5px solid var(--theme-input-border, #CBD5E1)',
+                    color: 'var(--cru-text, #062A77)',
+                    fontSize: '0.92rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    fontFamily: 'monospace'
+                  }}
+                />
+                <div
+                  style={{
+                    marginTop: '6px',
+                    fontSize: '0.72rem',
+                    color: 'var(--cru-text-soft, #64748B)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  <IconShieldCheck size={13} color="#059669" />
+                  <span>Ley N° 8968: Su cédula se valida con hash y nunca se almacena en texto plano.</span>
+                </div>
+              </div>
+
+              {/* Botón de Ingreso Comercial */}
+              <button
+                type="submit"
+                id="btn-login-comercio-submit"
+                disabled={comercioLoading || comercioBloqueado}
+                style={{
+                  width: '100%',
+                  padding: '0.95rem 1.5rem',
+                  borderRadius: '14px',
+                  backgroundColor: '#D97706',
+                  backgroundImage: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)',
+                  border: 'none',
+                  color: '#FFFFFF',
+                  fontWeight: 700,
+                  fontSize: '0.96rem',
+                  cursor: comercioLoading || comercioBloqueado ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.6rem',
+                  boxShadow: '0 6px 20px rgba(217, 119, 6, 0.35)',
+                  marginTop: '0.5rem'
+                }}
+              >
+                {comercioLoading ? (
+                  <>
+                    <IconLoader2 size={18} color="#FFFFFF" />
+                    <span>Verificando comercio acreditado...</span>
+                  </>
+                ) : (
+                  <>
+                    <IconStore size={18} color="#FFFFFF" />
+                    <span>Ingresar a Mi Perfil Comercial</span>
+                  </>
+                )}
+              </button>
+
+              {/* Botones de Prueba Rápida Oficial */}
+              <div
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.85rem',
+                  borderRadius: '12px',
+                  backgroundColor: 'var(--cru-surface-muted, #F8FAFC)',
+                  border: '1px solid var(--cru-border, #E2E8F0)',
+                  fontSize: '0.75rem'
+                }}
+              >
+                <span style={{ fontWeight: 700, color: 'var(--cru-text, #062A77)', display: 'block', marginBottom: '6px' }}>
+                  Accesos rápidos de prueba (Criterios de Aceptación):
+                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setComercioNombre('Carlos Hernández Rojas');
+                      setComercioCedula('1-1456-0789');
+                    }}
+                    style={{
+                      textAlign: 'left',
+                      padding: '5px 8px',
+                      borderRadius: '6px',
+                      border: '1px solid #FDE68A',
+                      backgroundColor: '#FFFBEB',
+                      color: '#B45309',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      fontSize: '0.74rem'
+                    }}
+                  >
+                    ✔ <strong>Comercio Aprobado:</strong> Carlos Hernández Rojas • 1-1456-0789
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setComercioNombre('Mauricio Solano Brenes');
+                      setComercioCedula('3-101-789456');
+                    }}
+                    style={{
+                      textAlign: 'left',
+                      padding: '5px 8px',
+                      borderRadius: '6px',
+                      border: '1px solid #CBD5E1',
+                      backgroundColor: '#F1F5F9',
+                      color: '#475569',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      fontSize: '0.74rem'
+                    }}
+                  >
+                    ⏳ <strong>Solicitud Pendiente:</strong> Mauricio Solano Brenes • 3-101-789456
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setComercioNombre('Eiker Manuel Abarca Murillo');
+                      setComercioCedula('1-1823-0456');
+                    }}
+                    style={{
+                      textAlign: 'left',
+                      padding: '5px 8px',
+                      borderRadius: '6px',
+                      border: '1px solid #FECACA',
+                      backgroundColor: '#FEF2F2',
+                      color: '#B91C1C',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      fontSize: '0.74rem'
+                    }}
+                  >
+                    ❌ <strong>Solicitud Rechazada:</strong> Eiker Manuel Abarca Murillo • 1-1823-0456
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
+
+          {/* ================================================================= */}
+          {/* CONTENIDO DINÁMICO: 3. CREAR CUENTA CIUDADANA                    */}
           {/* ================================================================= */}
           {authMode === 'register' && (
             <form onSubmit={handleRegisterSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>

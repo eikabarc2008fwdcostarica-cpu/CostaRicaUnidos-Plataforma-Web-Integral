@@ -1025,7 +1025,7 @@ export default function UsuariosAuditoriaModule({
       (typeof rolActual === 'string' && (rolActual.includes('Super') || rolActual.includes('Nacional')));
 
     if (!esSuperAdmin) {
-      alert('Acción denegada: Solo el Super Administrador Nacional puede dar de baja registros en la base de datos.');
+      mostrarToast('Acción denegada: Solo el Super Administrador Nacional puede dar de baja registros en la base de datos.');
       return;
     }
 
@@ -1046,7 +1046,7 @@ export default function UsuariosAuditoriaModule({
       (typeof rolActual === 'string' && (rolActual.includes('Super') || rolActual.includes('Nacional')));
 
     if (!esSuperAdmin) {
-      alert('Acción denegada: Solo el Super Administrador Nacional puede dar de baja registros en la base de datos.');
+      mostrarToast('Acción denegada: Solo el Super Administrador Nacional puede dar de baja registros en la base de datos.');
       return;
     }
 
@@ -1124,7 +1124,7 @@ export default function UsuariosAuditoriaModule({
         setConfirmacionBaja(false);
         mostrarToast(`Expediente de ${nombreEliminado} revocado y eliminado físicamente de db.json.`);
       } else {
-        alert('No se pudo eliminar de la base de datos.');
+        mostrarToast('No se pudo eliminar el registro de la base de datos.');
       }
     } catch (err) {
       console.error('Error al conectar con json-server:', err);
@@ -1232,7 +1232,7 @@ export default function UsuariosAuditoriaModule({
     const passLimpio = password.trim();
 
     if (!cedulaLimpia || !nombresLimpios || !correoLimpio || !passLimpio) {
-      alert('Por favor complete los campos obligatorios: Cédula, Nombres, Correo y Contraseña.');
+      mostrarToast('Por favor complete los campos obligatorios: Cédula, Nombres, Correo y Contraseña.');
       setIsSubmittingCrear(false);
       return;
     }
@@ -1391,7 +1391,7 @@ export default function UsuariosAuditoriaModule({
       mostrarToast(`Expediente oficial creado exitosamente para ${usuarioGuardado.nombre} y persistido en db.json.`);
     } catch (error) {
       console.error('Error al conectar con json-server:', error);
-      alert('Ocurrió un error al procesar el registro del nuevo usuario.');
+      mostrarToast('Ocurrió un error al procesar el registro del nuevo usuario.');
     } finally {
       setIsSubmittingCrear(false);
     }

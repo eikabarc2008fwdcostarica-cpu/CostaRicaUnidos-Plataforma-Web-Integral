@@ -1,30 +1,28 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  Newspaper,
-  MessageSquare,
+  BookOpen,
+  Sparkles,
+  Award,
   MapPin,
-  ShoppingBag,
   Compass,
   ChevronRight,
   ShieldCheck,
   Building2,
   Users,
   Layers,
-  Sparkles,
   ArrowRight
 } from 'lucide-react';
 import { PROVINCIAS_DATA, getProvincialTextColor } from '../../data/costaRicaTerritorialData';
 import { useTheme } from '../../context/ThemeContext';
 import { EscudoEmblematico } from '../ProvincialThemeEngine';
-import ProvinciaNoticias from './ProvinciaNoticias';
-import ProvinciaForo from './ProvinciaForo';
-import ProvinciaMapa from './ProvinciaMapa';
-import ProvinciaComercio from './ProvinciaComercio';
+import ProvinciaHistoria from './ProvinciaHistoria';
+import ProvinciaCuriosidades from './ProvinciaCuriosidades';
+import ProvinciaPersonajes from './ProvinciaPersonajes';
 
 /**
- * PROVINCIAS SECTION — MÓDULO TERRITORIAL MODULAR PRE-FOOTER (SRS v2.1)
+ * PROVINCIAS SECTION — MÓDULO HISTÓRICO Y CULTURAL PROVINCIAL (v3.0)
  * División Territorial de las 7 Provincias de Costa Rica
- * Scaffolding escalable para submódulos: Noticias, Foro, Mapa y Comercio.
+ * Pestañas verificadas: Historia, Datos Curiosos y Personajes Ilustres
  */
 export default function ProvinciasSection({ initialProvinciaId = 1 }) {
   const { theme, isDark } = useTheme();
@@ -41,9 +39,9 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
     }
   });
 
-  // Estado de la pestaña activa dentro del hub provincial
-  // 'noticias' | 'foro' | 'mapa' | 'comercio'
-  const [activeTab, setActiveTab] = useState('noticias');
+  // Estado de la pestaña activa dentro del hub provincial (por defecto Historia)
+  // 'historia' | 'datosCuriosos' | 'personajes'
+  const [activeTab, setActiveTab] = useState('historia');
 
   // Obtener el objeto completo de la provincia activa
   const provinciaActual = useMemo(() => {
@@ -65,10 +63,9 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
   };
 
   const tabsConfig = [
-    { id: 'noticias', label: 'Noticias', modulo: 'M01', icon: Newspaper, desc: 'Boletín y Comunicados' },
-    { id: 'foro', label: 'Foro Comunal', modulo: 'M04', icon: MessageSquare, desc: 'Cabildo Digital' },
-    { id: 'mapa', label: 'Mapa & GIS', modulo: 'M05', icon: MapPin, desc: 'Capas Cantonales' },
-    { id: 'comercio', label: 'Comercio & Ferias', modulo: 'M08/10', icon: ShoppingBag, desc: 'PYMES y Ferias' }
+    { id: 'historia', label: 'Historia', modulo: 'Cronología', icon: BookOpen, desc: 'Hitos & Formación Territorial' },
+    { id: 'datosCuriosos', label: 'Datos Curiosos', modulo: 'Identidad', icon: Sparkles, desc: 'Particularidades & Récords' },
+    { id: 'personajes', label: 'Personajes Ilustres', modulo: 'Biografías', icon: Award, desc: 'Forjadores de la Patria' }
   ];
 
   return (
@@ -153,7 +150,7 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
               margin: 0
             }}
           >
-            Plataforma descentralizada de gestión cívica: navega entre las regiones históricas de la República, accede a noticias oficiales, foros comunales, cartografía satelital y ferias locales.
+            Plataforma cívica soberana: explora la historia verificada, particularidades culturales, patrimonio y forjadores ilustres de las 7 provincias de la República de Costa Rica.
           </p>
         </div>
 
@@ -175,6 +172,7 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
                 key={prov.id}
                 role="tab"
                 aria-selected={esActiva}
+                aria-label={`Provincia de ${prov.nombre}: ${prov.cantonesCount} cantones`}
                 type="button"
                 onClick={() => handleSelectProvincia(prov.id)}
                 style={{
@@ -185,18 +183,20 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
                   border: esActiva
                     ? `2px solid ${activeBorderColor}`
                     : '1px solid var(--cru-border)',
-                  borderRadius: '14px',
-                  padding: '1.15rem 0.85rem',
+                  borderRadius: '16px',
+                  padding: '1.35rem 0.85rem',
+                  minHeight: '105px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   textAlign: 'center',
                   gap: '0.65rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                   boxShadow: esActiva
                     ? (isLight
-                        ? `0 8px 24px rgba(0, 42, 119, 0.12), 0 0 10px ${prov.color}25`
+                        ? `0 8px 24px rgba(0, 42, 119, 0.12), 0 0 12px ${prov.color}25`
                         : `0 10px 30px ${prov.color}45, 0 0 15px ${prov.color}30`)
                     : 'none',
                   transform: esActiva ? 'translateY(-3px)' : 'translateY(0)'
@@ -221,69 +221,41 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
                   style={{
                     position: 'absolute',
                     top: 0,
-                    left: '15%',
-                    right: '15%',
-                    height: '3px',
+                    left: '12%',
+                    right: '12%',
+                    height: '4px',
                     borderRadius: '0 0 4px 4px',
-                    backgroundColor: prov.color
+                    backgroundColor: prov.color,
+                    boxShadow: esActiva ? `0 0 8px ${prov.color}` : 'none'
                   }}
                 />
 
-                {/* Escudo Emblemático Vectorial */}
+                {/* Nombre de la Provincia (Protagonista y equilibrado) */}
                 <div
                   style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '50%',
-                    backgroundColor: 'var(--cru-surface-muted)',
-                    border: `1px solid ${esActiva ? activeBorderColor : 'var(--cru-border)'}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: esActiva ? `0 0 12px ${prov.color}60` : 'none',
-                    transition: 'all 0.2s ease'
+                    fontSize: '1.08rem',
+                    fontWeight: 800,
+                    color: esActiva ? 'var(--cru-text)' : 'var(--cru-text-soft)',
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.2
                   }}
                 >
-                  <EscudoEmblematico id={prov.id} size={28} />
-                </div>
-
-                {/* Nombre de la Provincia y Código */}
-                <div>
-                  <div
-                    style={{
-                      fontSize: '0.64rem',
-                      fontWeight: 800,
-                      color: esActiva ? activeBorderColor : 'var(--cru-text-muted)',
-                      letterSpacing: '0.08em',
-                      fontFamily: 'monospace'
-                    }}
-                  >
-                    0{prov.id} • {prov.codigo}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: '0.94rem',
-                      fontWeight: 800,
-                      color: esActiva ? 'var(--cru-text)' : 'var(--cru-text-soft)',
-                      marginTop: '2px'
-                    }}
-                  >
-                    {prov.nombre}
-                  </div>
+                  {prov.nombre}
                 </div>
 
                 {/* Chip informativo de cantones */}
                 <span
                   style={{
-                    fontSize: '0.68rem',
+                    fontSize: '0.72rem',
                     fontWeight: 700,
-                    padding: '2px 8px',
+                    padding: '3px 10px',
                     borderRadius: '999px',
                     backgroundColor: 'var(--cru-chip-bg)',
                     color: esActiva ? activeBorderColor : 'var(--cru-chip-text)',
                     border: esActiva
                       ? `1px solid ${activeBorderColor}`
-                      : '1px solid var(--cru-chip-border)'
+                      : '1px solid var(--cru-chip-border)',
+                    transition: 'all 0.2s ease'
                   }}
                 >
                   {prov.cantonesCount} Cantones
@@ -441,19 +413,21 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
                 }}
               >
                 <span style={{ fontSize: '0.68rem', color: 'var(--cru-text-muted)', display: 'block', textTransform: 'uppercase' }}>
-                  Obras Activas
+                  Distritos Oficiales
                 </span>
                 <span style={{ fontSize: '0.94rem', fontWeight: 800, color: provColorText }}>
-                  {provinciaActual.obrasActivas}
+                  {provinciaActual.distritosCount} distritos
                 </span>
               </div>
             </div>
           </div>
 
           {/* ======================================================================
-              4. BARRA DE NAVEGACIÓN INTERNA (TABS PROVINCIALES: NOTICIAS, FORO, MAPA, COMERCIO)
+              4. BARRA DE NAVEGACIÓN INTERNA (TABS PROVINCIALES: HISTORIA, DATOS CURIOSOS, PERSONAJES)
               ====================================================================== */}
           <div
+            role="tablist"
+            aria-label="Pestañas de Exploración Histórica y Cultural Provincial"
             style={{
               display: 'flex',
               gap: '0.65rem',
@@ -469,6 +443,10 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
               return (
                 <button
                   key={tab.id}
+                  role="tab"
+                  id={`tab-${tab.id}`}
+                  aria-selected={activo}
+                  aria-controls={`panel-${tab.id}`}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
                   style={{
@@ -520,13 +498,17 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
           </div>
 
           {/* ======================================================================
-              5. CONTENIDO MODULAR SEGÚN LA PESTAÑA ACTIVA (SCAFFOLDING EXPANDIBLE)
+              5. CONTENIDO MODULAR SEGÚN LA PESTAÑA ACTIVA (HISTORIA, CURIOSIDADES, PERSONAJES)
               ====================================================================== */}
-          <div style={{ minHeight: '340px' }}>
-            {activeTab === 'noticias' && <ProvinciaNoticias provincia={provinciaActual} />}
-            {activeTab === 'foro' && <ProvinciaForo provincia={provinciaActual} />}
-            {activeTab === 'mapa' && <ProvinciaMapa provincia={provinciaActual} />}
-            {activeTab === 'comercio' && <ProvinciaComercio provincia={provinciaActual} />}
+          <div
+            role="tabpanel"
+            id={`panel-${activeTab}`}
+            aria-labelledby={`tab-${activeTab}`}
+            style={{ minHeight: '340px' }}
+          >
+            {activeTab === 'historia' && <ProvinciaHistoria provincia={provinciaActual} />}
+            {activeTab === 'datosCuriosos' && <ProvinciaCuriosidades provincia={provinciaActual} />}
+            {activeTab === 'personajes' && <ProvinciaPersonajes provincia={provinciaActual} />}
           </div>
         </div>
       </div>

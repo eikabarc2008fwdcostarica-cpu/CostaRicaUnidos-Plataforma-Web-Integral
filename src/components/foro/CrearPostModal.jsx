@@ -13,7 +13,9 @@ import {
   Lock,
   Scale,
   BookOpen,
-  ShieldCheck
+  ShieldCheck,
+  Loader2,
+  Check
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -21,8 +23,11 @@ import { crearPost } from '../../services/foroService';
 import { obtenerNombrePublico } from '../../utils/privacyUtils';
 import { VERSION_REGLAS_FORO, haAceptadoReglas, registrarAceptacionReglas } from '../../config/reglasForo';
 import { inspeccionarContenidoForo } from '../../services/moderacionForoService';
+import { enviarAModeracionN8n } from '../../services/n8nModeracionService';
 import ReglasComunidadModal from './ReglasComunidadModal';
 import IncidenteModeracionModal from './IncidenteModeracionModal';
+import { generarRespuestaIA, getGeminiApiKey } from '../../services/geminiService';
+import { PROMPT_SISTEMA_FORO_MEJORAR_REDACCION } from '../../config/promptsIA';
 
 const PROVINCIAS_OPCIONES = [
   { id: 'nacional', nombre: 'Nacional (Todo el País)' },
@@ -122,6 +127,73 @@ export default function CrearPostModal({
   const [errorMsg, setErrorMsg] = useState('');
   const [exito, setExito] = useState(false);
 
+  // Estados de Asistencia de Redacción con Gemini (IA)
+  const [mejorandoIa, setMejorandoIa] = useState(false);
+  const [sugerenciaIa, setSugerenciaIa] = useState(null);
+  const [errorIa, setErrorIa] = useState(null);
+
+  const hayApiKey = Boolean(getGeminiApiKey());
+
+  const handleMejorarRedaccion = async () => {
+    if (!contenido.trim()) {
+      setErrorIa('Escribe al menos una frase en el detalle de la propuesta para que la IA pueda sugerirte mejoras.');
+      return;
+    }
+
+    if (!hayApiKey) {
+      setErrorIa('Asistencia de redacción con IA no disponible. Configure VITE_GEMINI_API_KEY.');
+      return;
+    }
+
+    setMejorandoIa(true);
+    setErrorIa(null);
+    try {
+      const textoMensaje = `Título actual: ${titulo || '(Sin título aún)'}
+Contenido actual:
+${contenido}`;
+
+      const res = await generarRespuestaIA({
+        sistema: PROMPT_SISTEMA_FORO_MEJORAR_REDACCION,
+        mensaje: textoMensaje,
+        opciones: { temperature: 0.5 }
+      });
+
+      const raw = res.texto;
+      let sugTitulo = '';
+      let sugContenido = raw;
+
+      if (raw.includes('TÍTULO SUGERIDO:') && raw.includes('CONTENIDO SUGERIDO:')) {
+        const partes = raw.split('CONTENIDO SUGERIDO:');
+        sugTitulo = partes[0].replace('TÍTULO SUGERIDO:', '').trim();
+        sugContenido = partes[1].trim();
+      }
+
+      setSugerenciaIa({
+        titulo: sugTitulo,
+        contenido: sugContenido,
+        modelo: res.modelo,
+        latenciaMs: res.latenciaMs
+      });
+    } catch (err) {
+      console.error('[CrearPostModal IA Error]', err);
+      setErrorIa('La IA no está disponible ahora, inténtalo de nuevo.');
+    } finally {
+      setMejorandoIa(false);
+    }
+  };
+
+  const handleAplicarSugerencia = () => {
+    if (!sugerenciaIa) return;
+    if (sugerenciaIa.titulo) setTitulo(sugerenciaIa.titulo);
+    if (sugerenciaIa.contenido) setContenido(sugerenciaIa.contenido);
+    setSugerenciaIa(null);
+  };
+
+  const handleDescartarSugerencia = () => {
+    setSugerenciaIa(null);
+    setErrorIa(null);
+  };
+
   // Inicializar datos al abrir modal con estricta validación territorial
   useEffect(() => {
     if (isOpen) {
@@ -138,6 +210,8 @@ export default function CrearPostModal({
       setAutorCedula(activeUser?.cedula || '1-1823-0456');
       setErrorMsg('');
       setExito(false);
+      setSugerenciaIa(null);
+      setErrorIa(null);
       setAceptoReglas(haAceptadoReglas(activeUser));
     }
   }, [isOpen, provinciaInicial, activeUser, opcionesPermitidas]);
@@ -241,6 +315,37 @@ export default function CrearPostModal({
 
       const creado = await crearPost(nuevoPost);
       setExito(true);
+
+      // =====================================================================
+      // CAPA COMPLEMENTARIA N8N: BLINDAJE LEY N.º 8968 Y AUDITORÍA CÍVICA
+      // No bloqueante para la creación en la interfaz
+      // =====================================================================
+      enviarAModeracionN8n({
+        tipo: 'post',
+        id: creado?.id || nuevoPost.id,
+        texto: `${titulo.trim()}\n${contenido.trim()}`,
+        autorId: activeUser?.id || 'USR-ANON',
+        rolAutor: activeUser?.rol || 'Ciudadano',
+        ambito: provinciaId === 'nacional' ? 'nacional' : 'provincial',
+        provincia: provinciaNombre,
+        canton: activeUser?.canton || 'San José',
+        momento: 'post'
+      }).then((resN8n) => {
+        if (!resN8n || resN8n.omitido) return;
+        if (resN8n.estado === 'oculto') {
+          console.warn('[n8n] Publicación ocultada preventivamente por auditoría n8n:', creado?.id);
+          if (onPostCreado) {
+            onPostCreado({ ...creado, estado: 'oculto' });
+          }
+        } else if (resN8n.avisoPrivacidad && resN8n.textoFinal) {
+          console.info('[n8n] Datos personales protegidos bajo Ley N.º 8968.');
+          if (onPostCreado) {
+            onPostCreado({ ...creado, contenido: resN8n.textoFinal });
+          }
+        }
+      }).catch((err) => {
+        console.error('[n8n] Error no bloqueante en auditoría n8n:', err);
+      });
 
       setTimeout(() => {
         if (onPostCreado) {
@@ -606,6 +711,162 @@ export default function CrearPostModal({
                 boxSizing: 'border-box'
               }}
             />
+
+            {/* Botón de Asistencia de Redacción con IA */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.45rem' }}>
+              <button
+                type="button"
+                onClick={handleMejorarRedaccion}
+                disabled={mejorandoIa || !contenido.trim()}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(168, 85, 247, 0.15)',
+                  border: '1px solid rgba(168, 85, 247, 0.35)',
+                  color: '#D8B4FE',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: mejorandoIa || !contenido.trim() ? 'not-allowed' : 'pointer',
+                  opacity: !contenido.trim() ? 0.6 : 1,
+                  transition: 'all 0.2s ease'
+                }}
+                title="Sugerir una versión más clara y respetuosa con Gemini (no publica nada automáticamente)"
+              >
+                {mejorandoIa ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5 text-purple-300" />
+                )}
+                <span>{mejorandoIa ? 'Mejorando redacción...' : 'Mejorar redacción con IA'}</span>
+              </button>
+            </div>
+
+            {/* Error de asistencia IA */}
+            {errorIa && (
+              <div
+                style={{
+                  marginTop: '0.5rem',
+                  padding: '0.45rem 0.75rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#FCA5A5',
+                  fontSize: '0.75rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <span>{errorIa}</span>
+                <button
+                  type="button"
+                  onClick={() => setErrorIa(null)}
+                  style={{ background: 'none', border: 'none', color: '#FCA5A5', cursor: 'pointer', display: 'flex' }}
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
+            {/* Tarjeta de Sugerencia Generada por IA */}
+            {sugerenciaIa && (
+              <div
+                style={{
+                  marginTop: '0.65rem',
+                  padding: '0.85rem 1rem',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(168, 85, 247, 0.08)',
+                  border: '1px solid rgba(168, 85, 247, 0.4)',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.3rem' }}>
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      padding: '0.15rem 0.55rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(168, 85, 247, 0.25)',
+                      color: '#E9D5FF',
+                      fontSize: '0.7rem',
+                      fontWeight: 700
+                    }}
+                  >
+                    <Sparkles className="w-3 h-3 text-purple-300" />
+                    Sugerencia Generada por IA (No publicada)
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: '#94A3B8' }}>
+                    Modelo: {sugerenciaIa.modelo}
+                  </span>
+                </div>
+
+                {sugerenciaIa.titulo && (
+                  <div style={{ marginBottom: '0.4rem', fontSize: '0.8rem', color: '#CBD5E1' }}>
+                    <strong style={{ color: '#D8B4FE' }}>Título sugerido:</strong> {sugerenciaIa.titulo}
+                  </div>
+                )}
+
+                <div
+                  style={{
+                    fontSize: '0.825rem',
+                    color: '#F1F5F9',
+                    whiteSpace: 'pre-wrap',
+                    lineHeight: 1.5,
+                    maxHeight: '140px',
+                    overflowY: 'auto',
+                    padding: '0.55rem',
+                    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255, 255, 255, 0.08)'
+                  }}
+                >
+                  {sugerenciaIa.contenido}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.65rem' }}>
+                  <button
+                    type="button"
+                    onClick={handleDescartarSugerencia}
+                    style={{
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: '6px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: '#94A3B8',
+                      fontSize: '0.75rem',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Descartar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleAplicarSugerencia}
+                    style={{
+                      padding: '0.35rem 0.85rem',
+                      borderRadius: '6px',
+                      backgroundColor: '#7C3AED',
+                      border: 'none',
+                      color: '#FFFFFF',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem'
+                    }}
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    Aplicar sugerencia al formulario
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Fila: Datos del Autor (Autocompletados con Cédula Oficial) */}
