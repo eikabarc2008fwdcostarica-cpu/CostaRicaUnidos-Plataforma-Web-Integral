@@ -75,6 +75,29 @@ El diseño, arquitectura e implementación de la plataforma se rigen estrictamen
   * **Verificación de Accesibilidad Ley N° 7600**: Analiza las pendientes continuas en el perfil de elevación 3D de cada ruta peatonal o urbana, certificando que no superen el **8%** de gradiente máximo establecido para tránsito seguro de personas usuarias de silla de ruedas o con movilidad reducida.
   * **Alerta Activa de Tracción 4x4**: Evalúa las cotas altimétricas y pendientes del terreno; si el gradiente de la vía supera el **16%** o discurre por tramos no pavimentados de alta montaña, el sistema bloquea itinerarios para vehículos convencionales (4x2) y emite una advertencia preventiva de seguridad vial exigiendo tracción 4x4 y equipo de contingencia.
 
+### 2.12. Control de Acceso Basado en Roles (RBAC) y Sesiones
+- La definición de roles y permisos de navegación se centraliza en `src/config/roles.ts` y `src/config/navigationRoles.ts`; las rutas protegidas se resuelven en `src/routes/PrivateRoutes.jsx` y redirigen a `AccessDenied.jsx` cuando el rol no es suficiente.
+- `AuthContext` verifica la suspensión vigente del usuario en los tres caminos de autenticación (login con credenciales, login con usuario ya resuelto y restauración de sesión) y levanta automáticamente las suspensiones vencidas.
+- Las acciones administrativas sensibles (sanciones, levantamiento de baneos, alta/baja de usuarios) quedan registradas en `bitacoraAuditoria`.
+
+### 2.13. Moderación del Foro y Uso de Inteligencia Artificial (Gemini)
+- La moderación pre-publicación opera en dos capas: filtro local determinista (`src/config/lexicoModeracion.js`) y clasificación opcional con Gemini (`src/services/geminiService.js`, `moderacionForoService.js`).
+- **Minimización**: al servicio de IA solo se envía el texto a clasificar, sin cédula, nombre ni otros datos del autor (Ley N° 8968); el texto se declara como dato no ejecutable para mitigar *prompt injection*, con *timeout* de 5 s y degradación segura a la capa local.
+- La clave `VITE_GEMINI_API_KEY` debe restringirse por *HTTP Referrer* y por API en Google Cloud, y nunca se versiona.
+
+### 2.14. Alta y Baja de Usuarios con Validación de Hacienda
+- El alta de usuarios desde el panel administrativo (`src/services/adminService.ts`, `userService.ts`) valida la cédula mediante `haciendaService.ts`; la baja es reactiva y queda auditada.
+- Las consultas a Hacienda siguen el tratamiento efímero descrito en la sección 2.10.
+
+### 2.15. Base de Datos Local de Desarrollo (`db.json` / json-server)
+- `db.json` se sirve con `json-server` (`npm run server`, puerto 3001) y funciona como **base de datos de demostración y desarrollo**; no está pensada para producción.
+- No exponga el puerto 3001 fuera de `localhost` ni use datos personales reales dentro de `db.json`. En producción debe sustituirse por un backend autenticado (JWT/OAuth2), según el plan del `CHANGELOG.md`.
+
+### 2.16. Limitaciones Conocidas
+- El control de acceso se aplica en el cliente y mediante `json-server`, sin autenticación del lado del servidor; no debe considerarse una barrera de seguridad suficiente para datos reales.
+- El estado de sesión se conserva en `localStorage` (`cru_user_session` / `cr_sesion_activa`) para restaurar el inicio de sesión; en producción debe migrarse a cookies `HttpOnly` emitidas por el backend.
+- Atajos de teclado: el cierre con `Escape` en diálogos críticos como la botonera SOS (`SosKeypadFullscreen.jsx`) está pendiente de revisión de seguridad, ya que salir de un teclado de emergencia con una sola tecla puede ser riesgoso.
+
 ---
 
 ## 3. Versiones con Soporte Activo de Seguridad
@@ -83,7 +106,7 @@ Actualmente, las versiones mayores y ramas de desarrollo activo reciben parches 
 
 | Versión | Rama de Desarrollo | Estado de Soporte | Soporte de Parches |
 | :--- | :--- | :--- | :--- |
-| **v2.3.x** | `feature/Alanie` | **Activo y Prioritario** | ✅ Parches inmediatos (Módulos cívicos, Hacienda y Votación) |
+| **v2.3.x / Unreleased** | `main` / `feature/Eiker` / `feature/Alanie` | **Activo y Prioritario** | ✅ Parches inmediatos (Módulos cívicos, Hacienda, Votación, Foro y Theming) |
 | **v2.2.x** | `develop` / `feature/Eiker` | **Activo y Prioritario** | ✅ Parches inmediatos (GIS 3D, Reportes y SOS) |
 | **v2.1.x** | `release/v2.1.0` | **Soporte de Mantenimiento** | ✅ Parches de seguridad críticos |
 | **v2.0.x** | `main` | **Soporte Extendido** | ✅ Parches de seguridad críticos |

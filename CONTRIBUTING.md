@@ -49,6 +49,8 @@ main (Producción estable, solo releases y hotfixes etiquetados)
    - `feature/<id-o-rol>-<descripcion-corta>` (ejemplo: `feature/Eiker`, `feature/Alanie`, `feature/m05-gis-3d-tiles`).
    - `fix/<modulo>-<descripcion-corta>` (ejemplo: `fix/m07-exif-stripper-leak`, `fix/m11-voto-duplicado`).
    - `docs/<tema>` (ejemplo: `docs/actualizacion-arquitectura-srs`).
+3. **Flujo vigente del equipo**: en la práctica actual, las ramas `feature/Eiker` y `feature/Alanie` se integran a `main` mediante Pull Requests (p. ej. PR #27 y #28). Si `develop` no está activa en el remoto, apunte el PR a `main`. Antes de abrir el PR, sincronice con `git pull origin main`.
+4. **Proyecto dentro de OneDrive**: si el repositorio está en una carpeta sincronizada por OneDrive, ejecute `git config gc.auto 0` para evitar fallos de limpieza automática (`Deletion of directory '.git/objects/..' failed`). Lo ideal es trabajar fuera de OneDrive.
 
 ---
 
@@ -182,6 +184,10 @@ Y exportar la colección con la utilidad `toGeoJSONFeatureCollection(items)`.
    - Todo componente que requiera mostrar el logotipo de Costa Rica Unidos debe importar el componente `<Logo />` de `src/components/common/Logo.jsx`.
    - Se debe utilizar el activo oficial `public/logo.png` con transparencia limpia.
    - La altura máxima de la imagen está estrictamente acotada a 40px (`maxHeight: 40px`) para salvaguardar la compacidad y alineación de la barra de navegación superior.
+6. **Tema Claro/Oscuro con Tokens Semánticos**:
+   - No introduzca colores hexadecimales o `rgba()` fijos en páginas y componentes. Use los tokens `--cru-surface`, `--cru-border`, `--cru-text`, `--cru-text-soft`, `--cru-text-muted`, `--cru-accent-*` y `--cru-badge-neutral-*` definidos en `src/index.css` (`:root` para oscuro y `html.light` para claro).
+   - Verifique ambos temas con contraste WCAG 2.1 AA antes de abrir el PR (ver scripts de auditoría históricos en el commit `chore(scratch)`).
+   - Los cambios de estilo no deben alterar la lógica ni el comportamiento de cierre de modales; en especial, la botonera SOS (`SosKeypadFullscreen.jsx`) no debe modificarse sin revisión explícita.
 
 ---
 
@@ -221,15 +227,18 @@ El cumplimiento de las siguientes leyes de la República de Costa Rica es de car
    npm install
    ```
 3. Configurar variables de entorno:
-   Copiar `.env.example` a `.env` y configurar la clave de Google Maps:
+   Copiar `.env.example` a `.env` y configurar las claves:
    ```bash
    cp .env.example .env
    ```
-   *Edite `.env` y asegúrese de que `VITE_GOOGLE_MAPS_API_KEY` contenga una clave válida con las APIs de Maps JavaScript y 3D habilitadas.*
+   *Edite `.env` y asegúrese de que `VITE_GOOGLE_MAPS_API_KEY` contenga una clave válida con las APIs de Maps JavaScript y 3D habilitadas. Para el Supervisor IA del Foro y funciones generativas, configure `VITE_GEMINI_API_KEY`.*
 
-4. Iniciar el servidor local de desarrollo:
+4. Iniciar el servidor local de desarrollo (frontend + base de datos simulada):
    ```bash
-   npm run dev
+   npm run dev:all     # json-server (puerto 3001) y Vite en paralelo
+   # o por separado:
+   npm run server      # json-server --watch db.json --port 3001
+   npm run dev         # Vite
    ```
 
 5. Compilar para producción y verificar empaquetado:

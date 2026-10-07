@@ -35,6 +35,9 @@ El formato de este registro se basa estrictamente en [Keep a Changelog](https://
     - Tabla de baneos activos con temporizador en vivo y botón "Levantar baneo" inmediato con justificación obligatoria.
     - Registro legal inmutable en `bitacoraAuditoria` con nuevas acciones normadas (`SANCIONAR_USUARIO`, `LEVANTAR_SANCION`, `MARCAR_FALSO_POSITIVO`, `MODIFICAR_SANCION_FORO`).
   - **Unificación de Sensibilidad**: Estandarización del tipo de sensibilidad a `'ESTRICTA' | 'MODERADA' | 'FLEXIBLE'` a través de `src/types/admin.ts`, `src/services/crudService.ts`, `Dashboard.jsx` y `moderacionForoService.js`.
+- **Administración de Usuarios con Validación ante Hacienda**: Alta y baja reactiva de usuarios desde el panel administrativo, con verificación de cédula mediante `haciendaService.ts` (`adminService.ts`, `userService.ts`, `dbClient.ts`).
+- **Script `dev:all`** en `package.json`: levanta de forma concurrente `json-server` (puerto 3001) y Vite con `concurrently`.
+- **Colecciones adicionales en `db.json`**: `solicitudesComercio`, `solicitudes_emprendedor`, `noticias`, `foro_posts`, `bitacoraAccesos`, `sesionesActivas`, `alertasCNE`, entre otras, para soportar los módulos de administración, comercio, noticias y foro.
 
 ### Fixed
 - **Arquitectura de Theming Sistémico y Corrección Integral del Modo Claro (WCAG 2.1 AA & Sovereign Civic Glass)**:
@@ -65,6 +68,19 @@ El formato de este registro se basa estrictamente en [Keep a Changelog](https://
   - En la rama de restauración al español base, únicamente se restauran aquellos nodos modificados explícitamente por el motor (`nodeValue === __cru_written`), protegiendo el renderizado legítimo de React.
   - Para `es-ES`, se implementó la restauración previa de los textos originales en español antes de superponer las traducciones específicas (`PANEL DE CONTROL`).
   - Pasadas extras de sincronización programada (50ms, 150ms, 350ms, 700ms) para evitar condiciones de carrera entre `t()` y las mutaciones del DOM.
+
+### Changed
+- **Migración del Theming por Fases (4A → 4D)**:
+  - **Fase 4A**: Estructura general y portal público (Navbar, MegaMenu, Inicio) adaptados a tokens semánticos `--cru-*`, con scripts de auditoría de tokens y contraste WCAG.
+  - **Fase 4B**: Adaptación temática y de layout de la sección de provincias.
+  - **Fase 4C**: Componentes comunes (`CivicModal`, `CivicButton`, etc.), modales y accesibilidad adaptados a ambos temas, con correcciones posteriores (`fix(theme): correcciones post-4C`).
+  - **Fase 4D**: Tokenización masiva de colores hardcodeados en páginas y componentes (1072 reemplazos en 44 archivos), verificada con `npm run build`.
+  - **Pendiente de revisión**: los listeners de la tecla `Escape` añadidos en 4C (`CivicModal`, `CivicModalContext`, `EmergencyQuickAccess`, `SosKeypadFullscreen`) no existían en el commit base y contradicen la restricción de "sin cambios de lógica de cierre". Se registran como punto abierto; en especial, salir del teclado SOS con una sola tecla es riesgoso.
+- **`db.json` desacoplado de Vite**: la persistencia ya no depende del plugin de `vite.config.js`; se sirve con `json-server` (`npm run server`, puerto 3001) a través de `src/services/dbClient.ts` y `dbService.ts`.
+- **Control de acceso por roles**: configuración centralizada en `src/config/roles.ts` y `navigationRoles.ts`, con ruta `AccessDenied.jsx` y `PrivateRoutes.jsx`.
+
+### Security
+- **Moderación y sesiones**: bloqueo de autores sancionados en servidor (HTTP 403) y verificación de baneo en los tres caminos de autenticación (ver *Added*).
 
 ### Planned
 - **Backend API Persistente**: Reemplazo de mocks en memoria y `localStorage` por API RESTful institucional autenticada con JWT/OAuth2.

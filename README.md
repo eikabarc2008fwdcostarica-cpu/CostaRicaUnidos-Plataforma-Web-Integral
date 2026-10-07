@@ -31,6 +31,10 @@ Plataforma digital integral para la soberanía ciudadana, transparencia presupue
    - [Módulo 12 / RF-12.2: Planificador Generativo 'Itinerario Pura Vida' con Análisis Topográfico 3D](#módulo-12--rf-122-planificador-generativo-itinerario-pura-vida-con-análisis-topográfico-3d)
    - [Consolidación de Datasets Geoespaciales POI para Capas GIS](#consolidación-de-datasets-geoespaciales-poi-para-capas-gis)
    - [Motor de Accesibilidad Universal (RNF-05 / Ley N° 7600)](#motor-de-accesibilidad-universal-rnf-05--ley-n-7600)
+   - [Foro Tico y Supervisor IA de Moderación](#foro-tico-y-supervisor-ia-de-moderación)
+   - [Noticias, Perfil Ciudadano y Portal del Ciudadano](#noticias-perfil-ciudadano-y-portal-del-ciudadano)
+   - [Administración, Roles y Base de Datos Local](#administración-roles-y-base-de-datos-local)
+   - [Tema Claro/Oscuro con Tokens Semánticos](#tema-claroscuro-con-tokens-semánticos)
 3. [Arquitectura del Sistema y Flujo de Datos](#3-arquitectura-del-sistema-y-flujo-de-datos)
 4. [Estructura del Proyecto](#4-estructura-del-proyecto)
 5. [Jerarquía Territorial Oficial de Costa Rica](#5-jerarquía-territorial-oficial-de-costa-rica)
@@ -233,6 +237,33 @@ Plataforma digital integral para la soberanía ciudadana, transparencia presupue
     * Conmutación entre voces femenina y masculina.
   - **Inducción Interactiva Guiada por Voz**: Modal de inducción en 3 pasos con locución de bienvenida y transcripción sincronizada de subtítulos en vivo.
 
+### Foro Tico y Supervisor IA de Moderación
+- **Ruta**: `/foro` | **Componentes**: `src/pages/ForoPage.jsx`, `src/components/foro/`
+- **Capacidades**:
+  - Publicaciones, comentarios, votos y reacciones con persistencia en `foro_posts`.
+  - **Moderación pre-publicación en dos capas**: filtro local determinista con léxico costarricense y lista blanca cívica (`src/config/lexicoModeracion.js`) y clasificación opcional con Gemini (`geminiService.js`, `moderacionForoService.js`).
+  - **Sanciones graduales** (`src/config/reglasForo.js`): advertencia, baneos de 24 h a indefinido y caducidad de faltas leves a los 90 días; derecho a apelación.
+  - Modal de "Reglas de la Comunidad" con aceptación de primer uso y panel de supervisión exclusivo para Super Administrador.
+
+### Noticias, Perfil Ciudadano y Portal del Ciudadano
+- **Rutas**: `/noticias`, `/perfil` y portal ciudadano (`src/pages/NoticiasPage.jsx`, `PerfilPage.tsx`, `PortalCiudadanoPage.tsx`)
+- **Capacidades**: publicación y detalle de noticias con control por rol (`src/components/noticias/`), perfil de usuario con datos y solicitudes de emprendedor (`solicitudes_emprendedor`) y portal con acceso a los servicios cívicos del usuario autenticado.
+
+### Administración, Roles y Base de Datos Local
+- **Componentes**: `src/pages/Dashboard.jsx`, `ProvincialAdminDashboard.jsx`, `src/components/admin/`
+- **Capacidades**:
+  - **RBAC centralizado** en `src/config/roles.ts` y `navigationRoles.ts`, con `PrivateRoutes.jsx` y página `AccessDenied.jsx`.
+  - **Alta y baja de usuarios** con validación de cédula ante Hacienda (`adminService.ts`, `userService.ts`) y bitácora de auditoría (`bitacoraAuditoria`).
+  - **`db.json` + json-server** (puerto 3001) como base de datos local de desarrollo, consumida vía `dbClient.ts` / `dbService.ts`. Colecciones: `usuarios`, `solicitudesComercio`, `incidenciasViales`, `alberguesCNE`, `proyectosPresupuesto`, `votosEmitidos`, `bitacoraAuditoria`, `foro_posts`, `noticias`, `sanciones_foro`, `moderacionContenido`, entre otras.
+  - Solo para desarrollo y demostración: ver limitaciones en [SECURITY.md](SECURITY.md).
+
+### Tema Claro/Oscuro con Tokens Semánticos
+- **Archivos**: `src/index.css`, `src/context/ThemeContext.jsx`, `src/styles/themeEngine.ts`
+- **Capacidades**:
+  - Tokens `--cru-surface`, `--cru-border`, `--cru-text*`, `--cru-accent-*` definidos en `:root` (oscuro) y `html.light` (claro) con contraste WCAG 2.1 AA.
+  - Migración por fases 4A–4D: portal, provincias, componentes comunes y tokenización de colores hardcodeados en páginas y componentes.
+  - El tema inicial por defecto es `dark`. Ver detalles en [CHANGELOG.md](CHANGELOG.md).
+
 ---
 
 ## 3. Arquitectura del Sistema y Flujo de Datos
@@ -409,8 +440,19 @@ CostaRicaUnidos-Plataforma-Web-Integral/
     │       ├── OfflineResilienceManager.jsx
     │       ├── SosKeypadFullscreen.jsx
     │       └── index.js
+    ├── config/                       # Roles, navegación, temas provinciales y reglas del foro
+    │   ├── roles.ts / roles.js
+    │   ├── navigationRoles.ts / navigationRoles.js
+    │   ├── provincialThemes.js
+    │   ├── lexicoModeracion.js
+    │   └── reglasForo.js
+    ├── types/                        # Tipos TypeScript compartidos (admin.ts, auth.ts)
+    ├── utils/                        # Utilidades (privacyUtils.ts)
     ├── context/
-    │   └── LanguageContext.jsx       # Contexto y diccionario reactivo para 8 idiomas oficiales
+    │   ├── AuthContext.tsx / .jsx    # Sesión, roles y verificación de sanciones
+    │   ├── CivicModalContext.jsx     # Orquestador global de modales cívicos
+    │   ├── LanguageContext.jsx       # Contexto y diccionario reactivo para 8 idiomas oficiales
+    │   └── ThemeContext.jsx          # Tema claro/oscuro
     ├── data/
     │   ├── poiDatasets.ts            # Datasets consolidados para capas GIS (GeoJSON)
     │   └── territorialData.js        # DTA oficial: 7 provincias, 84 cantones, distritos
@@ -436,10 +478,16 @@ CostaRicaUnidos-Plataforma-Web-Integral/
     │   ├── ParticipacionPage.tsx     # Presupuesto participativo y votación
     │   ├── ReportarIncidencia.jsx    # Asistente y trazabilidad de reportes viales
     │   ├── SeguridadEmergencias.jsx  # Centro de resiliencia y emergencias SOS
-    │   └── TurismoPage.tsx           # Guía turística cantonal accesible
+    │   ├── TurismoPage.tsx           # Guía turística cantonal accesible
+    │   │   (además: ForoPage, NoticiasPage, PerfilPage, PortalCiudadanoPage,
+    │   │    ProvincialAdminDashboard, FeriaPage y AccessDenied)
     ├── routes/
+    │   ├── PrivateRoutes.jsx         # Protección de rutas por rol (RBAC)
     │   └── Routing.jsx               # Enrutador central con rutas públicas y privadas
     ├── services/
+    │   ├── adminService.ts / userService.ts / crudService.ts  # Administración y CRUD
+    │   ├── dbClient.ts / dbService.ts # Acceso a db.json vía json-server
+    │   ├── foroService.js / moderacionForoService.js / geminiService.js
     │   ├── geoSemanticNlpService.js  # Motor NLP de búsqueda geoespacial semántica
     │   ├── haciendaService.ts        # Cliente oficial API Ministerio de Hacienda
     │   ├── itinerarioIAPlanner.ts    # Motor de ruteo e itinerarios inteligentes
@@ -550,13 +598,16 @@ graph TD
    *Contenido de `.env`:*
    ```env
    VITE_GOOGLE_MAPS_API_KEY=tu_clave_de_google_maps_aqui
+   VITE_GEMINI_API_KEY=tu_clave_de_gemini_aqui   # opcional: moderación IA del foro
    ```
 
-5. Iniciar el servidor local de desarrollo:
+5. Iniciar el entorno local de desarrollo (frontend + base de datos `db.json`):
    ```bash
-   npm run dev
+   npm run dev:all   # json-server en :3001 y Vite en :5173
    ```
-   La aplicación se abrirá en `http://localhost:5173/`.
+   O por separado: `npm run server` (json-server, puerto 3001) y `npm run dev` (Vite). La aplicación se abrirá en `http://localhost:5173/`.
+
+   > Si el repositorio está dentro de OneDrive y `git pull` falla al limpiar `.git/objects`, ejecute `git config gc.auto 0`. Ver [CONTRIBUTING.md](CONTRIBUTING.md).
 
 6. Validar compilación de producción:
    ```bash
