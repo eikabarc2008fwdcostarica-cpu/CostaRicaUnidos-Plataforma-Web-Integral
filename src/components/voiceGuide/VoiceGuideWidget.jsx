@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './VoiceGuideWidget.css';
 import { useSpeechSynthesis } from './useSpeechSynthesis';
 import { getCantonInstitutionalSummary } from './cantonSummaryHelper';
 import { useAuth } from '../../context/AuthContext';
 import { useAccessibility } from '../accessibility/AccessibilityContext';
 import { useTheme } from '../../context/ThemeContext';
+import { generarRespuestaIA, getGeminiApiKey } from '../../services/geminiService';
+import { obtenerPromptGuiaVoz, MAPA_RUTAS_PLATAFORMA } from '../../config/promptsIA';
 
 /**
  * VoiceGuideWidget (Sovereign Civic Glass v2.1)
@@ -72,6 +75,26 @@ export default function VoiceGuideWidget({
   const cantonActivo = activeCanton;
   const selectedCanton = propCanton || activeCanton || 'San José';
 
+  const navigate = useNavigate();
+  let location;
+  try {
+    location = useLocation();
+  } catch {
+    location = { pathname: '/' };
+  }
+
+  // Estados del Asistente de Voz Interactivo con Gemini
+  const [asistenteAbierto, setAsistenteAbierto] = useState(false);
+  const [estadoAsistente, setEstadoAsistente] = useState('inactivo'); // 'inactivo' | 'escuchando' | 'procesando' | 'hablando'
+  const [consultaTexto, setConsultaTexto] = useState('');
+  const [transcripcionEnVivo, setTranscripcionEnVivo] = useState('');
+  const [respuestaVoz, setRespuestaVoz] = useState(null);
+  const [silenciado, setSilenciado] = useState(false);
+  const [errorAsistente, setErrorAsistente] = useState(null);
+
+  const recognitionRef = useRef(null);
+  const abortControllerRef = useRef(null);
+
   // Hook nativo de síntesis de voz con Web Speech API
   const {
     isSpeaking,
@@ -83,6 +106,166 @@ export default function VoiceGuideWidget({
     speak,
     stop
   } = useSpeechSynthesis();
+
+  const soportaVoz = typeof window !== 'undefined' && Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
+
+  const procesarConsultaConGemini = async (textoPregunta) => {
+    if (!textoPregunta || !textoPregunta.trim()) return;
+
+    setEstadoAsistente('procesando');
+    setErrorAsistente(null);
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
+    try {
+      const rutaActual = location?.pathname || '/';
+      const rolActual = user?.rol || user?.rolNombre || 'Ciudadano';
+      const promptSistema = obtenerPromptGuiaVoz({
+        rutaActual,
+        cantonActivo: selectedCanton,
+        rolUsuario: rolActual
+      });
+
+      const res = await generarRespuestaIA({
+        sistema: promptSistema,
+        mensaje: textoPregunta,
+        opciones: { temperature: 0.5, maxOutputTokens: 500 }
+      });
+
+      const rawTexto = res.texto;
+
+      // Detectar etiqueta [RUTA:/...]
+      let rutaDestino = null;
+      let nombreRuta = null;
+      const matchRuta = rawTexto.match(/\[RUTA:([^\]]+)\]/);
+      if (matchRuta && matchRuta[1]) {
+        rutaDestino = matchRuta[1].trim();
+        nombreRuta = MAPA_RUTAS_PLATAFORMA[rutaDestino]?.nombre || rutaDestino;
+      }
+
+      // Limpiar etiqueta para que el sintetizador de voz no la lea
+      const textoLimpio = rawTexto.replace(/\[RUTA:[^\]]+\]/g, '').trim();
+
+      setRespuestaVoz({
+        texto: textoLimpio,
+        modelo: res.modelo,
+        latenciaMs: res.latenciaMs,
+        rutaDestino,
+        nombreRuta
+      });
+
+      setEstadoAsistente('hablando');
+
+      if (!silenciado) {
+        speak(textoLimpio, () => {
+          setEstadoAsistente('inactivo');
+        });
+      } else {
+        setEstadoAsistente('inactivo');
+      }
+    } catch (err) {
+      console.error('[Guía por Voz Gemini Error]', err);
+      setErrorAsistente('La IA no está disponible ahora, inténtalo de nuevo.');
+      setEstadoAsistente('inactivo');
+    }
+  };
+
+  const iniciarReconocimientoVoz = () => {
+    if (!soportaVoz) {
+      setErrorAsistente('Tu navegador no soporta reconocimiento de voz por micrófono. Puedes escribir tu consulta en el recuadro inferior.');
+      return;
+    }
+
+    const hayKey = Boolean(getGeminiApiKey());
+    if (!hayKey) {
+      setErrorAsistente('Asistente por voz deshabilitado (Configure VITE_GEMINI_API_KEY).');
+      return;
+    }
+
+    stop();
+    setErrorAsistente(null);
+    setTranscripcionEnVivo('');
+    setEstadoAsistente('escuchando');
+
+    try {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const rec = new SpeechRec();
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.lang = 'es-CR';
+
+      rec.onstart = () => {
+        setEstadoAsistente('escuchando');
+      };
+
+      rec.onresult = (event) => {
+        const transcript = event.results?.[0]?.[0]?.transcript;
+        if (transcript && transcript.trim()) {
+          setTranscripcionEnVivo(transcript.trim());
+          procesarConsultaConGemini(transcript.trim());
+        }
+      };
+
+      rec.onerror = (event) => {
+        console.warn('[Guía por Voz] Error SpeechRecognition:', event.error);
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          setErrorAsistente('Permiso de micrófono no otorgado. Puedes escribir tu consulta a continuación.');
+          setEstadoAsistente('inactivo');
+        } else if (event.error === 'no-speech') {
+          setErrorAsistente('No logramos escucharte. Inténtalo de nuevo o escribe tu consulta.');
+          setEstadoAsistente('inactivo');
+        } else if (event.error === 'language-not-supported' && rec.lang === 'es-CR') {
+          rec.lang = 'es-419';
+          try { rec.start(); return; } catch {}
+          setEstadoAsistente('inactivo');
+        } else {
+          setErrorAsistente('Inconveniente al capturar audio. Puedes escribir tu consulta.');
+          setEstadoAsistente('inactivo');
+        }
+      };
+
+      rec.onend = () => {
+        setEstadoAsistente((prev) => (prev === 'escuchando' ? 'inactivo' : prev));
+      };
+
+      recognitionRef.current = rec;
+      rec.start();
+    } catch (err) {
+      console.warn('[Guía por Voz] Excepción iniciando micrófono:', err);
+      setErrorAsistente('No se pudo activar el micrófono. Puedes escribir tu consulta.');
+      setEstadoAsistente('inactivo');
+    }
+  };
+
+  const detenerReconocimientoVoz = () => {
+    if (recognitionRef.current) {
+      try { recognitionRef.current.stop(); } catch {}
+    }
+    setEstadoAsistente('inactivo');
+  };
+
+  const cerrarAsistente = () => {
+    detenerReconocimientoVoz();
+    stop();
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    setAsistenteAbierto(false);
+    setEstadoAsistente('inactivo');
+    setErrorAsistente(null);
+  };
+
+  const handleConsultarPorTexto = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!consultaTexto.trim() || estadoAsistente === 'procesando') return;
+    const query = consultaTexto.trim();
+    setConsultaTexto('');
+    setTranscripcionEnVivo(query);
+    procesarConsultaConGemini(query);
+  };
 
   // Detener locución si cambia el cantón territorial
   useEffect(() => {
@@ -387,7 +570,66 @@ export default function VoiceGuideWidget({
         </svg>
       </button>
 
-      {/* 2. Botón de Guía (Destello + "Guía") */}
+      {/* 2. Botón de Asistente de Voz (Micrófono + Hablar con Gemini) */}
+      <button
+        type="button"
+        onClick={() => {
+          setAsistenteAbierto(true);
+          setIsSettingsOpen(false);
+          // Si está inactivo, iniciar escucha automáticamente
+          if (estadoAsistente === 'inactivo') {
+            iniciarReconocimientoVoz();
+          }
+        }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          padding: '8px 14px',
+          borderRadius: '9999px',
+          backgroundColor: isDark
+            ? (estadoAsistente === 'escuchando'
+                ? 'rgba(239, 68, 68, 0.35)'
+                : estadoAsistente === 'hablando'
+                ? 'rgba(56, 189, 248, 0.35)'
+                : 'rgba(168, 85, 247, 0.22)')
+            : (estadoAsistente === 'escuchando'
+                ? '#DC2626'
+                : estadoAsistente === 'hablando'
+                ? '#0284C7'
+                : '#7C3AED'),
+          border: isDark
+            ? (estadoAsistente === 'escuchando'
+                ? '1px solid rgba(248, 113, 113, 0.85)'
+                : estadoAsistente === 'hablando'
+                ? '1px solid rgba(56, 189, 248, 0.85)'
+                : '1px solid rgba(192, 132, 252, 0.45)')
+            : '1px solid transparent',
+          color: '#FFFFFF',
+          cursor: 'pointer',
+          fontSize: '0.85rem',
+          fontWeight: 700,
+          boxShadow: isDark
+            ? (estadoAsistente === 'escuchando'
+                ? '0 0 16px rgba(239, 68, 68, 0.45)'
+                : estadoAsistente === 'hablando'
+                ? '0 0 16px rgba(56, 189, 248, 0.45)'
+                : 'none')
+            : '0 4px 12px rgba(124, 58, 237, 0.25)',
+          transition: 'all 0.22s ease'
+        }}
+        title="Hablar con la Guía por Voz (Gemini)"
+        aria-label="Hablar con la Guía por Voz (Gemini)"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+          <line x1="12" x2="12" y1="19" y2="22" />
+        </svg>
+        <span>Hablar</span>
+      </button>
+
+      {/* 3. Botón de Guía (Recorrido de Pantalla) */}
       <button
         type="button"
         onClick={ejecutarGuiaDeRecuadros}
@@ -396,7 +638,7 @@ export default function VoiceGuideWidget({
           display: 'flex',
           alignItems: 'center',
           gap: '7px',
-          padding: '8px 18px',
+          padding: '8px 16px',
           borderRadius: '9999px',
           backgroundColor: isDark
             ? (isSpeaking ? 'rgba(14, 116, 144, 0.45)' : 'rgba(30, 136, 229, 0.22)')
@@ -433,6 +675,403 @@ export default function VoiceGuideWidget({
         )}
         <span>Guía</span>
       </button>
+
+      {/* DIÁLOGO / MODAL INTERACTIVO DE GUÍA POR VOZ (GEMINI) */}
+      {asistenteAbierto && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Guía por Voz Soberana con Gemini"
+          style={{
+            position: 'fixed',
+            bottom: '4.8rem',
+            right: '1.5rem',
+            width: 'calc(100vw - 3rem)',
+            maxWidth: '430px',
+            maxHeight: '82vh',
+            borderRadius: '20px',
+            backgroundColor: isDark ? 'rgba(5, 12, 28, 0.95)' : 'rgba(255, 255, 255, 0.98)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            border: isDark ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid var(--cru-border, #CBD5E1)',
+            boxShadow: isDark
+              ? '0 16px 48px rgba(0, 4, 13, 0.85), 0 0 28px rgba(168, 85, 247, 0.2)'
+              : '0 16px 40px rgba(0, 43, 127, 0.25)',
+            zIndex: 9500,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            boxSizing: 'border-box'
+          }}
+        >
+          {/* Cabecera del Asistente */}
+          <div
+            style={{
+              padding: '0.85rem 1.15rem',
+              borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid var(--cru-border, #CBD5E1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: isDark ? 'rgba(15, 23, 42, 0.6)' : '#F8FAFC'
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    backgroundColor: estadoAsistente === 'escuchando' ? '#EF4444' : estadoAsistente === 'hablando' ? '#38BDF8' : '#A855F7'
+                  }}
+                />
+                <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A' }}>
+                  Guía por Voz • Gemini
+                </h3>
+              </div>
+              <p style={{ margin: '0.15rem 0 0', fontSize: '0.72rem', color: isDark ? '#94A3B8' : '#64748B' }}>
+                {selectedCanton} • Rol: {user?.rol || 'Ciudadano'}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={cerrarAsistente}
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                border: 'none',
+                color: isDark ? '#CBD5E1' : '#64748B',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer'
+              }}
+              aria-label="Cerrar Asistente de Voz"
+              title="Cerrar Asistente de Voz"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Cuerpo Central del Asistente */}
+          <div
+            style={{
+              padding: '1.25rem 1.15rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              overflowY: 'auto',
+              maxHeight: 'calc(82vh - 120px)'
+            }}
+          >
+            {/* Botón Central de Micrófono con Estados */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0.5rem 0 1rem' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  if (estadoAsistente === 'escuchando') {
+                    detenerReconocimientoVoz();
+                  } else if (estadoAsistente === 'hablando') {
+                    detenerLocucion();
+                  } else {
+                    iniciarReconocimientoVoz();
+                  }
+                }}
+                disabled={estadoAsistente === 'procesando'}
+                style={{
+                  width: '68px',
+                  height: '68px',
+                  borderRadius: '50%',
+                  backgroundColor: estadoAsistente === 'escuchando'
+                    ? '#DC2626'
+                    : estadoAsistente === 'hablando'
+                    ? '#0284C7'
+                    : '#7C3AED',
+                  border: estadoAsistente === 'escuchando'
+                    ? '3px solid rgba(254, 202, 202, 0.6)'
+                    : estadoAsistente === 'hablando'
+                    ? '3px solid rgba(186, 230, 253, 0.6)'
+                    : '3px solid rgba(233, 213, 255, 0.4)',
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: estadoAsistente === 'procesando' ? 'wait' : 'pointer',
+                  boxShadow: estadoAsistente === 'escuchando'
+                    ? '0 0 24px rgba(239, 68, 68, 0.6)'
+                    : estadoAsistente === 'hablando'
+                    ? '0 0 24px rgba(56, 189, 248, 0.6)'
+                    : '0 8px 24px rgba(124, 58, 237, 0.35)',
+                  transition: 'all 0.25s ease'
+                }}
+                aria-label={
+                  estadoAsistente === 'escuchando'
+                    ? 'Detener micrófono'
+                    : estadoAsistente === 'hablando'
+                    ? 'Detener locución'
+                    : 'Hablar con la Guía'
+                }
+              >
+                {estadoAsistente === 'procesando' ? (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="animate-spin">
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                  </svg>
+                ) : estadoAsistente === 'hablando' ? (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="voice-audio-bars">
+                    <rect className="sound-wave-bar bar-1" x="4" y="4" width="3.2" height="16" rx="1.6" />
+                    <rect className="sound-wave-bar bar-2" x="10.4" y="4" width="3.2" height="16" rx="1.6" />
+                    <rect className="sound-wave-bar bar-3" x="16.8" y="4" width="3.2" height="16" rx="1.6" />
+                  </svg>
+                ) : (
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" x2="12" y1="19" y2="22" />
+                  </svg>
+                )}
+              </button>
+
+              <span style={{ marginTop: '0.6rem', fontSize: '0.78rem', fontWeight: 600, color: isDark ? '#E2E8F0' : '#334155', textAlign: 'center' }}>
+                {estadoAsistente === 'escuchando'
+                  ? 'Te escuchamos... Di tu pregunta en voz alta'
+                  : estadoAsistente === 'procesando'
+                  ? 'Gemini pensando respuesta cívica...'
+                  : estadoAsistente === 'hablando'
+                  ? 'Guía leyendo respuesta en voz alta'
+                  : 'Toca el micrófono para hablar'}
+              </span>
+            </div>
+
+            {/* Controles de Voz: Detener Locución y Silenciar */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+              {isSpeaking && (
+                <button
+                  type="button"
+                  onClick={detenerLocucion}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    padding: '0.35rem 0.75rem',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    color: '#FCA5A5',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="4" y="4" width="16" height="16" rx="2" />
+                  </svg>
+                  <span>Detener Lectura</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (!silenciado && isSpeaking) stop();
+                  setSilenciado(!silenciado);
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  padding: '0.35rem 0.75rem',
+                  borderRadius: '8px',
+                  backgroundColor: silenciado ? 'rgba(234, 179, 8, 0.2)' : 'rgba(255, 255, 255, 0.06)',
+                  border: silenciado ? '1px solid rgba(234, 179, 8, 0.4)' : '1px solid rgba(255, 255, 255, 0.15)',
+                  color: silenciado ? '#FDE047' : (isDark ? '#CBD5E1' : '#475569'),
+                  fontSize: '0.75rem',
+                  cursor: 'pointer'
+                }}
+                title={silenciado ? 'Activar voz' : 'Silenciar locución de voz'}
+              >
+                {silenciado ? (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <line x1="23" y1="9" x2="17" y2="15" />
+                    <line x1="17" y1="9" x2="23" y2="15" />
+                  </svg>
+                ) : (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                )}
+                <span>{silenciado ? 'Voz Silenciada' : 'Silenciar'}</span>
+              </button>
+            </div>
+
+            {/* Transcripción en vivo */}
+            {transcripcionEnVivo && (
+              <div
+                style={{
+                  width: '100%',
+                  padding: '0.55rem 0.85rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                  border: '1px solid rgba(56, 189, 248, 0.25)',
+                  fontSize: '0.8rem',
+                  color: '#BAE6FD',
+                  marginBottom: '0.75rem',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <strong>Tú dijiste:</strong> "{transcripcionEnVivo}"
+              </div>
+            )}
+
+            {/* Aviso de error o soporte */}
+            {errorAsistente && (
+              <div
+                style={{
+                  width: '100%',
+                  padding: '0.55rem 0.85rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  fontSize: '0.78rem',
+                  color: '#FCA5A5',
+                  marginBottom: '0.75rem',
+                  boxSizing: 'border-box'
+                }}
+              >
+                {errorAsistente}
+              </div>
+            )}
+
+            {/* Tarjeta de Respuesta de Gemini */}
+            {respuestaVoz && (
+              <div
+                style={{
+                  width: '100%',
+                  padding: '0.85rem 1rem',
+                  borderRadius: '12px',
+                  backgroundColor: isDark ? 'rgba(15, 23, 42, 0.8)' : '#F1F5F9',
+                  border: '1px solid rgba(168, 85, 247, 0.35)',
+                  fontSize: '0.84rem',
+                  color: isDark ? '#F8FAFC' : '#0F172A',
+                  lineHeight: 1.5,
+                  marginBottom: '0.85rem',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      padding: '0.15rem 0.5rem',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                      color: '#D8B4FE',
+                      fontSize: '0.7rem',
+                      fontWeight: 700
+                    }}
+                  >
+                    Generado por IA • {respuestaVoz.modelo}
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: isDark ? '#94A3B8' : '#64748B' }}>
+                    {respuestaVoz.latenciaMs} ms
+                  </span>
+                </div>
+
+                <div style={{ margin: '0.35rem 0' }}>{respuestaVoz.texto}</div>
+
+                {/* Botón de Navegación si se detectó una ruta de destino */}
+                {respuestaVoz.rutaDestino && (
+                  <div style={{ marginTop: '0.65rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigate(respuestaVoz.rutaDestino);
+                        cerrarAsistente();
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '0.55rem 0.85rem',
+                        borderRadius: '8px',
+                        backgroundColor: '#002B7F',
+                        border: '1px solid #001489',
+                        color: '#FFFFFF',
+                        fontWeight: 700,
+                        fontSize: '0.8rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.4rem',
+                        boxShadow: '0 4px 12px rgba(0, 43, 127, 0.3)'
+                      }}
+                    >
+                      <span>Ir a {respuestaVoz.nombreRuta || respuestaVoz.rutaDestino}</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Entrada alternativa de texto (fallback para teclado / sin micrófono) */}
+            <form onSubmit={handleConsultarPorTexto} style={{ width: '100%', display: 'flex', gap: '0.4rem', marginTop: 'auto' }}>
+              <input
+                type="text"
+                value={consultaTexto}
+                onChange={(e) => setConsultaTexto(e.target.value)}
+                placeholder="O escribe tu duda cívica aquí..."
+                disabled={estadoAsistente === 'procesando'}
+                maxLength={250}
+                style={{
+                  flex: 1,
+                  padding: '0.55rem 0.85rem',
+                  borderRadius: '10px',
+                  backgroundColor: isDark ? 'rgba(15, 23, 42, 0.9)' : '#FFFFFF',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid #CBD5E1',
+                  color: isDark ? '#FFFFFF' : '#0F172A',
+                  fontSize: '0.8rem',
+                  outline: 'none'
+                }}
+              />
+              <button
+                type="submit"
+                disabled={estadoAsistente === 'procesando' || !consultaTexto.trim()}
+                style={{
+                  padding: '0.55rem 0.85rem',
+                  borderRadius: '10px',
+                  backgroundColor: '#7C3AED',
+                  border: 'none',
+                  color: '#FFFFFF',
+                  cursor: (estadoAsistente === 'procesando' || !consultaTexto.trim()) ? 'not-allowed' : 'pointer',
+                  opacity: (!consultaTexto.trim()) ? 0.6 : 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                aria-label="Enviar consulta escrita"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

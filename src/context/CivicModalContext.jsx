@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { AlertTriangle, CheckCircle2, Info, XCircle, X } from 'lucide-react';
+import ConfirmDialog from '../components/common/ConfirmDialog';
 
 const CivicModalContext = createContext(null);
 
@@ -17,9 +18,61 @@ export function CivicModalProvider({ children }) {
     onCancelar: null
   });
 
+  const [confirmDialogConfig, setConfirmDialogConfig] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    confirmText: 'Confirmar',
+    cancelText: 'Cancelar',
+    variant: 'danger',
+    isLoading: false,
+    onConfirm: null,
+    onCancel: null
+  });
+
   const [valorInput, setValorInput] = useState('');
   const [errorInput, setErrorInput] = useState('');
   const [toastNotificacion, setToastNotificacion] = useState(null);
+
+  // Método moderno con Promesa para diálogos de confirmación accesibles
+  const confirm = useCallback((options = {}) => {
+    return new Promise((resolve) => {
+      const isDanger = options.variant === 'danger' || !options.variant;
+      setConfirmDialogConfig({
+        isOpen: true,
+        title: options.title || (isDanger ? '¿Eliminar este elemento?' : '¿Confirmar acción?'),
+        message: options.message || (isDanger ? 'Esta acción no se puede deshacer.' : '¿Desea continuar con esta acción?'),
+        confirmText: options.confirmText || (isDanger ? 'Sí, eliminar' : 'Confirmar'),
+        cancelText: options.cancelText || 'Cancelar',
+        variant: options.variant || 'danger',
+        isLoading: false,
+        onConfirm: async () => {
+          if (typeof options.onConfirm === 'function') {
+            try {
+              setConfirmDialogConfig((prev) => ({ ...prev, isLoading: true }));
+              await options.onConfirm();
+            } catch (err) {
+              console.error('[ConfirmDialog] Error en onConfirm:', err);
+            } finally {
+              setConfirmDialogConfig((prev) => ({ ...prev, isLoading: false, isOpen: false }));
+            }
+          } else {
+            setConfirmDialogConfig((prev) => ({ ...prev, isOpen: false }));
+          }
+          resolve(true);
+        },
+        onCancel: () => {
+          if (typeof options.onCancel === 'function') {
+            try {
+              options.onCancel();
+            } catch (_) {}
+          }
+          setConfirmDialogConfig((prev) => ({ ...prev, isOpen: false, isLoading: false }));
+          resolve(false);
+        }
+      });
+    });
+  }, []);
 
   // Método para disparar notificación toast en la esquina superior derecha
   const mostrarToast = (mensaje, icono = 'exito') => {
@@ -123,8 +176,11 @@ export function CivicModalProvider({ children }) {
   };
 
   return (
-    <CivicModalContext.Provider value={{ mostrarAlerta, solicitarConfirmacion, solicitarMotivo, mostrarToast }}>
+    <CivicModalContext.Provider value={{ mostrarAlerta, solicitarConfirmacion, solicitarMotivo, mostrarToast, confirm }}>
       {children}
+
+      {/* Diálogo de Confirmación Accesible Soberano (ConfirmDialog) */}
+      <ConfirmDialog {...confirmDialogConfig} />
 
       {/* Contenedor de Notificaciones Emergentes / Toasts en Esquina Superior Derecha */}
       {toastNotificacion && (
@@ -262,4 +318,20 @@ export function useCivicModal() {
     throw new Error('useCivicModal debe usarse dentro de CivicModalProvider');
   }
   return context;
+}
+
+/**
+ * Hook global soberano para confirmaciones asíncronas con Promesa (useConfirm)
+ * Permite tanto:
+ *   const confirm = useConfirm();
+ *   const ok = await confirm({ ... });
+ * Como:
+ *   const { confirm } = useConfirm();
+ *   const ok = await confirm({ ... });
+ */
+export function useConfirm() {
+  const { confirm } = useCivicModal();
+  const confirmFn = (options) => confirm(options);
+  confirmFn.confirm = confirmFn;
+  return confirmFn;
 }

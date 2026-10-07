@@ -12,7 +12,8 @@
  */
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import PrivateRoutes, { RoleRoute, ProtectedRoute, AdminRoutes } from './PrivateRoutes';
+import PerfilComercialPage from '../pages/PerfilComercialPage';
+import PrivateRoutes, { RoleRoute, ProtectedRoute, AdminRoutes, ComercianteRoute } from './PrivateRoutes';
 import Inicio from '../pages/Inicio';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
@@ -64,7 +65,12 @@ function DashboardDispatcher() {
     return <Navigate to="/admin/territorial" replace />;
   }
 
-  // Nivel 3 (Comerciante) y Nivel 2 (Ciudadano):
+  // Nivel 3 (Comerciante Aprobado)
+  if (nivel === 3 || rol.includes("COMERCIANTE") || user.isComerciante) {
+    return <Navigate to="/perfil-comercial" replace />;
+  }
+
+  // Nivel 2 (Ciudadano):
   return <Navigate to="/portal-ciudadano" replace />;
 }
 
@@ -161,6 +167,11 @@ export default function Routing() {
           <Route path="/perfil" element={<PerfilPage />} />
           <Route path="/participacion/votar" element={<ParticipacionPage />} />
           <Route path="/gobernanza/audiencia" element={<ParticipacionPage />} />
+        </Route>
+
+        {/* Ruta Exclusiva del Comerciante Aprobado (Nivel 3 con guarda de validación y Ley 8968) */}
+        <Route element={<ComercianteRoute />}>
+          <Route path="/perfil-comercial" element={<PerfilComercialPage />} />
         </Route>
 
         {/* Despachador de Consola Administrativa Central */}

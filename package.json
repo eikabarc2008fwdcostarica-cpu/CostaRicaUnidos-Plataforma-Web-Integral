@@ -25,5 +25,8 @@
     "jest-environment-jsdom": "^30.5.2",
     "json-server": "^1.0.0-beta.15",
     "vite": "^5.4.1"
+  },
+  "overrides": {
+    "shell-quote": "^1.12.0"
   }
 }

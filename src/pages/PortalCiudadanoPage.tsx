@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ShieldCheck,
@@ -14,12 +14,14 @@ import {
   ThumbsUp,
   Award,
   Lock,
-  ChevronRight
+  ChevronRight,
+  Clock
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { obtenerNombrePublico } from '../utils/privacyUtils';
+import { obtenerSolicitudesComercioApi } from '../services/comercioService';
 
 export default function PortalCiudadanoPage() {
   const { user, usuarioActual } = useAuth();
@@ -31,6 +33,38 @@ export default function PortalCiudadanoPage() {
   const nombrePublico = obtenerNombrePublico(nombreCompleto);
   const canton = currentUser?.canton || 'San José';
   const provincia = currentUser?.provincia || 'San José';
+
+  const [estadoComercio, setEstadoComercio] = useState<'aprobado' | 'pendiente' | 'rechazado' | null>(() => {
+    if (currentUser?.isComerciante || currentUser?.nivelAcceso === 3 || currentUser?.rolOficial === 'COMERCIANTE') {
+      return 'aprobado';
+    }
+    if (currentUser?.estadoComercio) {
+      return currentUser.estadoComercio as any;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    const verificarSolicitud = async () => {
+      if (currentUser?.isComerciante || currentUser?.nivelAcceso === 3) {
+        setEstadoComercio('aprobado');
+        return;
+      }
+      try {
+        const sols = await obtenerSolicitudesComercioApi();
+        const userCleanCed = String(currentUser?.cedula || '').replace(/[^0-9]/g, '');
+        const miSol = sols.find((s) => {
+          const sCed = String(s.cedula || s.cedulaJuridica || '').replace(/[^0-9]/g, '');
+          return (userCleanCed && sCed === userCleanCed) || (s.usuarioId && s.usuarioId === currentUser?.id);
+        });
+        if (miSol) {
+          const st = String(miSol.estado || '').toLowerCase() as any;
+          setEstadoComercio(st);
+        }
+      } catch (_) {}
+    };
+    verificarSolicitud();
+  }, [currentUser]);
 
   return (
     <div
@@ -162,6 +196,57 @@ export default function PortalCiudadanoPage() {
                 <Store className="w-4 h-4" />
                 <span>Comercios & PyMES</span>
               </Link>
+
+              {/* Botón Secundario Mi Perfil Comercial (Aprobado o Pendiente con estado) */}
+              {estadoComercio === 'aprobado' && (
+                <Link
+                  to="/perfil-comercial"
+                  id="btn-mi-perfil-comercial"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.75rem 1.4rem',
+                    borderRadius: '12px',
+                    backgroundColor: isDark ? 'rgba(16, 185, 129, 0.15)' : '#ECFDF5',
+                    border: isDark ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid #A7F3D0',
+                    color: isDark ? '#34D399' : '#047857',
+                    textDecoration: 'none',
+                    fontSize: '0.88rem',
+                    fontWeight: 700,
+                    transition: 'all 0.2s ease'
+                  }}
+                  className="hover:opacity-90 hover:scale-[1.02]"
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Mi Perfil Comercial</span>
+                </Link>
+              )}
+
+              {estadoComercio === 'pendiente' && (
+                <button
+                  disabled
+                  id="btn-mi-perfil-comercial-pendiente"
+                  title="Tu solicitud de acreditación comercial está siendo evaluada por el gobierno municipal"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.75rem 1.4rem',
+                    borderRadius: '12px',
+                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#F1F5F9',
+                    border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #CBD5E1',
+                    color: isDark ? '#64748B' : '#94A3B8',
+                    fontSize: '0.88rem',
+                    fontWeight: 700,
+                    cursor: 'not-allowed',
+                    opacity: 0.75
+                  }}
+                >
+                  <Clock className="w-4 h-4 text-amber-500" />
+                  <span>Perfil Comercial (En Revisión)</span>
+                </button>
+              )}
             </div>
           </div>
 

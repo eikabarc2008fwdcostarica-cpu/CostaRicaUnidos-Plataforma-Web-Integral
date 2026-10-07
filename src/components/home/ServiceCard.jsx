@@ -55,7 +55,7 @@ export default function ServiceCard({
           alignItems: 'center',
           justifyContent: 'center',
           pointerEvents: 'none',
-          transition: 'transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          transition: 'transform 200ms ease',
           filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.16))'
         }}
       >

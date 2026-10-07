@@ -50,17 +50,17 @@ export default function FaqAccordion() {
         aria-hidden="true"
         style={{
           position: 'absolute',
-          top: '-40px',
-          right: '2%',
-          width: '260px',
-          height: '260px',
+          top: '-65px',
+          right: '1%',
+          width: '380px',
+          height: '380px',
           pointerEvents: 'none',
-          opacity: 0.16,
+          opacity: 0.13,
           zIndex: 1
         }}
       >
         <div className="animate-wheel-slow" style={{ width: '100%', height: '100%' }}>
-          <svg viewBox="-52 -52 104 104" style={{ width: '100%', height: '100%' }}>
+          <svg viewBox="-155 -155 310 310" style={{ width: '100%', height: '100%' }}>
             <use href="#mandala-carreta-wheel" />
           </svg>
         </div>

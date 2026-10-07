@@ -24,6 +24,7 @@ import {
   Clock
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useCivicModal } from '../../context/CivicModalContext';
 import {
   reaccionarNoticia,
   agregarComentarioNoticia,
@@ -87,6 +88,7 @@ export default function NoticiaFeedPost({
   onActualizar
 }) {
   const { user } = useAuth();
+  const { mostrarToast } = useCivicModal();
   const tienePermisoEditor = esEditorMunicipal(user);
 
   // Estados locales del post
@@ -165,7 +167,7 @@ export default function NoticiaFeedPost({
   // Manejar Reacción Cívica con actualización optimista
   const handleReaccionar = async (tipo) => {
     if (!user) {
-      alert('Debes iniciar sesión con tu cédula para emitir reacciones cívicas oficiales.');
+      mostrarToast('Debes iniciar sesión con tu cédula para emitir reacciones cívicas oficiales.', 'advertencia');
       return;
     }
     if (reaccionando) return;

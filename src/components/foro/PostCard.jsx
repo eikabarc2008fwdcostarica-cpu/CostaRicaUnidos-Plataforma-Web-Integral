@@ -14,13 +14,26 @@ import {
   Lightbulb,
   CheckCircle2,
   Trash2,
-  ShieldCheck
+  ShieldCheck,
+  Bot,
+  FileText,
+  Loader2,
+  Send,
+  RotateCcw,
+  X
 } from 'lucide-react';
 import ComentariosSection from './ComentariosSection';
 import { votarPost, reaccionarPost, eliminarPost } from '../../services/foroService';
 import { useAuth } from '../../context/AuthContext';
+import { useConfirm } from '../../hooks/useConfirm';
 import { obtenerNombrePublico } from '../../utils/privacyUtils';
 import PerfilPublicoModal from '../perfil/PerfilPublicoModal';
+import { generarRespuestaIA, getGeminiApiKey } from '../../services/geminiService';
+import {
+  PROMPT_SISTEMA_FORO_CONSULTA,
+  PROMPT_SISTEMA_FORO_RESUMEN,
+  enmascararDatosPersonales
+} from '../../config/promptsIA';
 
 // Mapeo de estilos y colores por provincia
 const PROVINCIA_COLORS = {
@@ -109,11 +122,129 @@ function formatearFecha(fechaIso) {
 
 export default function PostCard({ post, onActualizado, onEliminado }) {
   const { user } = useAuth();
+  const confirm = useConfirm();
   const [mostrarComentarios, setMostrarComentarios] = useState(false);
   const [mostrarPerfilModal, setMostrarPerfilModal] = useState(false);
   const [votando, setVotando] = useState(false);
   const [reaccionando, setReaccionando] = useState(false);
   const [copiado, setCopiado] = useState(false);
+
+  // Estados de Asistencia IA (Gemini) en el hilo
+  const [panelIaAbierto, setPanelIaAbierto] = useState(false);
+  const [modoIa, setModoIa] = useState(null); // 'resumen' | 'pregunta'
+  const [preguntaIa, setPreguntaIa] = useState('');
+  const [cargandoIa, setCargandoIa] = useState(false);
+  const [respuestaIa, setRespuestaIa] = useState(null);
+  const [errorIa, setErrorIa] = useState(null);
+
+  const hayApiKey = Boolean(getGeminiApiKey());
+
+  const handleAbrirResumenIa = async () => {
+    if (panelIaAbierto && modoIa === 'resumen') {
+      setPanelIaAbierto(false);
+      return;
+    }
+    setPanelIaAbierto(true);
+    setModoIa('resumen');
+    setErrorIa(null);
+
+    if (!hayApiKey) {
+      setErrorIa('Asistencia de IA no disponible. Se requiere configurar VITE_GEMINI_API_KEY en el entorno.');
+      return;
+    }
+
+    if (respuestaIa?.tipo === 'resumen') return;
+
+    setCargandoIa(true);
+    try {
+      const comentariosTexto = (post.comentarios || [])
+        .slice(-6)
+        .map((c) => `- ${c.autorNombre || 'Vecino'}: ${c.contenido}`)
+        .join('\n');
+
+      const textoHilo = `Título del debate: ${post.titulo || 'Sin título'}
+Categoría: ${post.categoria || 'General'}
+Detalle de la propuesta:
+${post.contenido || ''}
+${comentariosTexto ? `\nComentarios recientes de la comunidad:\n${comentariosTexto}` : ''}`;
+
+      const res = await generarRespuestaIA({
+        sistema: PROMPT_SISTEMA_FORO_RESUMEN,
+        mensaje: textoHilo,
+        opciones: { temperature: 0.4 }
+      });
+
+      setRespuestaIa({
+        texto: res.texto,
+        modelo: res.modelo,
+        latenciaMs: res.latenciaMs,
+        tipo: 'resumen'
+      });
+    } catch (err) {
+      console.error('[PostCard IA Error]', err);
+      setErrorIa('La IA no está disponible ahora, inténtalo de nuevo.');
+    } finally {
+      setCargandoIa(false);
+    }
+  };
+
+  const handleAbrirPreguntaIa = () => {
+    if (panelIaAbierto && modoIa === 'pregunta') {
+      setPanelIaAbierto(false);
+      return;
+    }
+    setPanelIaAbierto(true);
+    setModoIa('pregunta');
+    setErrorIa(null);
+  };
+
+  const handleEnviarPreguntaIa = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!preguntaIa.trim() || cargandoIa) return;
+
+    if (!hayApiKey) {
+      setErrorIa('Asistencia de IA no disponible. Se requiere configurar VITE_GEMINI_API_KEY en el entorno.');
+      return;
+    }
+
+    setCargandoIa(true);
+    setErrorIa(null);
+    try {
+      const comentariosTexto = (post.comentarios || [])
+        .slice(-5)
+        .map((c) => `- ${c.autorNombre || 'Vecino'}: ${c.contenido}`)
+        .join('\n');
+
+      const contextoHilo = `Contexto del debate cívico:
+Título: ${post.titulo || 'Sin título'}
+Provincia: ${provMeta.label}
+Detalle: ${post.contenido || ''}
+${comentariosTexto ? `Comentarios recientes:\n${comentariosTexto}` : ''}
+
+Pregunta del ciudadano:
+"${preguntaIa.trim()}"`;
+
+      const res = await generarRespuestaIA({
+        sistema: PROMPT_SISTEMA_FORO_CONSULTA,
+        mensaje: contextoHilo,
+        opciones: { temperature: 0.5 }
+      });
+
+      setRespuestaIa({
+        texto: res.texto,
+        modelo: res.modelo,
+        latenciaMs: res.latenciaMs,
+        tipo: 'pregunta',
+        preguntaOriginal: preguntaIa.trim()
+      });
+      setPreguntaIa('');
+    } catch (err) {
+      console.error('[PostCard IA Error]', err);
+      setErrorIa('La IA no está disponible ahora, inténtalo de nuevo.');
+    } finally {
+      setCargandoIa(false);
+    }
+  };
 
   const cleanCedula = user?.cedula || '1-1823-0456';
   const votoActual = post.usuariosVotaron?.[cleanCedula] || null;
@@ -167,13 +298,20 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
 
   // Eliminar post si es autor o administrador
   const handleEliminar = async () => {
-    if (window.confirm('¿Está seguro de eliminar esta publicación del Foro Tico?')) {
-      try {
-        await eliminarPost(post.id);
-        if (onEliminado) onEliminado(post.id);
-      } catch (e) {
-        console.error('Error eliminando:', e);
-      }
+    const ok = await confirm({
+      title: 'Eliminar publicación',
+      message: '¿Está seguro de eliminar esta publicación del Foro Tico? Esta acción no se puede deshacer.',
+      confirmText: 'Sí, eliminar',
+      cancelText: 'Cancelar',
+      variant: 'danger'
+    });
+    if (!ok) return;
+
+    try {
+      await eliminarPost(post.id);
+      if (onEliminado) onEliminado(post.id);
+    } catch (e) {
+      console.error('Error eliminando:', e);
     }
   };
 
@@ -502,6 +640,64 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
 
         {/* Grupo Secundario: Comentarios + Compartir + Eliminar */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {/* Botón Resumir Hilo */}
+          <button
+            type="button"
+            onClick={handleAbrirResumenIa}
+            title="Resumir este debate con IA en viñetas"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '10px',
+              backgroundColor: panelIaAbierto && modoIa === 'resumen'
+                ? 'rgba(56, 189, 248, 0.2)'
+                : 'rgba(255, 255, 255, 0.05)',
+              border: panelIaAbierto && modoIa === 'resumen'
+                ? '1px solid rgba(56, 189, 248, 0.5)'
+                : '1px solid rgba(255, 255, 255, 0.1)',
+              color: panelIaAbierto && modoIa === 'resumen' ? '#38BDF8' : '#CBD5E1',
+              fontSize: '0.825rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'var(--transition-smooth)'
+            }}
+            className="hover:bg-sky-500/10"
+          >
+            <FileText className="w-4 h-4 text-sky-400" />
+            <span className="hidden sm:inline">Resumir hilo</span>
+          </button>
+
+          {/* Botón Preguntar a la IA */}
+          <button
+            type="button"
+            onClick={handleAbrirPreguntaIa}
+            title="Preguntar a la IA cívica de Gemini sobre este debate"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '10px',
+              backgroundColor: panelIaAbierto && modoIa === 'pregunta'
+                ? 'rgba(168, 85, 247, 0.2)'
+                : 'rgba(255, 255, 255, 0.05)',
+              border: panelIaAbierto && modoIa === 'pregunta'
+                ? '1px solid rgba(168, 85, 247, 0.5)'
+                : '1px solid rgba(255, 255, 255, 0.1)',
+              color: panelIaAbierto && modoIa === 'pregunta' ? '#C084FC' : '#CBD5E1',
+              fontSize: '0.825rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'var(--transition-smooth)'
+            }}
+            className="hover:bg-purple-500/10"
+          >
+            <Bot className="w-4 h-4 text-purple-400" />
+            <span className="hidden sm:inline">Preguntar a la IA</span>
+          </button>
+
           {/* Botón Desplegar Comentarios */}
           <button
             type="button"
@@ -583,6 +779,213 @@ export default function PostCard({ post, onActualizado, onEliminado }) {
           )}
         </div>
       </div>
+
+      {/* PANEL DE ASISTENCIA IA DEL FORO TICO */}
+      {panelIaAbierto && (
+        <div
+          style={{
+            marginTop: '0.85rem',
+            marginBottom: '0.5rem',
+            padding: '1rem 1.15rem',
+            borderRadius: '12px',
+            backgroundColor: 'rgba(10, 18, 38, 0.92)',
+            border: '1px solid rgba(168, 85, 247, 0.35)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
+            position: 'relative'
+          }}
+        >
+          {/* Cabecera del panel de IA con distintivo visible */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: '9999px',
+                  backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                  border: '1px solid rgba(168, 85, 247, 0.45)',
+                  color: '#D8B4FE',
+                  fontSize: '0.725rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.02em'
+                }}
+              >
+                <Sparkles className="w-3 h-3 text-purple-300" />
+                Generado por IA
+              </span>
+              <span style={{ fontSize: '0.775rem', color: '#94A3B8' }}>
+                {modoIa === 'resumen' ? 'Resumen Cívico del Debate' : 'Orientación Cívica con Gemini'}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setPanelIaAbierto(false)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#94A3B8',
+                cursor: 'pointer',
+                padding: '0.2rem',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+              title="Cerrar panel de IA"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Formulario de Pregunta si modo === 'pregunta' */}
+          {modoIa === 'pregunta' && (
+            <form onSubmit={handleEnviarPreguntaIa} style={{ display: 'flex', gap: '0.45rem', marginBottom: '0.75rem' }}>
+              <input
+                type="text"
+                value={preguntaIa}
+                onChange={(e) => setPreguntaIa(e.target.value)}
+                placeholder="Pregunta a la IA sobre este debate (ej: ¿Cómo presentar esto al Concejo?)..."
+                maxLength={300}
+                disabled={cargandoIa || !hayApiKey}
+                style={{
+                  flex: 1,
+                  padding: '0.55rem 0.85rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: '#FFFFFF',
+                  fontSize: '0.825rem',
+                  outline: 'none'
+                }}
+              />
+              <button
+                type="submit"
+                disabled={cargandoIa || !preguntaIa.trim() || !hayApiKey}
+                style={{
+                  padding: '0.55rem 0.95rem',
+                  borderRadius: '8px',
+                  backgroundColor: '#7C3AED',
+                  border: 'none',
+                  color: '#FFFFFF',
+                  fontSize: '0.825rem',
+                  fontWeight: 600,
+                  cursor: (cargandoIa || !preguntaIa.trim() || !hayApiKey) ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  opacity: (!preguntaIa.trim() || !hayApiKey) ? 0.6 : 1
+                }}
+              >
+                {cargandoIa ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                <span>Consultar</span>
+              </button>
+            </form>
+          )}
+
+          {/* Estado sin API Key */}
+          {!hayApiKey && (
+            <div
+              style={{
+                padding: '0.5rem 0.75rem',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(234, 179, 8, 0.1)',
+                border: '1px solid rgba(234, 179, 8, 0.25)',
+                color: '#FDE047',
+                fontSize: '0.78rem'
+              }}
+            >
+              Asistencia de IA deshabilitada temporalmente (Configure VITE_GEMINI_API_KEY en el entorno).
+            </div>
+          )}
+
+          {/* Estado de carga */}
+          {cargandoIa && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 0', color: '#C084FC', fontSize: '0.825rem' }}>
+              <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
+              <span>Analizando el hilo de debate cívico con Gemini...</span>
+            </div>
+          )}
+
+          {/* Estado de error */}
+          {errorIa && (
+            <div
+              style={{
+                padding: '0.5rem 0.75rem',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid rgba(239, 68, 68, 0.25)',
+                color: '#FCA5A5',
+                fontSize: '0.8rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '0.5rem'
+              }}
+            >
+              <span>{errorIa}</span>
+              {hayApiKey && (
+                <button
+                  type="button"
+                  onClick={modoIa === 'resumen' ? handleAbrirResumenIa : handleEnviarPreguntaIa}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    background: 'none',
+                    border: 'none',
+                    color: '#F87171',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <RotateCcw className="w-3.5 h-3.5" /> Reintentar
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Resultado de la IA */}
+          {respuestaIa && !cargandoIa && (
+            <div
+              style={{
+                padding: '0.85rem 1rem',
+                borderRadius: '10px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(168, 85, 247, 0.3)',
+                color: '#E2E8F0',
+                fontSize: '0.84rem',
+                lineHeight: 1.55,
+                whiteSpace: 'pre-wrap'
+              }}
+            >
+              {respuestaIa.tipo === 'pregunta' && respuestaIa.preguntaOriginal && (
+                <div style={{ fontSize: '0.75rem', color: '#A78BFA', marginBottom: '0.4rem', fontWeight: 600 }}>
+                  Consulta cívica: "{respuestaIa.preguntaOriginal}"
+                </div>
+              )}
+              <div>{respuestaIa.texto}</div>
+              <div
+                style={{
+                  marginTop: '0.65rem',
+                  paddingTop: '0.45rem',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: '0.7rem',
+                  color: '#94A3B8',
+                  flexWrap: 'wrap',
+                  gap: '0.35rem'
+                }}
+              >
+                <span>Modelo: {respuestaIa.modelo} • {respuestaIa.latenciaMs} ms</span>
+                <span style={{ fontStyle: 'italic' }}>Información orientativa cívica • Datos protegidos Ley N° 8968</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 5. SECCIÓN DESPLEGABLE DE COMENTARIOS */}
       {mostrarComentarios && (

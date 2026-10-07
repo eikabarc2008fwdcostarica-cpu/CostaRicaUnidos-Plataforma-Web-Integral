@@ -2830,25 +2830,30 @@ body {
 @keyframes starTwinkle {
   0%, 100% {
     opacity: 0.25;
-    transform: scale(0.85);
+    transform: scale(0.9);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.2);
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.95));
+    opacity: 0.95;
+    transform: scale(1.1);
   }
 }
 
 .animate-star-twinkle-1 {
-  animation: starTwinkle 2.5s ease-in-out infinite;
+  animation: starTwinkle 3s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .animate-star-twinkle-2 {
-  animation: starTwinkle 3.4s ease-in-out infinite 0.7s;
+  animation: starTwinkle 4.5s ease-in-out infinite 1s;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .animate-star-twinkle-3 {
-  animation: starTwinkle 2.9s ease-in-out infinite 1.4s;
+  animation: starTwinkle 2.5s ease-in-out infinite 0.5s;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 /* 4. Nubes flotantes */
@@ -2982,10 +2987,10 @@ body {
 /* 10. Tradición del Boyeo y Carreta Típica: cruce natural continuo con suave vaivén */
 @keyframes oxcartCross {
   0% {
-    transform: translateX(-400px);
+    transform: translateX(-560px);
   }
   100% {
-    transform: translateX(calc(100vw + 400px));
+    transform: translateX(calc(100vw + 560px));
   }
 }
 
@@ -2994,24 +2999,68 @@ body {
     transform: translateY(0) rotate(0deg);
   }
   25% {
-    transform: translateY(-2px) rotate(0.35deg);
+    transform: translateY(-2.5px) rotate(0.4deg);
   }
   50% {
     transform: translateY(0) rotate(0deg);
   }
   75% {
-    transform: translateY(-2px) rotate(-0.35deg);
+    transform: translateY(-2.5px) rotate(-0.4deg);
   }
 }
 
+@keyframes oxcartWheelRoll {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes oxLegFront {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(6deg); }
+}
+
+@keyframes oxLegBack {
+  0%, 100% { transform: rotate(6deg); }
+  50% { transform: rotate(-6deg); }
+}
+
+@keyframes picanaSway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-4.5deg); }
+}
+
 .animate-oxcart-cross {
-  animation: oxcartCross 22s linear infinite;
+  animation: oxcartCross 24s linear infinite;
   will-change: transform;
 }
 
 .animate-oxcart-sway {
   animation: oxcartSway 1.8s ease-in-out infinite;
   transform-origin: bottom center;
+}
+
+.animate-oxcart-wheel {
+  animation: oxcartWheelRoll 2.8s linear infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.animate-ox-leg-front {
+  animation: oxLegFront 0.9s ease-in-out infinite;
+  transform-origin: top center;
+  transform-box: fill-box;
+}
+
+.animate-ox-leg-back {
+  animation: oxLegBack 0.9s ease-in-out infinite;
+  transform-origin: top center;
+  transform-box: fill-box;
+}
+
+.animate-picana {
+  animation: picanaSway 1.8s ease-in-out infinite;
+  transform-origin: bottom right;
+  transform-box: fill-box;
 }
 
 /* 11. Tarjetas de trámites: elevación y leve giro en hover, brote se agranda y gira */
@@ -3028,12 +3077,12 @@ body {
 
 .service-card-clean .national-symbol-corner,
 .service-card-clean .sprout-icon {
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 200ms ease;
   transform-origin: center;
 }
 
 .service-card-clean:hover .national-symbol-corner {
-  transform: scale(1.18) rotate(6deg);
+  transform: scale(1.1);
 }
 
 .service-card-clean:hover .sprout-icon {
@@ -3093,7 +3142,10 @@ body {
   .animate-guaria-3,
   .animate-guaria-4,
   .animate-oxcart-cross,
-  .animate-oxcart-wheel {
+  .animate-oxcart-wheel,
+  .animate-ox-leg-front,
+  .animate-ox-leg-back,
+  .animate-picana {
     animation: none !important;
   }
 }

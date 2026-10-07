@@ -6,7 +6,7 @@ import React from 'react';
  * 1. ventanilla: Guaria Morada (Flor Nacional - Guarianthe skinneri)
  * 2. concejo:    Rueda de Carreta Típica (Mandala multicolor Sarchí)
  * 3. averias:    Yigüirro (Ave Nacional - Turdus grayi)
- * 4. ccdr:       Escudo Nacional de Costa Rica (Silueta institucional)
+ * 4. ccdr:       Colibrí Costarricense en vuelo (Símbolo de Biodiversidad)
  * 5. gis:        Manatí (Fauna Marina - Trichechus manatus)
  * 6. cne:        Granos de Café (Grano de Oro - Ramita con frutos rojos)
  * 7. comercio:   Venado Cola Blanca (Fauna Silvestre - Odocoileus virginianus)
@@ -75,35 +75,13 @@ export default function NationalSymbolIcon({ symbolId, size = 34, className = ''
         <svg
           width={s}
           height={s}
-          viewBox="0 0 36 36"
+          viewBox="-155 -155 310 310"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className={className}
           aria-label="Símbolo Nacional: Rueda de Carreta Típica"
         >
-          {/* Aro exterior de hierro */}
-          <circle cx="18" cy="18" r="16.5" fill="#6B3E1F" stroke="#131313" strokeWidth="1" />
-          {/* Anillo Rojo Nacional */}
-          <circle cx="18" cy="18" r="14.8" fill="#C22727" stroke="#FFFFFF" strokeWidth="0.8" />
-          {/* Anillo Azul Institucional */}
-          <circle cx="18" cy="18" r="11.8" fill="#0053AF" stroke="#FFCA26" strokeWidth="0.8" />
-          {/* Anillo Blanco Cívico */}
-          <circle cx="18" cy="18" r="8" fill="#FDFDFF" stroke="#C22727" strokeWidth="0.6" />
-
-          {/* 8 Radios dorados y puntas geométricas */}
-          <g transform="translate(18, 18)">
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((ang, i) => (
-              <g key={i} transform={`rotate(${ang})`}>
-                <line x1="0" y1="0" x2="0" y2="-14.5" stroke="#FFCA26" strokeWidth="1.2" />
-                <circle cx="0" cy="-10" r="1.1" fill="#19532B" />
-                <polygon points="-1.5,-6 1.5,-6 0,-4" fill="#C22727" />
-              </g>
-            ))}
-          </g>
-
-          {/* Maza central dorada con centro negro */}
-          <circle cx="18" cy="18" r="4.2" fill="#FFCA26" stroke="#C22727" strokeWidth="1" />
-          <circle cx="18" cy="18" r="1.8" fill="#131313" />
+          <use href="#mandala-carreta-wheel" />
         </svg>
       );
 
@@ -153,8 +131,133 @@ export default function NationalSymbolIcon({ symbolId, size = 34, className = ''
         </svg>
       );
 
-    // 4. Escudo Nacional de Costa Rica
+    // 4. Colibrí Costarricense en vuelo (Trochilidae) — Sustituye al Escudo en CCDR
     case 'ccdr':
+    case 'colibri':
+      return (
+        <svg
+          width={s}
+          height={s}
+          viewBox="0 0 36 36"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={`colibri-symbol transition-transform duration-200 ${className}`}
+          aria-label="Símbolo de Biodiversidad: Colibrí Costarricense en vuelo"
+          style={{
+            transition: 'transform 200ms ease',
+            transformOrigin: 'center'
+          }}
+        >
+          <defs>
+            {/* Degradado Verde Esmeralda Radiante */}
+            <linearGradient id="colibriEmerald" x1="10" y1="8" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#34D399" />
+              <stop offset="35%" stopColor="#00A86B" />
+              <stop offset="100%" stopColor="#19532B" />
+            </linearGradient>
+
+            {/* Degradado Azul Turquesa / Zafiro para el pecho */}
+            <linearGradient id="colibriSapphireChest" x1="14" y1="14" x2="22" y2="24" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#22D3EE" />
+              <stop offset="40%" stopColor="#06B6D4" />
+              <stop offset="80%" stopColor="#0284C7" />
+              <stop offset="100%" stopColor="#0369A1" />
+            </linearGradient>
+
+            {/* Degradado Violeta / Amatista Iridiscente para la garganta */}
+            <linearGradient id="colibriVioletGorget" x1="14" y1="13" x2="19" y2="18" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#C084FC" />
+              <stop offset="50%" stopColor="#8B5CF6" />
+              <stop offset="100%" stopColor="#6D28D9" />
+            </linearGradient>
+
+            {/* Degradado del Ala Arqueada */}
+            <linearGradient id="colibriWingGrad" x1="20" y1="3" x2="33" y2="20" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#10B981" />
+              <stop offset="50%" stopColor="#00A86B" />
+              <stop offset="100%" stopColor="#064E3B" />
+            </linearGradient>
+          </defs>
+
+          {/* Ala Lejana (en el fondo, ángulo de aleteo superior) */}
+          <path
+            d="M 17 12 C 17 6 22 1.5 27 2 C 25 6 21 10 18 14 Z"
+            fill="#047857"
+            opacity="0.85"
+          />
+          <path
+            d="M 19 8 C 22 4 25.5 2.5 26.5 2.5 C 24.5 5 21.5 8 19 9 Z"
+            fill="#065F46"
+            opacity="0.9"
+          />
+
+          {/* Cola Ahorquillada (Forked tail) con dos timoneras divergentes */}
+          <path
+            d="M 23 23 L 30 31.5 C 29 32 27 30.5 22 25 Z"
+            fill="#0F766E"
+          />
+          <path
+            d="M 24 23 L 34 29 C 33.5 30 30.5 28.5 23.5 24 Z"
+            fill="#065F46"
+          />
+          {/* Hendidura central de la horquilla */}
+          <polygon points="23,23 28,27 24,24" fill="#042F2E" opacity="0.6" />
+
+          {/* Lomo y Cuerpo Verde Esmeralda */}
+          <path
+            d="M 16 11 C 21 11 25 15 25 21 C 25 25 20.5 25.5 17.5 23 C 15.5 20 15 14 16 11 Z"
+            fill="url(#colibriEmerald)"
+          />
+
+          {/* Pecho con Destellos Azul Turquesa / Zafiro */}
+          <path
+            d="M 16 15 C 15 19 17.5 23.5 21 24 C 22 22 22 18.5 18.5 16 Z"
+            fill="url(#colibriSapphireChest)"
+          />
+
+          {/* Destello sutil Violeta en la Garganta (Gorget iridiscente) */}
+          <path
+            d="M 14.8 14.2 C 16.2 16.8 18.5 17.2 19 15 C 17.5 14.5 16 13.8 14.8 14.2 Z"
+            fill="url(#colibriVioletGorget)"
+          />
+
+          {/* Cabeza aerodinámica y corona esmeralda */}
+          <circle cx="16.5" cy="12.5" r="3.6" fill="#00A86B" />
+          <path d="M 14.5 10 C 16.5 9 19 10 19.5 11.5 C 18 10.8 15.8 10.5 14.5 10 Z" fill="#6EE7B7" opacity="0.75" />
+
+          {/* Ojo vivaz oscuro con microbrillo */}
+          <circle cx="15.8" cy="11.8" r="0.9" fill="#0F172A" />
+          <circle cx="15.5" cy="11.5" r="0.3" fill="#FFFFFF" />
+
+          {/* Pico Fino y Alargado (Pico nectarívoro estilizado) */}
+          <path
+            d="M 14.5 13.2 L 2.5 15.6 L 14.2 14.2 Z"
+            fill="#0F172A"
+          />
+
+          {/* Ala Cercana Arqueada en Pleno Aleteo Dinámico */}
+          <path
+            d="M 18.5 14 C 21 5 28 0.5 33 1.5 C 31 6.5 26 13 20 17.5 Z"
+            fill="url(#colibriWingGrad)"
+          />
+          {/* Plumas primarias y secundarias con gradación esmeralda brillante */}
+          <path
+            d="M 20 13.5 C 22.5 6.5 28 3 31.5 3 C 28.5 7 24.5 12 21 16 Z"
+            fill="#34D399"
+            opacity="0.65"
+          />
+          <path
+            d="M 21.5 14 C 23.5 9.5 27 6.5 29.5 6 C 27.5 9 24.5 13 22 15.5 Z"
+            fill="#A7F3D0"
+            opacity="0.45"
+          />
+
+          {/* Resplandor y reflejo dorsal tornasol */}
+          <ellipse cx="20" cy="18" rx="1.6" ry="3.2" fill="#6EE7B7" opacity="0.35" transform="rotate(-20 20 18)" />
+        </svg>
+      );
+
+    // Escudo Nacional de Costa Rica (disponible para referencias específicas)
     case 'escudo':
       return (
         <svg

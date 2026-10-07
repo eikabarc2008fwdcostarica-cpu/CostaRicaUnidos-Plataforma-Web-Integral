@@ -72,7 +72,7 @@ import {
   obtenerMetricasGestionMunicipal
 } from '../services/adminService';
 import * as adminService from '../services/adminService';
-import { actualizarEstadoSolicitudApi } from '../services/comercioService';
+import { actualizarEstadoSolicitudApi, obtenerSolicitudesComercioApi } from '../services/comercioService';
 
 // Sectores normados para asignación de puestos de feria
 const SECTORES_FERIA = [
@@ -323,9 +323,8 @@ export default function Dashboard() {
     window.addEventListener('cru_db_updated', reloadData);
     window.addEventListener('cru_admin_updated', reloadData);
 
-    // Sincronización inicial directa con json-server (db.json)
-    fetch('http://localhost:3001/solicitudesComercio')
-      .then((res) => (res.ok ? res.json() : null))
+    // Sincronización inicial directa con backend (/api/solicitudesComercio o db.json)
+    obtenerSolicitudesComercioApi()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setSolicitudes(data);
@@ -335,7 +334,7 @@ export default function Dashboard() {
         }
       })
       .catch((err) => {
-        console.warn('[Dashboard] json-server no disponible en :3001, usando dbClient local:', err);
+        console.warn('[Dashboard] Error al sincronizar solicitudes de comercio:', err);
       });
 
     return () => {
@@ -1025,93 +1024,38 @@ export default function Dashboard() {
 
   const handleAsignarPuestoFeria = async (solicitudId, sector = "Sector A") => {
     const sectorFinal = sector || "Sector A";
-    const cambios = {
-      estado: "aprobado",
-      asignacion: sectorFinal,
-      sectorFeria: sectorFinal,
-      sectorFeriaSolicitado: sectorFinal,
-      detalleAsignacion: `Puesto asignado formalmente en ${sectorFinal}.`,
-      verificado: true,
-      verificadoHacienda: true,
-      fechaResolucion: new Date().toISOString()
-    };
-
     try {
-      // Ajustar endpoint a la colección exacta de db.json (solicitudesComercio)
-      const endpoint = `http://localhost:3001/solicitudesComercio/${solicitudId}`;
-      const res = await fetch(endpoint, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cambios)
-      });
-
-      // Sincronizar en solicitudes_emprendedor si existe en db.json
-      try {
-        await fetch(`http://localhost:3001/solicitudes_emprendedor/${solicitudId}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(cambios)
-        });
-      } catch (_) {}
-
-      try {
-        dbClient.update('solicitudesComercio', solicitudId, cambios);
-      } catch (_) {}
-
-      if (res.ok) {
-        // Actualizar tabla visual en React
+      const guardadoExitoso = await actualizarEstadoSolicitudApi(solicitudId, 'aprobado', undefined, sectorFinal);
+      if (guardadoExitoso) {
         setSolicitudes((prev) =>
-          prev.map((s) => (s.id === solicitudId ? { ...s, ...cambios } : s))
+          prev.map((s) => (s.id === solicitudId ? { ...s, estado: 'aprobado', asignacion: sectorFinal, sectorFeria: sectorFinal, verificado: true } : s))
         );
+        resolverSolicitudComercio(solicitudId, 'APROBADO', `Puesto asignado formalmente en ${sectorFinal}.`);
         showToast(`Puesto asignado formalmente en ${sectorFinal}.`);
       } else {
-        showToast("Error al actualizar estado en db.json.");
+        showToast("Error al actualizar estado de solicitud.");
       }
     } catch (error) {
-      console.error("Error al conectar con json-server:", error);
-      showToast("Error de conexión con json-server en el puerto 3001.");
+      console.error("Error al asignar puesto:", error);
+      showToast("Error al asignar puesto en el servidor.");
     }
   };
 
   const handleOtorgarSelloVerificado = async (solicitudId) => {
-    const cambios = {
-      estado: "aprobado",
-      verificado: true,
-      verificadoHacienda: true,
-      fechaResolucion: new Date().toISOString()
-    };
-
     try {
-      const endpoint = `http://localhost:3001/solicitudesComercio/${solicitudId}`;
-      const res = await fetch(endpoint, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cambios)
-      });
-
-      try {
-        await fetch(`http://localhost:3001/solicitudes_emprendedor/${solicitudId}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(cambios)
-        });
-      } catch (_) {}
-
-      try {
-        dbClient.update('solicitudesComercio', solicitudId, cambios);
-      } catch (_) {}
-
-      if (res.ok) {
+      const guardadoExitoso = await actualizarEstadoSolicitudApi(solicitudId, 'aprobado');
+      if (guardadoExitoso) {
         setSolicitudes((prev) =>
-          prev.map((s) => (s.id === solicitudId ? { ...s, ...cambios } : s))
+          prev.map((s) => (s.id === solicitudId ? { ...s, estado: 'aprobado', verificado: true, verificadoHacienda: true } : s))
         );
-        showToast("Sello Verificado y patente municipal otorgados con éxito en db.json.");
+        resolverSolicitudComercio(solicitudId, 'APROBADO', 'Patente municipal y acreditación comercial otorgadas.');
+        showToast("Sello Verificado y patente municipal otorgados con éxito.");
       } else {
         showToast("Error al actualizar estado en db.json.");
       }
     } catch (error) {
-      console.error("Error al otorgar sello en json-server:", error);
-      showToast("Error de conexión con json-server en el puerto 3001.");
+      console.error("Error al otorgar sello:", error);
+      showToast("Error de conexión al actualizar solicitud.");
     }
   };
 

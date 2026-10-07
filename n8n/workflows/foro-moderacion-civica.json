@@ -1,0 +1,659 @@
+[
+  {
+    "id": "ForoModCivic8968",
+    "name": "Foro – Moderación Cívica y Blindaje de Privacidad",
+    "active": true,
+    "settings": {
+      "executionOrder": "v1",
+      "saveDataErrorExecution": "none",
+      "saveDataSuccessExecution": "none",
+      "saveManualExecutions": false
+    },
+    "nodes": [
+      {
+        "id": "webhook-input",
+        "name": "Webhook - Entrada Foro",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          100,
+          200
+        ],
+        "webhookId": "foro-moderacion",
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "foro-moderacion",
+          "responseMode": "responseNode",
+          "options": {}
+        }
+      },
+      {
+        "id": "preparar-y-filtrar",
+        "name": "Preparar y Filtrar",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          320,
+          200
+        ],
+        "parameters": {
+          "jsCode": "// 1. Extraer cuerpo\nconst body = $json.body ?? $json;\n\n// 2. Validación de contrato\nconst tipo = body.tipo; // 'post' | 'comentario'\nconst id = body.id;\nconst postId = body.postId;\nconst textoRaw = body.texto;\nconst autorId = body.autorId;\nconst rolAutorRaw = body.rolAutor || 'Ciudadano';\nconst ambito = body.ambito || 'nacional';\nconst provincia = body.provincia || 'San José';\nconst canton = body.canton || 'San José';\nconst momento = body.momento || 'post';\n\nif (!tipo || !id || textoRaw === undefined || textoRaw === null || !autorId) {\n  return [{\n    json: {\n      contractError: true,\n      errorMsg: 'Faltan campos obligatorios en el contrato de entrada: tipo, id, texto o autorId.',\n      status: 400\n    }\n  }];\n}\n\n// 3. Idempotencia y prevención de bucles\nif (body.moderadoPorN8n === true) {\n  return [{\n    json: {\n      yaProcesado: true,\n      ok: true,\n      estado: body.estado || 'activo',\n      textoFinal: String(textoRaw),\n      avisoPrivacidad: false\n    }\n  }];\n}\n\n// 4. Normalización de texto (trim y máx 5.000 caracteres)\nconst texto = String(textoRaw).trim().slice(0, 5000);\n\n// 5. Verificación de roles exentos de sanción\nconst rolStr = String(rolAutorRaw).toLowerCase();\nconst esExento = rolStr.includes('super admin') ||\n  rolStr.includes('superadministrador') ||\n  rolStr.includes('gestor') ||\n  rolStr.includes('auditor');\n\n// 6. Mapa de moderadores cantonales de respaldo\nconst moderadoresCanton = {\n  'San José': 'eik@gmail.com',\n  'Escazú': 'gestor.escazu@crviva.cr',\n  'Desamparados': 'gestor.desamparados@crviva.cr',\n  'Alajuela': 'gestor.alajuela@crviva.cr',\n  'Cartago': 'gestor.cartago@crviva.cr',\n  'Heredia': 'gestor.heredia@crviva.cr',\n  'Puntarenas': 'gestor.puntarenas@crviva.cr'\n};\nconst moderadorEmail = moderadoresCanton[canton] || 'moderacion.nacional@crviva.cr';\n\nreturn [{\n  json: {\n    contractError: false,\n    yaProcesado: false,\n    tipo,\n    id,\n    postId,\n    textoOriginalSeguro: texto,\n    autorId,\n    rolAutor: rolAutorRaw,\n    esExento,\n    ambito,\n    provincia,\n    canton,\n    moderadorEmail,\n    momento\n  }\n}];"
+        }
+      },
+      {
+        "id": "filtro-contrato",
+        "name": "Validar Contrato OK",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          540,
+          200
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "leftValue": "={{ $json.contractError }}",
+                "rightValue": true,
+                "operator": {
+                  "type": "boolean",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          }
+        }
+      },
+      {
+        "id": "respond-400",
+        "name": "Responder 400 Bad Request",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          760,
+          50
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: false, error: \"BAD_REQUEST\", message: $json.errorMsg || \"Contrato inválido\" }) }}",
+          "options": {
+            "responseCode": 400
+          }
+        }
+      },
+      {
+        "id": "filtro-ya-procesado",
+        "name": "Validar Ya Procesado",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          760,
+          300
+        ],
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "leftValue": "={{ $json.yaProcesado }}",
+                "rightValue": true,
+                "operator": {
+                  "type": "boolean",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          }
+        }
+      },
+      {
+        "id": "respond-ya-procesado",
+        "name": "Responder Ya Procesado",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          980,
+          200
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ ok: true, estado: $json.estado, textoFinal: $json.textoFinal, avisoPrivacidad: false, yaProcesado: true }) }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      },
+      {
+        "id": "enmascarado-regex",
+        "name": "Enmascarado Determinista (Ley 8968)",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          980,
+          420
+        ],
+        "parameters": {
+          "jsCode": "let texto = String($json.textoOriginalSeguro || '');\n\nlet countCedulas = 0;\nlet countTelefonos = 0;\nlet countCorreos = 0;\n\n// 1. Correos electrónicos\nconst regexCorreo = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/gi;\ntexto = texto.replace(regexCorreo, () => {\n  countCorreos++;\n  return '[CORREO OCULTO]';\n});\n\n// 2. Cédula nacional costarricense (formatos: 1-2345-6789, 1 2345 6789, 123456789)\n// Evita confundir años de 4 dígitos o montos comunes requiriendo prefijo de provincia 1 a 9\nconst regexCedula = /\\b[1-9][\\s-]\\d{4}[\\s-]\\d{4}\\b/g;\ntexto = texto.replace(regexCedula, () => {\n  countCedulas++;\n  return '[CÉDULA OCULTA]';\n});\n\n// Cédula sin guiones (9 dígitos exactos comenzando en 1-9)\nconst regexCedulaSinGuion = /\\b[1-9]\\d{8}\\b/g;\ntexto = texto.replace(regexCedulaSinGuion, () => {\n  countCedulas++;\n  return '[CÉDULA OCULTA]';\n});\n\n// DIMEX (11 a 12 dígitos)\nconst regexDimex = /\\b\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{3,4}\\b/g;\ntexto = texto.replace(regexDimex, () => {\n  countCedulas++;\n  return '[CÉDULA OCULTA]';\n});\n\n// 3. Teléfonos de Costa Rica (8 dígitos: móvil 5-8, fijo 2; con o sin +506)\nconst regexTelefono = /(?:\\+?506[\\s-]?)?\\b[25-8]\\d{3}[\\s-]?\\d{4}\\b/g;\ntexto = texto.replace(regexTelefono, () => {\n  countTelefonos++;\n  return '[TELÉFONO OCULTO]';\n});\n\nconst totalHallazgos = countCedulas + countTelefonos + countCorreos;\n\nreturn [{\n  json: {\n    ...$json,\n    textoEnmascarado: texto,\n    hallazgosRegex: {\n      cedulas: countCedulas,\n      telefonos: countTelefonos,\n      correos: countCorreos,\n      total: totalHallazgos\n    },\n    avisoPrivacidadRegex: totalHallazgos > 0\n  }\n}];"
+        }
+      },
+      {
+        "id": "chain-llm",
+        "name": "Basic LLM Chain - Gemini Moderador",
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.5,
+        "position": [
+          1260,
+          420
+        ],
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ \"Eres un clasificador de moderación cívica para el Foro de Costa Rica Unidos. Analiza el siguiente contenido:\\n\\n\" + $json.textoEnmascarado + \"\\n\\nINSTRUCCIONES CLAVES:\\n1. CRÍTICA POLÍTICA O MUNICIPAL LEGÍTIMA: Comentarios sobre baches, huecos en calles, ineficiencia municipal o críticas al alcalde/regidores son legítimos y NO son infracción (veredicto: \\\"seguro\\\").\\n2. INFRACCIONES REALES: Insultos directos vulgares, discurso de odio, acoso o amenazas directas o veladas (ej. \\\"ya sé dónde vive, que se cuide\\\") son veredicto \\\"infractor\\\".\\n3. EN CASO DE DUDA LEVE: Prefiere \\\"revisar\\\".\\n4. PRIVACIDAD: Si detectas datos personales de terceros que aún queden expuestos (nombres con cédula, direcciones exactas de personas), enmascáralos en textoFinal usando [DIRECCIÓN OCULTA], etc.\" }}"
+        }
+      },
+      {
+        "id": "gemini-model",
+        "name": "Google Gemini Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "typeVersion": 1.1,
+        "position": [
+          1200,
+          640
+        ],
+        "credentials": {
+          "googlePalmApi": {
+            "id": "BKQjmRuEwC7QO8An",
+            "name": "Google Gemini(PaLM) Api account 2"
+          }
+        },
+        "parameters": {
+          "modelName": "models/gemini-2.5-flash",
+          "options": {
+            "temperature": 0.1,
+            "maxOutputTokens": 2048,
+            "safetySettings": {
+              "values": [
+                {
+                  "category": "HARM_CATEGORY_HARASSMENT",
+                  "threshold": "BLOCK_NONE"
+                },
+                {
+                  "category": "HARM_CATEGORY_HATE_SPEECH",
+                  "threshold": "BLOCK_NONE"
+                },
+                {
+                  "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                  "threshold": "BLOCK_NONE"
+                },
+                {
+                  "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                  "threshold": "BLOCK_NONE"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "structured-output-parser",
+        "name": "Structured Output Parser",
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          1380,
+          640
+        ],
+        "parameters": {
+          "schemaType": "fromJson",
+          "autoFix": true,
+          "jsonSchemaExample": "{\n  \"datosPersonalesDetectados\": false,\n  \"tiposDatos\": [\n    \"cedula\",\n    \"telefono\",\n    \"direccion\"\n  ],\n  \"textoFinal\": \"texto enmascarado seguro\",\n  \"convivencia\": {\n    \"infraccion\": false,\n    \"categoria\": \"ninguna\",\n    \"severidad\": \"baja\",\n    \"motivo\": \"Comentario conforme a las normas cívicas\"\n  },\n  \"veredicto\": \"seguro\",\n  \"confianza\": 0.95\n}"
+        }
+      },
+      {
+        "id": "consolidar-veredicto",
+        "name": "Consolidar Veredicto y Salida",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1560,
+          420
+        ],
+        "parameters": {
+          "jsCode": "// Recuperar datos previos del nodo de enmascarado\nlet prev = {};\ntry {\n  prev = $('Enmascarado Determinista (Ley 8968)').first()?.json || $('Enmascarado Determinista (Ley 8968)').item?.json || {};\n} catch (e) {\n  prev = {};\n}\nconst llmRaw = $json.output ?? $json;\n\nlet iaFallo = false;\nlet geminiRes = null;\n\nif (typeof llmRaw === 'object' && llmRaw !== null && (llmRaw.veredicto || llmRaw.convivencia)) {\n  geminiRes = llmRaw;\n} else if (typeof llmRaw === 'string') {\n  try {\n    const cleaned = llmRaw.replace(/^```json/i, '').replace(/```$/i, '').trim();\n    geminiRes = JSON.parse(cleaned);\n  } catch (e) {\n    iaFallo = true;\n  }\n} else {\n  iaFallo = true;\n}\n\nconst hallazgosRegex = prev.hallazgosRegex || { total: 0 };\nconst textoBase = prev.textoEnmascarado || '';\n\nlet textoFinal = textoBase;\nlet veredictoFinal = 'seguro';\nlet categoria = 'ninguna';\nlet severidad = 'baja';\nlet motivo = 'Contenido cívico seguro';\nlet confianza = 1.0;\nlet datosPersonalesDetectados = hallazgosRegex.total > 0;\nlet tiposDatos = [];\n\nif (hallazgosRegex.cedulas > 0) tiposDatos.push('cedula');\nif (hallazgosRegex.telefonos > 0) tiposDatos.push('telefono');\nif (hallazgosRegex.correos > 0) tiposDatos.push('correo');\n\nif (iaFallo || !geminiRes) {\n  // Fail-open controlado: no ocultar por fallo técnico, pero marcar revisión\n  veredictoFinal = 'revisar';\n  motivo = 'Gemini no disponible; fail-open aplicado con enmascarado regex';\n  confianza = 0.5;\n} else {\n  if (geminiRes.textoFinal && typeof geminiRes.textoFinal === 'string') {\n    textoFinal = geminiRes.textoFinal;\n  }\n  if (geminiRes.datosPersonalesDetectados) {\n    datosPersonalesDetectados = true;\n    if (Array.isArray(geminiRes.tiposDatos)) {\n      tiposDatos = Array.from(new Set([...tiposDatos, ...geminiRes.tiposDatos]));\n    }\n  }\n\n  const veredictoGemini = String(geminiRes.veredicto || 'seguro').toLowerCase();\n  const infraccion = Boolean(geminiRes.convivencia?.infraccion);\n  categoria = geminiRes.convivencia?.categoria || 'ninguna';\n  severidad = geminiRes.convivencia?.severidad || 'baja';\n  motivo = geminiRes.convivencia?.motivo || 'Evaluación de convivencia ciudadana';\n  confianza = typeof geminiRes.confianza === 'number' ? geminiRes.confianza : 0.9;\n\n  // Lógica de Veredicto Final:\n  // Si autor es exento (Super Admin, Gestor, Auditor), salta sanción (máximo revisar si hubiese duda)\n  if (prev.esExento) {\n    veredictoFinal = 'seguro';\n  } else if ((veredictoGemini === 'infractor' || infraccion) && confianza >= 0.6) {\n    veredictoFinal = 'infractor';\n  } else if (veredictoGemini === 'revisar' || (infraccion && confianza < 0.6)) {\n    veredictoFinal = 'revisar';\n  } else {\n    veredictoFinal = 'seguro';\n  }\n}\n\nconst avisoPrivacidad = datosPersonalesDetectados;\nlet estadoRegistro = 'activo';\nif (veredictoFinal === 'infractor') {\n  estadoRegistro = 'oculto';\n} else if (veredictoFinal === 'revisar') {\n  estadoRegistro = 'activo'; // Permanece activo con marca pendienteRevision\n}\n\nreturn [{\n  json: {\n    ...prev,\n    textoFinal,\n    veredictoFinal,\n    categoria,\n    severidad,\n    motivo,\n    confianza,\n    datosPersonalesDetectados,\n    tiposDatos,\n    avisoPrivacidad,\n    estadoRegistro,\n    iaFallo,\n    fechaIso: new Date().toISOString()\n  }\n}];"
+        }
+      },
+      {
+        "id": "router-switch",
+        "name": "Router de Veredicto",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.4,
+        "position": [
+          1800,
+          420
+        ],
+        "parameters": {
+          "mode": "expression",
+          "numberOutputs": 3,
+          "output": "={{ $json.veredictoFinal === 'seguro' ? 0 : ($json.veredictoFinal === 'revisar' ? 1 : 2) }}"
+        }
+      },
+      {
+        "id": "patch-seguro-con-enmascarado",
+        "name": "Actualizar Post Texto Enmascarado",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2050,
+          220
+        ],
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "method": "PATCH",
+          "url": "=http://127.0.0.1:5175/api/foro_posts/{{ $json.id }}",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({\n          id: $json.id,\n          contenido: $json.textoFinal,\n          moderadoPorN8n: true\n        }) }}",
+          "options": {
+            "timeout": 5000,
+            "maxRetries": 2
+          }
+        }
+      },
+      {
+        "id": "respond-seguro",
+        "name": "Responder Seguro",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          2300,
+          220
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({\n          ok: true,\n          estado: \"activo\",\n          textoFinal: $('Consolidar Veredicto y Salida').item.json.textoFinal,\n          avisoPrivacidad: $('Consolidar Veredicto y Salida').item.json.avisoPrivacidad\n        }) }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      },
+      {
+        "id": "patch-revisar-post",
+        "name": "Marcar Post Pendiente Revisión",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2050,
+          420
+        ],
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "method": "PATCH",
+          "url": "=http://127.0.0.1:5175/api/foro_posts/{{ $json.id }}",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({\n          id: $json.id,\n          contenido: $json.textoFinal,\n          pendienteRevision: true,\n          moderadoPorN8n: true\n        }) }}",
+          "options": {
+            "timeout": 5000,
+            "maxRetries": 2
+          }
+        }
+      },
+      {
+        "id": "notificar-moderador-revisar",
+        "name": "Crear Ticket Moderador Cantonal",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2300,
+          420
+        ],
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "method": "POST",
+          "url": "http://127.0.0.1:5175/api/moderacionContenido",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({\n          id: \"MOD-N8N-\" + Date.now(),\n          registroId: $json.id,\n          tipoContenido: $json.tipo,\n          canton: $json.canton,\n          provincia: $json.provincia,\n          moderadorAsignado: $json.moderadorEmail,\n          categoria: $json.categoria,\n          severidad: $json.severidad,\n          motivo: $json.motivo,\n          accionTomada: \"MARCADO_PARA_REVISION\",\n          origen: \"n8n\",\n          fechaReporte: $json.fechaIso\n        }) }}",
+          "options": {
+            "timeout": 5000,
+            "maxRetries": 2
+          }
+        }
+      },
+      {
+        "id": "respond-revisar",
+        "name": "Responder Revisar",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          2550,
+          420
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({\n          ok: true,\n          estado: \"revision\",\n          textoFinal: $('Consolidar Veredicto y Salida').item.json.textoFinal,\n          avisoPrivacidad: $('Consolidar Veredicto y Salida').item.json.avisoPrivacidad\n        }) }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      },
+      {
+        "id": "patch-ocultar-post",
+        "name": "Ocultar Contenido Infractor",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2050,
+          620
+        ],
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "method": "PATCH",
+          "url": "=http://127.0.0.1:5175/api/foro_posts/{{ $json.id }}",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({\n          id: $json.id,\n          estado: \"oculto\",\n          contenido: $json.textoFinal,\n          moderadoPorN8n: true\n        }) }}",
+          "options": {
+            "timeout": 5000,
+            "maxRetries": 2
+          }
+        }
+      },
+      {
+        "id": "post-sancion-foro",
+        "name": "Registrar en sanciones_foro",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2300,
+          620
+        ],
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "method": "POST",
+          "url": "http://127.0.0.1:5175/api/sanciones_foro",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({\n          id: \"SANC-N8N-\" + Date.now(),\n          registroId: $json.id,\n          tipo: $json.tipo,\n          usuarioId: $json.autorId,\n          categoria: $json.categoria,\n          severidad: $json.severidad,\n          motivo: $json.motivo,\n          veredicto: \"infractor\",\n          confianza: $json.confianza,\n          hallazgosPrivacidad: {\n            tipos: $json.tiposDatos,\n            total: $json.hallazgosRegex ? $json.hallazgosRegex.total : 0\n          },\n          modelo: \"gemini-2.5-flash\",\n          fecha: $json.fechaIso,\n          origen: \"n8n\",\n          estado: \"activa\"\n        }) }}",
+          "options": {
+            "timeout": 5000,
+            "maxRetries": 2
+          }
+        }
+      },
+      {
+        "id": "notificar-moderador-infraccion",
+        "name": "Notificar Moderador Cantonal Infracción",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2550,
+          620
+        ],
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "method": "POST",
+          "url": "http://127.0.0.1:5175/api/moderacionContenido",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify({\n          id: \"MOD-INC-\" + Date.now(),\n          registroId: $json.id,\n          tipoContenido: $json.tipo,\n          canton: $json.canton,\n          provincia: $json.provincia,\n          moderadorAsignado: $json.moderadorEmail,\n          categoria: $json.categoria,\n          severidad: $json.severidad,\n          motivo: $json.motivo,\n          accionTomada: \"CONTENIDO_OCULTADO_SANCION_REGISTRADA\",\n          origen: \"n8n\",\n          fechaReporte: $json.fechaIso\n        }) }}",
+          "options": {
+            "timeout": 5000,
+            "maxRetries": 2
+          }
+        }
+      },
+      {
+        "id": "email-moderador-opcional",
+        "name": "Notificación Email Moderador (Opcional)",
+        "type": "n8n-nodes-base.emailSend",
+        "typeVersion": 2.1,
+        "position": [
+          2800,
+          720
+        ],
+        "disabled": true,
+        "parameters": {
+          "fromEmail": "moderacion@crviva.cr",
+          "toEmail": "={{ $json.moderadorEmail }}",
+          "subject": "=Alerta de Moderación Cívica - Cantón {{ $json.canton }}",
+          "text": "=Se ha detectado una infracción en el foro del cantón {{ $json.canton }}. Motivo: {{ $json.motivo }}. Categoría: {{ $json.categoria }}. Acción: Contenido ocultado y sanción registrada."
+        }
+      },
+      {
+        "id": "respond-infractor",
+        "name": "Responder Infractor",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          2800,
+          620
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({\n          ok: true,\n          estado: \"oculto\",\n          textoFinal: $('Consolidar Veredicto y Salida').item.json.textoFinal,\n          avisoPrivacidad: $('Consolidar Veredicto y Salida').item.json.avisoPrivacidad\n        }) }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook - Entrada Foro": {
+        "main": [
+          [
+            {
+              "node": "Preparar y Filtrar",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Preparar y Filtrar": {
+        "main": [
+          [
+            {
+              "node": "Validar Contrato OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Contrato OK": {
+        "main": [
+          [
+            {
+              "node": "Responder 400 Bad Request",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Validar Ya Procesado",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Ya Procesado": {
+        "main": [
+          [
+            {
+              "node": "Responder Ya Procesado",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Enmascarado Determinista (Ley 8968)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Enmascarado Determinista (Ley 8968)": {
+        "main": [
+          [
+            {
+              "node": "Basic LLM Chain - Gemini Moderador",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Gemini Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Basic LLM Chain - Gemini Moderador",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Basic LLM Chain - Gemini Moderador",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Basic LLM Chain - Gemini Moderador": {
+        "main": [
+          [
+            {
+              "node": "Consolidar Veredicto y Salida",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consolidar Veredicto y Salida": {
+        "main": [
+          [
+            {
+              "node": "Router de Veredicto",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Router de Veredicto": {
+        "main": [
+          [
+            {
+              "node": "Actualizar Post Texto Enmascarado",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Marcar Post Pendiente Revisión",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Ocultar Contenido Infractor",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Actualizar Post Texto Enmascarado": {
+        "main": [
+          [
+            {
+              "node": "Responder Seguro",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Marcar Post Pendiente Revisión": {
+        "main": [
+          [
+            {
+              "node": "Crear Ticket Moderador Cantonal",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Crear Ticket Moderador Cantonal": {
+        "main": [
+          [
+            {
+              "node": "Responder Revisar",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Ocultar Contenido Infractor": {
+        "main": [
+          [
+            {
+              "node": "Registrar en sanciones_foro",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar en sanciones_foro": {
+        "main": [
+          [
+            {
+              "node": "Notificar Moderador Cantonal Infracción",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Moderador Cantonal Infracción": {
+        "main": [
+          [
+            {
+              "node": "Responder Infractor",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    }
+  }
+]

@@ -6,6 +6,7 @@ import { agregarComentario } from '../../services/foroService';
 import { obtenerNombrePublico } from '../../utils/privacyUtils';
 import { VERSION_REGLAS_FORO, haAceptadoReglas, registrarAceptacionReglas } from '../../config/reglasForo';
 import { inspeccionarContenidoForo } from '../../services/moderacionForoService';
+import { enviarAModeracionN8n } from '../../services/n8nModeracionService';
 import ReglasComunidadModal from './ReglasComunidadModal';
 import IncidenteModeracionModal from './IncidenteModeracionModal';
 import PerfilPublicoModal from '../perfil/PerfilPublicoModal';
@@ -106,6 +107,45 @@ export default function ComentariosSection({ post, onPostActualizado }) {
       setContenido('');
       setExitoMsg(true);
       setTimeout(() => setExitoMsg(false), 2500);
+
+      // =====================================================================
+      // CAPA COMPLEMENTARIA N8N: BLINDAJE LEY N.º 8968 Y AUDITORÍA CÍVICA
+      // No bloqueante para el comentario en la interfaz
+      // =====================================================================
+      const nuevoComentario = (updatedPost?.comentarios || []).slice(-1)[0] || {};
+      enviarAModeracionN8n({
+        tipo: 'comentario',
+        id: nuevoComentario.id || `com-${Date.now()}`,
+        postId: post.id,
+        texto: contenido.trim(),
+        autorId: user?.id || 'USR-ANON',
+        rolAutor: user?.rol || 'Ciudadano',
+        ambito: post.provinciaId === 'nacional' ? 'nacional' : 'provincial',
+        provincia: post.provinciaNombre || 'San José',
+        canton: user?.canton || 'San José',
+        momento: 'post'
+      }).then((resN8n) => {
+        if (!resN8n || resN8n.omitido) return;
+        if (resN8n.estado === 'oculto') {
+          console.warn('[n8n] Comentario ocultado preventivamente por auditoría n8n.');
+          const comentariosFiltrados = (updatedPost.comentarios || []).filter(
+            (c) => c.id !== nuevoComentario.id
+          );
+          if (onPostActualizado) {
+            onPostActualizado({ ...updatedPost, comentarios: comentariosFiltrados });
+          }
+        } else if (resN8n.avisoPrivacidad && resN8n.textoFinal) {
+          console.info('[n8n] Datos personales en comentario protegidos bajo Ley N.º 8968.');
+          const comentariosModificados = (updatedPost.comentarios || []).map((c) =>
+            c.id === nuevoComentario.id ? { ...c, contenido: resN8n.textoFinal } : c
+          );
+          if (onPostActualizado) {
+            onPostActualizado({ ...updatedPost, comentarios: comentariosModificados });
+          }
+        }
+      }).catch((err) => {
+        console.error('[n8n] Error no bloqueante en auditoría de comentario:', err);
+      });
 
       if (onPostActualizado) {
         onPostActualizado(updatedPost);

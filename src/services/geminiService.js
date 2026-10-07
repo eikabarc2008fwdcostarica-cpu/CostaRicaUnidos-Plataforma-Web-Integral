@@ -7,8 +7,16 @@
  * 3. Base de conocimiento cívico de respaldo multi-idioma (8 idiomas oficiales) con entonación natural.
  */
 
-// Modelos soportados (prioriza la versión Flash ultrarrápida para baja latencia en voz)
-export const GEMINI_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.5-flash'];
+import { enmascararDatosPersonales } from '../config/promptsIA';
+
+// Modelos soportados vigentes (prioriza VITE_GEMINI_MODEL si está definido en .env)
+const ENV_MODEL = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_MODEL) || null;
+export const GEMINI_MODELS = [
+  ...(ENV_MODEL && ENV_MODEL.trim() ? [ENV_MODEL.trim()] : []),
+  'gemini-2.5-flash',
+  'gemini-2.5-flash-lite',
+  'gemini-2.5-pro'
+];
 export const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 /**
@@ -668,3 +676,165 @@ function generateLocalContextualAnswer(question, step, lang = 'es-CR', canton = 
     isAiLive: false
   };
 }
+
+// Control de rate limiting en el cliente (1 petición cada 2 s)
+let ultimoUsoTimestamp = 0;
+const LIMITE_INTERVALO_MS = 2000;
+const MAX_CARACTERES_MENSAJE = 3000;
+
+/**
+ * Capa de servicio unificada para invocar Gemini (Foro Tico y Guía por Voz)
+ * Devuelve: { texto, modelo, latenciaMs }
+ *
+ * @param {object} params
+ * @param {string} params.sistema - Instrucción de sistema (systemInstruction)
+ * @param {Array} [params.historial] - Historial previo [{ role: 'user'|'model', text: string }]
+ * @param {string} params.mensaje - Mensaje o consulta actual del usuario
+ * @param {object} [params.opciones] - Opciones de generación (temperature, maxOutputTokens, topP)
+ * @returns {Promise<{ texto: string, modelo: string, latenciaMs: number }>}
+ */
+export async function generarRespuestaIA({
+  sistema = '',
+  historial = [],
+  mensaje = '',
+  opciones = {}
+}) {
+  const ahora = Date.now();
+  if (ahora - ultimoUsoTimestamp < LIMITE_INTERVALO_MS) {
+    const esperaMs = LIMITE_INTERVALO_MS - (ahora - ultimoUsoTimestamp);
+    await new Promise((resolve) => setTimeout(resolve, esperaMs));
+  }
+  ultimoUsoTimestamp = Date.now();
+
+  const apiKey = getGeminiApiKey();
+  if (!apiKey) {
+    const errorNoKey = new Error('La clave de API de Gemini no está configurada.');
+    errorNoKey.code = 'API_KEY_MISSING';
+    throw errorNoKey;
+  }
+
+  const mensajeSanitizado = enmascararDatosPersonales(String(mensaje || '').trim());
+  if (!mensajeSanitizado) {
+    throw new Error('El mensaje enviado a la IA está vacío.');
+  }
+
+  if (mensajeSanitizado.length > MAX_CARACTERES_MENSAJE) {
+    throw new Error(`El mensaje excede el límite máximo de ${MAX_CARACTERES_MENSAJE} caracteres.`);
+  }
+
+  // Sanitizar y estructurar historial si se suministra
+  const contents = [];
+  if (Array.isArray(historial) && historial.length > 0) {
+    for (const item of historial) {
+      if (item && item.text) {
+        contents.push({
+          role: item.role === 'model' ? 'model' : 'user',
+          parts: [{ text: enmascararDatosPersonales(item.text) }]
+        });
+      }
+    }
+  }
+
+  // Agregar mensaje actual del usuario
+  contents.push({
+    role: 'user',
+    parts: [{ text: mensajeSanitizado }]
+  });
+
+  const tiempoInicioTotal = Date.now();
+  const PRESUPUESTO_TOTAL_MS = 20000;
+  const TIMEOUT_MODELO_MS = 12000;
+
+  let ultimoError = null;
+
+  for (const model of GEMINI_MODELS) {
+    const tiempoTranscurrido = Date.now() - tiempoInicioTotal;
+    const tiempoRestante = PRESUPUESTO_TOTAL_MS - tiempoTranscurrido;
+    if (tiempoRestante <= 1000) {
+      break;
+    }
+
+    const timeoutThisModel = Math.min(TIMEOUT_MODELO_MS, tiempoRestante);
+    const controller = new AbortController();
+    const timerId = setTimeout(() => controller.abort(), timeoutThisModel);
+    const tInicioModelo = Date.now();
+
+    try {
+      const isGemini25 = model.toLowerCase().includes('gemini-2.5');
+      const generationConfig = {
+        temperature: opciones.temperature ?? 0.6,
+        maxOutputTokens: opciones.maxOutputTokens ?? 2048,
+        topP: opciones.topP ?? 0.9,
+        ...(isGemini25 ? { thinkingConfig: { thinkingBudget: 0 } } : {})
+      };
+
+      const requestPayload = {
+        ...(sistema ? { systemInstruction: { parts: [{ text: sistema }] } } : {}),
+        contents,
+        generationConfig
+      };
+
+      const url = `${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestPayload),
+        signal: controller.signal
+      });
+
+      clearTimeout(timerId);
+
+      if (!response.ok) {
+        let errorMsg = `HTTP ${response.status} en modelo ${model}`;
+        try {
+          const errData = await response.json();
+          if (errData?.error?.message) {
+            errorMsg = `HTTP ${response.status}: ${errData.error.message}`;
+          }
+        } catch {}
+        console.error(`[GeminiService] Error respuesta de API:`, errorMsg);
+        throw new Error(errorMsg);
+      }
+
+      const data = await response.json();
+
+      // Verificar si hubo bloqueo de seguridad del prompt
+      if (data?.promptFeedback?.blockReason) {
+        console.warn('[GeminiService] Prompt bloqueado por filtros de seguridad:', data.promptFeedback.blockReason);
+        return {
+          texto: 'La consulta no pudo ser procesada debido a las políticas de seguridad de contenido. Por favor intenta con otra redacción cívica.',
+          modelo: model,
+          latenciaMs: Date.now() - tInicioModelo
+        };
+      }
+
+      const candidate = data?.candidates?.[0];
+      const textoGenerado = candidate?.content?.parts?.[0]?.text;
+
+      if (!textoGenerado || !textoGenerado.trim()) {
+        const finishReason = candidate?.finishReason || 'SIN_TEXTO';
+        const errFinish = new Error(`Respuesta vacía recibida de la IA (finishReason: ${finishReason})`);
+        console.error('[GeminiService]', errFinish);
+        throw errFinish;
+      }
+
+      return {
+        texto: textoGenerado.trim(),
+        modelo: model,
+        latenciaMs: Date.now() - tInicioModelo
+      };
+    } catch (err) {
+      clearTimeout(timerId);
+      console.error(`[GeminiService] Fallo al consultar modelo ${model}:`, err.message);
+      ultimoError = err;
+    }
+  }
+
+  // Si se agotaron los modelos sin éxito
+  const errorFinal = new Error('La IA no está disponible en este momento. Por favor inténtalo de nuevo.');
+  errorFinal.causaTecnica = ultimoError?.message;
+  throw errorFinal;
+}
+
