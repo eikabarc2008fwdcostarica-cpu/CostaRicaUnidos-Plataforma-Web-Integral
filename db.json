@@ -11,7 +11,11 @@
       "provincia": "Nacional",
       "canton": "Todas las Municipalidades",
       "fechaRegistro": "2026-01-01T00:00:00Z",
-      "verificadoHacienda": true
+      "verificadoHacienda": true,
+      "reglasAceptadas": {
+        "fecha": "2026-10-06T14:50:01.881Z",
+        "version": "1.0.0"
+      }
     },
     {
       "id": "VuM2sRah80w",
@@ -521,6 +525,15 @@
       "accion": "REGISTRO_USUARIO",
       "detalles": "Registro exitoso para BELKIS YULIETH RUIZ VICTOR RUIZ VICTOR en cantón Puntarenas.",
       "timestamp": "2026-10-06T02:37:42.241Z"
+    },
+    {
+      "id": "LOG-1889",
+      "usuarioId": "USR-NAC-001",
+      "usuarioNombre": "Superintendencia Nacional de Gobierno Digital",
+      "rol": "Super Administrador Nacional",
+      "accion": "ACTUALIZACION_USUARIO",
+      "detalles": "Actualización de usuario Superintendencia Nacional de Gobierno Digital (Rol: Super Administrador Nacional, Nivel: 5).",
+      "timestamp": "2026-10-06T14:50:01.889Z"
     }
   ],
   "foro_posts": [
@@ -637,36 +650,6 @@
           "autorCedula": "109870654",
           "contenido": "Fundamental que mantenga compatibilidad con los sistemas de autenticación ciudadana y del TSE.",
           "fecha": "2026-10-01T12:45:00Z"
-        }
-      ]
-    },
-    {
-      "id": "post-nac-101",
-      "titulo": "Ventanilla Única Soberana de Digitalización de Trámites y Cero Papel para los 84 Cantones",
-      "contenido": "Iniciativa nacional para exigir la interoperabilidad obligatoria entre todas las municipalidades e instituciones públicas del país, eliminando certificaciones notariales redundantes y habilitando expedientes digitales de libre acceso cívico.",
-      "provinciaId": "nacional",
-      "provinciaNombre": "Nacional (Todo el País)",
-      "categoria": "Gobernanza & Presupuesto",
-      "autorNombre": "Red Nacional de Gobierno Digital",
-      "autorCedula": "1-0000-0001",
-      "fecha": "2026-10-01T15:30:00Z",
-      "likes": 52,
-      "dislikes": 1,
-      "reacciones": {
-        "apoyo": 44,
-        "urgente": 28,
-        "idea": 36
-      },
-      "usuariosVotaron": {
-        "1-0000-0001": "like"
-      },
-      "comentarios": [
-        {
-          "id": "com-nac-1",
-          "autorNombre": "Valeria Mora Solís",
-          "autorCedula": "117650432",
-          "contenido": "Esto reduciría meses de burocracia en permisos de construcción y patentes en todo el país.",
-          "fecha": "2026-10-01T16:00:00Z"
         }
       ]
     },
