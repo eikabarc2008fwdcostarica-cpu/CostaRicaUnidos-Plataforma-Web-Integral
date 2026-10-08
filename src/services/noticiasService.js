@@ -27,26 +27,26 @@ function notificarCambios(noticias) {
 }
 
 /**
- * Validador helper para rol de Gestión Territorial y Municipal (RBAC)
+/**
+ * Validador helper para rol de Encargado Municipal (RBAC)
  */
-export const esEditorMunicipal = (user) => {
+export const esEncargadoMunicipal = (user) => {
   if (!user) return false;
   
   const rolNormalizado = (user.rol || user.role || "").toLowerCase();
-  const nivel = user.nivelAcceso || 0;
+  const nivel = Number(user.nivelAcceso || 0);
 
-  // Tienen permiso tanto el Gestor Territorial (Nivel 4) como el Super Admin (Nivel 5)
+  // Tienen permiso el Encargado Municipal, el Gestor Territorial y el Super Admin
   const tieneRolAutorizado = 
+    user.isEncargadoMunicipal ||
+    rolNormalizado.includes("encargado municipal") ||
+    rolNormalizado.includes("encargado_municipal") ||
     rolNormalizado.includes("gestor territorial") ||
     rolNormalizado.includes("gestor_territorial") ||
-    rolNormalizado.includes("territorial") ||
-    rolNormalizado.includes("editor municipal") ||
-    rolNormalizado.includes("editor_muni") ||
     rolNormalizado.includes("super administrador") ||
-    rolNormalizado.includes("super_admin") ||
-    rolNormalizado.includes("administrador provincial");
+    rolNormalizado.includes("super_admin");
 
-  const tieneNivelSuficiente = nivel >= 4;
+  const tieneNivelSuficiente = nivel >= 3;
 
   return tieneRolAutorizado || tieneNivelSuficiente;
 };
@@ -148,11 +148,16 @@ export async function obtenerNoticiaPorId(id) {
 }
 
 /**
- * Crear un comunicado oficial (Exclusivo Editor Municipal)
+ * Crear un comunicado oficial (Exclusivo Encargado Municipal / Super Admin)
  */
 export async function crearNoticia(noticiaData, user) {
-  if (!esEditorMunicipal(user)) {
-    throw new Error('Acceso Denegado (RBAC): Se requiere rol de "Editor Municipal" para publicar comunicados.');
+  if (!esEncargadoMunicipal(user)) {
+    throw new Error('Acceso Denegado (RBAC): Se requiere rol de "Encargado Municipal" para publicar comunicados.');
+  }
+
+  const cantonAutor = user?.canton || noticiaData.canton || '';
+  if (!cantonAutor && user?.rol === 'Encargado Municipal') {
+    throw new Error('Acceso Denegado (RBAC): El Encargado Municipal debe tener un cantón asignado.');
   }
 
   try {
@@ -161,14 +166,19 @@ export async function crearNoticia(noticiaData, user) {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        'X-User-Role': user.rol || 'Editor Municipal',
-        'X-User-Cedula': user.cedula || ''
+        'X-User-Role': user?.rol || 'Encargado Municipal',
+        'X-User-Canton': cantonAutor,
+        'X-User-Cedula': user?.cedula || ''
       },
       body: JSON.stringify({
         ...noticiaData,
-        autorNombre: user.nombre || noticiaData.autorNombre || 'Editor Municipal',
-        autorRol: 'Editor Municipal',
-        autorCedula: user.cedula || noticiaData.autorCedula || ''
+        canton: cantonAutor || noticiaData.canton,
+        municipalidadId: user?.municipalidadId || (cantonAutor ? `muni-${cantonAutor.toLowerCase().replace(/\s+/g, '-')}` : ''),
+        autorNombre: user?.nombre || noticiaData.autorNombre || 'Encargado Municipal',
+        autorRol: 'Encargado Municipal',
+        autorCedula: user?.cedula || noticiaData.autorCedula || '',
+        esOficial: true,
+        distintivo: `Cuenta oficial · Municipalidad de ${cantonAutor || noticiaData.canton || 'Costa Rica'}`
       })
     });
 
@@ -187,12 +197,14 @@ export async function crearNoticia(noticiaData, user) {
 }
 
 /**
- * Modificar un comunicado existente (Exclusivo Editor Municipal)
+ * Modificar un comunicado existente (Exclusivo Encargado Municipal de su cantón)
  */
 export async function actualizarNoticia(id, noticiaData, user) {
-  if (!esEditorMunicipal(user)) {
-    throw new Error('Acceso Denegado (RBAC): Se requiere rol de "Editor Municipal" para modificar comunicados.');
+  if (!esEncargadoMunicipal(user)) {
+    throw new Error('Acceso Denegado (RBAC): Se requiere rol de "Encargado Municipal" para modificar comunicados.');
   }
+
+  const cantonAutor = user?.canton || noticiaData.canton || '';
 
   try {
     const res = await fetch(`${API_BASE_URL}/${encodeURIComponent(id)}`, {
@@ -200,12 +212,14 @@ export async function actualizarNoticia(id, noticiaData, user) {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        'X-User-Role': user.rol || 'Editor Municipal',
-        'X-User-Cedula': user.cedula || ''
+        'X-User-Role': user?.rol || 'Encargado Municipal',
+        'X-User-Canton': cantonAutor,
+        'X-User-Cedula': user?.cedula || ''
       },
       body: JSON.stringify({
         ...noticiaData,
-        solicitanteRol: user.rol || 'Editor Municipal'
+        solicitanteRol: user?.rol || 'Encargado Municipal',
+        solicitanteCanton: cantonAutor
       })
     });
 
@@ -224,19 +238,23 @@ export async function actualizarNoticia(id, noticiaData, user) {
 }
 
 /**
- * Eliminar / dar de baja un comunicado (Exclusivo Editor Municipal)
+ * Eliminar / dar de baja un comunicado (Exclusivo Encargado Municipal de su cantón)
  */
 export async function eliminarNoticia(id, user) {
-  if (!esEditorMunicipal(user)) {
-    throw new Error('Acceso Denegado (RBAC): Se requiere rol de "Editor Municipal" para eliminar comunicados.');
+  if (!esEncargadoMunicipal(user)) {
+    throw new Error('Acceso Denegado (RBAC): Se requiere rol de "Encargado Municipal" para eliminar comunicados.');
   }
+
+  const cantonAutor = user?.canton || '';
 
   try {
     const res = await fetch(`${API_BASE_URL}/${encodeURIComponent(id)}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
-        'X-User-Role': user.rol || 'Editor Municipal'
+        'X-User-Role': user?.rol || 'Encargado Municipal',
+        'X-User-Canton': cantonAutor,
+        'X-User-Cedula': user?.cedula || ''
       }
     });
 

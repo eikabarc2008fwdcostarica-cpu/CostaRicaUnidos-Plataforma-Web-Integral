@@ -52,7 +52,8 @@ function jsonDbServerPlugin() {
             publicacionesComercio: [],
             intentosLoginComercio: {},
             sanciones_foro: [],
-            moderacionContenido: []
+            moderacionContenido: [],
+            bitacoraAuditoria: []
           };
           try {
             if (fs.existsSync(rootDbPath)) {
@@ -69,6 +70,7 @@ function jsonDbServerPlugin() {
           if (!Array.isArray(data.foro_posts)) data.foro_posts = [];
           if (!Array.isArray(data.sanciones_foro)) data.sanciones_foro = [];
           if (!Array.isArray(data.moderacionContenido)) data.moderacionContenido = [];
+          if (!Array.isArray(data.bitacoraAuditoria)) data.bitacoraAuditoria = [];
           return data;
         };
 
@@ -76,6 +78,77 @@ function jsonDbServerPlugin() {
         const writeDb = (dbData) => {
           const jsonStr = JSON.stringify(dbData, null, 2);
           fs.writeFileSync(rootDbPath, jsonStr, 'utf-8');
+        };
+
+        // Helper para registrar acciones en bitacoraAuditoria inmutable
+        const registrarAuditoriaServidor = (db, { usuario, municipalidad, accion, entidadAfectada, descripcion }) => {
+          if (!Array.isArray(db.bitacoraAuditoria)) db.bitacoraAuditoria = [];
+          const fechaNow = new Date();
+          const entrada = {
+            id: `AUD-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+            fecha: fechaNow.toISOString(),
+            fechaHoraCst: fechaNow.toLocaleString('es-CR', { timeZone: 'America/Costa_Rica' }) + ' CST',
+            usuario: usuario || 'Encargado Municipal',
+            municipalidad: municipalidad || 'General',
+            accion,
+            entidadAfectada: entidadAfectada || '',
+            descripcion: descripcion || '',
+            ipOrigen: '127.0.0.1 (Servidor Local)'
+          };
+          db.bitacoraAuditoria.unshift(entrada);
+        };
+
+        // Helpers de resolución de rol y cantón del usuario en servidor
+        const esRolEncargadoMunicipal = (rol) => {
+          if (!rol) return false;
+          const r = String(rol).toLowerCase().trim();
+          return (
+            r.includes('encargado') ||
+            r === 'encargado_municipal' ||
+            (r.includes('municipal') && !r.includes('territorial') && !r.includes('polic'))
+          );
+        };
+
+        const esRolSuperAdmin = (rol) => {
+          if (!rol) return false;
+          const r = String(rol).toLowerCase().trim();
+          return r.includes('super') || r.includes('nacional');
+        };
+
+        const resolverUsuarioServidor = (db, req, bodyData = {}) => {
+          const callerId = String(req.headers['x-user-id'] || bodyData.solicitanteId || bodyData.autorId || bodyData.usuarioId || bodyData.userId || '').trim();
+          const callerRole = String(req.headers['x-user-role'] || bodyData.solicitanteRol || bodyData.autorRol || '').trim();
+          const callerCedula = String(req.headers['x-user-cedula'] || bodyData.solicitanteCedula || bodyData.autorCedula || '').trim();
+          let callerCanton = String(req.headers['x-user-canton'] || bodyData.solicitanteCanton || bodyData.canton || '').trim();
+
+          let userObj = null;
+          if (callerId && Array.isArray(db.usuarios)) {
+            userObj = db.usuarios.find(u => u.id === callerId);
+          }
+          if (!userObj && callerCedula && Array.isArray(db.usuarios)) {
+            const cleanCed = callerCedula.replace(/[^0-9]/g, '');
+            userObj = db.usuarios.find(u => {
+              const uClean = String(u.cedula || '').replace(/[^0-9]/g, '');
+              return (cleanCed && uClean === cleanCed) || u.cedula === callerCedula;
+            });
+          }
+
+          if (userObj && userObj.canton !== undefined) {
+            callerCanton = userObj.canton;
+          }
+
+          const rolFinal = userObj ? (userObj.rol || callerRole) : callerRole;
+          const isSuper = esRolSuperAdmin(rolFinal);
+          const isEncargado = esRolEncargadoMunicipal(rolFinal);
+
+          return {
+            user: userObj,
+            rol: rolFinal,
+            canton: callerCanton,
+            cedula: callerCedula,
+            isSuperAdmin: isSuper,
+            isEncargadoMunicipal: isEncargado
+          };
         };
 
         // Helper para verificar en el servidor si una cédula presenta sanción activa no vencida
@@ -523,12 +596,29 @@ function jsonDbServerPlugin() {
           }
 
           if (req.method === 'PATCH' || req.method === 'PUT') {
+            const callerRoleHeader = String(req.headers['x-user-role'] || '').toUpperCase();
+            if (callerRoleHeader.includes('ENCARGADO') || callerRoleHeader === 'ENCARGADO_MUNICIPAL') {
+              res.statusCode = 403;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(JSON.stringify({ success: false, error: 'ACCESO_DENEGADO', message: 'Acceso Denegado (403): El Encargado Municipal no tiene permisos para aprobar o gestionar comerciantes.' }));
+              return;
+            }
+
             let bodyChunks = [];
             req.on('data', (chunk) => bodyChunks.push(chunk));
             req.on('end', () => {
               try {
                 const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
                 const updatePayload = JSON.parse(bodyStr || '{}');
+                const callerRole = String(req.headers['x-user-role'] || updatePayload.solicitanteRol || '').toUpperCase();
+                if (callerRole.includes('ENCARGADO') || callerRole === 'ENCARGADO_MUNICIPAL') {
+                  res.statusCode = 403;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: false, error: 'ACCESO_DENEGADO', message: 'Acceso Denegado (403): El Encargado Municipal no tiene permisos para aprobar o gestionar comerciantes.' }));
+                  return;
+                }
                 const solId = targetId || updatePayload.id;
 
                 const db = readDb();
@@ -1139,6 +1229,23 @@ function jsonDbServerPlugin() {
                   });
                 }
 
+                if (cambios.rol === 'Encargado Municipal' || db.usuarios[userIndex].rol === 'Encargado Municipal') {
+                  const rolAnterior = db.usuarios[userIndex].rol;
+                  const nuevoRol = cambios.rol || rolAnterior;
+                  let accionMuni = 'ASIGNACION_ROL_MUNICIPAL';
+                  if (rolAnterior === 'Encargado Municipal' && nuevoRol && nuevoRol !== 'Encargado Municipal') {
+                    accionMuni = 'REVOCACION_ROL_MUNICIPAL';
+                  }
+
+                  registrarAuditoriaServidor(db, {
+                    usuario: cambios.asignadoPor || cambios.retiradoPor || 'Super Administrador Nacional',
+                    municipalidad: db.usuarios[userIndex].canton || 'Nacional',
+                    accion: accionMuni,
+                    entidadAfectada: db.usuarios[userIndex].id,
+                    descripcion: `Gestión de rol Encargado Municipal para usuario ${db.usuarios[userIndex].id} en cantón ${db.usuarios[userIndex].canton}.`
+                  });
+                }
+
                 writeDb(db);
                 console.log(`[jsonDbServer] Usuario ${idToUpdate} actualizado físicamente en db.json`);
 
@@ -1224,7 +1331,7 @@ function jsonDbServerPlugin() {
                     ? 5
                     : rol === 'Administrador Provincial'
                     ? 4
-                    : rol === 'Editor Municipal'
+                    : rol === 'Encargado Municipal'
                     ? 3
                     : 2;
 
@@ -1233,7 +1340,7 @@ function jsonDbServerPlugin() {
                     ? 'USR-NAC'
                     : rol === 'Administrador Provincial'
                     ? 'USR-PROV'
-                    : rol === 'Editor Municipal'
+                    : rol === 'Encargado Municipal'
                     ? 'USR-MUNI'
                     : 'USR-CIUD';
 
@@ -1413,6 +1520,17 @@ function jsonDbServerPlugin() {
                   return;
                 }
 
+                const userInfo = resolverUsuarioServidor(db, req, data);
+                if (userInfo.isEncargadoMunicipal && !userInfo.isSuperAdmin) {
+                  if (!userInfo.canton || userInfo.canton.trim() === '') {
+                    res.statusCode = 403;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    res.end(JSON.stringify({ success: false, error: 'SIN_MUNICIPALIDAD', message: 'Acceso Denegado (403): Cuenta de Encargado sin municipalidad asignada. Contacte al administrador.' }));
+                    return;
+                  }
+                }
+
                 const provId = String(data.provinciaId || 'nacional').toLowerCase().trim();
                 const provNombres = {
                   'nacional': 'Nacional (Todo el País)',
@@ -1425,15 +1543,26 @@ function jsonDbServerPlugin() {
                   'limon': 'Limón'
                 };
 
+                const isOficialPost = Boolean(data.esOficial || userInfo.isEncargadoMunicipal);
+                const cantonFinal = userInfo.isEncargadoMunicipal ? userInfo.canton : (data.canton || '');
+                const distintivoPost = isOficialPost ? (data.distintivo || `Cuenta oficial · Municipalidad de ${cantonFinal}`) : undefined;
+                const municipalidadIdPost = isOficialPost && cantonFinal ? (data.municipalidadId || `muni-${String(cantonFinal).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')}`) : undefined;
+
                 const newPost = {
                   id: data.id || `post-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
                   titulo: String(data.titulo).trim(),
                   contenido: String(data.contenido).trim(),
                   provinciaId: provId,
                   provinciaNombre: data.provinciaNombre || provNombres[provId] || 'Nacional',
-                  categoria: data.categoria || 'Participación Ciudadana',
-                  autorNombre: data.autorNombre || 'Ciudadano',
-                  autorCedula: String(data.autorCedula || '1-1823-0456'),
+                  canton: cantonFinal,
+                  municipalidadId: municipalidadIdPost,
+                  categoria: data.categoria || (isOficialPost ? 'Comunicación Oficial' : 'Participación Ciudadana'),
+                  autorNombre: data.autorNombre || (isOficialPost ? `Municipalidad de ${cantonFinal}` : 'Ciudadano'),
+                  autorRol: isOficialPost ? 'Encargado Municipal' : (data.autorRol || 'Ciudadano'),
+                  autorCedula: String(data.autorCedula || (userInfo.user ? userInfo.user.cedula : '1-1823-0456')),
+                  esOficial: isOficialPost,
+                  distintivo: distintivoPost,
+                  estado: data.estado || 'publicado',
                   fecha: data.fecha || new Date().toISOString(),
                   likes: Number(data.likes || 0),
                   dislikes: Number(data.dislikes || 0),
@@ -1444,6 +1573,17 @@ function jsonDbServerPlugin() {
 
                 db.foro_posts.unshift(newPost);
                 writeDb(db);
+
+                if (isOficialPost) {
+                  registrarAuditoriaServidor(db, {
+                    usuario: newPost.autorNombre,
+                    municipalidad: cantonFinal,
+                    accion: 'PUBLICAR_FORO',
+                    entidadAfectada: newPost.id,
+                    descripcion: `Publicación en Foro Tico: ${newPost.titulo}`
+                  });
+                  writeDb(db);
+                }
 
                 console.log(`[jsonDbServer] Post creado en Foro Tico: ${newPost.id} (${newPost.provinciaNombre})`);
 
@@ -1579,20 +1719,79 @@ function jsonDbServerPlugin() {
                     return;
                   }
 
+                  const userInfo = resolverUsuarioServidor(db, req, c);
+                  const isOficialComentario = Boolean(c.esOficial || userInfo.isEncargadoMunicipal);
+                  const distintivoComentario = isOficialComentario ? `Cuenta oficial · Municipalidad de ${userInfo.canton || post.canton}` : undefined;
+
                   const comentarios = Array.isArray(post.comentarios) ? [...post.comentarios] : [];
                   const nuevoComentario = {
                     id: `com-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
-                    autorNombre: c.autorNombre || 'Ciudadano',
-                    autorCedula: String(c.autorCedula || '1-1823-0456'),
+                    autorNombre: c.autorNombre || (isOficialComentario ? `Municipalidad de ${userInfo.canton || post.canton}` : 'Ciudadano'),
+                    autorCedula: String(c.autorCedula || (userInfo.user ? userInfo.user.cedula : '1-1823-0456')),
+                    autorRol: isOficialComentario ? 'Encargado Municipal' : (c.autorRol || 'Ciudadano'),
+                    esOficial: isOficialComentario,
+                    distintivo: distintivoComentario,
                     contenido: String(c.contenido).trim(),
                     fecha: new Date().toISOString()
                   };
                   comentarios.push(nuevoComentario);
                   post.comentarios = comentarios;
+
+                  if (isOficialComentario) {
+                    registrarAuditoriaServidor(db, {
+                      usuario: nuevoComentario.autorNombre,
+                      municipalidad: userInfo.canton || post.canton,
+                      accion: 'COMENTAR_FORO_OFICIAL',
+                      entidadAfectada: post.id,
+                      descripcion: `Comentario oficial en tema: ${post.titulo}`
+                    });
+                  }
                 }
-                // Acción D: Merge general de campos
+                // Acción D: Modificación de contenido o estado de publicación (Edición / Ocultar / Archivar)
                 else {
-                  Object.assign(post, updatePayload);
+                  const userInfo = resolverUsuarioServidor(db, req, updatePayload);
+                  if (userInfo.isEncargadoMunicipal && !userInfo.isSuperAdmin) {
+                    if (!userInfo.canton || userInfo.canton.trim() === '') {
+                      res.statusCode = 403;
+                      res.setHeader('Content-Type', 'application/json');
+                      res.setHeader('Access-Control-Allow-Origin', '*');
+                      res.end(JSON.stringify({ success: false, error: 'SIN_MUNICIPALIDAD', message: 'Acceso Denegado (403): Usuario sin municipalidad asignada.' }));
+                      return;
+                    }
+                    // No puede editar publicaciones de ciudadanos
+                    if (!post.esOficial && post.autorRol !== 'Encargado Municipal') {
+                      res.statusCode = 403;
+                      res.setHeader('Content-Type', 'application/json');
+                      res.setHeader('Access-Control-Allow-Origin', '*');
+                      res.end(JSON.stringify({ success: false, error: 'ACCESO_DENEGADO', message: 'Acceso Denegado (403): No puede editar publicaciones de ciudadanos.' }));
+                      return;
+                    }
+                    // No puede editar publicaciones de otra municipalidad
+                    if (String(post.canton || '').toLowerCase().trim() !== String(userInfo.canton).toLowerCase().trim()) {
+                      res.statusCode = 403;
+                      res.setHeader('Content-Type', 'application/json');
+                      res.setHeader('Access-Control-Allow-Origin', '*');
+                      res.end(JSON.stringify({ success: false, error: 'MUNICIPALIDAD_NO_AUTORIZADA', message: `Acceso Denegado (403): No puede editar publicaciones de otra municipalidad (${post.canton}). Solo puede gestionar su cantón (${userInfo.canton}).` }));
+                      return;
+                    }
+                  }
+
+                  if (updatePayload.titulo) post.titulo = String(updatePayload.titulo).trim();
+                  if (updatePayload.contenido) post.contenido = String(updatePayload.contenido).trim();
+                  if (updatePayload.categoria) post.categoria = updatePayload.categoria;
+                  if (updatePayload.estado) post.estado = updatePayload.estado; // 'publicado' | 'oculto' | 'archivado'
+                  post.fechaModificacion = new Date().toISOString();
+
+                  if (userInfo.isEncargadoMunicipal) {
+                    const accionAudit = updatePayload.estado === 'oculto' ? 'OCULTAR_PUBLICACION' : updatePayload.estado === 'archivado' ? 'ARCHIVAR_PUBLICACION' : 'EDITAR_PUBLICACION';
+                    registrarAuditoriaServidor(db, {
+                      usuario: userInfo.user?.nombre || `Municipalidad de ${userInfo.canton}`,
+                      municipalidad: userInfo.canton,
+                      accion: accionAudit,
+                      entidadAfectada: post.id,
+                      descripcion: `Gestión de publicación de foro: ${post.titulo}`
+                    });
+                  }
                 }
 
                 db.foro_posts[postIndex] = post;
@@ -1618,8 +1817,55 @@ function jsonDbServerPlugin() {
             const targetPostId = postIdFromPath;
             const db = readDb();
             if (!Array.isArray(db.foro_posts)) db.foro_posts = [];
+            const postToDelete = db.foro_posts.find((p) => String(p.id) === String(targetPostId));
+            if (!postToDelete) {
+              res.statusCode = 404;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(JSON.stringify({ success: false, message: 'Publicación no encontrada.' }));
+              return;
+            }
+
+            const userInfo = resolverUsuarioServidor(db, req, {});
+            if (userInfo.isEncargadoMunicipal && !userInfo.isSuperAdmin) {
+              if (!userInfo.canton || userInfo.canton.trim() === '') {
+                res.statusCode = 403;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, error: 'SIN_MUNICIPALIDAD', message: 'Acceso Denegado (403): Usuario sin municipalidad asignada.' }));
+                return;
+              }
+              // No puede eliminar posts de ciudadanos
+              if (!postToDelete.esOficial && postToDelete.autorRol !== 'Encargado Municipal') {
+                res.statusCode = 403;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, error: 'ACCESO_DENEGADO', message: 'Acceso Denegado (403): No puede eliminar publicaciones de ciudadanos.' }));
+                return;
+              }
+              // No puede eliminar posts de otra municipalidad
+              if (String(postToDelete.canton || '').toLowerCase().trim() !== String(userInfo.canton).toLowerCase().trim()) {
+                res.statusCode = 403;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: false, error: 'MUNICIPALIDAD_NO_AUTORIZADA', message: `Acceso Denegado (403): No puede eliminar publicaciones pertenecientes a otra municipalidad (${postToDelete.canton}).` }));
+                return;
+              }
+            }
+
             db.foro_posts = db.foro_posts.filter((p) => String(p.id) !== String(targetPostId));
             writeDb(db);
+
+            if (userInfo.isEncargadoMunicipal) {
+              registrarAuditoriaServidor(db, {
+                usuario: userInfo.user?.nombre || `Municipalidad de ${userInfo.canton}`,
+                municipalidad: userInfo.canton || postToDelete.canton,
+                accion: 'ELIMINAR_PUBLICACION',
+                entidadAfectada: targetPostId,
+                descripcion: `Eliminación de publicación de foro: ${postToDelete.titulo}`
+              });
+              writeDb(db);
+            }
 
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -1658,12 +1904,29 @@ function jsonDbServerPlugin() {
           }
 
           if (req.method === 'POST') {
+            const callerRoleHeader = String(req.headers['x-user-role'] || '').toUpperCase();
+            if (callerRoleHeader.includes('ENCARGADO') || callerRoleHeader === 'ENCARGADO_MUNICIPAL') {
+              res.statusCode = 403;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(JSON.stringify({ success: false, error: 'ACCESO_DENEGADO', message: 'Acceso Denegado (403): El Encargado Municipal no tiene permisos para sancionar usuarios.' }));
+              return;
+            }
+
             let bodyChunks = [];
             req.on('data', (chunk) => bodyChunks.push(chunk));
             req.on('end', () => {
               try {
                 const bodyStr = Buffer.concat(bodyChunks).toString('utf-8');
                 const nuevaSancion = JSON.parse(bodyStr || '{}');
+                const callerRole = String(req.headers['x-user-role'] || nuevaSancion.solicitanteRol || '').toUpperCase();
+                if (callerRole.includes('ENCARGADO') || callerRole === 'ENCARGADO_MUNICIPAL') {
+                  res.statusCode = 403;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(JSON.stringify({ success: false, error: 'ACCESO_DENEGADO', message: 'Acceso Denegado (403): El Encargado Municipal no tiene permisos para sancionar usuarios.' }));
+                  return;
+                }
                 const db = readDb();
                 if (!Array.isArray(db.sanciones_foro)) db.sanciones_foro = [];
                 nuevaSancion.id = nuevaSancion.id || `SANC-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
@@ -1791,8 +2054,8 @@ function jsonDbServerPlugin() {
         }
 
         // =====================================================================
-        // RUTA 3: /api/noticias y /noticias (Módulo 01: Noticias Municipales)
-        // Control de Acceso Basado en Roles (RBAC): Exclusivo Editor Municipal
+        // RUTA 3: /api/noticias y /noticias (Módulo 01: Noticias y Comunicados)
+        // Control de Acceso Basado en Roles (RBAC): Encargado Municipal y Super Admin
         // =====================================================================
         if (
           url === '/api/noticias' ||
@@ -1809,29 +2072,12 @@ function jsonDbServerPlugin() {
           const pathSegments = cleanPath.split('/').filter(Boolean);
           const noticiaIdFromPath = pathSegments.length > 1 ? pathSegments[1] : null;
 
-          // Helper RBAC para validar rol de Gestor Territorial y Editor Municipal
-          const esEditorMunicipal = (rol) => {
-            if (!rol) return false;
-            const r = String(rol).toLowerCase().trim();
-            return (
-              r.includes('gestor territorial') ||
-              r.includes('gestor_territorial') ||
-              r.includes('territorial') ||
-              r.includes('editor municipal') ||
-              r === 'editor_muni' ||
-              r === 'editormunicipal' ||
-              r.includes('super administrador') ||
-              r.includes('super_admin') ||
-              r.includes('administrador provincial')
-            );
-          };
-
           // 1. Manejo de CORS Preflight (OPTIONS)
           if (req.method === 'OPTIONS') {
             res.statusCode = 204;
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, X-User-Role, X-User-Cedula');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, X-User-Role, X-User-Cedula, X-User-Canton');
             res.end();
             return;
           }
@@ -1928,7 +2174,7 @@ function jsonDbServerPlugin() {
             return;
           }
 
-          // 3. POST: Crear comunicado oficial (RBAC: Exclusivo Editor Municipal)
+          // 3. POST: Crear comunicado oficial (RBAC: Exclusivo Encargado Municipal y Super Admin)
           if (req.method === 'POST') {
             let bodyChunks = [];
             req.on('data', (chunk) => bodyChunks.push(chunk));
@@ -1946,35 +2192,69 @@ function jsonDbServerPlugin() {
                   return;
                 }
 
-                const userRole = req.headers['x-user-role'] || data.autorRol || '';
-                if (!esEditorMunicipal(userRole)) {
+                const db = readDb();
+                const userInfo = resolverUsuarioServidor(db, req, data);
+
+                if (!userInfo.isEncargadoMunicipal && !userInfo.isSuperAdmin) {
                   res.statusCode = 403;
                   res.setHeader('Content-Type', 'application/json');
                   res.setHeader('Access-Control-Allow-Origin', '*');
                   res.end(
                     JSON.stringify({
                       success: false,
-                      message: 'Acceso Denegado (RBAC): Única y exclusivamente usuarios con rol de "Editor Municipal" tienen permisos para publicar comunicados oficiales.'
+                      error: 'ACCESO_DENEGADO',
+                      message: 'Acceso Denegado (RBAC): Única y exclusivamente usuarios con rol de "Encargado Municipal" tienen permisos para publicar comunicados oficiales.'
                     })
                   );
                   return;
                 }
 
-                if (!data.titulo || !data.contenido || !data.canton) {
+                if (!userInfo.isSuperAdmin && (!userInfo.canton || userInfo.canton.trim() === '')) {
+                  res.statusCode = 403;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(
+                    JSON.stringify({
+                      success: false,
+                      error: 'SIN_MUNICIPALIDAD',
+                      message: 'Acceso Denegado (403): Cuenta de Encargado sin municipalidad asignada. Contacte al administrador.'
+                    })
+                  );
+                  return;
+                }
+
+                if (!data.titulo || !data.contenido) {
                   res.statusCode = 400;
                   res.setHeader('Content-Type', 'application/json');
                   res.setHeader('Access-Control-Allow-Origin', '*');
                   res.end(
                     JSON.stringify({
                       success: false,
-                      message: 'El título, contenido y cantón municipal son obligatorios.'
+                      message: 'El título y el contenido son obligatorios.'
                     })
                   );
                   return;
                 }
 
-                const db = readDb();
+                // Validación de Cantón: Solo puede publicar en su propia municipalidad
+                const cantonFinal = userInfo.isSuperAdmin ? (data.canton || 'San José') : userInfo.canton;
+                if (!userInfo.isSuperAdmin && data.canton && String(data.canton).toLowerCase().trim() !== String(userInfo.canton).toLowerCase().trim()) {
+                  res.statusCode = 403;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.end(
+                    JSON.stringify({
+                      success: false,
+                      error: 'MUNICIPALIDAD_NO_AUTORIZADA',
+                      message: `Acceso Denegado (403): Solo tiene autorización para publicar comunicados en la Municipalidad de ${userInfo.canton}.`
+                    })
+                  );
+                  return;
+                }
+
                 if (!Array.isArray(db.noticias)) db.noticias = [];
+
+                const municipalidadIdFinal = data.municipalidadId || `muni-${String(cantonFinal).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')}`;
 
                 const nuevaNoticia = {
                   id: data.id || `noticia-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
@@ -1982,11 +2262,16 @@ function jsonDbServerPlugin() {
                   resumen: String(data.resumen || data.titulo).trim(),
                   contenido: String(data.contenido).trim(),
                   categoria: data.categoria || 'Gobernanza Local',
+                  tipo: data.tipo || 'noticia', // 'noticia' | 'comunicado'
                   provincia: data.provincia || 'San José',
-                  canton: data.canton || 'San José',
-                  autorNombre: data.autorNombre || 'Gestión Municipal',
-                  autorRol: 'Editor Municipal',
-                  autorCedula: String(data.autorCedula || '1-1155-0892'),
+                  canton: cantonFinal,
+                  municipalidadId: municipalidadIdFinal,
+                  autorNombre: data.autorNombre || (userInfo.user ? userInfo.user.nombre : `Municipalidad de ${cantonFinal}`),
+                  autorRol: 'Encargado Municipal',
+                  autorCedula: String(data.autorCedula || (userInfo.user ? userInfo.user.cedula : '1-1155-0892')),
+                  esOficial: true,
+                  distintivo: `Cuenta oficial · Municipalidad de ${cantonFinal}`,
+                  estado: data.estado || 'publicado', // 'publicado' | 'oculto' | 'archivado'
                   fechaPublicacion: data.fechaPublicacion || new Date().toISOString(),
                   imagenUrl: data.imagenUrl || '',
                   reacciones: data.reacciones || { apoyo: 0, interesante: 0, alerta: 0 },
@@ -1994,6 +2279,13 @@ function jsonDbServerPlugin() {
                 };
 
                 db.noticias.unshift(nuevaNoticia);
+                registrarAuditoriaServidor(db, {
+                  usuario: nuevaNoticia.autorNombre,
+                  municipalidad: cantonFinal,
+                  accion: nuevaNoticia.tipo === 'comunicado' ? 'PUBLICAR_COMUNICADO' : 'PUBLICAR_NOTICIA',
+                  entidadAfectada: nuevaNoticia.id,
+                  descripcion: `Publicación oficial (${nuevaNoticia.tipo}): ${nuevaNoticia.titulo}`
+                });
                 writeDb(db);
 
                 console.log(`[jsonDbServer] Noticia municipal publicada: ${nuevaNoticia.id} (${nuevaNoticia.canton})`);
@@ -2085,17 +2377,47 @@ function jsonDbServerPlugin() {
                   comentarios.push(nuevoComentario);
                   noticia.comentarios = comentarios;
                 }
-                // C. Modificación de contenido de la noticia (RBAC: Exclusivo Editor Municipal)
+                // C. Modificación de contenido o estado de la noticia (RBAC: Exclusivo Encargado Municipal de su cantón)
                 else {
-                  const callerRole = req.headers['x-user-role'] || updatePayload.solicitanteRol || '';
-                  if (!esEditorMunicipal(callerRole)) {
+                  const userInfo = resolverUsuarioServidor(db, req, updatePayload);
+                  if (!userInfo.isEncargadoMunicipal && !userInfo.isSuperAdmin) {
                     res.statusCode = 403;
                     res.setHeader('Content-Type', 'application/json');
                     res.setHeader('Access-Control-Allow-Origin', '*');
                     res.end(
                       JSON.stringify({
                         success: false,
-                        message: 'Acceso Denegado (RBAC): Única y exclusivamente usuarios con rol de "Editor Municipal" tienen permisos para modificar comunicados oficiales.'
+                        error: 'ACCESO_DENEGADO',
+                        message: 'Acceso Denegado (RBAC): Única y exclusivamente usuarios con rol de "Encargado Municipal" tienen permisos para modificar comunicados oficiales.'
+                      })
+                    );
+                    return;
+                  }
+
+                  if (!userInfo.isSuperAdmin && (!userInfo.canton || userInfo.canton.trim() === '')) {
+                    res.statusCode = 403;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    res.end(
+                      JSON.stringify({
+                        success: false,
+                        error: 'SIN_MUNICIPALIDAD',
+                        message: 'Acceso Denegado (403): Cuenta de Encargado sin municipalidad asignada.'
+                      })
+                    );
+                    return;
+                  }
+
+                  // VALIDACIÓN ESTRICTA DE JURISDICCIÓN: No puede editar noticias de otra municipalidad
+                  if (!userInfo.isSuperAdmin && String(noticia.canton || '').toLowerCase().trim() !== String(userInfo.canton).toLowerCase().trim()) {
+                    res.statusCode = 403;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    res.end(
+                      JSON.stringify({
+                        success: false,
+                        error: 'MUNICIPALIDAD_NO_AUTORIZADA',
+                        message: `Acceso Denegado (403): No puede modificar publicaciones de la Municipalidad de ${noticia.canton}. Solo puede gestionar su cantón asignado (${userInfo.canton}).`
                       })
                     );
                     return;
@@ -2105,10 +2427,19 @@ function jsonDbServerPlugin() {
                   if (updatePayload.resumen) noticia.resumen = String(updatePayload.resumen).trim();
                   if (updatePayload.contenido) noticia.contenido = String(updatePayload.contenido).trim();
                   if (updatePayload.categoria) noticia.categoria = updatePayload.categoria;
-                  if (updatePayload.provincia) noticia.provincia = updatePayload.provincia;
-                  if (updatePayload.canton) noticia.canton = updatePayload.canton;
+                  if (updatePayload.tipo) noticia.tipo = updatePayload.tipo;
+                  if (updatePayload.estado) noticia.estado = updatePayload.estado; // 'publicado' | 'oculto' | 'archivado'
                   if (updatePayload.imagenUrl !== undefined) noticia.imagenUrl = updatePayload.imagenUrl;
                   noticia.fechaModificacion = new Date().toISOString();
+
+                  const accionAudit = updatePayload.estado === 'oculto' ? 'OCULTAR_PUBLICACION' : updatePayload.estado === 'archivado' ? 'ARCHIVAR_PUBLICACION' : 'EDITAR_PUBLICACION';
+                  registrarAuditoriaServidor(db, {
+                    usuario: userInfo.user?.nombre || `Municipalidad de ${noticia.canton}`,
+                    municipalidad: noticia.canton,
+                    accion: accionAudit,
+                    entidadAfectada: noticia.id,
+                    descripcion: `Gestión de comunicado (${noticia.tipo || 'noticia'}): ${noticia.titulo}`
+                  });
                 }
 
                 db.noticias[idx] = noticia;
@@ -2129,31 +2460,77 @@ function jsonDbServerPlugin() {
             return;
           }
 
-          // 5. DELETE: Eliminar comunicado (RBAC: Exclusivo Editor Municipal)
+          // 5. DELETE: Eliminar comunicado (RBAC: Exclusivo Encargado Municipal de su cantón)
           if (req.method === 'DELETE') {
             const targetId = noticiaIdFromPath;
             const fullUrl = new URL(req.url, 'http://localhost');
-            const callerRole = req.headers['x-user-role'] || fullUrl.searchParams.get('rol') || '';
+            const db = readDb();
+            if (!Array.isArray(db.noticias)) db.noticias = [];
 
-            if (!esEditorMunicipal(callerRole)) {
+            const targetNoticia = db.noticias.find((n) => String(n.id) === String(targetId));
+            if (!targetNoticia) {
+              res.statusCode = 404;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(JSON.stringify({ success: false, message: 'Comunicado oficial no encontrado.' }));
+              return;
+            }
+
+            const userInfo = resolverUsuarioServidor(db, req, {});
+            if (!userInfo.isEncargadoMunicipal && !userInfo.isSuperAdmin) {
               res.statusCode = 403;
               res.setHeader('Content-Type', 'application/json');
               res.setHeader('Access-Control-Allow-Origin', '*');
               res.end(
                 JSON.stringify({
                   success: false,
-                  message: 'Acceso Denegado (RBAC): Única y exclusivamente usuarios con rol de "Editor Municipal" tienen permisos para eliminar comunicados oficiales.'
+                  error: 'ACCESO_DENEGADO',
+                  message: 'Acceso Denegado (RBAC): Única y exclusivamente usuarios con rol de "Encargado Municipal" tienen permisos para eliminar comunicados oficiales.'
                 })
               );
               return;
             }
 
-            const db = readDb();
-            if (!Array.isArray(db.noticias)) db.noticias = [];
+            if (!userInfo.isSuperAdmin && (!userInfo.canton || userInfo.canton.trim() === '')) {
+              res.statusCode = 403;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(
+                JSON.stringify({
+                  success: false,
+                  error: 'SIN_MUNICIPALIDAD',
+                  message: 'Acceso Denegado (403): Cuenta de Encargado sin municipalidad asignada.'
+                })
+              );
+              return;
+            }
+
+            // VALIDACIÓN ESTRICTA: No puede eliminar publicaciones de otra municipalidad
+            if (!userInfo.isSuperAdmin && String(targetNoticia.canton || '').toLowerCase().trim() !== String(userInfo.canton).toLowerCase().trim()) {
+              res.statusCode = 403;
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.end(
+                JSON.stringify({
+                  success: false,
+                  error: 'MUNICIPALIDAD_NO_AUTORIZADA',
+                  message: `Acceso Denegado (403): No puede eliminar publicaciones pertenecientes a la Municipalidad de ${targetNoticia.canton}. Solo puede gestionar ${userInfo.canton}.`
+                })
+              );
+              return;
+            }
+
             db.noticias = db.noticias.filter((n) => String(n.id) !== String(targetId));
+            registrarAuditoriaServidor(db, {
+              usuario: userInfo.user?.nombre || `Municipalidad de ${targetNoticia.canton}`,
+              municipalidad: targetNoticia.canton,
+              accion: 'ELIMINAR_PUBLICACION',
+              entidadAfectada: targetId,
+              descripcion: `Eliminación de comunicado oficial: ${targetNoticia.titulo}`
+            });
             writeDb(db);
 
-            console.log(`[jsonDbServer] Noticia municipal eliminada: ${targetId}`);
+            console.log(`[jsonDbServer] Noticia municipal eliminada: ${targetId} (${targetNoticia.canton})`);
 
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');

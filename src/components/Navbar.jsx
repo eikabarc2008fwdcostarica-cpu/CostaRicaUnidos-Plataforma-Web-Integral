@@ -137,7 +137,7 @@ export default function Navbar() {
       };
     }
 
-    // 2. Gestor Territorial y Municipal (Nivel 4)
+    // 2. Gestor Territorial (Nivel 4)
     if (nivel === 4 || rolNorm === 'GESTOR_TERRITORIAL' || rolNorm.includes('TERRITORIAL') || rolNorm.includes('PROVINCIAL')) {
       return {
         path: '/admin/territorial',
@@ -150,7 +150,20 @@ export default function Navbar() {
       };
     }
 
-    // 3. Comerciante y Emprendedor Local (Nivel 3)
+    // 3. Encargado Municipal (Nivel 3 · Mi Municipalidad)
+    if (user?.isEncargadoMunicipal || rolNorm === 'ENCARGADO_MUNICIPAL' || rolNorm.includes('ENCARGADO') || (rolNorm.includes('MUNICIPAL') && !rolNorm.includes('TERRITORIAL'))) {
+      return {
+        path: '/mi-municipalidad',
+        label: 'Mi Municipalidad',
+        roleShort: 'Encargado Municipal',
+        roleFull: `Encargado Municipal (${user?.canton || 'Cantón no asignado'})`,
+        themeClass: 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-white',
+        badgeColor: '#10B981',
+        title: `Encargado Municipal — Gestión Oficial de ${user?.canton || 'su Municipalidad'}`
+      };
+    }
+
+    // 4. Comerciante y Emprendedor Local (Nivel 3)
     if (nivel === 3 || rolNorm === 'COMERCIANTE' || rolNorm.includes('COMERCIANTE') || rolNorm.includes('EMPRENDEDOR')) {
       return {
         path: '/portal-ciudadano',
@@ -502,8 +515,10 @@ export default function Navbar() {
               {(() => {
                 const esSuperAdmin = user?.nivelAcceso === 5 || 
                   (user?.rol && (user.rol.toUpperCase().includes("SUPER") || user.rol.toUpperCase().includes("NACIONAL")));
-                const esGestor = user?.nivelAcceso === 4 ||
-                  (user?.rol && (user.rol.toUpperCase().includes("TERRITORIAL") || user.rol.toUpperCase().includes("PROVINCIAL") || user.rol.toUpperCase().includes("MUNICIPAL")));
+                const esEncargado = user?.isEncargadoMunicipal ||
+                  (user?.rol && (user.rol.toUpperCase().includes("ENCARGADO") || (user.rol.toUpperCase().includes("MUNICIPAL") && !user.rol.toUpperCase().includes("TERRITORIAL"))));
+                const esGestor = !esEncargado && (user?.nivelAcceso === 4 ||
+                  (user?.rol && (user.rol.toUpperCase().includes("TERRITORIAL") || user.rol.toUpperCase().includes("PROVINCIAL"))));
                 
                 if (esSuperAdmin) {
                   return (
@@ -521,6 +536,27 @@ export default function Navbar() {
                       </svg>
                       <span style={{ color: "#EF4444", fontWeight: 600 }}>
                         [NIVEL 5] SUPER ADMIN NACIONAL | COSTA RICA UNIDOS
+                      </span>
+                    </div>
+                  );
+                }
+
+                if (esEncargado) {
+                  return (
+                    <div
+                      className="badge-encargado-municipal px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase flex items-center gap-2"
+                      style={{
+                        fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+                        backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                        border: '1px solid rgba(16, 185, 129, 0.25)',
+                        boxShadow: '0 0 14px rgba(16, 185, 129, 0.12)'
+                      }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      </svg>
+                      <span style={{ color: "#34D399", fontWeight: 600 }}>
+                        [NIVEL 3] ENCARGADO MUNICIPAL · {user?.canton ? `MUNICIPALIDAD DE ${user.canton.toUpperCase()}` : 'SIN CANTÓN ASIGNADO'}
                       </span>
                     </div>
                   );
@@ -638,7 +674,7 @@ export default function Navbar() {
             1. BARRA SUPERIOR (TOP BAR): IDIOMAS, ALTO CONTRASTE Y REDES SOCIALES
             ====================================================================== */}
         <div
-          className="cintillo-superior-container surface-brand h-8 relative flex items-center justify-between px-3 sm:px-6 md:px-10 text-[11px] font-semibold tracking-wider overflow-hidden whitespace-nowrap"
+          className="cintillo-superior-container surface-brand h-8 relative flex items-center justify-between px-2 sm:px-6 md:px-10 text-[11px] font-semibold tracking-wider overflow-x-auto scrollbar-none whitespace-nowrap"
           style={{
             backgroundColor: '#01004E',
             color: '#FFFFFF',
@@ -646,11 +682,11 @@ export default function Navbar() {
           }}
         >
           {/* LADO IZQUIERDO: IDIOMAS OFICIALES (Español, Bribri, Cabécar, English) */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
             {[
               { code: 'es', label: 'Español' },
               { code: 'bribri', label: 'Bribri' },
-              { code: 'cabecar', label: 'Cabécar' },
+              { code: 'cabecar', label: 'Cabécar', hideSmall: true },
               { code: 'en', label: 'English' }
             ].map((lang, idx, arr) => (
               <React.Fragment key={lang.code}>
@@ -660,29 +696,31 @@ export default function Navbar() {
                     cambiarIdioma(lang.code);
                     setActiveLangCode(lang.code);
                   }}
-                  className={`hover:text-yellow-300 transition-colors cursor-pointer text-[11px] ${
+                  className={`hover:text-yellow-300 transition-colors cursor-pointer text-[11px] py-1 px-1 min-h-[28px] ${lang.hideSmall ? 'hidden min-[420px]:inline-flex' : 'inline-flex'} items-center ${
                     currentLang === lang.code ? 'text-yellow-400 font-bold underline' : 'text-slate-200'
                   }`}
-                  style={{ background: 'none', border: 'none', padding: 0 }}
+                  style={{ background: 'none', border: 'none' }}
                 >
                   {lang.label}
                 </button>
-                {idx < arr.length - 1 && <span className="opacity-40 text-slate-400">·</span>}
+                {idx < arr.length - 1 && (
+                  <span className={`opacity-40 text-slate-400 ${lang.hideSmall ? 'hidden min-[420px]:inline' : ''}`}>·</span>
+                )}
               </React.Fragment>
             ))}
           </div>
 
           {/* LADO DERECHO: ALTO CONTRASTE Y REDES SOCIALES */}
-          <div className="flex items-center gap-2 sm:gap-3 text-[11px]">
+          <div className="flex items-center gap-1.5 sm:gap-3 text-[11px] flex-shrink-0 pl-2">
             <button
               type="button"
               onClick={() => {
                 setDaltonismoMode(daltonismoMode === 'alto-contraste' ? 'normal' : 'alto-contraste');
               }}
-              className={`hover:text-yellow-300 transition-colors cursor-pointer text-[11px] ${
+              className={`hover:text-yellow-300 transition-colors cursor-pointer text-[11px] py-1 px-1 min-h-[28px] inline-flex items-center ${
                 daltonismoMode === 'alto-contraste' ? 'text-yellow-400 font-bold underline' : 'text-slate-200'
               }`}
-              style={{ background: 'none', border: 'none', padding: 0 }}
+              style={{ background: 'none', border: 'none' }}
             >
               Alto contraste
             </button>
@@ -791,16 +829,19 @@ export default function Navbar() {
           </nav>
 
           {/* LADO DERECHO: UTILIDADES ESENCIALES (TEMA + ACCESIBILIDAD) + ACCESO CÍVICO */}
-          <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 flex-shrink-0">
+          <div className="flex items-center gap-1 min-[400px]:gap-1.5 sm:gap-2.5 lg:gap-3 flex-shrink-0">
             {/* 1. Botón Minimalista de Modo Oscuro / Claro */}
             <button
               type="button"
               onClick={toggleTheme}
               className="btn-theme-toggle"
               title={theme === 'dark' ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              aria-label={theme === 'dark' ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
               style={{
-                width: '34px',
-                height: '34px',
+                width: '40px',
+                height: '40px',
+                minWidth: '40px',
+                minHeight: '40px',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -813,7 +854,7 @@ export default function Navbar() {
             >
               {theme === 'dark' ? (
                 /* SVG Sol */
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="5" />
                   <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
                   <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
@@ -822,14 +863,14 @@ export default function Navbar() {
                 </svg>
               ) : (
                 /* SVG Luna */
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cru-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cru-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg>
               )}
             </button>
 
             {/* 2. Menú Flotante de Accesibilidad Universal en el Topbar (Ley N° 7600) */}
-            <div className="relative" data-tour="panel-civico-btn">
+            <div className="relative hidden min-[360px]:block" data-tour="panel-civico-btn">
               <button
                 type="button"
                 ref={a11yButtonRef}
@@ -839,8 +880,10 @@ export default function Navbar() {
                 aria-expanded={isA11yOpen}
                 title="Accesibilidad Universal (Ley N° 7600)"
                 style={{
-                  width: '34px',
-                  height: '34px',
+                  width: '40px',
+                  height: '40px',
+                  minWidth: '40px',
+                  minHeight: '40px',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
@@ -857,7 +900,7 @@ export default function Navbar() {
                 }}
               >
                 {/* Icono universal de accesibilidad (persona/figura humana dentro de un círculo) */}
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10" />
                   <circle cx="12" cy="7" r="1.5" />
                   <path d="M7 11.5h10" />
@@ -877,7 +920,8 @@ export default function Navbar() {
                     top: 'calc(100% + 10px)',
                     right: 0,
                     zIndex: 100,
-                    width: '320px',
+                    width: 'min(320px, calc(100vw - 24px))',
+                    maxWidth: 'calc(100vw - 24px)',
                     backgroundColor: 'var(--cru-card-bg)',
                     backdropFilter: 'blur(24px)',
                     WebkitBackdropFilter: 'blur(24px)',
@@ -1087,17 +1131,16 @@ export default function Navbar() {
             {/* 3. Bloque de Identificación y Acceso Cívico */}
             <div className="flex items-center gap-1 sm:gap-1.5" data-tour="registro-login-btn">
               {isAuthenticated && user ? (
-                <div className="flex items-center gap-1.5 sm:gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   {/* Botón Dinámico de Retorno al Panel ("Volver a mi Interfaz") para TODOS los roles */}
                   <Link
                     to={interfaceInfo.path}
                     aria-label={`Volver a la interfaz de ${interfaceInfo.roleShort}`}
                     title={interfaceInfo.title}
-                    className={`inline-flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-full border text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 shadow-sm ${interfaceInfo.themeClass}`}
+                    className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-full border text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 shadow-sm ${interfaceInfo.themeClass}`}
                   >
                     <LayoutDashboard className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} />
-                    <span className="hidden sm:inline">{t('Volver a mi Interfaz')}</span>
-                    <span className="sm:hidden">{t('Mi Interfaz')}</span>
+                    <span>{t('Volver a mi Interfaz')}</span>
                   </Link>
 
                   {/* Pastilla de Identificación y Expediente Cívico */}
@@ -1105,10 +1148,10 @@ export default function Navbar() {
                     to="/perfil"
                     aria-label={`Expediente cívico de ${user.nombre || 'Usuario'}`}
                     title={`Usuario autenticado: ${user.nombre || 'Usuario'} • ${interfaceInfo.roleShort}`}
-                    className="inline-flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-full bg-cru-surface-muted hover:bg-cru-surface-hover border border-cru-border text-cru-text text-[11px] xl:text-xs font-bold tracking-wide transition-all shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 xl:px-3 xl:py-2 rounded-full bg-cru-surface-muted hover:bg-cru-surface-hover border border-cru-border text-cru-text text-[11px] xl:text-xs font-bold tracking-wide transition-all shadow-sm min-h-[40px]"
                   >
-                    <ShieldCheck className="w-3.5 h-3.5 text-cru-accent-sky shrink-0" strokeWidth={1.75} />
-                    <span className="max-w-[100px] sm:max-w-[140px] truncate">
+                    <ShieldCheck className="w-4 h-4 text-cru-accent-sky shrink-0" strokeWidth={1.75} />
+                    <span className="hidden min-[420px]:inline max-w-[85px] sm:max-w-[140px] truncate">
                       {user.nombre?.split(' ')[0]} {user.nombre?.split(' ')[1] || (user.nombre?.includes('Abarca') ? 'Abarca' : '')}
                     </span>
                     <span
@@ -1126,10 +1169,10 @@ export default function Navbar() {
                     onClick={() => setIsLogoutModalOpen(true)}
                     aria-label="Cerrar sesión activa"
                     title="Cerrar Sesión"
-                    className="inline-flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-full bg-cru-accent-red-bg border border-cru-accent-red-border text-cru-accent-red hover:bg-cru-accent-red hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm cursor-pointer"
+                    className="hidden md:inline-flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-full bg-cru-accent-red-bg border border-cru-accent-red-border text-cru-accent-red hover:bg-cru-accent-red hover:text-white text-[11px] xl:text-xs font-bold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5 text-cru-accent-red" strokeWidth={1.75} />
-                    <span className="hidden sm:inline lg:hidden xl:inline">{t('Cerrar Sesión')}</span>
+                    <span>{t('Cerrar Sesión')}</span>
                   </button>
                 </div>
               ) : (
@@ -1137,10 +1180,11 @@ export default function Navbar() {
                   to="/login"
                   aria-label="Iniciar sesión en la plataforma cívica institucional"
                   title="Iniciar Sesión"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-cru-accent-blue text-cru-accent-blue hover:bg-cru-accent-blue hover:text-white text-xs font-bold tracking-wide transition-all duration-200 shadow-sm"
+                  className="inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-4 py-2 rounded-full border-2 border-cru-accent-blue text-cru-accent-blue hover:bg-cru-accent-blue hover:text-white text-xs font-bold tracking-wide transition-all duration-200 shadow-sm min-h-[44px] min-w-[44px]"
                 >
-                  <LogIn className="w-3.5 h-3.5" strokeWidth={2} />
-                  <span>{t('Iniciar sesión')}</span>
+                  <LogIn className="w-4 h-4 shrink-0" strokeWidth={2} />
+                  <span className="hidden min-[480px]:inline">{t('Iniciar sesión')}</span>
+                  <span className="hidden min-[360px]:inline min-[480px]:hidden text-[11px]">{t('Entrar')}</span>
                 </Link>
               )}
             </div>
@@ -1151,7 +1195,7 @@ export default function Navbar() {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
               aria-expanded={isMobileMenuOpen}
-              className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cru-surface-muted hover:bg-cru-surface-hover border border-cru-border text-cru-text flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-cru-accent-blue"
+              className="lg:hidden w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl bg-cru-surface-muted hover:bg-cru-surface-hover border border-cru-border text-cru-text flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-cru-accent-blue shrink-0"
             >
               {isMobileMenuOpen ? (
                 <X className="w-5 h-5 text-cru-text" strokeWidth={2} />
@@ -1166,42 +1210,62 @@ export default function Navbar() {
         {isMobileMenuOpen && (
           <nav
             aria-label="Navegación Móvil Municipal"
-            className="lg:hidden border-t px-4 py-4 space-y-4 bg-cru-card-bg border-cru-border shadow-xl text-cru-text"
+            className="lg:hidden border-t px-4 py-4 space-y-4 bg-cru-card-bg border-cru-border shadow-xl text-cru-text max-h-[85dvh] overflow-y-auto pb-[max(1.5rem,env(safe-area-inset-bottom))]"
           >
+            {/* Accesos rápidos móviles a Tema y Accesibilidad */}
+            <div className="flex items-center justify-between pb-3 border-b border-cru-border gap-2">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="flex-1 py-2 px-3 rounded-xl border border-cru-border bg-cru-surface-muted text-xs font-bold flex items-center justify-center gap-1.5 min-h-[44px] text-cru-text"
+              >
+                {theme === 'dark' ? '☀️ Modo Claro' : '🌙 Modo Oscuro'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsA11yOpen(true);
+                }}
+                className="flex-1 py-2 px-3 rounded-xl border border-cru-border bg-cru-surface-muted text-xs font-bold flex items-center justify-center gap-1.5 min-h-[44px] text-cru-text"
+              >
+                ♿ Ley 7600
+              </button>
+            </div>
             {/* Enlaces principales */}
             <div className="flex flex-col gap-1 pb-3 border-b border-cru-border">
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 text-sm font-bold text-cru-accent-blue rounded-lg bg-cru-surface-muted"
+                className="min-h-[44px] flex items-center py-2.5 px-3 text-sm font-bold text-cru-accent-blue rounded-lg bg-cru-surface-muted"
               >
                 La Muni
               </Link>
               <Link
                 to="/portal-ciudadano"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 text-sm font-semibold text-cru-text hover:bg-cru-surface-muted rounded-lg"
+                className="min-h-[44px] flex items-center py-2.5 px-3 text-sm font-semibold text-cru-text hover:bg-cru-surface-muted rounded-lg"
               >
                 Trámites y servicios
               </Link>
               <Link
                 to="/gobernanza"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 text-sm font-semibold text-cru-text hover:bg-cru-surface-muted rounded-lg"
+                className="min-h-[44px] flex items-center py-2.5 px-3 text-sm font-semibold text-cru-text hover:bg-cru-surface-muted rounded-lg"
               >
                 Concejo y Actas
               </Link>
               <Link
                 to="/reportar-incidencia"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 text-sm font-semibold text-cru-text hover:bg-cru-surface-muted rounded-lg"
+                className="min-h-[44px] flex items-center py-2.5 px-3 text-sm font-semibold text-cru-text hover:bg-cru-surface-muted rounded-lg"
               >
                 Obras y Reportes
               </Link>
               <Link
                 to="/gobernanza"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 text-sm font-semibold text-cru-text hover:bg-cru-surface-muted rounded-lg"
+                className="min-h-[44px] flex items-center py-2.5 px-3 text-sm font-semibold text-cru-text hover:bg-cru-surface-muted rounded-lg"
               >
                 Transparencia
               </Link>
@@ -1211,7 +1275,7 @@ export default function Navbar() {
                 <Link
                   to={interfaceInfo.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold ${interfaceInfo.themeClass}`}
+                  className={`flex items-center justify-between min-h-[44px] px-3 py-2.5 rounded-xl border text-xs font-bold ${interfaceInfo.themeClass}`}
                 >
                   <span className="flex items-center gap-2">
                     <LayoutDashboard className="w-4 h-4 shrink-0" strokeWidth={1.75} />
@@ -1224,7 +1288,7 @@ export default function Navbar() {
                   <Link
                     to="/perfil"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-2 text-xs font-medium text-cru-text-soft hover:text-cru-text"
+                    className="flex items-center gap-2 min-h-[44px] py-1 text-xs font-medium text-cru-text-soft hover:text-cru-text"
                   >
                     <ShieldCheck className="w-4 h-4 text-cru-accent-sky" strokeWidth={1.75} />
                     <span className="truncate max-w-[180px]">{user.nombre}</span>
@@ -1236,7 +1300,7 @@ export default function Navbar() {
                       setIsMobileMenuOpen(false);
                       setIsLogoutModalOpen(true);
                     }}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cru-accent-red-bg border border-cru-accent-red-border text-cru-accent-red hover:bg-cru-accent-red hover:text-white text-xs font-bold transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 min-h-[44px] px-3 py-2 rounded-lg bg-cru-accent-red-bg border border-cru-accent-red-border text-cru-accent-red hover:bg-cru-accent-red hover:text-white text-xs font-bold transition-colors cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5 text-cru-accent-red" strokeWidth={1.75} />
                     <span>{t('Cerrar Sesión')}</span>
@@ -1248,7 +1312,7 @@ export default function Navbar() {
               const IconoCat = cat.icon;
               return (
                 <div key={cat.id} className="space-y-1">
-                  <div className="flex items-center gap-2 text-xs font-bold text-cru-accent-sky uppercase tracking-wider">
+                  <div className="flex items-center gap-2 text-xs font-bold text-cru-accent-sky uppercase tracking-wider py-1">
                     <IconoCat className="w-3.5 h-3.5" strokeWidth={1.75} />
                     <span>{t(cat.label)}</span>
                   </div>
@@ -1258,7 +1322,7 @@ export default function Navbar() {
                         key={mod.path}
                         to={mod.path}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="py-1 text-xs text-cru-text-soft hover:text-cru-text transition-colors block"
+                        className="min-h-[44px] py-2 px-2 text-xs text-cru-text-soft hover:text-cru-text transition-colors flex items-center"
                       >
                         {t(mod.titulo)}
                       </Link>

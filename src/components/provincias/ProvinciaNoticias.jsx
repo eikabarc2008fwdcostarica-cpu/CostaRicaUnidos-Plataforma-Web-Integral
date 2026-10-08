@@ -19,7 +19,7 @@ import {
   Building2,
   Plus
 } from 'lucide-react';
-import { obtenerNoticias, esEditorMunicipal } from '../../services/noticiasService';
+import { obtenerNoticias, esEncargadoMunicipal } from '../../services/noticiasService';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { getProvincialTextColor } from '../../data/costaRicaTerritorialData';
@@ -35,7 +35,7 @@ export default function ProvinciaNoticias({ provincia }) {
   const { user } = useAuth();
   const { theme, isDark } = useTheme();
   const isLight = theme === 'light' && !isDark;
-  const tienePermisoEditor = esEditorMunicipal(user);
+  const tienePermisoEncargado = esEncargadoMunicipal(user);
 
   const [categoriaFiltro, setCategoriaFiltro] = useState('TODAS');
   const [busqueda, setBusqueda] = useState('');
@@ -76,7 +76,7 @@ export default function ProvinciaNoticias({ provincia }) {
       provincia: provincia.nombre,
       canton: provincia.cabecera || provincia.nombre,
       autorNombre: `Secretaría Técnica • ${provincia.cabecera}`,
-      autorRol: 'Editor Municipal',
+      autorRol: 'Encargado Municipal',
       autorCedula: '118230456',
       fechaPublicacion: '2026-10-01T10:00:00Z',
       reacciones: { apoyo: 12, interesante: 7, alerta: 1 },
@@ -180,7 +180,7 @@ export default function ProvinciaNoticias({ provincia }) {
 
         {/* Acciones y Buscador */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-          {tienePermisoEditor && (
+          {tienePermisoEncargado && (
             <button
               onClick={() => setModalFormAbierto(true)}
               style={{

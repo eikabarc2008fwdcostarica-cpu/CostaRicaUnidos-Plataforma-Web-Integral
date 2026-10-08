@@ -25,7 +25,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
   obtenerNoticias,
   eliminarNoticia,
-  esEditorMunicipal,
+  esEncargadoMunicipal,
   suscribirCambiosNoticias
 } from '../../services/noticiasService';
 import { PROVINCIAS_DATA, CANTONES_OFICIALES } from '../../data/costaRicaTerritorialData';
@@ -70,7 +70,7 @@ export default function NoticiasSection({
   tituloPersonalizado = null
 }) {
   const { user } = useAuth();
-  const tienePermisoEditor = esEditorMunicipal(user);
+  const tienePermisoEditor = esEncargadoMunicipal(user);
 
   // Estados de Datos del Feed
   const [noticias, setNoticias] = useState([]);
@@ -235,12 +235,12 @@ export default function NoticiasSection({
     setCantonFiltro('todos');
   };
 
-  // Manejador: Editar Noticia (Exclusivo Editor Municipal)
+  // Manejador: Editar Noticia (Exclusivo Encargado Municipal)
   const handleEditarNoticia = (noticia) => {
     if (!tienePermisoEditor) {
       setAlertaGlobal({
         tipo: 'error',
-        texto: 'Acceso Denegado (RBAC): Sólo un Editor Municipal puede modificar comunicados oficiales.'
+        texto: 'Acceso Denegado (RBAC): Sólo un Encargado Municipal puede modificar comunicados oficiales.'
       });
       return;
     }
@@ -248,12 +248,12 @@ export default function NoticiasSection({
     setModalFormAbierto(true);
   };
 
-  // Manejador: Crear Noticia (Exclusivo Editor Municipal)
+  // Manejador: Crear Noticia (Exclusivo Encargado Municipal)
   const handleNuevaNoticia = () => {
     if (!tienePermisoEditor) {
       setAlertaGlobal({
         tipo: 'error',
-        texto: 'Acceso Denegado (RBAC): Se requiere rol de "Editor Municipal" para publicar.'
+        texto: 'Acceso Denegado (RBAC): Se requiere rol de "Encargado Municipal" para publicar.'
       });
       return;
     }
@@ -266,7 +266,7 @@ export default function NoticiasSection({
     if (!tienePermisoEditor) {
       setAlertaGlobal({
         tipo: 'error',
-        texto: 'Acceso Denegado (RBAC): Se requiere rol de "Editor Municipal" para dar de baja comunicados.'
+        texto: 'Acceso Denegado (RBAC): Se requiere rol de "Encargado Municipal" para dar de baja comunicados.'
       });
       return;
     }
@@ -687,7 +687,7 @@ export default function NoticiasSection({
         }}
       >
         {/* =================================================================== */}
-        {/* BARRA SUPERIOR DE PUBLICACIÓN PARA EL EDITOR MUNICIPAL (FACEBOOK)  */}
+        {/* BARRA SUPERIOR DE PUBLICACIÓN PARA EL ENCARGADO MUNICIPAL (FACEBOOK)  */}
         {/* =================================================================== */}
         {tienePermisoEditor && (
           <div
@@ -704,7 +704,7 @@ export default function NoticiasSection({
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-              {/* Avatar del Editor Municipal */}
+              {/* Avatar del Encargado Municipal */}
               <div
                 style={{
                   width: '42px',
@@ -765,7 +765,7 @@ export default function NoticiasSection({
                     borderRadius: '999px'
                   }}
                 >
-                  Editor Municipal
+                  Encargado Municipal
                 </span>
               </button>
             </div>
@@ -1069,7 +1069,7 @@ export default function NoticiasSection({
       </div>
 
       {/* ===================================================================== */}
-      {/* 5. MODAL DE PUBLICACIÓN / EDICIÓN (RBAC: Solo Editor Municipal)       */}
+      {/* 5. MODAL DE PUBLICACIÓN / EDICIÓN (RBAC: Solo Encargado Municipal)     */}
       {/* ===================================================================== */}
       {tienePermisoEditor && (
         <NoticiaFormModal

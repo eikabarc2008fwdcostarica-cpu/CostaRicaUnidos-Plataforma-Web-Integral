@@ -14,7 +14,7 @@ import {
   Lock
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { crearNoticia, actualizarNoticia, esEditorMunicipal } from '../../services/noticiasService';
+import { crearNoticia, actualizarNoticia, esEncargadoMunicipal } from '../../services/noticiasService';
 import { PROVINCIAS_DATA, CANTONES_OFICIALES } from '../../data/costaRicaTerritorialData';
 
 const CATEGORIAS_NOTICIAS = [
@@ -35,7 +35,7 @@ export default function NoticiaFormModal({
   noticiaParaEditar = null
 }) {
   const { user } = useAuth();
-  const tienePermisoEditor = esEditorMunicipal(user);
+  const tienePermisoEditor = esEncargadoMunicipal(user);
 
   const [titulo, setTitulo] = useState('');
   const [resumen, setResumen] = useState('');
@@ -103,7 +103,7 @@ export default function NoticiaFormModal({
     e.preventDefault();
 
     if (!tienePermisoEditor) {
-      setErrorMsg('Acceso Denegado (RBAC): Única y exclusivamente usuarios con rol de "Editor Municipal" pueden publicar o editar comunicados oficiales.');
+      setErrorMsg('Acceso Denegado (RBAC): Única y exclusivamente usuarios con rol de "Encargado Municipal" pueden publicar o editar comunicados oficiales.');
       return;
     }
 
@@ -124,9 +124,11 @@ export default function NoticiaFormModal({
         provincia,
         canton,
         imagenUrl: imagenUrl.trim(),
-        autorNombre: user?.nombre || 'Gestión Municipal',
-        autorRol: 'Editor Municipal',
-        autorCedula: user?.cedula || '1-1155-0892'
+        autorNombre: user?.nombre || 'Encargado Municipal',
+        autorRol: 'Encargado Municipal',
+        autorCedula: user?.cedula || '1-1155-0892',
+        esOficial: true,
+        distintivo: `Cuenta oficial · Municipalidad de ${canton}`
       };
 
       let resultado;
@@ -248,7 +250,7 @@ export default function NoticiaFormModal({
               }}
             >
               {tienePermisoEditor ? <ShieldCheck className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
-              RBAC: {tienePermisoEditor ? 'Editor Municipal Autorizado' : 'Rol No Autorizado'}
+              RBAC: {tienePermisoEditor ? 'Encargado Municipal Autorizado' : 'Rol No Autorizado'}
             </span>
           </div>
 
@@ -268,7 +270,7 @@ export default function NoticiaFormModal({
           </p>
         </div>
 
-        {/* Alerta de bloqueo RBAC si el usuario no es Editor Municipal */}
+        {/* Alerta de bloqueo RBAC si el usuario no es Encargado Municipal */}
         {!tienePermisoEditor && (
           <div
             style={{
@@ -289,7 +291,7 @@ export default function NoticiaFormModal({
                 Control de Acceso Basado en Roles (RBAC)
               </div>
               <p style={{ fontSize: '0.8rem', lineHeight: 1.4, margin: 0 }}>
-                Única y exclusivamente los usuarios con rol de <strong>"Editor Municipal"</strong> tienen permisos para publicar, modificar o dar de baja comunicados. Tu rol actual es: <em>{user?.rol || 'Visitante no autenticado'}</em>.
+                Única y exclusivamente los usuarios con rol de <strong>"Encargado Municipal"</strong> tienen permisos para publicar, modificar o dar de baja comunicados. Tu rol actual es: <em>{user?.rol || 'Visitante no autenticado'}</em>.
               </p>
             </div>
           </div>
@@ -632,10 +634,10 @@ export default function NoticiaFormModal({
             }}
           >
             <span>
-              Emitiendo como: <strong style={{ color: '#F1F5F9' }}>{user?.nombre || 'Editor Municipal'}</strong>
+              Emitiendo como: <strong style={{ color: '#F1F5F9' }}>{user?.nombre || 'Encargado Municipal'}</strong>
             </span>
             <span>
-              Rol Acreditado: <strong style={{ color: '#F59E0B' }}>{user?.rol || 'Editor Municipal'}</strong>
+              Rol Acreditado: <strong style={{ color: '#F59E0B' }}>{user?.rol || 'Encargado Municipal'}</strong>
             </span>
           </div>
 

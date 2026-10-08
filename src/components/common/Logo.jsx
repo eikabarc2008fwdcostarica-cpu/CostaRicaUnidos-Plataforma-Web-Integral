@@ -22,12 +22,11 @@ export default function Logo({ size = '40px', showText = true, variant = 'auto',
   return (
     <Link
       to="/"
-      className="flex items-center gap-3 cursor-pointer select-none group no-underline"
+      className="flex items-center gap-2 sm:gap-3 cursor-pointer select-none group no-underline"
       aria-label="Ir a la página principal de Costa Rica Unidos"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '0.75rem',
         textDecoration: 'none',
         flexShrink: 0
       }}
@@ -42,13 +41,12 @@ export default function Logo({ size = '40px', showText = true, variant = 'auto',
           width: 'auto',
           objectFit: 'contain'
         }}
-        className="h-10 w-10 object-contain"
+        className="h-9 w-9 sm:h-10 sm:w-10 object-contain shrink-0"
       />
       {showText && (
         <div
-          className="flex flex-col select-none"
+          className="hidden min-[380px]:flex flex-col select-none"
           style={{
-            display: 'flex',
             flexDirection: 'column',
             lineHeight: 1.1,
             userSelect: 'none'

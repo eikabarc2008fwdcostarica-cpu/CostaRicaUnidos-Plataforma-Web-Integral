@@ -149,7 +149,7 @@ export const CivicModal: FC<CivicModalProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1.25rem',
+        padding: 'clamp(0.5rem, 2vw, 1.25rem)',
         animation: 'civicModalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards'
       }}
     >
@@ -165,7 +165,7 @@ export const CivicModal: FC<CivicModalProps> = ({
         style={{
           width: '100%',
           maxWidth: sizeWidthMap[size],
-          maxHeight: size === 'full' ? '92vh' : '88vh',
+          maxHeight: size === 'full' ? '92dvh' : '88dvh',
           display: 'flex',
           flexDirection: 'column',
           background: 'var(--cru-surface-card)',
@@ -183,7 +183,7 @@ export const CivicModal: FC<CivicModalProps> = ({
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
-            padding: '1.5rem 1.75rem',
+            padding: '1.25rem 1.5rem',
             borderBottom: '1px solid var(--cru-border)',
             background: 'var(--cru-surface-muted)'
           }}
@@ -227,8 +227,10 @@ export const CivicModal: FC<CivicModalProps> = ({
                 background: 'var(--cru-surface-muted)',
                 border: '1px solid var(--cru-border)',
                 borderRadius: '8px',
-                width: '38px',
-                height: '38px',
+                width: '44px',
+                height: '44px',
+                minWidth: '44px',
+                minHeight: '44px',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -236,7 +238,7 @@ export const CivicModal: FC<CivicModalProps> = ({
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 flexShrink: 0,
-                marginLeft: '1rem'
+                marginLeft: '0.75rem'
               }}
               className="civic-modal-close-btn focus-visible:ring-2 focus-visible:ring-cru-accent-blue focus-visible:outline-none"
             >

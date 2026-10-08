@@ -38,7 +38,8 @@ export default function HeroScene({ isNight = false }) {
           height: '100%',
           display: 'block',
           position: 'absolute',
-          inset: 0
+          inset: 0,
+          overflow: 'hidden'
         }}
       >
         <defs>

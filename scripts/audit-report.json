@@ -1,0 +1,5863 @@
+[
+  {
+    "name": "Inicio (Home)",
+    "path": "/",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 24,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 38,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 47,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 86,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 24,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 29,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Avisos",
+            "w": 83,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 34,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 30,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Login (Pestaña Ingreso)",
+    "path": "/login",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 13,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 13,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 11,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Ciudadano",
+            "w": 101,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 15,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 12,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 768,
+        "innerWidth": 768,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Noticias y Comunicados",
+    "path": "/noticias",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 46,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 51,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 50,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 37,
+            "h": 37,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 54,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 51,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Foro Cívico Tico",
+    "path": "/foro",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 38,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 38,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 39,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 45,
+            "h": 37,
+            "cls": "hover:bg-sky-500/20 hover:text-white"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 42,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 40,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Comercios y PyMES",
+    "path": "/comercio",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 13,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 13,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 11,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Ciudadano",
+            "w": 101,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 15,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 12,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 768,
+        "innerWidth": 768,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Mapa GIS Territorial",
+    "path": "/mapa-gis",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 9,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 44,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 43,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "div",
+            "text": "",
+            "w": 22,
+            "h": 30,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 50,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 44,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Reportar Incidencia",
+    "path": "/reportar-incidencia",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 7,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 11,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Seguridad y Emergencias SOS",
+    "path": "/seguridad-emergencias",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 20,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 20,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 19,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "Waze",
+            "w": 81,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 23,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 20,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Gobernanza y Concejos",
+    "path": "/gobernanza",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 23,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 23,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 22,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "alcaldia@msj.go.cr",
+            "w": 125,
+            "h": 22,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 26,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 23,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Cultura y Tradición",
+    "path": "/cultura",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 7,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 11,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Deportes y Recreación",
+    "path": "/deportes",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 18,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 18,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 17,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Todas (6)",
+            "w": 86,
+            "h": 37,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 21,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 18,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Educación Cívica",
+    "path": "/educacion",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 32,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 32,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 31,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Todos los Niveles",
+            "w": 135,
+            "h": 37,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 35,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 32,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Feria del Agricultor",
+    "path": "/feria-agricultor",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 28,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 28,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 27,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "Volver a Directorio",
+            "w": 256,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 31,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 28,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Turismo Sostenible",
+    "path": "/turismo",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 60,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 60,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 61,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Generar Itinerario I",
+            "w": 248,
+            "h": 36,
+            "cls": "civic-btn civic-btn-primary"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 64,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 62,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Participación Ciudadana",
+    "path": "/participacion",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 7,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 11,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1280,
+        "innerWidth": 1280,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Itinerario Turístico IA",
+    "path": "/itinerario-ia",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 16,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 768,
+        "innerWidth": 768,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1280,
+        "innerWidth": 1280,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Acceso Denegado (403)",
+    "path": "/acceso-denegado",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 9,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 11,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1280,
+        "innerWidth": 1280,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Página No Encontrada (404)",
+    "path": "/404-no-existe",
+    "role": null,
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 9,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 9,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 7,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 768,
+        "innerWidth": 768,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Portal Ciudadano",
+    "path": "/portal-ciudadano",
+    "role": "CIUDADANO",
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 9,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "Ver mi expediente →",
+            "w": 121,
+            "h": 20,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 14,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Perfil de Usuario",
+    "path": "/perfil",
+    "role": "CIUDADANO",
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 7,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 8,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Perfil Comercial PyME",
+    "path": "/perfil-comercial",
+    "role": "COMERCIANTE",
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 12,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 13,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 12,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "Inicio",
+            "w": 33,
+            "h": 21,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 18,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 13,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 58,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Mi Municipalidad",
+    "path": "/mi-municipalidad",
+    "role": "ENCARGADO_MUNICIPAL",
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 12,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 54,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 40,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 50,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 91,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "a",
+            "text": "",
+            "w": 37,
+            "h": 40,
+            "cls": "flex items-center"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 11,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 56,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 41,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 52,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 95,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Noticia",
+            "w": 88,
+            "h": 28,
+            "cls": "px-3 py-1.5"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 17,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 56,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 41,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 61,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 52,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 95,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 69,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "Español",
+            "w": 56,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Bribri",
+            "w": 41,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Cabécar",
+            "w": 60,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "English",
+            "w": 52,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          },
+          {
+            "tag": "button",
+            "text": "Alto contraste",
+            "w": 95,
+            "h": 28,
+            "cls": "hover:text-yellow-300 transition-colors"
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 753,
+        "innerWidth": 768,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1265,
+        "innerWidth": 1280,
+        "overflowDiff": -15,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Consola Gestor Territorial",
+    "path": "/admin/territorial",
+    "role": "GESTOR_TERRITORIAL",
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 20,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 30,
+            "h": 30,
+            "cls": "sidebar-collapse-btn hidden"
+          },
+          {
+            "tag": "a",
+            "text": "COSTA RICA UNIDOS",
+            "w": 198,
+            "h": 32,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Salir",
+            "w": 72,
+            "h": 36,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Puntarenas\n601",
+            "w": 155,
+            "h": 39,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Esparza\n602",
+            "w": 131,
+            "h": 39,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 20,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 30,
+            "h": 30,
+            "cls": "sidebar-collapse-btn hidden"
+          },
+          {
+            "tag": "a",
+            "text": "COSTA RICA UNIDOS",
+            "w": 201,
+            "h": 32,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Salir",
+            "w": 72,
+            "h": 36,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Puntarenas\n601",
+            "w": 155,
+            "h": 39,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Esparza\n602",
+            "w": 131,
+            "h": 39,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 20,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 30,
+            "h": 30,
+            "cls": "sidebar-collapse-btn hidden"
+          },
+          {
+            "tag": "a",
+            "text": "COSTA RICA UNIDOS",
+            "w": 201,
+            "h": 32,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Salir",
+            "w": 72,
+            "h": 36,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Puntarenas\n601",
+            "w": 155,
+            "h": 39,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Esparza\n602",
+            "w": 131,
+            "h": 39,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 23,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 30,
+            "h": 30,
+            "cls": "sidebar-collapse-btn hidden"
+          },
+          {
+            "tag": "a",
+            "text": "COSTA RICA UNIDOS\nGO",
+            "w": 201,
+            "h": 32,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Portal",
+            "w": 82,
+            "h": 36,
+            "cls": "hidden sm:inline-flex"
+          },
+          {
+            "tag": "button",
+            "text": "GIS 3D",
+            "w": 87,
+            "h": 36,
+            "cls": "hidden md:inline-flex"
+          },
+          {
+            "tag": "button",
+            "text": "Salir",
+            "w": 72,
+            "h": 36,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 20,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 30,
+            "h": 30,
+            "cls": "sidebar-collapse-btn hidden"
+          },
+          {
+            "tag": "a",
+            "text": "COSTA RICA UNIDOS",
+            "w": 201,
+            "h": 32,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Salir",
+            "w": 72,
+            "h": 36,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Puntarenas\n601",
+            "w": 155,
+            "h": 39,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Esparza\n602",
+            "w": 131,
+            "h": 39,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 768,
+        "innerWidth": 768,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1280,
+        "innerWidth": 1280,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  },
+  {
+    "name": "Consola Super Admin",
+    "path": "/admin/super",
+    "role": "SUPER_ADMIN_NACIONAL",
+    "sizes": {
+      "320x568 (iPhone SE)": {
+        "status": "✅ PASS",
+        "scrollWidth": 320,
+        "innerWidth": 320,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 5,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 30,
+            "h": 30,
+            "cls": "md:hidden p-1.5"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": "md:hidden p-2"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Hablar",
+            "w": 94,
+            "h": 40,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Guía",
+            "w": 86,
+            "h": 40,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "360x640 (Android)": {
+        "status": "✅ PASS",
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 5,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 30,
+            "h": 30,
+            "cls": "md:hidden p-1.5"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": "md:hidden p-2"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Hablar",
+            "w": 94,
+            "h": 40,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Guía",
+            "w": 86,
+            "h": 40,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "390x844 (iPhone 12/13)": {
+        "status": "✅ PASS",
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 5,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 30,
+            "h": 30,
+            "cls": "md:hidden p-1.5"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": "md:hidden p-2"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Hablar",
+            "w": 94,
+            "h": 40,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Guía",
+            "w": 86,
+            "h": 40,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "844x390 (iPhone Landscape)": {
+        "status": "✅ PASS",
+        "scrollWidth": 844,
+        "innerWidth": 844,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 4,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 28,
+            "h": 28,
+            "cls": "sidebar-collapse-toggle-btn hidden"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Hablar",
+            "w": 94,
+            "h": 40,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Guía",
+            "w": 86,
+            "h": 40,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "430x932 (iPhone Pro Max)": {
+        "status": "✅ PASS",
+        "scrollWidth": 430,
+        "innerWidth": 430,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 5,
+        "sampleSmallTargets": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 30,
+            "h": 30,
+            "cls": "md:hidden p-1.5"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": "md:hidden p-2"
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 36,
+            "h": 36,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Hablar",
+            "w": 94,
+            "h": 40,
+            "cls": ""
+          },
+          {
+            "tag": "button",
+            "text": "Guía",
+            "w": 86,
+            "h": 40,
+            "cls": ""
+          }
+        ],
+        "inputsWithSmallFont": 0
+      },
+      "768x1024 (Tablet)": {
+        "status": "✅ PASS",
+        "scrollWidth": 768,
+        "innerWidth": 768,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      },
+      "1280x800 (Desktop)": {
+        "status": "✅ PASS",
+        "scrollWidth": 1280,
+        "innerWidth": 1280,
+        "overflowDiff": 0,
+        "hasHorizontalScroll": false,
+        "overflowingElements": [],
+        "smallTapTargets": 0,
+        "sampleSmallTargets": [],
+        "inputsWithSmallFont": 0
+      }
+    }
+  }
+]

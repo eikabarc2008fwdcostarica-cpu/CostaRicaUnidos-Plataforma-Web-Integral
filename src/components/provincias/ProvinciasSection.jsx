@@ -5,8 +5,6 @@ import {
   Award,
   MapPin,
   Compass,
-  ChevronRight,
-  ShieldCheck,
   Building2,
   Users,
   Layers,
@@ -14,7 +12,6 @@ import {
 } from 'lucide-react';
 import { PROVINCIAS_DATA, getProvincialTextColor } from '../../data/costaRicaTerritorialData';
 import { useTheme } from '../../context/ThemeContext';
-import { EscudoEmblematico } from '../ProvincialThemeEngine';
 import ProvinciaHistoria from './ProvinciaHistoria';
 import ProvinciaCuriosidades from './ProvinciaCuriosidades';
 import ProvinciaPersonajes from './ProvinciaPersonajes';
@@ -306,58 +303,41 @@ export default function ProvinciasSection({ initialProvinciaId = 1 }) {
               paddingBottom: '1.75rem'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-              <div
-                style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '16px',
-                  backgroundColor: 'var(--cru-surface-muted)',
-                  border: `2px solid ${provinciaActual.color}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: `0 0 20px ${provinciaActual.color}35`
-                }}
-              >
-                <EscudoEmblematico id={provinciaActual.id} size={42} />
-              </div>
-
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                  <span
-                    style={{
-                      fontSize: '0.74rem',
-                      fontWeight: 800,
-                      color: provColorText,
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase'
-                    }}
-                  >
-                    PROVINCIA 0{provinciaActual.id} • {provinciaActual.codigo}
-                  </span>
-                  <span style={{ color: 'var(--cru-text-muted)' }}>•</span>
-                  <span style={{ fontSize: '0.74rem', color: 'var(--cru-text-soft)' }}>
-                    Cabecera: <strong>{provinciaActual.cabecera}</strong>
-                  </span>
-                </div>
-
-                <h3
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', maxWidth: '720px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+                <span
                   style={{
-                    fontSize: 'clamp(1.4rem, 2.8vw, 1.85rem)',
-                    fontWeight: 900,
-                    color: 'var(--cru-text)',
-                    margin: '3px 0 6px 0',
-                    letterSpacing: '-0.01em'
+                    fontSize: '0.74rem',
+                    fontWeight: 800,
+                    color: provColorText,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase'
                   }}
                 >
-                  {provinciaActual.nombre}
-                </h3>
-
-                <p style={{ color: 'var(--cru-text-soft)', fontSize: '0.88rem', margin: 0, maxWidth: '620px', lineHeight: 1.5 }}>
-                  {provinciaActual.lema} — {provinciaActual.descripcion}
-                </p>
+                  PROVINCIA 0{provinciaActual.id} • {provinciaActual.codigo}
+                </span>
+                <span style={{ color: 'var(--cru-text-muted)' }}>•</span>
+                <span style={{ fontSize: '0.74rem', color: 'var(--cru-text-soft)' }}>
+                  Cabecera: <strong>{provinciaActual.cabecera}</strong>
+                </span>
               </div>
+
+              <h3
+                style={{
+                  fontSize: 'clamp(1.45rem, 2.8vw, 1.95rem)',
+                  fontWeight: 900,
+                  color: 'var(--cru-text)',
+                  margin: '3px 0 6px 0',
+                  letterSpacing: '-0.01em',
+                  lineHeight: 1.2
+                }}
+              >
+                {provinciaActual.nombre}
+              </h3>
+
+              <p style={{ color: 'var(--cru-text-soft)', fontSize: '0.88rem', margin: 0, maxWidth: '680px', lineHeight: 1.5 }}>
+                {provinciaActual.lema} — {provinciaActual.descripcion}
+              </p>
             </div>
 
             {/* Ficha rápida de telemetría territorial */}

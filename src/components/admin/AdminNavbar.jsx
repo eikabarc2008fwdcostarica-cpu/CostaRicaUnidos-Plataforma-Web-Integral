@@ -96,11 +96,11 @@ export default function AdminNavbar({
             <button
               type="button"
               onClick={onToggleMobileSidebar}
-              className="admin-mobile-menu-btn md:hidden p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors flex items-center justify-center shrink-0 cursor-pointer"
+              className="admin-mobile-menu-btn md:hidden w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors flex items-center justify-center shrink-0 cursor-pointer"
               title="Abrir menú de navegación"
               aria-label="Abrir menú de navegación"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <line x1="3" y1="18" x2="21" y2="18" />
@@ -129,6 +129,7 @@ export default function AdminNavbar({
                 Costa Rica Unidos
               </span>
               <span
+                className="hidden sm:inline"
                 style={{
                   color: '#94A3B8',
                   fontSize: '0.62rem',
@@ -144,7 +145,7 @@ export default function AdminNavbar({
         </div>
 
         {/* CENTRO: Identificador Nivel 4 en JetBrains Mono */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="hidden lg:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
           <span
             style={{
               fontFamily: "'JetBrains Mono', 'Courier New', monospace",
@@ -171,7 +172,7 @@ export default function AdminNavbar({
         </div>
 
         {/* LADO DERECHO: Selector de Provincia (Theming) + Accesos Directos */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
           {/* Control de Jurisdicción Territorial (Bloqueado para Gestor con Pastilla Fija) */}
           {!isSuperAdmin ? (
             <div
@@ -179,10 +180,10 @@ export default function AdminNavbar({
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.5rem',
+                gap: '0.4rem',
                 backgroundColor: 'rgba(56, 189, 248, 0.10)',
                 border: `1px solid ${activeTheme?.primary || '#38BDF8'}`,
-                padding: '0.35rem 0.85rem',
+                padding: '0.35rem 0.65rem',
                 borderRadius: '8px',
                 fontSize: '0.72rem',
                 fontFamily: "'JetBrains Mono', 'Courier New', monospace",
@@ -193,8 +194,11 @@ export default function AdminNavbar({
               }}
             >
               <Compass size={14} color={activeTheme?.primary || '#38BDF8'} />
-              <span>
+              <span className="hidden sm:inline">
                 JURISDICCIÓN ASIGNADA: {(activeTheme?.nombre || user?.provinciaNombre || user?.provincia || 'SAN JOSÉ').toUpperCase()} • {activeTheme?.cantonesCount || 20} CANTONES
+              </span>
+              <span className="sm:hidden">
+                {(activeTheme?.nombre || user?.provinciaNombre || user?.provincia || 'SAN JOSÉ').toUpperCase()}
               </span>
             </div>
           ) : (
@@ -249,10 +253,8 @@ export default function AdminNavbar({
           <button
             type="button"
             onClick={() => navigate('/portal-ciudadano')}
+            className="hidden sm:inline-flex items-center gap-1.5"
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
               padding: '0.45rem 0.75rem',
               borderRadius: '8px',
               backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -275,10 +277,8 @@ export default function AdminNavbar({
           <button
             type="button"
             onClick={() => navigate('/mapa-gis')}
+            className="hidden md:inline-flex items-center gap-1.5"
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
               padding: '0.45rem 0.75rem',
               borderRadius: '8px',
               backgroundColor: 'rgba(0, 43, 127, 0.35)',

@@ -8,6 +8,7 @@
 export type OfficialRoleName =
   | 'Super Administrador Nacional'
   | 'Gestor Territorial y Municipal'
+  | 'Encargado Municipal'
   | 'Comerciante y Emprendedor'
   | 'Ciudadano Residente'
   | 'Ciudadano/Turista';
@@ -16,6 +17,7 @@ export type UserRole =
   | OfficialRoleName
   | 'SUPER_ADMIN_NACIONAL'
   | 'GESTOR_TERRITORIAL'
+  | 'ENCARGADO_MUNICIPAL'
   | 'COMERCIANTE'
   | 'CIUDADANO'
   | 'CIUDADANO_TURISTA';
@@ -42,10 +44,11 @@ export interface DbUser {
   correo: string;
   password?: string;
   rol: OfficialRoleName | string;
-  nivelAcceso: number; // 5 = Super Admin, 4 = Admin Prov, 3 = Editor Muni, 2 = Ciudadano/Turista
+  nivelAcceso: number; // 5 = Super Admin, 4 = Gestor Terr, 3 = Encargado Muni / Comerciante, 2 = Ciudadano
   provincia: string;
   canton: string;
   distrito?: string;
+  municipalidadId?: string;
   fechaRegistro: string;
   verificadoHacienda: boolean;
 }

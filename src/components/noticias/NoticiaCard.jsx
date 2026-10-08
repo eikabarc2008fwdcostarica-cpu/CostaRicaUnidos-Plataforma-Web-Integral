@@ -18,12 +18,12 @@ import {
   Eye
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { esEditorMunicipal } from '../../services/noticiasService';
+import { esEncargadoMunicipal } from '../../services/noticiasService';
 
 /**
  * Tarjeta de Noticia / Comunicado Municipal (M01)
- * Aplica RBAC estricto: Sólo usuarios con rol de Editor Municipal
- * pueden visualizar y ejecutar las acciones de Edición y Eliminación.
+ * Aplica RBAC estricto: Sólo usuarios con rol de Encargado Municipal
+ * de su cantón respectivo o Super Administrador pueden editar y eliminar.
  */
 export default function NoticiaCard({
   noticia,
@@ -33,7 +33,20 @@ export default function NoticiaCard({
   onReaccionar
 }) {
   const { user } = useAuth();
-  const tienePermisoEditor = esEditorMunicipal(user);
+  const tienePermisoEditor = esEncargadoMunicipal(user);
+
+  // Regla de jurisdicción territorial: Encargado solo gestiona su cantón
+  const puedeGestionarEstaNoticia = (() => {
+    if (!user || !tienePermisoEditor) return false;
+    const rolNorm = (user.rol || "").toLowerCase();
+    const nivel = Number(user.nivelAcceso || 0);
+    if (nivel >= 4 || rolNorm.includes("super") || rolNorm.includes("territorial")) return true;
+    if (user.isEncargadoMunicipal || rolNorm.includes("encargado")) {
+      if (!user.canton) return false;
+      return String(noticia?.canton || "").trim().toLowerCase() === String(user.canton || "").trim().toLowerCase();
+    }
+    return false;
+  })();
 
   const [confirmandoEliminar, setConfirmandoEliminar] = useState(false);
   const [eliminando, setEliminando] = useState(false);
@@ -371,7 +384,7 @@ export default function NoticiaCard({
           </div>
         </div>
 
-        {/* Confirmación de Borrado Inline para Editor Municipal */}
+        {/* Confirmación de Borrado Inline para Encargado Municipal */}
         {confirmandoEliminar && (
           <div
             style={{
@@ -466,9 +479,9 @@ export default function NoticiaCard({
           </button>
 
           {/* =============================================================== */}
-          {/* ACCIONES EXCLUSIVAS DE GESTIÓN (RBAC: Solo Editor Municipal)    */}
+          {/* ACCIONES EXCLUSIVAS DE GESTIÓN (RBAC: Encargado Municipal de su cantón) */}
           {/* =============================================================== */}
-          {tienePermisoEditor && !confirmandoEliminar && (
+          {puedeGestionarEstaNoticia && !confirmandoEliminar && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               {/* Botón Editar */}
               <button
@@ -477,7 +490,7 @@ export default function NoticiaCard({
                   e.stopPropagation();
                   if (onEditar) onEditar(noticia);
                 }}
-                title="Editar comunicado oficial (Editor Municipal)"
+                title="Editar comunicado oficial (Encargado Municipal)"
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -511,7 +524,7 @@ export default function NoticiaCard({
                   e.stopPropagation();
                   setConfirmandoEliminar(true);
                 }}
-                title="Dar de baja comunicado oficial (Editor Municipal)"
+                title="Dar de baja comunicado oficial (Encargado Municipal)"
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',

@@ -87,14 +87,21 @@ export async function obtenerPostPorId(id) {
 /**
  * Crear una nueva publicación en el foro
  */
-export async function crearPost(postData) {
+export async function crearPost(postData, user = null) {
   try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    };
+    if (user) {
+      if (user.rol) headers['X-User-Role'] = user.rol;
+      if (user.canton) headers['X-User-Canton'] = user.canton;
+      if (user.cedula) headers['X-User-Cedula'] = user.cedula;
+    }
+
     const res = await fetch(API_BASE_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
+      headers,
       body: JSON.stringify(postData)
     });
 
@@ -176,14 +183,21 @@ export async function reaccionarPost(postId, tipoReaccion, usuarioCedula) {
 /**
  * Agregar un comentario a una publicación
  */
-export async function agregarComentario(postId, comentarioData) {
+export async function agregarComentario(postId, comentarioData, user = null) {
   try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    };
+    if (user) {
+      if (user.rol) headers['X-User-Role'] = user.rol;
+      if (user.canton) headers['X-User-Canton'] = user.canton;
+      if (user.cedula) headers['X-User-Cedula'] = user.cedula;
+    }
+
     const res = await fetch(`${API_BASE_URL}/${encodeURIComponent(postId)}`, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
+      headers,
       body: JSON.stringify({
         action: 'comentar',
         comentario: comentarioData // { autorNombre, autorCedula, contenido }
@@ -203,15 +217,63 @@ export async function agregarComentario(postId, comentarioData) {
 }
 
 /**
- * Eliminar una publicación (para autor o administradores)
+ * Actualizar una publicación del foro (editar, ocultar, archivar)
  */
-export async function eliminarPost(postId) {
+export async function actualizarPost(postId, postData, user = null) {
   try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    };
+    if (user) {
+      if (user.rol) headers['X-User-Role'] = user.rol;
+      if (user.canton) headers['X-User-Canton'] = user.canton;
+      if (user.cedula) headers['X-User-Cedula'] = user.cedula;
+    }
+
+    const res = await fetch(`${API_BASE_URL}/${encodeURIComponent(postId)}`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({
+        action: 'editar',
+        ...postData
+      })
+    });
+
+    if (!res.ok) {
+      const errorJson = await res.json().catch(() => ({}));
+      throw new Error(errorJson.message || `Error actualizando publicación (${res.status})`);
+    }
+
+    const updated = await res.json();
+    obtenerPosts('nacional').then(notificarCambios).catch(() => {});
+    return updated;
+  } catch (err) {
+    console.error('[foroService] Error actualizando post:', err);
+    throw err;
+  }
+}
+
+/**
+ * Eliminar una publicación (para autor, encargado municipal de su cantón o administradores)
+ */
+export async function eliminarPost(postId, user = null) {
+  try {
+    const headers = { Accept: 'application/json' };
+    if (user) {
+      if (user.rol) headers['X-User-Role'] = user.rol;
+      if (user.canton) headers['X-User-Canton'] = user.canton;
+      if (user.cedula) headers['X-User-Cedula'] = user.cedula;
+    }
+
     const res = await fetch(`${API_BASE_URL}/${encodeURIComponent(postId)}`, {
       method: 'DELETE',
-      headers: { Accept: 'application/json' }
+      headers
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) {
+      const errorJson = await res.json().catch(() => ({}));
+      throw new Error(errorJson.message || `HTTP ${res.status}`);
+    }
     const result = await res.json();
     obtenerPosts('nacional').then(notificarCambios).catch(() => {});
     return result;

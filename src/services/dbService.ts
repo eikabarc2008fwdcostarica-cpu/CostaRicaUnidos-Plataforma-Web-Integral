@@ -95,7 +95,10 @@ export function normalizeOfficialRole(rol: string): OfficialRoleName {
   if (clean.includes('super') || clean.includes('nacional')) {
     return 'Super Administrador Nacional';
   }
-  if (clean.includes('gestor') || clean.includes('territorial') || clean.includes('provincial') || clean.includes('municipal') || clean.includes('editor')) {
+  if (clean.includes('encargado') || (clean.includes('municipal') && !clean.includes('territorial'))) {
+    return 'Encargado Municipal';
+  }
+  if (clean.includes('gestor') || clean.includes('territorial') || clean.includes('provincial')) {
     return 'Gestor Territorial y Municipal';
   }
   if (clean.includes('comerciante') || clean.includes('emprendedor') || clean.includes('comercio')) {
@@ -114,6 +117,7 @@ export function getAccessLevelByRole(rol: string): number {
       return 5;
     case 'Gestor Territorial y Municipal':
       return 4;
+    case 'Encargado Municipal':
     case 'Comerciante y Emprendedor':
       return 3;
     case 'Ciudadano Residente':
@@ -248,7 +252,7 @@ export function registerUsuario(data: RegisterUserData): { success: boolean; use
     ? 'USR-NAC'
     : officialRole === 'Administrador Provincial'
     ? 'USR-PROV'
-    : officialRole === 'Editor Municipal'
+    : officialRole === 'Encargado Municipal'
     ? 'USR-MUNI'
     : 'USR-CIUD';
 
