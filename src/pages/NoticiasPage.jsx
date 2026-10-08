@@ -27,7 +27,7 @@ export default function NoticiasPage() {
             </span>
             <span className="text-slate-600 hidden md:inline">•</span>
             <span className="text-slate-400 hidden md:inline">
-              Control de Acceso RBAC (Editor Municipal) & Persistencia db.json
+              Control de Acceso RBAC (Encargado Municipal) & Persistencia db.json
             </span>
           </div>
 

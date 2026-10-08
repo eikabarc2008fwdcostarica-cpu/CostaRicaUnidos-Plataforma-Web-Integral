@@ -98,6 +98,23 @@ export const MOCK_GESTOR_TERRITORIAL = {
   verificadoHacienda: true
 };
 
+export const MOCK_ENCARGADO_MUNICIPAL = {
+  id: 'USR-MUNI-001',
+  cedula: '1-1155-0892',
+  nombre: 'Encargado Municipal de Heredia',
+  correo: 'muni.heredia@gob.cr',
+  email: 'muni.heredia@gob.cr',
+  password: 'Muni2026*',
+  rol: 'Encargado Municipal',
+  nivelAcceso: 3,
+  provincia: 'Heredia',
+  provinciaId: 4,
+  canton: 'Heredia',
+  municipalidadId: 'muni-heredia',
+  fechaRegistro: '2026-03-01T10:00:00Z',
+  verificadoHacienda: true
+};
+
 export const MOCK_CIUDADANO = {
   id: 'USR-CIUD-001',
   cedula: '1-1823-0456',
@@ -126,6 +143,7 @@ function normalizarUsuario(rawUser, token = null) {
   if (!nivelAcceso) {
     if (rolNorm === ROLES_SISTEMA.SUPER_ADMIN_NACIONAL) nivelAcceso = 5;
     else if (rolNorm === ROLES_SISTEMA.GESTOR_TERRITORIAL) nivelAcceso = 4;
+    else if (rolNorm === ROLES_SISTEMA.ENCARGADO_MUNICIPAL) nivelAcceso = 3;
     else if (rolNorm === ROLES_SISTEMA.COMERCIANTE) nivelAcceso = 3;
     else nivelAcceso = 2;
   }
@@ -153,6 +171,8 @@ function normalizarUsuario(rawUser, token = null) {
   }
 
   const email = rawUser.correo || rawUser.email || '';
+  const cantonVal = rawUser.canton || '';
+  const muniIdVal = rawUser.municipalidadId || (cantonVal ? `muni-${String(cantonVal).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')}` : '');
 
   return {
     id: rawUser.id ?? `USR-${Date.now()}`,
@@ -164,10 +184,14 @@ function normalizarUsuario(rawUser, token = null) {
     rol: rawUser.rol || rolNorm,
     rolOficial: rolNorm,
     nivelAcceso: Number(nivelAcceso),
+    isEncargadoMunicipal: Boolean(
+      rolNorm === ROLES_SISTEMA.ENCARGADO_MUNICIPAL ||
+      String(rawUser.rol || '').toUpperCase().includes('ENCARGADO')
+    ),
     isComerciante: Boolean(
       rawUser.isComerciante ||
       rolNorm === ROLES_SISTEMA.COMERCIANTE ||
-      Number(nivelAcceso) === 3
+      (Number(nivelAcceso) === 3 && rolNorm !== ROLES_SISTEMA.ENCARGADO_MUNICIPAL)
     ),
     estadoComercio: rawUser.estadoComercio || (rolNorm === ROLES_SISTEMA.COMERCIANTE ? 'aprobado' : undefined),
     comercioId: rawUser.comercioId || (rolNorm === ROLES_SISTEMA.COMERCIANTE ? 'SOL-COM-003' : undefined),
@@ -175,8 +199,9 @@ function normalizarUsuario(rawUser, token = null) {
     provincia: rawUser.provincia || provNombre,
     provinciaId: provId,
     provinciaNombre: provNombre,
-    canton: rawUser.canton || '',
+    canton: cantonVal,
     distrito: rawUser.distrito || '',
+    municipalidadId: muniIdVal,
     fechaRegistro: rawUser.fechaRegistro || new Date().toISOString(),
     verificadoHacienda: rawUser.verificadoHacienda ?? true,
     token: token || rawUser.token || `cru-token-${Date.now()}`,

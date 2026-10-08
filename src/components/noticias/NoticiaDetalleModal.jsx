@@ -346,7 +346,7 @@ export default function NoticiaDetalleModal({
                 </span>
               </div>
               <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748B', marginTop: '0.15rem' }}>
-                Publicado por: <strong style={{ color: '#E2E8F0' }}>{noticiaActual.autorNombre}</strong> ({noticiaActual.autorRol || 'Editor Municipal'})
+                Publicado por: <strong style={{ color: '#E2E8F0' }}>{noticiaActual.autorNombre}</strong> ({noticiaActual.autorRol || 'Encargado Municipal'})
               </p>
             </div>
           </div>

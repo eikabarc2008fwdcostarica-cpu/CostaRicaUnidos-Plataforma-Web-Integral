@@ -221,9 +221,10 @@ export default function ConcejosMunicipalesModule({
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 32px;
-          height: 32px;
-          min-width: 32px;
+          width: 40px;
+          height: 40px;
+          min-width: 40px;
+          min-height: 40px;
           border-radius: 50%;
           background: rgba(5, 12, 28, 0.70);
           border: 1px solid rgba(255, 255, 255, 0.12);

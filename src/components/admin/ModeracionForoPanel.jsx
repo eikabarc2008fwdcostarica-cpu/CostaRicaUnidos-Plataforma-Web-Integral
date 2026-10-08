@@ -615,6 +615,46 @@ export default function ModeracionForoPanel() {
                         <span className="text-[10px] font-bold text-cru-text-muted bg-cru-surface-muted px-2 py-0.5 rounded-md border border-cru-border">
                           {inc.tipoContenido === 'COMENTARIO' ? 'Comentario' : 'Publicación'}
                         </span>
+
+                        {/* Badge de Capa Ejecutada y Modelo */}
+                        <span
+                          className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-md border flex items-center gap-1 ${
+                            inc.capaEjecutada === 'GEMINI_CAPA_2'
+                              ? 'bg-purple-500/10 text-purple-400 border-purple-500/30'
+                              : inc.capaEjecutada === 'FALLBACK_CAPA_1'
+                              ? 'bg-amber-500/15 text-amber-400 border-amber-500/40'
+                              : 'bg-blue-500/10 text-blue-400 border-blue-500/30'
+                          }`}
+                        >
+                          {inc.capaEjecutada === 'GEMINI_CAPA_2' ? (
+                            <>
+                              <Cpu className="w-3 h-3 text-purple-400" />
+                              <span>Capa 2 · {inc.modeloIA || 'Gemini'}</span>
+                            </>
+                          ) : inc.capaEjecutada === 'FALLBACK_CAPA_1' ? (
+                            <>
+                              <AlertTriangle className="w-3 h-3 text-amber-400" />
+                              <span>Fallback Capa 1</span>
+                            </>
+                          ) : (
+                            <span>Capa 1 · Determinista</span>
+                          )}
+                        </span>
+
+                        {/* Reglas infringidas */}
+                        {Array.isArray(inc.reglasInfringidas) && inc.reglasInfringidas.length > 0 && (
+                          <div className="flex items-center gap-1">
+                            {inc.reglasInfringidas.map((rNum) => (
+                              <span
+                                key={rNum}
+                                className="text-[9px] font-black px-1.5 py-0.5 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30"
+                              >
+                                R{rNum}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
                         <span className="text-xs text-cru-text-muted">
                           {new Date(inc.fechaReporte || Date.now()).toLocaleString('es-CR')}
                         </span>
@@ -635,13 +675,28 @@ export default function ModeracionForoPanel() {
                       </div>
                     </div>
 
-                    {/* Autor e Info */}
+                    {/* Alerta de Error en IA si hubo Fallback */}
+                    {inc.errorIA && (
+                      <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
+                        <div>
+                          <strong>Alerta de Servicio IA:</strong> {inc.errorIA}. Se aplicó moderación preventiva determinista en Capa 1.
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Autor e Info (Cédula protegida por Ley N.º 8968) */}
                     <div className="text-xs text-cru-text-soft flex items-center gap-3 flex-wrap">
                       <span>
                         Autor: <strong className="text-cru-text">{inc.autorNombre}</strong>
                       </span>
                       <span>
-                        Cédula: <span className="font-mono text-cru-text-muted">{inc.autorCedula}</span>
+                        Cédula:{' '}
+                        <span className="font-mono text-cru-accent-sky font-semibold">
+                          {inc.autorCedula && inc.autorCedula.includes('CÉDULA')
+                            ? inc.autorCedula
+                            : '[CÉDULA PROTEGIDA / LEY 8968]'}
+                        </span>
                       </span>
                       {inc.autorRol && (
                         <span>

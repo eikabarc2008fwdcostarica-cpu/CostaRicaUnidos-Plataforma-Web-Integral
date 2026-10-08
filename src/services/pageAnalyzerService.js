@@ -300,7 +300,7 @@ export function scanCurrentPageElements() {
         'selector-7-provincias',
         '[data-tour-scanned="selector-7-provincias"]',
         'Selector Emblemático de las 7 Provincias',
-        'En esta sección territorial puede alternar entre las 7 provincias soberanas: San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas y Limón, actualizando la identidad gráfica, el escudo oficial y los datos territoriales.',
+        'En esta sección territorial puede alternar entre las 7 provincias soberanas: San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas y Limón, actualizando la identidad gráfica y los datos territoriales.',
         { tipo: 'selector-provincias', posicion: getElementPosition(selectorProvincias) }
       );
     }
@@ -1242,7 +1242,7 @@ export const ROUTE_KNOWLEDGE_BASE = {
       {
         targetSelector: '[data-tour-scanned="selector-7-provincias"], #exploracion-provincial [role="tablist"], button:has-text("San José")',
         title: 'Selector Emblemático de las 7 Provincias',
-        speechText: 'En esta sección territorial puede alternar entre las 7 provincias soberanas: San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas y Limón, actualizando la identidad gráfica, el escudo oficial y los datos territoriales.',
+        speechText: 'En esta sección territorial puede alternar entre las 7 provincias soberanas: San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas y Limón, actualizando la identidad gráfica y los datos territoriales.',
         tips: 'Haga clic en cualquiera de las 7 provincias para actualizar los datos.'
       },
       {
@@ -1890,7 +1890,7 @@ export function buildDeterministicSteps(pathNormal, scannedContext, routeKnowled
       } else if (bloque.tipo === 'filtros-traccion') {
         tips = 'Verifique si el destino requiere vehículo 4x4 o cuenta con acceso Ley 7600.';
       } else if (bloque.tipo === 'selector-provincias') {
-        tips = 'Alterne entre las 7 provincias para actualizar los escudos e indicadores.';
+        tips = 'Alterne entre las 7 provincias para actualizar la información y los indicadores.';
       } else if (bloque.tipo === 'indicadores-provinciales') {
         tips = 'Consulte los datos oficiales de Población, Superficie y Obras en fiscalización.';
       } else if (bloque.tipo === 'tabs-provinciales') {

@@ -7,7 +7,7 @@
  * 3. Base de conocimiento cívico de respaldo multi-idioma (8 idiomas oficiales) con entonación natural.
  */
 
-import { enmascararDatosPersonales } from '../config/promptsIA';
+import { enmascararDatosPersonales } from '../config/promptsIA.js';
 
 // Modelos soportados vigentes (prioriza VITE_GEMINI_MODEL si está definido en .env)
 const ENV_MODEL = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_MODEL) || null;

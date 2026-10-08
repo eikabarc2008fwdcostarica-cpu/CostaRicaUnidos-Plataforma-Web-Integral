@@ -72,6 +72,7 @@ export function PrivateRoutes({ allowedRoles, children }) {
       // Validación jerárquica por nivel de acceso
       if (rolPermitido.includes("SUPER") && (nivelUsuario === 5 || rolUsuario.includes("SUPER"))) return true;
       if (rolPermitido.includes("TERRITORIAL") && (nivelUsuario === 4 || rolUsuario.includes("TERRITORIAL"))) return true;
+      if ((rolPermitido.includes("ENCARGADO") || (rolPermitido.includes("MUNICIPAL") && !rolPermitido.includes("TERRITORIAL"))) && (activeUser.isEncargadoMunicipal || rolUsuario.includes("ENCARGADO") || (rolUsuario.includes("MUNICIPAL") && !rolUsuario.includes("TERRITORIAL")))) return true;
       if (rolPermitido.includes("COMERCIANTE") && (nivelUsuario === 3 || rolUsuario.includes("COMERCIANTE") || rolUsuario.includes("EMPRENDEDOR"))) return true;
       if (rolPermitido.includes("CIUDADANO") && nivelUsuario >= 2) return true;
 
@@ -131,6 +132,7 @@ export function RoleRoute({ minLevel = 1, rolesPermitidos = [], allowedRoles = [
       if (rolPermitido === rolUsuario) return true;
       if (rolPermitido.includes("SUPER") && (nivelUsuario === 5 || rolUsuario.includes("SUPER"))) return true;
       if (rolPermitido.includes("TERRITORIAL") && (nivelUsuario === 4 || rolUsuario.includes("TERRITORIAL"))) return true;
+      if ((rolPermitido.includes("ENCARGADO") || (rolPermitido.includes("MUNICIPAL") && !rolPermitido.includes("TERRITORIAL"))) && (activeUser.isEncargadoMunicipal || rolUsuario.includes("ENCARGADO") || (rolUsuario.includes("MUNICIPAL") && !rolUsuario.includes("TERRITORIAL")))) return true;
       if (rolPermitido.includes("COMERCIANTE") && (nivelUsuario === 3 || rolUsuario.includes("COMERCIANTE") || rolUsuario.includes("EMPRENDEDOR"))) return true;
       if (rolPermitido.includes("CIUDADANO") && nivelUsuario >= 2) return true;
       return false;

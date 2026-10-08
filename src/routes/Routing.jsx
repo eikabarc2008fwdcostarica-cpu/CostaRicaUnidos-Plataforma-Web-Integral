@@ -38,6 +38,7 @@ import ForoPage from '../pages/ForoPage';
 import NoticiasPage from '../pages/NoticiasPage';
 import PerfilPage from '../pages/PerfilPage';
 import PortalCiudadanoPage from '../pages/PortalCiudadanoPage';
+import MiMunicipalidadPage from '../pages/MiMunicipalidadPage';
 import UniversalVoiceGuide from '../components/voiceGuide/UniversalVoiceGuide';
 import GlobalErrorBoundary from '../components/common/GlobalErrorBoundary';
 
@@ -63,6 +64,11 @@ function DashboardDispatcher() {
 
   if (nivel === 4 || rol.includes("TERRITORIAL") || rol.includes("PROVINCIAL")) {
     return <Navigate to="/admin/territorial" replace />;
+  }
+
+  // Nivel 3 (Encargado Municipal)
+  if (user.isEncargadoMunicipal || rol.includes("ENCARGADO") || (rol.includes("MUNICIPAL") && !rol.includes("TERRITORIAL"))) {
+    return <Navigate to="/mi-municipalidad" replace />;
   }
 
   // Nivel 3 (Comerciante Aprobado)
@@ -193,10 +199,23 @@ export default function Routing() {
           <Route path="/admin/provincial" element={<ProvincialAdminDashboard />} />
         </Route>
 
+        {/* Ruta Exclusiva del Encargado Municipal ("Mi Municipalidad") */}
+        <Route element={<PrivateRoutes allowedRoles={[
+          "ENCARGADO_MUNICIPAL",
+          "Encargado Municipal",
+          "GESTOR_TERRITORIAL",
+          "SUPER_ADMIN_NACIONAL"
+        ]} />}>
+          <Route path="/mi-municipalidad" element={<MiMunicipalidadPage />} />
+          <Route path="/municipalidad" element={<Navigate to="/mi-municipalidad" replace />} />
+        </Route>
+
         {/* 3. Despachador Inteligente de Dashboard segregado por rol */}
         <Route element={<PrivateRoutes allowedRoles={[
           "SUPER_ADMIN_NACIONAL",
           "GESTOR_TERRITORIAL",
+          "ENCARGADO_MUNICIPAL",
+          "Encargado Municipal",
           "COMERCIANTE",
           "Comerciante y Emprendedor",
           "CIUDADANO"

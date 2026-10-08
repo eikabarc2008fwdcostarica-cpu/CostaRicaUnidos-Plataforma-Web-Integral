@@ -391,7 +391,16 @@ function normalizarRolInfo(rolRaw, nivelAcceso) {
       dotClass: 'bg-cru-accent-red'
     };
   }
-  if (n === 4 || r.includes('GESTOR') || r.includes('TERRITORIAL') || r.includes('MUNICIPAL') || r.includes('PROVINCIAL')) {
+  if (r.includes('ENCARGADO') || (r.includes('MUNICIPAL') && !r.includes('TERRITORIAL') && !r.includes('GESTOR'))) {
+    return {
+      codigo: 'ENCARGADO_MUNICIPAL',
+      nombre: 'Encargado Municipal',
+      nivel: 3,
+      badgeClass: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+      dotClass: 'bg-emerald-500'
+    };
+  }
+  if (n === 4 || r.includes('GESTOR') || r.includes('TERRITORIAL') || r.includes('PROVINCIAL')) {
     return {
       codigo: 'GESTOR_TERRITORIAL',
       nombre: 'Gestor Territorial',
@@ -925,11 +934,17 @@ export default function UsuariosAuditoriaModule({
 
     // 1. Determinar el nivel de acceso exacto según el rol asignado
     const rolSeleccionado = formularioEdicion.rol;
+    const esEncargado =
+      rolSeleccionado === 'Encargado Municipal' ||
+      rolSeleccionado === 'ENCARGADO_MUNICIPAL';
+
     const nuevoNivelAcceso =
       rolSeleccionado === 'Super Administrador Nacional' || rolSeleccionado === 'SUPER_ADMIN_NACIONAL'
         ? 5
         : rolSeleccionado === 'Gestor Territorial' || rolSeleccionado === 'GESTOR_TERRITORIAL'
         ? 4
+        : esEncargado
+        ? 3
         : rolSeleccionado === 'Comerciante y Emprendedor' || rolSeleccionado === 'COMERCIANTE'
         ? 3
         : 2;
@@ -939,7 +954,9 @@ export default function UsuariosAuditoriaModule({
         ? 'Super Administrador Nacional'
         : nuevoNivelAcceso === 4
         ? 'Gestor Territorial'
-        : nuevoNivelAcceso === 3
+        : esEncargado
+        ? 'Encargado Municipal'
+        : (rolSeleccionado === 'Comerciante y Emprendedor' || rolSeleccionado === 'COMERCIANTE')
         ? 'Comerciante y Emprendedor'
         : 'Ciudadano Residente';
 
@@ -958,6 +975,16 @@ export default function UsuariosAuditoriaModule({
       forzarCambioPassword: Boolean(formularioEdicion.forzarCambioPassword),
       verificadoHacienda: Boolean(formularioEdicion.verificadoHacienda)
     };
+
+    if (esEncargado) {
+      payloadCambios.municipalidadId = cantonFinal ? `muni-${cantonFinal.toLowerCase().replace(/\s+/g, '-')}` : '';
+      payloadCambios.asignadoPor = user?.nombre || 'Super Administrador Nacional';
+      payloadCambios.fechaAsignacion = new Date().toISOString();
+    } else if (usuarioAEditar.rol === 'Encargado Municipal') {
+      payloadCambios.municipalidadId = '';
+      payloadCambios.retiradoPor = user?.nombre || 'Super Administrador Nacional';
+      payloadCambios.fechaRetiro = new Date().toISOString();
+    }
 
     // 2. Enviar actualización física a db.json vía json-server / API
     const exitoApi = await actualizarUsuarioApi(usuarioAEditar.id, payloadCambios);
@@ -1238,11 +1265,14 @@ export default function UsuariosAuditoriaModule({
     }
 
     // 1. Generar ID y formatear estructura exacta de db.json
+    const esEncargadoCrear = nuevoRol === 'ENCARGADO_MUNICIPAL';
     const prefijoId =
       nuevoRol === 'SUPER_ADMIN_NACIONAL'
         ? 'USR-NAC'
         : nuevoRol === 'GESTOR_TERRITORIAL'
         ? 'USR-TER'
+        : esEncargadoCrear
+        ? 'USR-MUNI'
         : nuevoRol === 'COMERCIANTE'
         ? 'USR-COM'
         : 'USR-CIUD';
@@ -1258,6 +1288,8 @@ export default function UsuariosAuditoriaModule({
         ? 'Super Administrador Nacional'
         : nuevoRol === 'GESTOR_TERRITORIAL'
         ? 'Gestor Territorial'
+        : esEncargadoCrear
+        ? 'Encargado Municipal'
         : nuevoRol === 'COMERCIANTE'
         ? 'Comerciante y Emprendedor'
         : 'Ciudadano Residente';
@@ -1267,7 +1299,7 @@ export default function UsuariosAuditoriaModule({
         ? 5
         : nuevoRol === 'GESTOR_TERRITORIAL'
         ? 4
-        : nuevoRol === 'COMERCIANTE'
+        : (esEncargadoCrear || nuevoRol === 'COMERCIANTE')
         ? 3
         : 2;
 
@@ -1290,6 +1322,12 @@ export default function UsuariosAuditoriaModule({
       verificadoHacienda: Boolean(isHaciendaVerified),
       estado: nuevoEstado || 'ACTIVO'
     };
+
+    if (esEncargadoCrear) {
+      nuevoUsuario.municipalidadId = cantonFinal ? `muni-${cantonFinal.toLowerCase().replace(/\s+/g, '-')}` : '';
+      nuevoUsuario.asignadoPor = user?.nombre || 'Super Administrador Nacional';
+      nuevoUsuario.fechaAsignacion = new Date().toISOString();
+    }
 
     try {
       // 2. Guardar físicamente en db.json mediante json-server (con fallback a API local)
@@ -1561,6 +1599,7 @@ export default function UsuariosAuditoriaModule({
               <option value="TODOS">Rol: Todos</option>
               <option value="SUPER_ADMIN_NACIONAL">Super Administrador Nacional</option>
               <option value="GESTOR_TERRITORIAL">Gestor Territorial</option>
+              <option value="ENCARGADO_MUNICIPAL">Encargado Municipal</option>
               <option value="COMERCIANTE">Comerciante y Emprendedor</option>
               <option value="CIUDADANO">Ciudadano Residente</option>
             </select>
@@ -1861,8 +1900,9 @@ export default function UsuariosAuditoriaModule({
                 >
                   <option value="CIUDADANO">Ciudadano Residente (Nivel de Acceso: 2)</option>
                   <option value="COMERCIANTE">Comerciante y Emprendedor (Nivel de Acceso: 3)</option>
+                  <option value="ENCARGADO_MUNICIPAL">Encargado Municipal (Nivel de Acceso: 3 · Cantón Exclusivo)</option>
                   <option value="GESTOR_TERRITORIAL">
-                    Gestor Territorial y Municipal (Nivel de Acceso: 4)
+                    Gestor Territorial (Nivel de Acceso: 4)
                   </option>
                   <option value="SUPER_ADMIN_NACIONAL">
                     Super Administrador Nacional (Nivel de Acceso: 5)
@@ -2313,8 +2353,9 @@ export default function UsuariosAuditoriaModule({
                 >
                   <option value="CIUDADANO">Ciudadano Residente (Nivel de Acceso: 2)</option>
                   <option value="COMERCIANTE">Comerciante y Emprendedor (Nivel de Acceso: 3)</option>
+                  <option value="ENCARGADO_MUNICIPAL">Encargado Municipal (Nivel de Acceso: 3 · Cantón Exclusivo)</option>
                   <option value="GESTOR_TERRITORIAL">
-                    Gestor Territorial y Municipal (Nivel de Acceso: 4)
+                    Gestor Territorial (Nivel de Acceso: 4)
                   </option>
                   <option value="SUPER_ADMIN_NACIONAL">
                     Super Administrador Nacional (Nivel de Acceso: 5)

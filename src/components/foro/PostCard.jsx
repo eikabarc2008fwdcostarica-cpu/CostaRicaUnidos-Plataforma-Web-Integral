@@ -308,17 +308,26 @@ Pregunta del ciudadano:
     if (!ok) return;
 
     try {
-      await eliminarPost(post.id);
+      await eliminarPost(post.id, user);
       if (onEliminado) onEliminado(post.id);
     } catch (e) {
       console.error('Error eliminando:', e);
     }
   };
 
-  const esAutorOAdmin =
-    user?.cedula === post.autorCedula ||
-    user?.rol === 'Super Administrador Nacional' ||
-    user?.rol === 'Administrador Provincial';
+  const esAutorOAdmin = (() => {
+    if (!user) return false;
+    if (user.rol === 'Super Administrador Nacional') return true;
+    if (user.rol === 'Administrador Provincial') return true;
+    if (user.cedula && user.cedula === post.autorCedula) return true;
+    // Si es Encargado Municipal: solo si el post es de SU cantón Y emitido como publicación oficial de su municipalidad
+    if (user.isEncargadoMunicipal || user.rol === 'Encargado Municipal') {
+      const mismoCanton = user.canton && String(post.canton || '').toLowerCase() === String(user.canton || '').toLowerCase();
+      const esOficialMuni = post.esOficial || post.autorRol === 'Encargado Municipal';
+      return Boolean(mismoCanton && esOficialMuni);
+    }
+    return false;
+  })();
 
   return (
     <article
@@ -372,13 +381,34 @@ Pregunta del ciudadano:
           </div>
 
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--cru-text, #062A77)' }}>
-                {obtenerNombrePublico(post.autorNombre)}
+                {post.esOficial || post.distintivo ? (post.autorNombre || 'Encargado Municipal') : obtenerNombrePublico(post.autorNombre)}
               </span>
-              <span title="Ciudadano Verificado" style={{ display: 'flex', alignItems: 'center' }}>
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              </span>
+              {post.esOficial || post.distintivo || post.autorRol === 'Encargado Municipal' ? (
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                    color: '#34D399',
+                    border: '1px solid rgba(16, 185, 129, 0.35)',
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: '9999px',
+                    fontSize: '0.72rem',
+                    fontWeight: 700
+                  }}
+                  title="Publicación Oficial Municipal Verificada"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  {post.distintivo || `Cuenta oficial · Municipalidad de ${post.canton || ''}`}
+                </span>
+              ) : (
+                <span title="Ciudadano Verificado" style={{ display: 'flex', alignItems: 'center' }}>
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                </span>
+              )}
             </div>
 
             <div

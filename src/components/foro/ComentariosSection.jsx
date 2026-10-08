@@ -97,13 +97,18 @@ export default function ComentariosSection({ post, onPostActualizado }) {
         return;
       }
 
+      const esOficial = Boolean(user?.isEncargadoMunicipal || user?.rol === 'Encargado Municipal');
       const comentarioData = {
-        autorNombre: nombrePublicoAutor,
+        autorNombre: esOficial ? (user?.nombre || 'Encargado Municipal') : nombrePublicoAutor,
         autorCedula,
-        contenido: contenido.trim()
+        contenido: contenido.trim(),
+        esOficial,
+        distintivo: esOficial ? `Cuenta oficial · Municipalidad de ${user?.canton || ''}` : '',
+        canton: user?.canton || '',
+        autorRol: user?.rol || 'Ciudadano'
       };
 
-      const updatedPost = await agregarComentario(post.id, comentarioData);
+      const updatedPost = await agregarComentario(post.id, comentarioData, user);
       setContenido('');
       setExitoMsg(true);
       setTimeout(() => setExitoMsg(false), 2500);
@@ -244,11 +249,32 @@ export default function ComentariosSection({ post, onPostActualizado }) {
                     {obtenerNombrePublico(c.autorNombre).charAt(0)}
                   </div>
                   <span style={{ fontSize: '0.825rem', fontWeight: 600, color: '#F1F5F9' }}>
-                    {obtenerNombrePublico(c.autorNombre)}
+                    {c.esOficial || c.distintivo ? (c.autorNombre || 'Encargado Municipal') : obtenerNombrePublico(c.autorNombre)}
                   </span>
-                  <span title="Ciudadano Verificado" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  </span>
+                  {c.esOficial || c.distintivo || c.autorRol === 'Encargado Municipal' ? (
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.2rem',
+                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                        color: '#34D399',
+                        border: '1px solid rgba(16, 185, 129, 0.35)',
+                        padding: '0.1rem 0.45rem',
+                        borderRadius: '9999px',
+                        fontSize: '0.68rem',
+                        fontWeight: 700
+                      }}
+                      title="Comentario Oficial Municipal Verificado"
+                    >
+                      <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                      {c.distintivo || `Cuenta oficial · Municipalidad de ${c.canton || ''}`}
+                    </span>
+                  ) : (
+                    <span title="Ciudadano Verificado" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    </span>
+                  )}
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--cru-text-muted)', fontSize: '0.75rem' }}>

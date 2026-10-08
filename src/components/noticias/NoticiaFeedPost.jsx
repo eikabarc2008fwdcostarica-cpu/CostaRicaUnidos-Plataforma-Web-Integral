@@ -28,7 +28,7 @@ import { useCivicModal } from '../../context/CivicModalContext';
 import {
   reaccionarNoticia,
   agregarComentarioNoticia,
-  esEditorMunicipal
+  esEncargadoMunicipal
 } from '../../services/noticiasService';
 import { obtenerNombrePublico } from '../../utils/privacyUtils';
 import PerfilPublicoModal from '../perfil/PerfilPublicoModal';
@@ -89,7 +89,20 @@ export default function NoticiaFeedPost({
 }) {
   const { user } = useAuth();
   const { mostrarToast } = useCivicModal();
-  const tienePermisoEditor = esEditorMunicipal(user);
+  const tienePermisoEditor = esEncargadoMunicipal(user);
+
+  // Validación de jurisdicción: el Encargado Municipal solo gestiona su cantón
+  const puedeGestionarEstePost = (() => {
+    if (!user || !tienePermisoEditor) return false;
+    const rolNorm = (user.rol || "").toLowerCase();
+    const nivel = Number(user.nivelAcceso || 0);
+    if (nivel >= 4 || rolNorm.includes("super") || rolNorm.includes("territorial")) return true;
+    if (user.isEncargadoMunicipal || rolNorm.includes("encargado")) {
+      if (!user.canton) return false;
+      return String(post?.canton || "").trim().toLowerCase() === String(user.canton || "").trim().toLowerCase();
+    }
+    return false;
+  })();
 
   // Estados locales del post
   const [post, setPost] = useState(noticia);
@@ -390,20 +403,25 @@ export default function NoticiaFeedPost({
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.2rem',
-                  color: '#10B981',
+                  gap: '0.25rem',
+                  color: '#34D399',
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.25)',
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: '999px',
                   fontSize: '0.72rem',
                   fontWeight: 700
                 }}
                 title="Cuenta Oficial Verificada"
               >
-                <ShieldCheck size={14} />
+                <ShieldCheck size={13} />
+                Cuenta oficial · Municipalidad de {post.canton || 'Costa Rica'}
               </span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.2rem' }}>
               <span style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: 500 }}>
-                {post.autorNombre || 'Gestión Municipal Territorial'}
+                {post.autorNombre || 'Encargado Municipal'}
               </span>
               <span style={{ fontSize: '0.7rem', color: '#475569' }}>•</span>
               <span
@@ -423,7 +441,7 @@ export default function NoticiaFeedPost({
           </div>
         </div>
 
-        {/* Badges de Territorio & Menú de Opciones para Editor Municipal */}
+        {/* Badges de Territorio & Menú de Opciones para Encargado Municipal */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
           {/* Badge Provincia / Cantón */}
           <span
@@ -463,8 +481,8 @@ export default function NoticiaFeedPost({
             {post.categoria || 'Comunicado'}
           </span>
 
-          {/* Menú de Opciones (Solo Editor Municipal) */}
-          {tienePermisoEditor && (
+          {/* Menú de Opciones (Solo Encargado Municipal de su cantón) */}
+          {puedeGestionarEstePost && (
             <div style={{ position: 'relative' }} ref={menuRef}>
               <button
                 type="button"
@@ -481,7 +499,7 @@ export default function NoticiaFeedPost({
                   justifyContent: 'center',
                   transition: 'background-color 0.15s'
                 }}
-                title="Gestión de comunicado (Editor Municipal)"
+                title="Gestión de comunicado (Encargado Municipal)"
               >
                 <MoreVertical size={18} />
               </button>

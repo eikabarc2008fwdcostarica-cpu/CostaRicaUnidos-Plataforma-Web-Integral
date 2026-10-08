@@ -771,7 +771,7 @@ export default function Login() {
             backdropFilter: 'blur(28px)',
             WebkitBackdropFilter: 'blur(28px)',
             boxShadow: 'var(--cru-card-shadow-hover, 0 20px 45px rgba(6, 42, 119, 0.08))',
-            padding: 'clamp(2rem, 5vw, 3.25rem) clamp(1.5rem, 4vw, 2.75rem)',
+            padding: 'clamp(1.5rem, 4vw, 3rem) clamp(0.75rem, 3.5vw, 2.5rem)',
             position: 'relative',
             overflow: 'hidden',
             boxSizing: 'border-box'
@@ -838,10 +838,10 @@ export default function Login() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '6px',
+              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+              gap: '4px',
               backgroundColor: 'var(--cru-badge-neutral-bg, #F1F5F9)',
-              padding: '6px',
+              padding: '4px',
               borderRadius: '14px',
               border: '1px solid var(--cru-border, #E2E8F0)',
               marginBottom: '1.75rem'
@@ -857,7 +857,7 @@ export default function Login() {
                 setSuccessMsg('');
               }}
               style={{
-                padding: '9px 8px',
+                padding: '9px 4px',
                 borderRadius: '10px',
                 border: 'none',
                 background:
@@ -866,19 +866,20 @@ export default function Login() {
                     : 'transparent',
                 color: authMode === 'login' ? '#FFFFFF' : 'var(--cru-text-soft, #64748B)',
                 fontWeight: 700,
-                fontSize: '0.8rem',
+                fontSize: 'clamp(0.7rem, 2.2vw, 0.8rem)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '6px',
+                gap: '4px',
+                minWidth: 0,
                 boxShadow:
                   authMode === 'login' ? '0 4px 14px rgba(6, 42, 119, 0.25)' : 'none'
               }}
             >
               <IconLogIn size={15} color="currentColor" />
-              <span>Ciudadano</span>
+              <span className="truncate">Ciudadano</span>
             </button>
 
             {/* Pestaña 2: [🏪] Comercio PyMES Aprobado */}
@@ -891,7 +892,7 @@ export default function Login() {
                 setSuccessMsg('');
               }}
               style={{
-                padding: '9px 8px',
+                padding: '9px 4px',
                 borderRadius: '10px',
                 border: 'none',
                 background:
@@ -900,19 +901,22 @@ export default function Login() {
                     : 'transparent',
                 color: authMode === 'comercio' ? '#FFFFFF' : 'var(--cru-text-soft, #64748B)',
                 fontWeight: 700,
-                fontSize: '0.8rem',
+                fontSize: 'clamp(0.7rem, 2.2vw, 0.8rem)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '6px',
+                gap: '4px',
+                minWidth: 0,
                 boxShadow:
                   authMode === 'comercio' ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none'
               }}
             >
               <IconStore size={15} color="currentColor" />
-              <span>Comercios & PyMES</span>
+              <span className="truncate">
+                <span className="hidden min-[480px]:inline">Comercios & </span>PyMES
+              </span>
             </button>
 
             {/* Pestaña 3: [+] Crear Cuenta */}
@@ -925,7 +929,7 @@ export default function Login() {
                 setSuccessMsg('');
               }}
               style={{
-                padding: '9px 8px',
+                padding: '9px 4px',
                 borderRadius: '10px',
                 border: 'none',
                 background:
@@ -934,19 +938,23 @@ export default function Login() {
                     : 'transparent',
                 color: authMode === 'register' ? '#FFFFFF' : 'var(--cru-text-soft, #64748B)',
                 fontWeight: 700,
-                fontSize: '0.8rem',
+                fontSize: 'clamp(0.7rem, 2.2vw, 0.8rem)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '6px',
+                gap: '4px',
+                minWidth: 0,
                 boxShadow:
                   authMode === 'register' ? '0 4px 14px rgba(6, 42, 119, 0.25)' : 'none'
               }}
             >
               <IconUserPlus size={15} color="currentColor" />
-              <span>Registrarse</span>
+              <span className="truncate">
+                <span className="hidden min-[480px]:inline">Registrarse</span>
+                <span className="min-[480px]:hidden">Registro</span>
+              </span>
             </button>
           </div>
 
